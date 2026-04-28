@@ -1,9 +1,8 @@
 import { defineConfig } from 'astro/config';
 
-// GitHub Pages deployment under builttoelevate/designed-to-elevate
+// Production deployment on Vercel at designedtoelevate.co
 export default defineConfig({
-  site: 'https://builttoelevate.github.io',
-  base: '/designed-to-elevate/',
+  site: 'https://designedtoelevate.co',
   trailingSlash: 'ignore',
   build: {
     assets: 'assets',

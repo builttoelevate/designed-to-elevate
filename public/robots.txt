@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://builttoelevate.github.io/designed-to-elevate/sitemap-index.xml
+Sitemap: https://designedtoelevate.co/sitemap-index.xml
