@@ -1,4 +1,5 @@
 ---
+const base = import.meta.env.BASE_URL;
 const trustItems = [
   'Auto Detailing',
   'Window Tint',
@@ -12,6 +13,16 @@ const trustItems = [
   <div class="hero-glow" aria-hidden="true"></div>
 
   <div class="container hero-inner">
+    <img
+      class="hero-logo"
+      src={`${base}logo-wordmark.png`}
+      alt="Designed to Elevate"
+      width="1080"
+      height="324"
+      fetchpriority="high"
+      decoding="async"
+    />
+
     <div class="eyebrow"><span class="dot" aria-hidden="true"></span> Marketing for local service businesses</div>
 
     <h1 class="hero-title">
@@ -77,6 +88,23 @@ const trustItems = [
     z-index: 2;
     max-width: 980px;
   }
+
+  .hero-logo {
+    width: clamp(280px, 56vw, 640px);
+    height: auto;
+    margin: 0 0 36px -2%;
+    display: block;
+    filter: drop-shadow(0 10px 40px rgba(30, 72, 255, 0.25));
+    animation: heroLogoIn .9s var(--ease) both;
+  }
+  @keyframes heroLogoIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (max-width: 700px) {
+    .hero-logo { margin-left: 0; }
+  }
+
   .hero-title {
     margin-top: 22px;
     font-size: clamp(2.6rem, 7.4vw, 5.2rem);
