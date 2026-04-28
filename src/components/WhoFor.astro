@@ -1,0 +1,80 @@
+---
+const audiences = [
+  {
+    title: 'Auto Detailing Shops',
+    blurb: 'From single-bay starts to full crews — make every quote feel earned before they ever pick up the phone.',
+  },
+  {
+    title: 'Window Tint Shops',
+    blurb: 'A page that explains film options, books appointments, and ranks for the searches your customers actually use.',
+  },
+  {
+    title: 'Barbershops & Grooming',
+    blurb: 'Walk-ins are great. A clean site, fast booking, and Google presence keep the chair full when they’re not.',
+  },
+  {
+    title: 'Home Service Providers',
+    blurb: 'Plumbing, HVAC, lawn, pressure washing, handyman work — turn searches into estimates on autopilot.',
+  },
+  {
+    title: 'Small Local Service Brands',
+    blurb: 'Studios, mobile services, niche trades. If word-of-mouth carries you, the website should carry the rest.',
+  },
+];
+---
+<section class="who-for" id="who-for">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Who this is for</span>
+      <h2>Built for the businesses on Main Street.</h2>
+      <p class="lede">
+        If your work runs on appointments, quotes, and repeat customers — this is for you.
+        Every system here is shaped around how local service shops actually run.
+      </p>
+    </div>
+
+    <ul class="who-grid">
+      {audiences.map((a, i) => (
+        <li class={`card elevate reveal who-card`} style={`transition-delay:${i * 60}ms;`}>
+          <span class="num">{String(i + 1).padStart(2, '0')}</span>
+          <h3>{a.title}</h3>
+          <p>{a.blurb}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .who-grid {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+  }
+  .who-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .who-card .num {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    color: var(--blue-soft);
+    letter-spacing: 0.18em;
+    font-weight: 600;
+  }
+  .who-card h3 { color: var(--white); }
+  .who-card::before {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .35s var(--ease);
+  }
+  .who-card:hover::before { transform: scaleX(1); }
+</style>

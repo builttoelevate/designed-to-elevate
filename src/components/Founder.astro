@@ -1,0 +1,151 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+<section class="founder" id="founder">
+  <div class="container">
+    <div class="founder-grid">
+      <div class="founder-copy reveal">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The founder</span>
+        <h2>Built From the Bay,<br/>Not a Boardroom.</h2>
+
+        <p>
+          I started Fitchin Automotive Detailing &amp; Window Tinting from nothing.
+          In the beginning I was close to all of it — the work, the customers, the quotes, the messages.
+        </p>
+        <p>
+          Over time I trained the team to handle the install side and stepped out completely.
+          That freed me up to focus on what was actually keeping the business growing: the marketing.
+          The website. The service pages. The quote flow. The Google presence.
+          The way customers found us and trusted us before they ever called.
+        </p>
+        <p>
+          Designed to Elevate is the system I built for Fitchin, now offered to other service-business owners.
+          I’m not a marketer who learned from theory. I’m a service-business owner who had to figure marketing
+          out in the real world to keep my own shop growing.
+        </p>
+
+        <ul class="principles" role="list">
+          <li><span class="mark" aria-hidden="true"></span> Clear beats clever. Every time.</li>
+          <li><span class="mark" aria-hidden="true"></span> Pretty isn’t the point — clarity is.</li>
+          <li><span class="mark" aria-hidden="true"></span> Plain over polished. True over generic.</li>
+        </ul>
+      </div>
+
+      <aside class="founder-card reveal" aria-label="About the founder">
+        <div class="card-inner">
+          <div class="badge">
+            <img src={`${base}logo-mark.png`} alt="" width="64" height="64" />
+          </div>
+          <p class="quote">
+            “I’m not coming at this from theory. I’m coming at it from inside the kind of business I help.”
+          </p>
+          <div class="meta">
+            <div class="meta-row">
+              <span class="label">Based</span>
+              <span>Zanesville, Ohio</span>
+            </div>
+            <div class="meta-row">
+              <span class="label">Working</span>
+              <span>With service businesses anywhere</span>
+            </div>
+            <div class="meta-row">
+              <span class="label">Background</span>
+              <span>Founder of Fitchin Auto Detailing &amp; Window Tinting</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .founder-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .founder-copy h2 { margin: 18px 0 24px; }
+  .founder-copy p { color: var(--soft); max-width: 60ch; }
+  .principles {
+    list-style: none;
+    padding: 0;
+    margin: 28px 0 0;
+    display: grid;
+    gap: 12px;
+  }
+  .principles li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(17,21,30,0.6);
+    color: var(--white);
+    font-family: var(--font-display);
+    font-weight: 500;
+  }
+
+  .founder-card {
+    position: sticky;
+    top: 100px;
+  }
+  .card-inner {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    background: linear-gradient(180deg, var(--ink-2), var(--ink-3));
+    position: relative;
+    overflow: hidden;
+  }
+  .card-inner::after {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(30,72,255,0.18), transparent 70%);
+    pointer-events: none;
+  }
+  .badge {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 22px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .badge img { width: 64px; height: 64px; object-fit: contain; }
+  .quote {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    line-height: 1.4;
+    color: var(--white);
+    margin-bottom: 28px;
+  }
+  .meta { display: grid; gap: 14px; }
+  .meta-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  .meta-row:last-child { border-bottom: 0; padding-bottom: 0; }
+  .label {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mute);
+    align-self: center;
+  }
+
+  @media (max-width: 900px) {
+    .founder-grid { grid-template-columns: 1fr; }
+    .founder-card { position: static; }
+  }
+</style>

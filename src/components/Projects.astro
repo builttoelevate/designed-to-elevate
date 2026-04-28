@@ -1,0 +1,109 @@
+---
+const projects = [
+  {
+    name: 'Modern Classic',
+    label: 'Client project — Barbershop',
+    blurb: 'A clean, mobile-first barbershop website built around bookings, gallery, and clear service info. A simple page that does the heavy lifting while the chair stays full.',
+    points: ['Conversion-focused layout', 'Service & pricing clarity', 'Mobile-first booking path'],
+    href: 'https://builttoelevate.github.io/modern-classic/',
+  },
+  {
+    name: 'Fitchin — Auto Detailing',
+    label: 'Founder’s shop — System in action',
+    blurb: 'A service page from my own shop. Built for the way customers actually search — package details, what’s included, FAQs, and a quote path that doesn’t make them dig.',
+    points: ['Local-SEO structure', 'Service page that answers objections', 'Quote-first lead flow'],
+    href: 'https://fitchin-website.vercel.app/auto-detailing',
+  },
+];
+---
+<section class="projects" id="projects">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Projects</span>
+      <h2>Real, live work.</h2>
+      <p class="lede">
+        Two examples of the system in the wild — one for a client, one inside my own shop.
+        Both links go to the live sites.
+      </p>
+    </div>
+
+    <div class="projects-grid">
+      {projects.map((p, i) => (
+        <a href={p.href} target="_blank" rel="noopener" class="project-card card elevate reveal" style={`transition-delay:${i * 80}ms;`}>
+          <div class="head">
+            <span class="label">{p.label}</span>
+            <span class="ext" aria-hidden="true">↗</span>
+          </div>
+
+          <h3>{p.name}</h3>
+          <p>{p.blurb}</p>
+
+          <ul class="points" role="list">
+            {p.points.map((pt) => (
+              <li><span class="mark" aria-hidden="true"></span>{pt}</li>
+            ))}
+          </ul>
+
+          <div class="visit">
+            <span>Visit live site</span>
+            <span class="arrow">↗</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 22px;
+  }
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px;
+    color: inherit;
+  }
+  .project-card .head {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .project-card .label {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    color: var(--blue-soft);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .project-card .ext {
+    color: var(--mute);
+    font-size: 1.2rem;
+    transition: transform .25s var(--ease), color .25s var(--ease);
+  }
+  .project-card:hover .ext { color: var(--blue); transform: translate(3px, -3px); }
+  .project-card h3 { font-size: 1.6rem; margin-top: 4px; }
+  .points {
+    list-style: none;
+    padding: 0; margin: 8px 0 0;
+    display: grid; gap: 8px;
+  }
+  .points li {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--soft);
+    font-size: 0.95rem;
+  }
+  .visit {
+    margin-top: 16px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--white);
+  }
+  .visit .arrow { color: var(--blue); transition: transform .25s var(--ease); }
+  .project-card:hover .visit .arrow { transform: translate(4px, -4px); }
+</style>

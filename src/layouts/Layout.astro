@@ -1,0 +1,144 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  pathname?: string;
+}
+
+const {
+  title = 'Designed to Elevate — Marketing Built From the Bay',
+  description = 'A digital marketing studio for local service businesses. Websites, landing pages, local SEO, and lead systems built by a service-business owner. Based in Zanesville, Ohio. Available anywhere.',
+  pathname = '',
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL;
+const canonical = `https://builttoelevate.github.io${base.replace(/\/$/, '')}/${pathname}`.replace(/\/+$/, '/');
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0B0E14" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+  <link rel="apple-touch-icon" href={`${base}logo-mark.png`} />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={`https://builttoelevate.github.io${base}og-image.png`} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content="Designed to Elevate" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={`https://builttoelevate.github.io${base}og-image.png`} />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Designed to Elevate",
+    "description": description,
+    "url": "https://builttoelevate.github.io" + base,
+    "email": "bilsonxnc@gmail.com",
+    "telephone": "+1-740-617-6488",
+    "areaServed": "United States",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Zanesville",
+      "addressRegion": "OH",
+      "addressCountry": "US"
+    },
+    "logo": `https://builttoelevate.github.io${base}logo-wordmark.png`
+  })} />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <slot />
+
+  <script>
+    // Reveal-on-scroll with IntersectionObserver
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+    // Mobile nav toggle
+    const navToggle = document.querySelector('[data-nav-toggle]');
+    const navPanel = document.querySelector('[data-nav-panel]');
+    if (navToggle && navPanel) {
+      navToggle.addEventListener('click', () => {
+        const open = navPanel.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        document.body.classList.toggle('nav-open', open);
+      });
+      navPanel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        navPanel.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('nav-open');
+      }));
+    }
+
+    // Header scroll state
+    const header = document.querySelector('[data-header]');
+    if (header) {
+      const onScroll = () => {
+        if (window.scrollY > 12) header.classList.add('scrolled');
+        else header.classList.remove('scrolled');
+      };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+
+    // FAQ accordion
+    document.querySelectorAll('[data-faq-item]').forEach((item) => {
+      const btn = item.querySelector('[data-faq-toggle]');
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        const open = item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    });
+
+    // Contact form — graceful no-backend submit
+    const form = document.querySelector('[data-contact-form]');
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        const subject = encodeURIComponent('New project request — ' + (data.get('name') || ''));
+        const body = encodeURIComponent(
+          'Name: ' + (data.get('name') || '') + '\n' +
+          'Business: ' + (data.get('business') || '') + '\n' +
+          'Email: ' + (data.get('email') || '') + '\n' +
+          'Phone: ' + (data.get('phone') || '') + '\n' +
+          'Website: ' + (data.get('website') || '') + '\n' +
+          'Need: ' + (data.get('need') || '') + '\n\n' +
+          'Message:\n' + (data.get('message') || '')
+        );
+        window.location.href = 'mailto:bilsonxnc@gmail.com?subject=' + subject + '&body=' + body;
+        const status = form.querySelector('[data-form-status]');
+        if (status) status.textContent = "Opening your email app — if nothing happens, email bilsonxnc@gmail.com directly.";
+      });
+    }
+
+    // Year auto-fill
+    document.querySelectorAll('[data-year]').forEach(el => el.textContent = String(new Date().getFullYear()));
+  </script>
+</body>
+</html>

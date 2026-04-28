@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pathname: string;
+  effective?: string;
+  intro?: string;
+}
+
+const { title, description, pathname, effective = 'April 2026', intro } = Astro.props;
+---
+<Layout title={`${title} — Designed to Elevate`} description={description} pathname={pathname}>
+  <Header />
+  <main id="main" class="legal-page">
+    <div class="container container-narrow">
+      <header class="legal-head">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Legal</span>
+        <h1>{title}</h1>
+        <p class="meta">Effective: {effective}</p>
+        {intro && <p class="intro">{intro}</p>}
+        <div class="placeholder-banner" role="note">
+          <strong>Placeholder.</strong> This page exists so the link works and so the site meets payment-processor review requirements.
+          The founder will replace this with the final policy text.
+        </div>
+      </header>
+      <article class="legal-body">
+        <slot />
+      </article>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .legal-page { padding-top: 64px; padding-bottom: 96px; }
+  .legal-head { margin-bottom: 40px; }
+  .legal-head h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin: 16px 0 12px;
+  }
+  .meta { color: var(--mute); font-size: 0.9rem; margin-bottom: 18px; }
+  .intro { color: var(--soft); }
+  .placeholder-banner {
+    margin-top: 22px;
+    padding: 16px 20px;
+    border: 1px dashed var(--line-2);
+    border-radius: 12px;
+    background: rgba(30,72,255,0.06);
+    color: var(--soft);
+    font-size: 0.95rem;
+  }
+  .placeholder-banner strong { color: var(--blue-soft); }
+
+  .legal-body :global(h2) {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    margin: 36px 0 12px;
+    color: var(--white);
+  }
+  .legal-body :global(p) {
+    color: var(--soft);
+    margin: 0 0 14px;
+    line-height: 1.75;
+  }
+  .legal-body :global(ul) {
+    color: var(--soft);
+    padding-left: 22px;
+    margin: 0 0 18px;
+  }
+  .legal-body :global(li) { margin-bottom: 8px; }
+  .legal-body :global(a) { color: var(--blue-soft); }
+  .legal-body :global(a:hover) { color: var(--white); }
+</style>

@@ -1,0 +1,195 @@
+---
+const tiers = [
+  {
+    name: 'Foundation Build',
+    sub: 'One-time website project',
+    description: 'A complete site built from the ground up — for shops without one yet, or rebuilding from a template that isn’t pulling its weight.',
+    includes: [
+      'Up to 6 core pages (home, services, about, contact, etc.)',
+      'Full copywriting in your voice',
+      'Local SEO structure on every page',
+      'Quote / booking / contact path wired in',
+      'Mobile-first build, performance-tuned',
+      'Search Console + analytics setup',
+      'Two refinement rounds before launch',
+    ],
+    note: 'Project-based. Custom quote.',
+    cta: 'Request a Quote',
+    featured: false,
+  },
+  {
+    name: 'Launch Page',
+    sub: 'Landing page project',
+    description: 'A single high-intent page built around one service, one promo, or one ad campaign. Stripped of distractions and pointed at one outcome.',
+    includes: [
+      'One conversion-focused page',
+      'Headline, offer, copy, and proof structure',
+      'Built-in form or booking path',
+      'Local SEO + metadata',
+      'Mobile-first, fast-loading',
+      'Designed to plug into ads or organic traffic',
+    ],
+    note: 'Project-based. Custom quote.',
+    cta: 'Start a Page',
+    featured: false,
+  },
+  {
+    name: 'Elevate Monthly',
+    sub: 'Ongoing marketing support',
+    description: 'For shops that want a dedicated marketing partner without the agency markup. Continuous improvement to the site, SEO, and lead flow.',
+    includes: [
+      'Monthly site updates and improvements',
+      'New service / location page builds',
+      'On-page SEO refinement',
+      'Lead flow + form optimization',
+      'Performance and analytics review',
+      'Direct line for marketing questions',
+      'Quarterly strategy check-ins',
+    ],
+    note: 'Month-to-month. No long contracts.',
+    cta: 'Talk About a Plan',
+    featured: true,
+  },
+  {
+    name: 'Strategy Session',
+    sub: 'Marketing strategy consulting',
+    description: 'No build, no commitment — just a focused working session on your offer, site, and customer journey. Walk out with a clear plan.',
+    includes: [
+      'Pre-call audit of site, search presence, and offer',
+      '60–90 minute working session',
+      'Written summary with prioritized actions',
+      'Ad / page / SEO direction tailored to your shop',
+      'Optional follow-up sessions',
+    ],
+    note: 'Flat session fee. Quoted on request.',
+    cta: 'Book a Session',
+    featured: false,
+  },
+];
+---
+<section class="ways" id="ways">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Ways to work together</span>
+      <h2>Four ways in.</h2>
+      <p class="lede">
+        Whether you need a full build, a single high-intent page, ongoing support, or a strategy session —
+        there’s a clear way to start. Pricing is project-based and quoted to your shop.
+      </p>
+    </div>
+
+    <div class="ways-grid">
+      {tiers.map((t, i) => (
+        <article class={`way card reveal ${t.featured ? 'featured' : ''}`} style={`transition-delay:${i * 70}ms;`}>
+          {t.featured && <span class="ribbon">Most popular</span>}
+          <div class="way-head">
+            <span class="sub">{t.sub}</span>
+            <h3>{t.name}</h3>
+            <p class="desc">{t.description}</p>
+          </div>
+
+          <ul class="includes" role="list">
+            {t.includes.map((i) => (
+              <li>
+                <span class="check" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="14" height="14"><path d="M5 12l5 5 9-11" stroke="#1E48FF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span>{i}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div class="way-foot">
+            <span class="note">{t.note}</span>
+            <a href="#contact" class={`btn ${t.featured ? 'btn-primary' : 'btn-ghost'}`}>{t.cta} <span class="arrow" aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .ways-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
+  }
+  .way {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 32px;
+    position: relative;
+    transition: border-color .25s var(--ease), transform .25s var(--ease);
+  }
+  .way:hover { transform: translateY(-3px); border-color: rgba(30,72,255,0.4); }
+  .way.featured {
+    border-color: rgba(30, 72, 255, 0.6);
+    background:
+      linear-gradient(180deg, rgba(30,72,255,0.06), rgba(30,72,255,0.02)),
+      linear-gradient(180deg, var(--ink-2), var(--ink-3));
+    box-shadow: 0 24px 60px -30px var(--blue-glow);
+  }
+  .way .ribbon {
+    position: absolute;
+    top: 18px; right: 18px;
+    background: var(--blue);
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 999px;
+  }
+  .way-head .sub {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    color: var(--blue-soft);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .way-head h3 { margin-bottom: 12px; font-size: 1.5rem; }
+  .way-head .desc { color: var(--soft); font-size: 0.98rem; }
+
+  .includes {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: grid; gap: 10px;
+    flex: 1;
+  }
+  .includes li {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 10px;
+    color: var(--soft);
+    font-size: 0.94rem;
+    line-height: 1.5;
+    align-items: start;
+  }
+  .check {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 999px;
+    background: rgba(30, 72, 255, 0.1);
+    border: 1px solid rgba(30,72,255,0.25);
+    margin-top: 1px;
+  }
+
+  .way-foot {
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .way-foot .note {
+    font-size: 0.85rem;
+    color: var(--mute);
+  }
+  .way-foot .btn { justify-content: center; }
+</style>
