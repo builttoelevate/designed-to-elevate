@@ -1,12 +1,7 @@
 ---
-const base = import.meta.env.BASE_URL;
 ---
 <header class="site-header" data-header>
   <div class="container header-row">
-    <a href={base} class="brand" aria-label="Designed to Elevate — home">
-      <span class="brand-text">Designed to Elevate</span>
-    </a>
-
     <nav class="primary-nav" aria-label="Primary">
       <a href="#services">Services</a>
       <a href="#process">Process</a>
@@ -54,30 +49,15 @@ const base = import.meta.env.BASE_URL;
 
   .header-row {
     display: grid;
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
     gap: 24px;
     height: 76px;
   }
 
-  .brand {
-    display: inline-flex;
-    align-items: center;
-    color: var(--white);
-  }
-  .brand-text {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1.05rem;
-    letter-spacing: -0.01em;
-    color: var(--white);
-    white-space: nowrap;
-  }
-  .brand:hover .brand-text { color: var(--blue-soft); }
-
   .primary-nav {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 36px;
     font-family: var(--font-display);
     font-weight: 500;
@@ -147,6 +127,6 @@ const base = import.meta.env.BASE_URL;
     .primary-nav { display: none; }
     .header-cta { display: none; }
     .nav-toggle { display: flex; }
-    .header-row { grid-template-columns: 1fr auto; }
+    .header-row { grid-template-columns: 1fr auto; justify-items: end; }
   }
 </style>
