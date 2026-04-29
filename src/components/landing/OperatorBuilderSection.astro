@@ -1,0 +1,74 @@
+---
+const cols = [
+  {
+    icon: 'wrench',
+    title: 'Built from the inside, not sold from the outside.',
+    body: "Most agencies sell marketing they've never had to live with. We've spent years figuring out what actually drives calls, quotes, and bookings because we needed it to work in real local businesses first.",
+  },
+  {
+    icon: 'shield',
+    title: 'No agency fluff. No long contracts. No empty promises.',
+    body: "We've seen too many local businesses lose thousands to agencies selling theory. Everything we recommend is something we've tested in a working business. If it didn't move the needle, we won't sell it.",
+  },
+  {
+    icon: 'path',
+    title: 'One system, not five disconnected services.',
+    body: 'Your website, Google listing, quote form, ads, and SEO all need to work together. We build the full path from the moment someone Googles your service to the moment they\'re booked.',
+  },
+];
+---
+<!-- OPERATOR-BUILDER SECTION -->
+<section class="relative border-b border-line">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Why We're Different</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        Built Inside Real Local Businesses,<br class="hidden sm:block"/> Not an Agency Bubble.
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+        Designed to Elevate was built through hands-on work with real local shops, including a barbershop and an auto detail/tint business, where every website section, quote question, review, and CTA had to actually move the needle. Not in theory. In real revenue.
+      </p>
+    </div>
+
+    <div class="mt-14 grid md:grid-cols-3 gap-5">
+      {cols.map((c) => (
+        <div class="card p-7 flex flex-col gap-4">
+          <div class="h-11 w-11 rounded-lg bg-accent/15 text-accent grid place-items-center" aria-hidden="true">
+            {c.icon === 'wrench' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5z"/></svg>
+            )}
+            {c.icon === 'shield' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            )}
+            {c.icon === 'path' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h7a4 4 0 0 1 0 8H8a4 4 0 0 0 0 8h13"/><path d="m17 17 4 4-4 4"/></svg>
+            )}
+          </div>
+          <h3 class="font-display font-semibold text-[1.1rem] leading-snug text-text">{c.title}</h3>
+          <p class="text-[0.95rem] text-text-soft leading-relaxed">{c.body}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- Money line callout -->
+    <div class="mt-14 relative overflow-hidden card p-8 sm:p-12">
+      <div class="accent-glow absolute -top-32 -right-32 w-[420px] h-[420px]" aria-hidden="true"></div>
+      <div class="relative">
+        <div class="font-display text-[0.75rem] tracking-[0.22em] uppercase text-accent">The Money Line</div>
+        <p class="mt-4 font-display font-semibold text-[1.7rem] sm:text-[2.4rem] leading-[1.15] tracking-tight text-text max-w-4xl">
+          We build the path from Google search to quote request to booked job.
+        </p>
+        <p class="mt-5 text-text-muted text-[0.95rem] max-w-2xl">
+          That's the whole pitch. Everything else is just the tools we use to make it happen.
+        </p>
+        <div class="mt-7">
+          <a href="#live-showcase" class="btn-ghost">
+            See What We Built for Our Own Shops
+            <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /OPERATOR-BUILDER SECTION -->

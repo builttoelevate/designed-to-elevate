@@ -1,0 +1,101 @@
+---
+const reviewItems = [
+  'Website conversion review',
+  'Google Business Profile review',
+  'Quote/contact form review',
+  'Service page review',
+  'Local SEO opportunity notes',
+  'Landing page/ad readiness review',
+  'Clear next-step recommendations',
+];
+---
+<!-- AUDIT OFFER FORM (the conversion section) -->
+<section id="audit-form" class="relative overflow-hidden bg-surface-1/60 border-y border-line">
+  <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+  <div class="accent-glow absolute -top-40 -left-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto max-w-6xl px-5 sm:px-8 py-24 sm:py-32">
+    <div class="grid lg:grid-cols-[1fr_1.05fr] gap-10 lg:gap-16">
+      <!-- Left: offer copy -->
+      <div>
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Free Audit</span>
+        <h2 class="mt-5 text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold">
+          Free Local <span class="text-accent">Growth Audit</span>
+        </h2>
+        <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-xl">
+          We'll review your website, Google presence, quote process, and lead path, then show you what's helping, what's hurting conversions, and what should be fixed first.
+        </p>
+
+        <div class="mt-8 rounded-xl border border-line bg-surface-2 p-6">
+          <div class="font-display font-semibold text-[0.8rem] uppercase tracking-[0.18em] text-accent mb-4">What you get</div>
+          <ul class="space-y-3">
+            {reviewItems.map((item) => (
+              <li class="flex items-start gap-3 text-[0.95rem] text-text">
+                <span class="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent text-bg text-[0.7rem] font-bold flex-shrink-0" aria-hidden="true">✓</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right: form -->
+      <div>
+        <form
+          data-audit-form
+          class="card p-6 sm:p-8 space-y-5"
+          novalidate
+        >
+          <div class="grid sm:grid-cols-2 gap-5">
+            <label class="block">
+              <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Name <span class="text-accent">*</span></span>
+              <input required name="name" type="text" autocomplete="name" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60" placeholder="Your name" />
+            </label>
+            <label class="block">
+              <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Business name <span class="text-accent">*</span></span>
+              <input required name="business" type="text" autocomplete="organization" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60" placeholder="Acme Auto Detail" />
+            </label>
+          </div>
+
+          <label class="block">
+            <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Website URL</span>
+            <input name="website" type="url" autocomplete="url" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60" placeholder="https://yourshop.com" />
+          </label>
+
+          <div class="grid sm:grid-cols-2 gap-5">
+            <label class="block">
+              <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Phone <span class="text-accent">*</span></span>
+              <input required name="phone" type="tel" autocomplete="tel" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60" placeholder="(555) 555-5555" />
+            </label>
+            <label class="block">
+              <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Email <span class="text-accent">*</span></span>
+              <input required name="email" type="email" autocomplete="email" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60" placeholder="you@yourshop.com" />
+            </label>
+          </div>
+
+          <label class="block">
+            <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">What's your biggest challenge right now?</span>
+            <textarea name="challenge" rows="4" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 resize-y" placeholder="Tell us where you're stuck — slow leads, weak Google ranking, quote process, etc."></textarea>
+          </label>
+
+          <button type="submit" class="btn-primary w-full !py-3.5">
+            Request My Free Audit
+            <span aria-hidden="true">↗</span>
+          </button>
+
+          <p
+            data-audit-status
+            class="hidden text-[0.92rem] text-accent font-display font-medium items-center gap-2"
+            role="status"
+            aria-live="polite"
+          ></p>
+
+          <p class="text-[0.78rem] text-text-muted leading-relaxed">
+            We respond within 24 hours. No spam, no list-selling, no long-form sales calls — just a real audit.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /AUDIT OFFER FORM -->

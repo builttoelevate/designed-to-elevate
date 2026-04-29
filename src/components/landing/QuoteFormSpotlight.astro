@@ -1,0 +1,116 @@
+---
+const features = [
+  { title: 'Package Pricing', body: 'Show tiered packages with clear differences instead of one boring "request a quote" button.' },
+  { title: 'Smart Add-Ons', body: 'Upsell ceramic coatings, premium tints, or extra services with a click — not a phone call.' },
+  { title: 'Instant Quote Logic', body: 'Customers get a real number on the spot, so they don\'t shop around while waiting.' },
+  { title: 'Lead Capture', body: 'Every step captures name, phone, and intent — so even half-finished quotes are leads.' },
+  { title: 'Booking Options', body: 'Let customers book the appointment right after the quote, before the moment passes.' },
+  { title: 'Custom-Built', body: 'Designed around your services, your packaging, and the questions your business actually needs to ask.' },
+];
+---
+<!-- QUOTE FORM SPOTLIGHT -->
+<section class="relative border-b border-line bg-surface-1/40">
+  <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-24 sm:py-32">
+    <div class="grid lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-16 items-start">
+      <div>
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Signature Tool</span>
+        <h2 class="mt-5 text-[2.1rem] sm:text-[2.9rem] leading-[1.05] font-bold">
+          Turn Your Quote Form Into a <span class="text-accent">Sales Tool</span>
+        </h2>
+        <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-2xl">
+          Most forms collect names and phone numbers. A custom quote tool can guide customers, calculate pricing, show service options, and help upsell higher-value packages.
+        </p>
+
+        <div class="mt-10 grid sm:grid-cols-2 gap-4">
+          {features.map((f) => (
+            <div class="rounded-xl border border-line bg-surface-2 p-5">
+              <div class="flex items-center gap-2.5 mb-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+                <h3 class="font-display font-semibold text-[1rem] text-text">{f.title}</h3>
+              </div>
+              <p class="text-[0.88rem] text-text-soft leading-relaxed">{f.body}</p>
+            </div>
+          ))}
+        </div>
+
+        <div class="mt-10">
+          <a href="#audit-form" class="btn-primary">
+            I Want a Quote Form Like This
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: quote wizard preview -->
+      <div class="relative" aria-hidden="true">
+        <div class="absolute -inset-2 bg-gradient-to-br from-accent/30 to-transparent rounded-2xl blur-2xl opacity-40" aria-hidden="true"></div>
+        <div class="relative card overflow-hidden">
+          <!-- Wizard header -->
+          <div class="px-5 py-4 border-b border-line bg-surface-2 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="h-7 w-7 rounded-md bg-accent grid place-items-center text-bg text-[0.7rem] font-display font-bold">DE</div>
+              <span class="font-display font-semibold text-[0.85rem]">Quote Wizard</span>
+            </div>
+            <span class="text-[0.7rem] tracking-[0.16em] uppercase text-text-muted">Step 3 of 5</span>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="h-1 bg-line">
+            <div class="h-full w-[60%] bg-accent"></div>
+          </div>
+
+          <div class="p-6 sm:p-8">
+            <div class="text-[0.78rem] uppercase tracking-[0.18em] text-accent font-display mb-2">Choose your package</div>
+            <h3 class="font-display font-semibold text-[1.3rem] text-text mb-5">Detail + Window Tint</h3>
+
+            <div class="space-y-3">
+              <label class="flex items-center justify-between p-4 rounded-lg border border-line bg-surface-2 cursor-pointer">
+                <div>
+                  <div class="font-display font-medium text-[0.95rem] text-text">Standard</div>
+                  <div class="text-[0.8rem] text-text-muted mt-0.5">Wash, vacuum, full interior wipe-down</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-display font-semibold text-[1rem] text-text">$149</div>
+                </div>
+              </label>
+
+              <label class="flex items-center justify-between p-4 rounded-lg border-2 border-accent bg-accent/10 ring-2 ring-accent/20 cursor-pointer">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-display font-medium text-[0.95rem] text-text">Premium</span>
+                    <span class="text-[0.6rem] uppercase tracking-[0.18em] text-accent font-semibold">Most Picked</span>
+                  </div>
+                  <div class="text-[0.8rem] text-text-soft mt-0.5">Standard + clay bar, sealant, leather treatment</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-display font-semibold text-[1rem] text-accent">$249</div>
+                </div>
+              </label>
+
+              <label class="flex items-center justify-between p-4 rounded-lg border border-line bg-surface-2 cursor-pointer">
+                <div>
+                  <div class="font-display font-medium text-[0.95rem] text-text">Signature</div>
+                  <div class="text-[0.8rem] text-text-muted mt-0.5">Premium + ceramic coat, headlight restore</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-display font-semibold text-[1rem] text-text">$399</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="mt-6 flex items-center justify-between">
+              <button class="text-[0.85rem] font-display text-text-muted">← Back</button>
+              <span class="btn-primary !py-2.5 !px-4 !text-[0.85rem]">Continue <span aria-hidden="true">→</span></span>
+            </div>
+          </div>
+        </div>
+        <p class="mt-4 text-center text-[0.7rem] uppercase tracking-[0.18em] text-text-muted/60">
+          Wizard preview · real Fitchin screenshots in Phase 2
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /QUOTE FORM SPOTLIGHT -->

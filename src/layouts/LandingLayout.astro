@@ -1,0 +1,97 @@
+---
+import '../styles/landing.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  pathname?: string;
+}
+
+const {
+  title = 'Designed to Elevate — Get More Local Leads From Your Website, Google Listing, and Quote Process',
+  description = 'Conversion-focused websites, Google Business Profile optimization, custom quote forms, Google Ads landing pages, and SEO for local service businesses. Built by an operator, not an agency.',
+  pathname = 'grow',
+} = Astro.props;
+
+const SITE_URL = 'https://designedtoelevate.co';
+const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
+---
+<!doctype html>
+<html lang="en" class="landing">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0E1014" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/logo-mark.png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={`${SITE_URL}/og-image.png`} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content="Designed to Elevate" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+  />
+</head>
+<body class="bg-bg text-text font-body antialiased">
+  <a class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-accent focus:text-bg" href="#audit-form">Skip to audit form</a>
+  <slot />
+
+  <script>
+    // Smooth-scroll for any in-page anchor link
+    document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href');
+        if (!id || id === '#') return;
+        const el = document.querySelector(id);
+        if (el) {
+          e.preventDefault();
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          history.replaceState(null, '', id);
+        }
+      });
+    });
+
+    // FAQ accordion (uses native <details>; this just enforces single-open behavior optionally — keep multi-open default)
+    document.querySelectorAll('[data-faq-item]').forEach((item) => {
+      // no-op for now; placeholder for future single-open behavior
+    });
+
+    /*
+     * PHASE 3 WIRING TARGET — Audit form submit handler
+     * The contact form submit handler intentionally short-circuits in Phase 1.
+     * In Phase 3 replace this with a real backend call (e.g., Vercel serverless
+     * function POST /api/audit, or a third-party form endpoint) and add Google
+     * Ads conversion tracking on success.
+     */
+    const form = document.querySelector<HTMLFormElement>('[data-audit-form]');
+    const status = document.querySelector<HTMLElement>('[data-audit-status]');
+    if (form && status) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Phase 1 placeholder: pretend-success, no network call.
+        form.querySelectorAll('input, textarea, button').forEach((el) => {
+          (el as HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement).disabled = true;
+        });
+        status.textContent = "Thanks! We'll be in touch within 24 hours.";
+        status.classList.remove('hidden');
+        status.classList.add('flex');
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+---
+const cards = [
+  {
+    headline: "Your website gets visitors, but the phone isn't ringing.",
+    body: "A nice-looking site doesn't matter if people leave without calling, booking, or requesting a quote. Most local websites act like a digital business card when they should be acting like a salesperson.",
+    linkText: 'Fix website conversion',
+    href: '#service-website',
+  },
+  {
+    headline: 'Your competitors keep showing up above you on Google.',
+    body: 'Local customers are searching for what you do every day. If your Google Business Profile, reviews, and website structure are weaker than the shop down the road, they\'re winning the click before you even have a chance.',
+    linkText: 'Improve Google visibility',
+    href: '#service-gbp',
+  },
+  {
+    headline: "You're spending money on ads that aren't bringing leads.",
+    body: 'The average Google Ads cost per lead is over $70 right now. When paid traffic lands on a weak page, that money burns fast. The ads aren\'t usually the problem. The page they point to is.',
+    linkText: 'Fix ad landing pages',
+    href: '#service-landing-pages',
+  },
+  {
+    headline: "Quoting takes too long, and you're losing jobs to whoever answers first.",
+    body: 'If customers have to wait for a callback, send a dozen texts, or guess what something costs, they move on. A custom quote tool can give them pricing, options, and add-ons instantly without you lifting a finger.',
+    linkText: 'Build a smarter quote form',
+    href: '#service-quote-forms',
+  },
+  {
+    headline: 'Customers keep choosing the cheapest option.',
+    body: "When your value isn't explained well, price wins by default. The right website copy, service packaging, and quote logic helps customers understand why your work is worth more before they ever call.",
+    linkText: 'Package your value better',
+    href: '#service-quote-forms',
+  },
+];
+---
+<!-- PAIN POINTS SECTION -->
+<section class="relative border-b border-line">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Sound Familiar</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        Sound Familiar?
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+        If any of these hit close to home, you're not alone. These are the exact problems we built Designed to Elevate to solve.
+      </p>
+    </div>
+
+    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {cards.map((c) => (
+        <a
+          href={c.href}
+          class="card card-hover group p-6 sm:p-7 flex flex-col gap-4"
+        >
+          <h3 class="text-[1.15rem] leading-[1.3] font-semibold text-text">
+            {c.headline}
+          </h3>
+          <p class="text-[0.95rem] text-text-soft leading-relaxed">{c.body}</p>
+          <span class="mt-auto inline-flex items-center gap-1.5 text-[0.85rem] font-display font-medium text-accent group-hover:translate-x-0.5 transition-transform">
+            {c.linkText}
+            <span aria-hidden="true">→</span>
+          </span>
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-14 max-w-3xl">
+      <p class="text-[1.05rem] sm:text-[1.15rem] leading-relaxed text-text">
+        We build the path from <span class="text-accent font-medium">Google search</span> to
+        <span class="text-accent font-medium">quote request</span> to
+        <span class="text-accent font-medium">booked job</span>. Every piece of what we do exists
+        to fix one of these problems.
+      </p>
+      <div class="mt-7">
+        <a href="#audit-form" class="btn-primary">
+          Get My Free Growth Audit
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /PAIN POINTS SECTION -->

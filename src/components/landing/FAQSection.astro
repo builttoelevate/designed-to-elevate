@@ -1,0 +1,48 @@
+---
+const faqs = [
+  {
+    q: 'Do I need a new website or can you improve my current one?',
+  },
+  {
+    q: 'Can you help my business show up higher on Google?',
+  },
+  {
+    q: 'Can you build a custom quote form for my business?',
+  },
+  {
+    q: 'Do you run Google Ads too?',
+  },
+  {
+    q: 'What makes Designed to Elevate different?',
+  },
+];
+---
+<!-- FAQ SECTION -->
+<section class="relative border-b border-line">
+  <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-28">
+    <div class="text-center">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> FAQ</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        Common Questions
+      </h2>
+    </div>
+
+    <div class="mt-12 space-y-3">
+      {faqs.map((f, i) => (
+        <details data-faq-item class="faq-item group card overflow-hidden">
+          <summary class="cursor-pointer flex items-center justify-between gap-4 p-5 sm:p-6">
+            <span class="font-display font-semibold text-[1rem] sm:text-[1.05rem] text-text">{f.q}</span>
+            <span class="flex-shrink-0 h-8 w-8 rounded-full border border-line bg-surface-2 grid place-items-center text-text-muted transition-transform duration-200 group-open:rotate-45 group-open:text-accent group-open:border-accent" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </span>
+          </summary>
+          <div class="px-5 sm:px-6 pb-6 -mt-1 text-[0.95rem] text-text-soft leading-relaxed">
+            <span class="inline-block px-1.5 py-0.5 rounded bg-accent/12 text-accent text-[0.6rem] uppercase tracking-[0.16em] mr-1.5 align-middle">Phase 2</span>
+            Answer placeholder for question {i + 1}. Final copy will be added in Phase 2 — keep it tight, specific, and avoid agency-speak.
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+<!-- /FAQ SECTION -->

@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import tailwindcss from '@tailwindcss/vite';
 
 // Production deployment on Vercel at designedtoelevate.co
 export default defineConfig({
@@ -8,4 +9,7 @@ export default defineConfig({
     assets: 'assets',
   },
   compressHTML: true,
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
