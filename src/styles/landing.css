@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0E1014;
+  --color-surface-1: #16191F;
+  --color-surface-2: #1E222B;
+  --color-surface-3: #262B36;
+  --color-line: #2A2F3A;
+  --color-line-2: #353B48;
+  --color-text: #F5F2EC;
+  --color-text-muted: #9AA0AA;
+  --color-text-soft: #C9CCD2;
+  --color-accent: #FF6B1A;
+  --color-accent-hover: #FF8038;
+  --color-accent-deep: #C44A0F;
+  --color-accent-tint: rgba(255, 107, 26, 0.12);
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 14px;
+  --radius-button: 10px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 12px 40px -16px rgba(0, 0, 0, 0.6);
+  --shadow-accent: 0 12px 36px -10px rgba(255, 107, 26, 0.5);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html.landing,
+html.landing body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.landing h1,
+.landing h2,
+.landing h3,
+.landing h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.landing .grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+.landing .accent-glow {
+  background: radial-gradient(circle at center, rgba(255, 107, 26, 0.22) 0%, transparent 60%);
+  filter: blur(20px);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.375rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  color: #0E1014;
+  background: var(--color-accent);
+  border-radius: var(--radius-button);
+  box-shadow: var(--shadow-accent);
+  transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+.btn-primary:focus-visible {
+  outline: 2px solid var(--color-accent-hover);
+  outline-offset: 3px;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.375rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-line-2);
+  border-radius: var(--radius-button);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.btn-ghost:hover {
+  border-color: var(--color-accent);
+  background: rgba(255, 107, 26, 0.06);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-line-2);
+  background: rgba(255, 107, 26, 0.06);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.eyebrow .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(255, 107, 26, 0.2);
+}
+
+.card {
+  border: 1px solid var(--color-line);
+  background: linear-gradient(180deg, var(--color-surface-1), var(--color-surface-2));
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.card-hover {
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.card-hover:hover {
+  border-color: var(--color-line-2);
+  transform: translateY(-2px);
+}
+
+.placeholder-block {
+  position: relative;
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(255, 107, 26, 0.05),
+    rgba(255, 107, 26, 0.05) 10px,
+    rgba(255, 107, 26, 0.02) 10px,
+    rgba(255, 107, 26, 0.02) 20px
+  );
+  border: 1px dashed var(--color-line-2);
+  border-radius: var(--radius-card);
+  color: var(--color-text-muted);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.faq-item summary {
+  list-style: none;
+}

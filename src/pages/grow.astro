@@ -1,0 +1,37 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import LandingHeader from '../components/landing/LandingHeader.astro';
+import HeroSection from '../components/landing/HeroSection.astro';
+import PainPointsSection from '../components/landing/PainPointsSection.astro';
+import GrowthSystemSection from '../components/landing/GrowthSystemSection.astro';
+import OperatorBuilderSection from '../components/landing/OperatorBuilderSection.astro';
+import CoreServicesSection from '../components/landing/CoreServicesSection.astro';
+import QuoteFormSpotlight from '../components/landing/QuoteFormSpotlight.astro';
+import LiveSiteShowcase from '../components/landing/LiveSiteShowcase.astro';
+import ProcessSection from '../components/landing/ProcessSection.astro';
+import AuditOfferForm from '../components/landing/AuditOfferForm.astro';
+import FAQSection from '../components/landing/FAQSection.astro';
+import FinalCTASection from '../components/landing/FinalCTASection.astro';
+import StickyMobileCTA from '../components/landing/StickyMobileCTA.astro';
+---
+<LandingLayout
+  title="Get More Local Leads — Designed to Elevate"
+  description="Designed to Elevate helps local service businesses turn online searches into calls, quote requests, and booked jobs with conversion-focused websites, GBP optimization, custom quote forms, ads landing pages, and SEO."
+  pathname="grow"
+>
+  <LandingHeader />
+  <main class="pb-24 md:pb-0">
+    <HeroSection />
+    <PainPointsSection />
+    <GrowthSystemSection />
+    <OperatorBuilderSection />
+    <CoreServicesSection />
+    <QuoteFormSpotlight />
+    <LiveSiteShowcase />
+    <ProcessSection />
+    <AuditOfferForm />
+    <FAQSection />
+    <FinalCTASection />
+  </main>
+  <StickyMobileCTA />
+</LandingLayout>
