@@ -43,71 +43,57 @@ const features = [
         </div>
       </div>
 
-      <!-- Right: quote wizard preview -->
+      <!-- Right: real Fitchin wizard screenshots, layered to tell the
+           guide → upsell → close story (Step 1 → upsell tiers → final quote) -->
       <div class="relative" aria-hidden="true">
-        <div class="absolute -inset-2 bg-gradient-to-br from-accent/30 to-transparent rounded-2xl blur-2xl opacity-40" aria-hidden="true"></div>
-        <div class="relative card overflow-hidden">
-          <!-- Wizard header -->
-          <div class="px-5 py-4 border-b border-line bg-surface-2 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <div class="h-7 w-7 rounded-md bg-accent grid place-items-center text-bg text-[0.7rem] font-display font-bold">DE</div>
-              <span class="font-display font-semibold text-[0.85rem]">Quote Wizard</span>
-            </div>
-            <span class="text-[0.7rem] tracking-[0.16em] uppercase text-text-muted">Step 3 of 5</span>
+        <div class="absolute -inset-4 bg-gradient-to-br from-accent/40 via-accent/10 to-transparent rounded-[2rem] blur-3xl opacity-50" aria-hidden="true"></div>
+
+        <div class="relative aspect-[5/6] sm:aspect-[5/5.5]">
+          <!-- Back card: Step 1 — service selection (the "guide" moment) -->
+          <div class="absolute top-0 left-0 w-[58%] rotate-[-4deg] origin-bottom-right rounded-[1.6rem] overflow-hidden border border-line shadow-2xl">
+            <img
+              src="/wizard/step-1-service.png"
+              alt=""
+              class="w-full h-auto block"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
 
-          <!-- Progress bar -->
-          <div class="h-1 bg-line">
-            <div class="h-full w-[60%] bg-accent"></div>
+          <!-- Front card: Step 3 — pick tint film (the upsell moment) -->
+          <div class="absolute top-[6%] right-0 w-[64%] rotate-[3deg] rounded-[1.6rem] overflow-hidden border border-accent/40 shadow-[0_30px_80px_-20px_rgba(255,107,26,0.45)]">
+            <img
+              src="/wizard/step-3-pick-film.png"
+              alt=""
+              class="w-full h-auto block"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
 
-          <div class="p-6 sm:p-8">
-            <div class="text-[0.78rem] uppercase tracking-[0.18em] text-accent font-display mb-2">Choose your package</div>
-            <h3 class="font-display font-semibold text-[1.3rem] text-text mb-5">Detail + Window Tint</h3>
+          <!-- Bottom card: final quote with $ total (the "close" moment) -->
+          <div class="absolute bottom-0 left-[6%] w-[60%] rotate-[-2deg] rounded-[1.6rem] overflow-hidden border border-line shadow-2xl">
+            <img
+              src="/wizard/step-6-final-quote.png"
+              alt=""
+              class="w-full h-auto block"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
 
-            <div class="space-y-3">
-              <label class="flex items-center justify-between p-4 rounded-lg border border-line bg-surface-2 cursor-pointer">
-                <div>
-                  <div class="font-display font-medium text-[0.95rem] text-text">Standard</div>
-                  <div class="text-[0.8rem] text-text-muted mt-0.5">Wash, vacuum, full interior wipe-down</div>
-                </div>
-                <div class="text-right">
-                  <div class="font-display font-semibold text-[1rem] text-text">$149</div>
-                </div>
-              </label>
-
-              <label class="flex items-center justify-between p-4 rounded-lg border-2 border-accent bg-accent/10 ring-2 ring-accent/20 cursor-pointer">
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-display font-medium text-[0.95rem] text-text">Premium</span>
-                    <span class="text-[0.6rem] uppercase tracking-[0.18em] text-accent font-semibold">Most Picked</span>
-                  </div>
-                  <div class="text-[0.8rem] text-text-soft mt-0.5">Standard + clay bar, sealant, leather treatment</div>
-                </div>
-                <div class="text-right">
-                  <div class="font-display font-semibold text-[1rem] text-accent">$249</div>
-                </div>
-              </label>
-
-              <label class="flex items-center justify-between p-4 rounded-lg border border-line bg-surface-2 cursor-pointer">
-                <div>
-                  <div class="font-display font-medium text-[0.95rem] text-text">Signature</div>
-                  <div class="text-[0.8rem] text-text-muted mt-0.5">Premium + ceramic coat, headlight restore</div>
-                </div>
-                <div class="text-right">
-                  <div class="font-display font-semibold text-[1rem] text-text">$399</div>
-                </div>
-              </label>
-            </div>
-
-            <div class="mt-6 flex items-center justify-between">
-              <button class="text-[0.85rem] font-display text-text-muted">← Back</button>
-              <span class="btn-primary !py-2.5 !px-4 !text-[0.85rem]">Continue <span aria-hidden="true">→</span></span>
+          <!-- Floating outcome chip -->
+          <div class="absolute bottom-[6%] right-[2%] card px-3.5 py-2.5 flex items-center gap-3 rotate-[3deg]">
+            <div class="h-8 w-8 rounded-full bg-accent grid place-items-center text-bg font-display font-bold text-[0.85rem]">$</div>
+            <div class="leading-tight">
+              <div class="font-display font-semibold text-[0.78rem] text-text">Quote: $674.10</div>
+              <div class="text-[0.65rem] text-text-muted">Booked online · just now</div>
             </div>
           </div>
         </div>
-        <p class="mt-4 text-center text-[0.7rem] uppercase tracking-[0.18em] text-text-muted/60">
-          Wizard preview · real Fitchin screenshots in Phase 2
+
+        <p class="mt-4 text-center text-[0.7rem] uppercase tracking-[0.18em] text-text-muted/70 not-sr-only" aria-hidden="true">
+          Real Fitchin wizard · live at fitchin-website.vercel.app
         </p>
       </div>
     </div>
