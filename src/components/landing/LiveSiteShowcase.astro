@@ -1,8 +1,7 @@
 ---
-// LIVE SITE SHOWCASE — content added in Phase 2
-// Phase 1 placeholder cards. The "Visit Live Site" links use the
-// three project URLs supplied by the user; the owner quotes,
-// screenshots, and 1-line summaries will be replaced in Phase 2.
+// LIVE SITE SHOWCASE
+// Screenshots are auto-generated via WordPress mShots from each project's
+// live URL. Owner quotes and 1-line summaries are still Phase 2 placeholders.
 const projects = [
   {
     name: 'Fitchin Auto Detailing & Window Tinting',
@@ -20,8 +19,11 @@ const projects = [
     industry: 'Local Transport',
   },
 ];
+
+const shotFor = (url: string) =>
+  `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=1200&h=900`;
 ---
-<!-- LIVE SITE SHOWCASE — content added in Phase 2 -->
+<!-- LIVE SITE SHOWCASE -->
 <section id="live-showcase" class="relative border-b border-line">
   <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
     <div class="max-w-3xl">
@@ -30,20 +32,34 @@ const projects = [
         See It Working in Real Local Businesses
       </h2>
       <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-        Three live projects built on the same system. Owner quotes, full screenshots, and the numbers behind each launch land in Phase 2.
+        Three live projects built on the same system. Owner quotes and the numbers behind each launch land in Phase 2.
       </p>
     </div>
 
     <div class="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
       {projects.map((p) => (
         <article class="card card-hover overflow-hidden flex flex-col">
-          <!-- Screenshot placeholder -->
-          <div class="placeholder-block aspect-[4/3] flex items-center justify-center text-center px-5">
-            <div>
-              <div class="text-[0.6rem] mb-1.5">Phase 2</div>
-              <div class="font-display text-[0.95rem] normal-case tracking-normal text-text-soft">Live screenshot →</div>
-            </div>
-          </div>
+          <!-- Live screenshot via mShots -->
+          <a
+            href={p.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="relative block aspect-[4/3] bg-surface-2 overflow-hidden border-b border-line group/shot"
+            aria-label={`Open ${p.name} in a new tab`}
+          >
+            <img
+              src={shotFor(p.url)}
+              alt={`${p.name} — live site preview`}
+              class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover/shot:scale-[1.02]"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+            <span class="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-bg/80 backdrop-blur px-2.5 py-1 text-[0.65rem] font-display tracking-wider uppercase text-text-soft border border-line">
+              <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+              Live
+            </span>
+          </a>
 
           <div class="p-6 flex-1 flex flex-col">
             <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">{p.industry}</div>
