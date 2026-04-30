@@ -1,23 +1,30 @@
 ---
 // LIVE SITE SHOWCASE — proof
-// Screenshots are auto-generated via WordPress mShots from each project's
-// live URL. Owner quotes and outcome numbers are intentionally omitted
-// until they can be added with a real human voice.
+// Two cards. Live screenshots auto-generated via WordPress mShots.
 const projects = [
   {
+    label: 'Auto Detail · Window Tint',
     name: 'Fitchin Auto Detailing & Window Tinting',
     url: 'https://fitchin-website.vercel.app',
-    industry: 'Auto Detail · Window Tint',
+    summary:
+      'A real local service business where the website, quote flow, and lead path were built around getting more calls, quote requests, and booked jobs.',
+    bullets: [
+      'Custom quote wizard that prices 378 vehicles by tier and package',
+      'Service packaging built around the real install workflow',
+      'Mobile-first quote flow designed for paid traffic',
+    ],
   },
   {
+    label: 'Barbershop',
     name: 'Modern Classic Barbershop',
     url: 'https://builttoelevate.github.io/modern-classic/',
-    industry: 'Barbershop',
-  },
-  {
-    name: 'All Transport Bus',
-    url: 'https://all-transport-bus.vercel.app',
-    industry: 'Local Transport',
+    summary:
+      'A premium local barbershop brand hub built around trust, clean service presentation, and easier booking.',
+    bullets: [
+      'Brand hub on Astro with Square handling bookings and Shopify handling product',
+      'Mobile-first homepage built around service clarity and booking flow',
+      'Premium positioning for a local grooming brand',
+    ],
   },
 ];
 
@@ -33,11 +40,11 @@ const shotFor = (url: string) =>
         See It Working in Real Local Businesses
       </h2>
       <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-        Three live projects built on the same system. Tap any one to open the live site.
+        Two live projects built on the same system. Tap either to open the live site.
       </p>
     </div>
 
-    <div class="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div class="mt-12 grid md:grid-cols-2 gap-6">
       {projects.map((p) => (
         <article class="card card-hover overflow-hidden flex flex-col">
           <a
@@ -61,11 +68,22 @@ const shotFor = (url: string) =>
             </span>
           </a>
 
-          <div class="p-6 flex-1 flex flex-col">
-            <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">{p.industry}</div>
-            <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text">{p.name}</h3>
+          <div class="p-7 flex-1 flex flex-col">
+            <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">{p.label}</div>
+            <h3 class="mt-2 font-display font-semibold text-[1.2rem] text-text leading-snug">{p.name}</h3>
 
-            <div class="mt-6 pt-5 border-t border-line">
+            <p class="mt-4 text-[0.95rem] text-text-soft leading-relaxed">{p.summary}</p>
+
+            <ul class="mt-5 space-y-2.5">
+              {p.bullets.map((b) => (
+                <li class="flex items-start gap-3 text-[0.9rem] text-text-soft leading-snug">
+                  <span class="mt-1.5 inline-block h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div class="mt-7 pt-5 border-t border-line">
               <a
                 href={p.url}
                 target="_blank"
