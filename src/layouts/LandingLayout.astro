@@ -128,15 +128,19 @@ const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        // Snapshot the form data BEFORE disabling controls — `disabled`
+        // inputs are excluded from FormData per spec, which would strip
+        // access_key and every other field from the payload.
+        const formData = new FormData(form);
+
         setDisabled(true);
         if (submitBtn) submitBtn.innerHTML = 'Sending…';
         showStatus('Sending your audit request…', false);
 
         try {
-          // Submit FormData as multipart/form-data — bit-for-bit identical to
-          // what the form's native action="..." method="POST" would send.
-          // Multi-value help[] checkboxes are preserved as repeated entries.
-          const formData = new FormData(form);
+          // multipart/form-data — bit-for-bit what a native HTML form POST
+          // would send. Multi-value help[] checkboxes preserved as repeats.
           const response = await fetch('https://api.web3forms.com/submit', {
             method: 'POST',
             headers: { Accept: 'application/json' },
