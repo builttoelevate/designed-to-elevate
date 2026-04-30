@@ -66,6 +66,43 @@ const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
       });
     });
 
+    // Sticky mobile CTA — show only when the hero CTA has scrolled out
+    // of view AND the audit form section is not yet visible. Keeps one
+    // major orange filled CTA on screen at a time.
+    const heroCta = document.querySelector<HTMLElement>('[data-hero-cta]');
+    const stickyCta = document.querySelector<HTMLElement>('[data-sticky-cta]');
+    const auditFormSection = document.querySelector<HTMLElement>('#audit-form');
+
+    if (heroCta && stickyCta) {
+      let heroVisible = true;
+      let formVisible = false;
+
+      const update = () => {
+        const show = !heroVisible && !formVisible;
+        stickyCta.classList.toggle('translate-y-full', !show);
+        stickyCta.classList.toggle('opacity-0', !show);
+        stickyCta.classList.toggle('pointer-events-none', !show);
+      };
+
+      new IntersectionObserver(
+        (entries) => {
+          heroVisible = entries[0].isIntersecting;
+          update();
+        },
+        { threshold: 0 }
+      ).observe(heroCta);
+
+      if (auditFormSection) {
+        new IntersectionObserver(
+          (entries) => {
+            formVisible = entries[0].isIntersecting;
+            update();
+          },
+          { threshold: 0.15 }
+        ).observe(auditFormSection);
+      }
+    }
+
     // Audit form: optimistic UI on submit. Replace with real backend
     // (POST /api/audit or third-party endpoint) + Google Ads conversion
     // tracking when the form is wired up for production traffic.

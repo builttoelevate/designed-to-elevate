@@ -1,8 +1,13 @@
 ---
 // StickyMobileCTA — bottom-of-screen CTA bar for mobile devices only.
+// Rendered hidden by default. The IntersectionObserver in LandingLayout
+// reveals it ONLY when the hero CTA has scrolled out of view AND the
+// audit form section is not yet in view. That keeps exactly one orange
+// filled CTA on screen at any time.
 ---
 <div
-  class="md:hidden fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/80 px-4 py-3 pb-[max(env(safe-area-inset-bottom),0.75rem)]"
+  data-sticky-cta
+  class="md:hidden fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/80 px-4 py-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] translate-y-full opacity-0 pointer-events-none transition-[transform,opacity] duration-300 ease-out"
   aria-label="Get free audit"
 >
   <a href="#audit-form" class="btn-primary w-full">
