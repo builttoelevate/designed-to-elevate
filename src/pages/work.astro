@@ -1,0 +1,234 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+---
+<LandingLayout
+  title="Our Work — Designed to Elevate"
+  description="Real systems built for local service businesses. A custom 378-vehicle quote wizard for an auto detail and tint shop, and a premium brand hub for a local barbershop."
+  pathname="work"
+>
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 pt-16 sm:pt-24 pb-16 sm:pb-20 text-center">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Our Work</span>
+        <h1 class="mt-6 text-[2.4rem] sm:text-[3.4rem] lg:text-[4rem] leading-[1.04] font-bold tracking-tight">
+          Real systems built for
+          <span class="text-accent">local service businesses</span>.
+        </h1>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Each project below was built to solve a specific lead, conversion, or sales problem. No template designs. No agency fluff.
+        </p>
+      </div>
+    </section>
+
+    <!-- PROJECT 1: FITCHIN -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="grid lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-16 items-start">
+          <!-- LEFT: copy -->
+          <div>
+            <span class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-2 px-3 py-1 font-display text-[0.7rem] uppercase tracking-[0.18em] text-accent">
+              Auto Detail · Window Tint
+            </span>
+            <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+              Fitchin Auto Detailing & Window Tinting
+            </h2>
+
+            <div class="mt-8 space-y-7">
+              <div>
+                <div class="font-display text-[0.78rem] uppercase tracking-[0.18em] text-accent">The Problem</div>
+                <p class="mt-3 text-text-soft text-[1rem] leading-relaxed">
+                  Quoting was manual, slow, and inconsistent. Customers would ask for prices, get a callback hours later, and book the cheaper shop in the meantime.
+                </p>
+              </div>
+
+              <div>
+                <div class="font-display text-[0.78rem] uppercase tracking-[0.18em] text-accent">What Was Built</div>
+                <p class="mt-3 text-text-soft text-[1rem] leading-relaxed">
+                  A custom 6-step quote wizard that prices 378 vehicles by service tier and package, captures leads at every step, upsells higher-value film options, and lets customers see real pricing in under 2 minutes.
+                </p>
+              </div>
+
+              <div>
+                <div class="font-display text-[0.78rem] uppercase tracking-[0.18em] text-accent">Why It Matters</div>
+                <p class="mt-3 text-text-soft text-[1rem] leading-relaxed">
+                  Quote response time dropped from hours to instant. Add-on attach rate went up by surfacing options during the quote, not after. Mobile-first flow built for paid traffic from Google Ads.
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-10 flex flex-wrap gap-3">
+              <a
+                href="https://fitchin-website.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-primary"
+              >
+                Visit Live Site
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a href="/grow#audit-form" class="btn-ghost">
+                Get a System Like This
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- RIGHT: stacked wizard screenshots -->
+          <div class="relative" aria-hidden="true">
+            <div class="absolute -inset-4 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
+
+            <div class="relative aspect-[5/6]">
+              <!-- Back: step 1 (service select) -->
+              <div class="absolute top-0 left-0 w-[58%] aspect-[10/13] rotate-[-4deg] origin-bottom-right rounded-[1.6rem] overflow-hidden border border-line shadow-2xl bg-surface-2">
+                <img
+                  src="/wizard/step-1-service.png"
+                  alt=""
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+
+              <!-- Front: step 3 (upsell tiers) -->
+              <div class="absolute top-[6%] right-0 w-[64%] aspect-[10/13] rotate-[3deg] rounded-[1.6rem] overflow-hidden border border-accent/40 shadow-[0_30px_80px_-20px_rgba(255,107,26,0.45)] bg-surface-2">
+                <img
+                  src="/wizard/step-3-pick-film.png"
+                  alt=""
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+
+              <!-- Bottom: final quote -->
+              <div class="absolute bottom-0 left-[6%] w-[60%] aspect-[10/13] rotate-[-2deg] rounded-[1.6rem] overflow-hidden border border-line shadow-2xl bg-surface-2">
+                <img
+                  src="/wizard/step-6-final-quote.png"
+                  alt=""
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+
+            <p class="mt-6 text-center text-[0.7rem] uppercase tracking-[0.18em] text-text-muted">
+              Real wizard · live at fitchin-website.vercel.app
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECT 2: MODERN CLASSIC -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="grid lg:grid-cols-[1fr_1.05fr] gap-12 lg:gap-16 items-start">
+          <!-- LEFT: image -->
+          <div class="relative order-2 lg:order-1" aria-hidden="true">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/25 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
+            <div class="relative mx-auto max-w-[340px] sm:max-w-[400px] aspect-[9/16] rounded-[1.6rem] overflow-hidden border border-line shadow-2xl bg-surface-2">
+              <img
+                src="/showcase/modern-classic-mobile.png"
+                alt="Modern Classic Barbershop — mobile site preview"
+                class="absolute inset-0 w-full h-full object-cover object-top"
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-bg/30 via-transparent to-transparent pointer-events-none"></div>
+              <span class="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-bg/80 backdrop-blur px-2.5 py-1 text-[0.65rem] font-display tracking-wider uppercase text-text-soft border border-line">
+                <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+                Live · Mobile
+              </span>
+            </div>
+          </div>
+
+          <!-- RIGHT: copy -->
+          <div class="order-1 lg:order-2">
+            <span class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-2 px-3 py-1 font-display text-[0.7rem] uppercase tracking-[0.18em] text-accent">
+              Barbershop
+            </span>
+            <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+              Modern Classic Barbershop
+            </h2>
+
+            <div class="mt-8 space-y-7">
+              <div>
+                <div class="font-display text-[0.78rem] uppercase tracking-[0.18em] text-accent">The Problem</div>
+                <p class="mt-3 text-text-soft text-[1rem] leading-relaxed">
+                  An old website that didn't match the brand quality of the in-shop experience. Inconsistent booking flow scattered between Square and Shopify.
+                </p>
+              </div>
+
+              <div>
+                <div class="font-display text-[0.78rem] uppercase tracking-[0.18em] text-accent">What Was Built</div>
+                <p class="mt-3 text-text-soft text-[1rem] leading-relaxed">
+                  A premium brand hub on Astro, with Square handling bookings and Shopify handling product. Clean mobile-first homepage built around service clarity and getting customers to book.
+                </p>
+              </div>
+
+              <div>
+                <div class="font-display text-[0.78rem] uppercase tracking-[0.18em] text-accent">Why It Matters</div>
+                <p class="mt-3 text-text-soft text-[1rem] leading-relaxed">
+                  The website now matches the premium in-shop experience. Service menu and booking path are unified into one clear flow.
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-10 flex flex-wrap gap-3">
+              <a
+                href="https://builttoelevate.github.io/modern-classic/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-primary"
+              >
+                Visit Live Site
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a href="/grow#audit-form" class="btn-ghost">
+                Get a System Like This
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Want results like these for <span class="text-accent">your shop</span>?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Start with a free Lead Leak Audit and we'll show you exactly where your current setup is leaving leads on the table.
+        </p>
+
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a href="/grow" class="btn-primary">
+            Get Free Audit
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="/pricing" class="btn-ghost">
+            View Pricing
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

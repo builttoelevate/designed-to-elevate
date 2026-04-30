@@ -1,0 +1,239 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+import GuaranteeSection from '../components/landing/GuaranteeSection.astro';
+import { foundingPackages } from '../data/founding-packages';
+
+const faqs = [
+  {
+    q: 'Do I need to sign a long contract?',
+    a: 'No. Foundation is a one-time project. Lead Engine and Custom Lead System include a monthly improvement support add-on, but it\'s month-to-month — no annual or multi-year commitment. Cancel any time with reasonable notice.',
+  },
+  {
+    q: 'How fast can this launch?',
+    a: 'Foundation: 7–14 days. Lead Engine: 14–21 days. Custom Lead System: 21–30 days. The clock starts after the free Lead Leak Audit and a brief kickoff. Faster turnarounds are possible — just ask.',
+  },
+  {
+    q: 'What happens to my rate after the founding period ends?',
+    a: 'Your founding rate is locked in for as long as you stay subscribed. When standard prices return — and standard rates roughly double — yours doesn\'t change.',
+  },
+  {
+    q: 'Do you run ads too?',
+    a: 'Lead Engine and Custom Lead System include the ad landing page and a strategy. Hands-on ad management itself is a separate add-on — we set it up only after we know the page is converting.',
+  },
+  {
+    q: 'What if I already have a website?',
+    a: 'Often the fastest win is fixing the homepage, service pages, quote form, or landing page before rebuilding everything. The free Lead Leak Audit will tell us which path will move the needle for your specific business.',
+  },
+  {
+    q: 'What kinds of businesses is this best for?',
+    a: 'Local service businesses doing roughly $200K+/year — auto detail shops, tint shops, barbershops, contractors, cleaners, landscapers, HVAC, roofing, pest control, and similar. Not for brand-new startups, e-commerce, or non-service businesses.',
+  },
+];
+---
+<LandingLayout
+  title="Pricing — Designed to Elevate"
+  description="Simple, founding-rate pricing for local service businesses. Three packages built around how local owners actually run their business. Founding pricing locked in for life."
+  pathname="pricing"
+>
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 pt-16 sm:pt-24 pb-14 sm:pb-20 text-center">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Pricing</span>
+        <h1 class="mt-6 text-[2.4rem] sm:text-[3.4rem] lg:text-[3.8rem] leading-[1.04] font-bold tracking-tight">
+          Simple Lead System Pricing for
+          <span class="text-accent">Local Service Businesses</span>.
+        </h1>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Founding pricing is available while we build our first public case studies. After 5 spots, prices return to standard rates.
+        </p>
+
+        <div class="mt-7 inline-flex items-center gap-3 rounded-full border border-accent/40 bg-accent/10 px-4 py-2 font-display text-[0.85rem] sm:text-[0.92rem] font-medium text-text">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="absolute inset-0 rounded-full bg-accent animate-ping opacity-60"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent"></span>
+          </span>
+          <span><span class="text-accent font-semibold">3 of 5</span> founding spots remaining</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING CARDS -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="grid md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
+          {foundingPackages.map((p) => (
+            <article
+              class:list={[
+                'relative card flex flex-col p-7 sm:p-8',
+                p.popular
+                  ? 'border-accent/60 lg:scale-[1.03] lg:-translate-y-1 shadow-[0_30px_60px_-20px_rgba(255,107,26,0.35)]'
+                  : '',
+              ]}
+            >
+              {p.popular && (
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 font-display text-[0.7rem] font-bold uppercase tracking-[0.16em] text-bg shadow-[0_8px_20px_-6px_rgba(255,107,26,0.6)]">
+                    <span aria-hidden="true">★</span> Most Popular
+                  </span>
+                </div>
+              )}
+
+              <div class="font-display font-semibold text-[1.4rem] text-text">{p.name}</div>
+              <p class="mt-2 text-[0.92rem] text-text-soft leading-relaxed min-h-[3.2rem]">{p.forWho}</p>
+
+              <div class="mt-6 pt-6 border-t border-line">
+                <div class="flex items-baseline flex-wrap gap-x-3 gap-y-1">
+                  <span class="font-display font-bold text-[2.4rem] sm:text-[2.6rem] leading-none text-text">
+                    {p.foundingPrice}
+                  </span>
+                  <span class="text-[0.9rem] text-text-soft">{p.foundingMeta}</span>
+                </div>
+                <div class="mt-2 flex items-center gap-2 text-[0.85rem]">
+                  <span class="text-text-muted line-through decoration-line-2">{p.futurePrice}</span>
+                  <span class="text-text-muted">future rate</span>
+                </div>
+                <div class="mt-3 inline-flex items-center gap-1.5 text-[0.78rem] font-display font-medium text-accent uppercase tracking-[0.14em]">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  Locked in for life
+                </div>
+                {p.paymentPlan && (
+                  <div class="mt-3 flex items-start gap-1.5 text-[0.8rem] text-text-soft leading-snug">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 text-accent flex-shrink-0" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                    <span><span class="text-text-muted">Payment plan:</span> {p.paymentPlan}.</span>
+                  </div>
+                )}
+              </div>
+
+              <ul class="mt-6 space-y-2.5 flex-1">
+                {p.includes.map((item) => (
+                  <li class="flex items-start gap-2.5 text-[0.9rem] text-text-soft leading-snug">
+                    <span class="mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div class="mt-6 pt-5 border-t border-line">
+                <div class="flex items-center gap-2 text-[0.82rem] text-text-muted mb-4">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>Delivery in {p.delivery}</span>
+                </div>
+                <a
+                  href="/grow#audit-form"
+                  class:list={[p.popular ? 'btn-primary w-full' : 'btn-ghost w-full']}
+                >
+                  Claim This Founding Spot
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY FOUNDING PRICING -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-3xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="card p-7 sm:p-9">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Why Founding Pricing</span>
+          <h2 class="mt-4 font-display font-semibold text-[1.6rem] sm:text-[2rem] leading-[1.15] text-text tracking-tight">
+            Why the pricing is lower right now.
+          </h2>
+          <p class="mt-4 text-[0.98rem] text-text-soft leading-relaxed">
+            We're opening 5 discounted Founding Client spots while Designed to Elevate builds more public case studies. In exchange for reduced launch pricing, Founding Clients agree to provide honest feedback, allow before-and-after screenshots where appropriate, and share a testimonial if they are happy with the work.
+          </p>
+          <p class="mt-4 text-[0.98rem] text-text-soft leading-relaxed">
+            Once these 5 spots are filled, pricing moves to standard rates.
+          </p>
+          <div class="mt-5 inline-flex items-center gap-2 text-[0.82rem] font-display font-medium text-accent uppercase tracking-[0.14em]">
+            <span class="relative flex h-2 w-2">
+              <span class="absolute inset-0 rounded-full bg-accent animate-ping opacity-60"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+            </span>
+            Current availability: 5 Founding Client spots open
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- $100 GUARANTEE (reused) -->
+    <GuaranteeSection />
+
+    <!-- PRICING FAQ -->
+    <section id="faq" class="relative border-b border-line">
+      <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-28">
+        <div>
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Pricing FAQ</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            Pricing & engagement questions.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-2xl">
+            Anything not covered? Call or text Bill at
+            <a href="tel:7406176488" class="text-accent font-medium underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors whitespace-nowrap">(740) 617-6488</a>.
+          </p>
+        </div>
+
+        <div class="mt-10 space-y-3">
+          {faqs.map((f) => (
+            <details class="faq-item card group p-0 overflow-hidden">
+              <summary class="cursor-pointer list-none flex items-start justify-between gap-4 px-6 py-5 sm:px-7 sm:py-6 select-none">
+                <span class="font-display font-semibold text-[1.02rem] sm:text-[1.08rem] text-text leading-snug">{f.q}</span>
+                <span class="mt-0.5 inline-flex h-7 w-7 items-center justify-center rounded-full border border-line text-text-soft group-hover:border-accent group-hover:text-accent transition-colors flex-shrink-0" aria-hidden="true">
+                  <svg class="faq-chevron transition-transform duration-200" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+              </summary>
+              <div class="px-6 pb-6 sm:px-7 sm:pb-7 -mt-1">
+                <p class="text-[0.95rem] text-text-soft leading-relaxed max-w-prose">{f.a}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -left-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Not sure which package fits?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] leading-relaxed max-w-2xl mx-auto">
+          Start with a free Lead Leak Audit. We'll review your website, Google presence, and quote flow, and recommend the right package based on what we actually find.
+        </p>
+
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a href="/grow#audit-form" class="btn-primary">
+            Start With a Free Lead Leak Audit
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="tel:7406176488" class="btn-ghost">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+            Call or Text Bill
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>
+
+<style>
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item[open] .faq-chevron { transform: rotate(180deg); }
+  .faq-item[open] { border-color: rgba(255, 107, 26, 0.4); }
+</style>
