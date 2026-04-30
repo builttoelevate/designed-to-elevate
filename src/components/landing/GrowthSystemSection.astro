@@ -1,8 +1,15 @@
 ---
 // GrowthSystemSection — the path from Google search to booked job.
-// Visual centerpiece is the customer-journey diagram (Get Found → Build
-// Trust → Quote Request → Booked Job). Diagram already conveys the four
-// stages with stronger visuals than parallel text cards would.
+// Desktop (≥768px): wide 4-card PNG diagram.
+// Mobile (<768px):  inline 2×2 card grid with stroked icons. Same four
+// stages, same labels, same brand language — just laid out for narrow
+// viewports so the labels stay readable.
+const steps = [
+  { num: 1, title: 'Get Found', icon: 'search' },
+  { num: 2, title: 'Build Trust', icon: 'browser' },
+  { num: 3, title: 'Quote Request', icon: 'doc-check' },
+  { num: 4, title: 'Booked Job', icon: 'cal-check' },
+];
 ---
 <!-- GROWTH SYSTEM / MONEY LINE -->
 <section class="relative border-b border-line bg-surface-1/40">
@@ -18,8 +25,62 @@
       <span class="text-accent">booked job</span>.
     </h2>
 
-    <!-- Customer-journey diagram — full-width responsive image -->
-    <div class="mt-14 sm:mt-16 mx-auto max-w-5xl">
+    <!-- Mobile (<md): 2×2 grid of icon cards, mirrors the desktop diagram. -->
+    <div
+      class="md:hidden mt-12 grid grid-cols-2 gap-x-3 gap-y-6 max-w-md mx-auto"
+      role="list"
+      aria-label="Customer journey: four stages from Google search to booked job."
+    >
+      {steps.map((s) => (
+        <div class="flex flex-col items-center" role="listitem">
+          <span class="font-display text-[0.68rem] tracking-[0.18em] uppercase text-text-muted mb-2">
+            Step {s.num}
+          </span>
+          <div class="relative w-full aspect-square rounded-2xl border border-accent/45 bg-surface-1 shadow-[0_0_28px_-8px_rgba(255,107,26,0.45)]">
+            <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/10 via-transparent to-transparent pointer-events-none" aria-hidden="true"></div>
+            <div class="relative h-full w-full grid place-items-center text-accent">
+              {s.icon === 'search' && (
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+              )}
+              {s.icon === 'browser' && (
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="4" width="18" height="16" rx="2"/>
+                  <line x1="3" y1="9" x2="21" y2="9"/>
+                  <circle cx="6.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+                  <circle cx="9" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+                  <circle cx="11.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+                </svg>
+              )}
+              {s.icon === 'doc-check' && (
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <polyline points="9 15 11 17 15 13"/>
+                </svg>
+              )}
+              {s.icon === 'cal-check' && (
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="4" width="18" height="17" rx="2"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <polyline points="9 16 11 18 15 14"/>
+                </svg>
+              )}
+            </div>
+          </div>
+          <div class="mt-3 font-display font-semibold text-[0.98rem] text-text leading-tight">
+            {s.title}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Desktop (≥md): wide PNG diagram. -->
+    <div class="hidden md:block mt-14 sm:mt-16 mx-auto max-w-5xl">
       <img
         src="/customer-journey.png"
         alt="Customer journey diagram: Get Found, Build Trust, Quote Request, Booked Job — the four-stage path from Google search to a paying customer."
@@ -31,7 +92,7 @@
       />
     </div>
 
-    <p class="mt-8 sm:mt-10 mx-auto max-w-2xl text-text-soft text-[0.98rem] sm:text-[1.05rem] leading-relaxed">
+    <p class="mt-10 sm:mt-10 mx-auto max-w-2xl text-text-soft text-[0.98rem] sm:text-[1.05rem] leading-relaxed">
       Every page, form, and line of copy we build is designed to move a customer from one stage to the next.
     </p>
   </div>
