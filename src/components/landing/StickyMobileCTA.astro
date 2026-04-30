@@ -1,17 +1,23 @@
 ---
 // StickyMobileCTA — bottom-of-screen CTA bar for mobile devices only.
-// Rendered hidden by default. The IntersectionObserver in LandingLayout
-// reveals it ONLY when the hero CTA has scrolled out of view AND the
-// audit form section is not yet in view. That keeps exactly one orange
-// filled CTA on screen at any time.
+// Two equal-width buttons: Call (ghost) + Claim (primary). The
+// IntersectionObserver in LandingLayout reveals it ONLY when the hero
+// CTA has scrolled out of view AND the audit form section is not yet
+// in view — so we never compete with the in-page primary button.
 ---
 <div
   data-sticky-cta
-  class="md:hidden fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/80 px-4 py-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] translate-y-full opacity-0 pointer-events-none transition-[transform,opacity] duration-300 ease-out"
-  aria-label="Get free audit"
+  class="md:hidden fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/85 px-3 py-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] translate-y-full opacity-0 pointer-events-none transition-[transform,opacity] duration-300 ease-out"
+  aria-label="Founding 5 actions"
 >
-  <a href="#audit-form" class="btn-primary w-full">
-    Get My Free Growth Audit
-    <span aria-hidden="true">↗</span>
-  </a>
+  <div class="flex gap-2">
+    <a href="tel:7406176488" class="btn-ghost flex-1 !px-2 !text-[0.85rem]" aria-label="Call or text Bill at 740-617-6488">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+      Call/Text Bill
+    </a>
+    <a href="#audit-form" class="btn-primary flex-1 !px-2 !text-[0.85rem]">
+      Claim Founding Spot
+      <span aria-hidden="true">↗</span>
+    </a>
+  </div>
 </div>

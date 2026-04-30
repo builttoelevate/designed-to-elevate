@@ -1,0 +1,181 @@
+---
+const packages = [
+  {
+    name: 'Foundation',
+    forWho: 'A business that has something online but it isn\'t bringing in calls or quote requests.',
+    foundingPrice: '$1,495',
+    foundingMeta: 'one-time',
+    futurePrice: '$2,500',
+    delivery: '7–14 days',
+    includes: [
+      'Conversion-focused homepage or landing page improvement',
+      'Mobile-first layout with clear service sections',
+      'Call, text, and quote CTAs throughout',
+      'Basic local SEO structure',
+      'Google Business Profile review',
+      'Lead form improvement',
+    ],
+    popular: false,
+  },
+  {
+    name: 'Lead Engine',
+    forWho: 'A service business that wants the whole path improved — Google search to website visitor to quote request to booked job.',
+    foundingPrice: '$2,495',
+    foundingMeta: 'one-time + $245/mo',
+    futurePrice: '$4,500 + $500/mo',
+    paymentPlan: '$832/month for 3 months, then $245/month',
+    delivery: '14–21 days',
+    includes: [
+      'Everything in Foundation',
+      'Conversion-focused service pages',
+      'Custom quote/contact flow',
+      'Google Ads landing page',
+      'Local SEO content direction',
+      'Review and trust strategy',
+      'Monthly improvement support + performance check-ins',
+    ],
+    popular: true,
+  },
+  {
+    name: 'Custom Lead System',
+    forWho: 'A higher-ticket service business that wants a real custom system — not just a website.',
+    foundingPrice: '$4,495',
+    foundingMeta: 'one-time + $545/mo',
+    futurePrice: '$8,500 + $1,200/mo',
+    paymentPlan: '$1,498/month for 3 months, then $545/month',
+    delivery: '21–30 days',
+    includes: [
+      'Everything in Lead Engine',
+      'Custom quote wizard with tiered package logic',
+      'Upsell and add-on flow',
+      'Advanced lead capture',
+      'Multi-service quote paths',
+      'Booking and request strategy',
+      'Performance reviews',
+    ],
+    popular: false,
+  },
+];
+---
+<!-- FOUNDING PRICING SECTION -->
+<section id="founding-pricing" class="relative overflow-hidden border-b border-line bg-surface-1/40">
+  <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+  <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-24 sm:py-32">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Founding Pricing · Limited</span>
+      <h2 class="mt-5 text-[2.1rem] sm:text-[2.9rem] lg:text-[3.2rem] leading-[1.04] font-bold tracking-tight">
+        Founding Client Pricing —<br class="hidden sm:block"/> <span class="text-accent">Locked In For Life</span>
+      </h2>
+      <p class="mt-6 text-text-soft text-[1.05rem] leading-relaxed">
+        We're opening 5 spots at heavily discounted launch pricing. After 5, prices return to standard rates.
+        Founding clients lock in their rate for as long as they stay subscribed — even when standard rates double.
+      </p>
+
+      <!-- Spots remaining counter -->
+      <div class="mt-7 inline-flex items-center gap-3 rounded-full border border-accent/40 bg-accent/10 px-4 py-2 font-display text-[0.85rem] sm:text-[0.92rem] font-medium text-text">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="absolute inset-0 rounded-full bg-accent animate-ping opacity-60"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent"></span>
+        </span>
+        <span><span class="text-accent font-semibold">3 of 5</span> founding spots remaining</span>
+      </div>
+    </div>
+
+    <div class="mt-14 grid md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
+      {packages.map((p) => (
+        <article
+          class={`relative card flex flex-col p-7 sm:p-8 ${p.popular ? 'border-accent/60 lg:scale-[1.03] lg:-translate-y-1 shadow-[0_30px_60px_-20px_rgba(255,107,26,0.35)]' : ''}`}
+        >
+          {p.popular && (
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 font-display text-[0.7rem] font-bold uppercase tracking-[0.16em] text-bg shadow-[0_8px_20px_-6px_rgba(255,107,26,0.6)]">
+                <span aria-hidden="true">★</span> Most Popular
+              </span>
+            </div>
+          )}
+
+          <div class="font-display font-semibold text-[1.4rem] text-text">{p.name}</div>
+          <p class="mt-2 text-[0.92rem] text-text-soft leading-relaxed min-h-[3.2rem]">{p.forWho}</p>
+
+          <div class="mt-6 pt-6 border-t border-line">
+            <div class="flex items-baseline flex-wrap gap-x-3 gap-y-1">
+              <span class="font-display font-bold text-[2.4rem] sm:text-[2.6rem] leading-none text-text">{p.foundingPrice}</span>
+              <span class="text-[0.9rem] text-text-soft">{p.foundingMeta}</span>
+            </div>
+            <div class="mt-2 flex items-center gap-2 text-[0.85rem]">
+              <span class="text-text-muted line-through decoration-line-2">{p.futurePrice}</span>
+              <span class="text-text-muted">future rate</span>
+            </div>
+            <div class="mt-3 inline-flex items-center gap-1.5 text-[0.78rem] font-display font-medium text-accent uppercase tracking-[0.14em]">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Locked in for life
+            </div>
+            {p.paymentPlan && (
+              <div class="mt-3 flex items-start gap-1.5 text-[0.8rem] text-text-soft leading-snug">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 text-accent flex-shrink-0" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                <span><span class="text-text-muted">Payment plan:</span> {p.paymentPlan}.</span>
+              </div>
+            )}
+          </div>
+
+          <ul class="mt-6 space-y-2.5 flex-1">
+            {p.includes.map((item) => (
+              <li class="flex items-start gap-2.5 text-[0.9rem] text-text-soft leading-snug">
+                <span class="mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div class="mt-6 pt-5 border-t border-line">
+            <div class="flex items-center gap-2 text-[0.82rem] text-text-muted mb-4">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Delivery in {p.delivery}</span>
+            </div>
+            <a
+              href="#audit-form"
+              class={p.popular ? 'btn-primary w-full' : 'btn-ghost w-full'}
+            >
+              Claim This Founding Spot
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Why the Pricing Is Lower Right Now — explainer -->
+    <div class="mt-16 card p-7 sm:p-9 max-w-3xl mx-auto">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Transparency</span>
+      <h3 class="mt-4 font-display font-semibold text-[1.5rem] sm:text-[1.8rem] leading-[1.15] text-text tracking-tight">
+        Why the Pricing Is Lower Right Now
+      </h3>
+      <p class="mt-4 text-[0.98rem] text-text-soft leading-relaxed">
+        We're opening 5 discounted Founding Client spots while Designed to Elevate builds more public case studies. In exchange for reduced launch pricing, Founding Clients agree to provide honest feedback, allow before-and-after screenshots where appropriate, and share a testimonial if they are happy with the work.
+      </p>
+      <p class="mt-4 text-[0.98rem] text-text-soft leading-relaxed">
+        Once these 5 spots are filled, pricing moves to standard rates.
+      </p>
+      <div class="mt-5 inline-flex items-center gap-2 text-[0.82rem] font-display font-medium text-accent uppercase tracking-[0.14em]">
+        <span class="relative flex h-2 w-2">
+          <span class="absolute inset-0 rounded-full bg-accent animate-ping opacity-60"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+        </span>
+        Current availability: 5 Founding Client spots open
+      </div>
+    </div>
+
+    <p class="mt-12 text-center text-[0.95rem] text-text-soft">
+      Not sure which package fits?
+      <a href="#audit-form" class="text-accent font-medium underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">
+        Start with a free Lead Leak Audit
+      </a>
+      and we'll recommend the right one.
+    </p>
+  </div>
+</section>
+<!-- /FOUNDING PRICING SECTION -->

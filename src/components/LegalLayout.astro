@@ -1,7 +1,6 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from './Header.astro';
-import Footer from './Footer.astro';
+import LandingLayout from '../layouts/LandingLayout.astro';
+import LandingHeader from './landing/LandingHeader.astro';
 
 interface Props {
   title: string;
@@ -13,66 +12,89 @@ interface Props {
 
 const { title, description, pathname, effective = 'April 2026', intro } = Astro.props;
 ---
-<Layout title={`${title} — Designed to Elevate`} description={description} pathname={pathname}>
-  <Header />
-  <main id="main" class="legal-page">
-    <div class="container container-narrow">
-      <header class="legal-head">
+<LandingLayout title={`${title} — Designed to Elevate`} description={description} pathname={pathname}>
+  <LandingHeader />
+  <main>
+    <!-- Legal head -->
+    <section class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-3xl px-5 sm:px-8 pt-12 sm:pt-20 pb-12">
         <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Legal</span>
-        <h1>{title}</h1>
-        <p class="meta">Effective: {effective}</p>
-        {intro && <p class="intro">{intro}</p>}
-        <div class="placeholder-banner" role="note">
-          <strong>Placeholder.</strong> This page exists so the link works and so the site meets payment-processor review requirements.
-          The founder will replace this with the final policy text.
+        <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] leading-[1.04] font-bold tracking-tight">{title}</h1>
+        <p class="mt-3 text-text-muted text-[0.85rem] font-display tracking-wider uppercase">Effective: {effective}</p>
+        {intro && <p class="mt-6 text-text-soft text-[1.05rem] leading-relaxed max-w-2xl">{intro}</p>}
+
+        <div class="mt-7 rounded-xl border border-dashed border-accent/40 bg-accent/5 px-5 py-4 text-[0.92rem] text-text-soft leading-relaxed" role="note">
+          <strong class="text-accent font-display font-semibold">Placeholder.</strong>
+          This page exists so the link works and so the site meets payment-processor review requirements. The founder will replace this with the final policy text.
         </div>
-      </header>
-      <article class="legal-body">
+      </div>
+    </section>
+
+    <!-- Legal body -->
+    <section class="relative">
+      <div class="mx-auto max-w-3xl px-5 sm:px-8 py-14 sm:py-20 legal-body">
         <slot />
-      </article>
-    </div>
+      </div>
+    </section>
+
+    <!-- Slim footer -->
+    <footer class="border-t border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-10 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6">
+        <a href="/" class="flex items-center" aria-label="Designed to Elevate">
+          <img
+            src="/logo-wordmark-orange.png"
+            alt="Designed to Elevate"
+            width="320"
+            height="96"
+            class="h-9 w-auto"
+          />
+        </a>
+        <div class="text-[0.85rem] text-text-muted text-center sm:text-right">
+          <div>© 2026 Designed to Elevate. All rights reserved.</div>
+          <div class="mt-1 flex flex-wrap gap-4 justify-center sm:justify-end">
+            <a href="tel:7406176488" class="hover:text-accent transition-colors">(740) 617-6488</a>
+            <a href="/privacy" class="hover:text-text transition-colors">Privacy</a>
+            <a href="/terms" class="hover:text-text transition-colors">Terms</a>
+            <a href="/refund" class="hover:text-text transition-colors">Refund</a>
+          </div>
+        </div>
+      </div>
+    </footer>
   </main>
-  <Footer />
-</Layout>
+</LandingLayout>
 
 <style>
-  .legal-page { padding-top: 64px; padding-bottom: 96px; }
-  .legal-head { margin-bottom: 40px; }
-  .legal-head h1 {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 4vw, 3rem);
-    margin: 16px 0 12px;
-  }
-  .meta { color: var(--mute); font-size: 0.9rem; margin-bottom: 18px; }
-  .intro { color: var(--soft); }
-  .placeholder-banner {
-    margin-top: 22px;
-    padding: 16px 20px;
-    border: 1px dashed var(--line-2);
-    border-radius: 12px;
-    background: rgba(30,72,255,0.06);
-    color: var(--soft);
-    font-size: 0.95rem;
-  }
-  .placeholder-banner strong { color: var(--blue-soft); }
-
   .legal-body :global(h2) {
-    font-family: var(--font-display);
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
     font-size: 1.4rem;
-    margin: 36px 0 12px;
-    color: var(--white);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 40px 0 14px;
+    letter-spacing: -0.01em;
   }
+  .legal-body :global(h2:first-child) { margin-top: 0; }
   .legal-body :global(p) {
-    color: var(--soft);
+    color: var(--color-text-soft);
     margin: 0 0 14px;
-    line-height: 1.75;
+    line-height: 1.78;
   }
   .legal-body :global(ul) {
-    color: var(--soft);
+    color: var(--color-text-soft);
     padding-left: 22px;
     margin: 0 0 18px;
+    line-height: 1.78;
   }
   .legal-body :global(li) { margin-bottom: 8px; }
-  .legal-body :global(a) { color: var(--blue-soft); }
-  .legal-body :global(a:hover) { color: var(--white); }
+  .legal-body :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 107, 26, 0.4);
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.2s ease;
+  }
+  .legal-body :global(a:hover) { text-decoration-color: var(--color-accent); }
+  .legal-body :global(strong) { color: var(--color-text); font-weight: 600; }
 </style>
