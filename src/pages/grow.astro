@@ -5,12 +5,10 @@ import HeroSection from '../components/landing/HeroSection.astro';
 import PainPointsSection from '../components/landing/PainPointsSection.astro';
 import GrowthSystemSection from '../components/landing/GrowthSystemSection.astro';
 import OperatorBuilderSection from '../components/landing/OperatorBuilderSection.astro';
-import CoreServicesSection from '../components/landing/CoreServicesSection.astro';
 import QuoteFormSpotlight from '../components/landing/QuoteFormSpotlight.astro';
 import LiveSiteShowcase from '../components/landing/LiveSiteShowcase.astro';
 import ProcessSection from '../components/landing/ProcessSection.astro';
 import AuditOfferForm from '../components/landing/AuditOfferForm.astro';
-import FAQSection from '../components/landing/FAQSection.astro';
 import FinalCTASection from '../components/landing/FinalCTASection.astro';
 import StickyMobileCTA from '../components/landing/StickyMobileCTA.astro';
 ---
@@ -22,15 +20,16 @@ import StickyMobileCTA from '../components/landing/StickyMobileCTA.astro';
   <LandingHeader />
   <main class="pb-24 md:pb-0">
     <HeroSection />
+
+    {/* WHAT WE'LL REVIEW FOR YOU — section will be added next session */}
+
     <PainPointsSection />
-    <GrowthSystemSection />
     <OperatorBuilderSection />
-    <CoreServicesSection />
+    <GrowthSystemSection />
     <QuoteFormSpotlight />
     <LiveSiteShowcase />
     <ProcessSection />
     <AuditOfferForm />
-    <FAQSection />
     <FinalCTASection />
   </main>
   <StickyMobileCTA />
