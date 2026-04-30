@@ -1,26 +1,8 @@
 ---
-const steps = [
-  {
-    n: '01',
-    title: 'Get Found',
-    body: 'Google Business Profile, SEO, and ads help local customers discover you.',
-  },
-  {
-    n: '02',
-    title: 'Build Trust',
-    body: 'Reviews, service pages, photos, and clear messaging help them feel confident.',
-  },
-  {
-    n: '03',
-    title: 'Convert Visitor',
-    body: 'Strong CTAs, landing pages, and forms guide them toward action.',
-  },
-  {
-    n: '04',
-    title: 'Increase Lead Value',
-    body: 'Quote tools, packages, and add-ons help customers choose better options.',
-  },
-];
+// GrowthSystemSection — the path from Google search to booked job.
+// Visual centerpiece is the customer-journey diagram (Get Found → Build
+// Trust → Quote Request → Booked Job). Diagram already conveys the four
+// stages with stronger visuals than parallel text cards would.
 ---
 <!-- GROWTH SYSTEM / MONEY LINE -->
 <section class="relative border-b border-line bg-surface-1/40">
@@ -36,21 +18,22 @@ const steps = [
       <span class="text-accent">booked job</span>.
     </h2>
 
-    <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-3 relative">
-      <!-- connector line for large screens -->
-      <div class="hidden lg:block absolute top-9 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" aria-hidden="true"></div>
-
-      {steps.map((s) => (
-        <div class="relative card p-6 text-left">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="font-display text-[0.78rem] tracking-[0.2em] text-accent">{s.n}</span>
-            <span class="h-px flex-1 bg-line"></span>
-          </div>
-          <h3 class="font-display font-semibold text-[1.1rem] text-text mb-2">{s.title}</h3>
-          <p class="text-[0.92rem] text-text-soft leading-relaxed">{s.body}</p>
-        </div>
-      ))}
+    <!-- Customer-journey diagram — full-width responsive image -->
+    <div class="mt-14 sm:mt-16 mx-auto max-w-5xl">
+      <img
+        src="/customer-journey.png"
+        alt="Customer journey diagram: Get Found, Build Trust, Quote Request, Booked Job — the four-stage path from Google search to a paying customer."
+        width="1696"
+        height="624"
+        loading="lazy"
+        decoding="async"
+        class="w-full h-auto"
+      />
     </div>
+
+    <p class="mt-8 sm:mt-10 mx-auto max-w-2xl text-text-soft text-[0.98rem] sm:text-[1.05rem] leading-relaxed">
+      Every page, form, and line of copy we build is designed to move a customer from one stage to the next.
+    </p>
   </div>
 </section>
 <!-- /GROWTH SYSTEM -->
