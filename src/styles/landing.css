@@ -144,27 +144,3 @@ html.landing body {
   transform: translateY(-2px);
 }
 
-.placeholder-block {
-  position: relative;
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(255, 107, 26, 0.05),
-    rgba(255, 107, 26, 0.05) 10px,
-    rgba(255, 107, 26, 0.02) 10px,
-    rgba(255, 107, 26, 0.02) 20px
-  );
-  border: 1px dashed var(--color-line-2);
-  border-radius: var(--radius-card);
-  color: var(--color-text-muted);
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.faq-item summary::-webkit-details-marker {
-  display: none;
-}
-.faq-item summary {
-  list-style: none;
-}

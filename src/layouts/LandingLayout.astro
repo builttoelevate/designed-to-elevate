@@ -8,7 +8,7 @@ interface Props {
 }
 
 const {
-  title = 'Designed to Elevate — Get More Local Leads From Your Website, Google Listing, and Quote Process',
+  title = 'Designed to Elevate — Get More Local Leads From Your Website, Google Listing, and Quote System',
   description = 'Conversion-focused websites, Google Business Profile optimization, custom quote forms, Google Ads landing pages, and SEO for local service businesses. Built by an operator, not an agency.',
   pathname = 'grow',
 } = Astro.props;
@@ -66,24 +66,14 @@ const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
       });
     });
 
-    // FAQ accordion (uses native <details>; this just enforces single-open behavior optionally — keep multi-open default)
-    document.querySelectorAll('[data-faq-item]').forEach((item) => {
-      // no-op for now; placeholder for future single-open behavior
-    });
-
-    /*
-     * PHASE 3 WIRING TARGET — Audit form submit handler
-     * The contact form submit handler intentionally short-circuits in Phase 1.
-     * In Phase 3 replace this with a real backend call (e.g., Vercel serverless
-     * function POST /api/audit, or a third-party form endpoint) and add Google
-     * Ads conversion tracking on success.
-     */
+    // Audit form: optimistic UI on submit. Replace with real backend
+    // (POST /api/audit or third-party endpoint) + Google Ads conversion
+    // tracking when the form is wired up for production traffic.
     const form = document.querySelector<HTMLFormElement>('[data-audit-form]');
     const status = document.querySelector<HTMLElement>('[data-audit-status]');
     if (form && status) {
       form.addEventListener('submit', (e) => {
         e.preventDefault();
-        // Phase 1 placeholder: pretend-success, no network call.
         form.querySelectorAll('input, textarea, button').forEach((el) => {
           (el as HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement).disabled = true;
         });
