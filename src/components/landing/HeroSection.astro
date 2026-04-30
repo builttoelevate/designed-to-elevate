@@ -55,17 +55,22 @@ const miniBullets = [
         </ul>
       </div>
 
-      <!-- RIGHT: real Fitchin wizard screenshot (single, no synthetic mockups) -->
+      <!-- RIGHT: real Fitchin wizard screenshot — full upsell visible
+           (Carbon $300 → Nano Ceramic $400 → Ceramic IR $500). Wrapper
+           aspect matches the image exactly so nothing crops. Width capped
+           with max-w so the right column doesn't dominate the desktop hero. -->
       <div class="relative" aria-hidden="true">
-        <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60" aria-hidden="true"></div>
-        <div class="relative aspect-[5/6] sm:aspect-[10/11] rounded-[1.6rem] overflow-hidden border border-accent/40 shadow-[0_30px_80px_-20px_rgba(255,107,26,0.5)] bg-surface-2">
-          <img
-            src="/wizard/step-3-pick-film.png"
-            alt="Live screenshot of the Fitchin Tint & Detail quote wizard"
-            class="absolute inset-0 w-full h-full object-cover object-top"
-            loading="eager"
-            decoding="async"
-          />
+        <div class="relative mx-auto w-full max-w-[320px] sm:max-w-[340px]">
+          <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60" aria-hidden="true"></div>
+          <div class="relative aspect-[303/665] rounded-[1.6rem] overflow-hidden border border-accent/40 shadow-[0_30px_80px_-20px_rgba(255,107,26,0.5)] bg-surface-2 rotate-[-2deg]">
+            <img
+              src="/wizard/step-3-pick-film-full.png"
+              alt="Live screenshot of the Fitchin Tint & Detail quote wizard showing three tint film tiers"
+              class="absolute inset-0 w-full h-full object-cover"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
         </div>
       </div>
     </div>
