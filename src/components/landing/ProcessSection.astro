@@ -1,26 +1,34 @@
 ---
+// ProcessSection — How It Works (the agency's workflow).
+// Each step has a custom orange line illustration in /public/icons/
+// (apply / audit / build / launch). The illustrations are part of
+// the brand asset set and replace the prior generic Lucide SVGs.
 const steps = [
   {
     n: '01',
-    icon: 'hand',
+    icon: '/icons/apply.png',
+    iconAlt: '',
     title: 'Apply',
     body: 'Tell us about your business and pick the package that fits — or let us recommend the right one.',
   },
   {
     n: '02',
-    icon: 'eye',
+    icon: '/icons/audit.png',
+    iconAlt: '',
     title: 'Free Lead Leak Audit',
     body: 'We review your website, Google presence, quote flow, and lead path. You get a clear report whether you hire us or not.',
   },
   {
     n: '03',
-    icon: 'hammer',
+    icon: '/icons/build.png',
+    iconAlt: '',
     title: 'Build',
     body: "Once you're in as a founding client, we ship in 7–30 days depending on the package.",
   },
   {
     n: '04',
-    icon: 'rocket',
+    icon: '/icons/launch.png',
+    iconAlt: '',
     title: 'Launch & Improve',
     body: 'We launch, track performance, and keep optimizing the customer path.',
   },
@@ -41,22 +49,20 @@ const steps = [
 
     <ol class="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
       {steps.map((s) => (
-        <li class="card p-6 relative">
-          <div class="flex items-center justify-between mb-4">
-            <span class="font-display text-[0.78rem] tracking-[0.2em] text-accent">{s.n}</span>
-            <div class="h-9 w-9 rounded-lg bg-accent/15 text-accent grid place-items-center" aria-hidden="true">
-              {s.icon === 'hand' && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-1.5-5.5-4L4 16"/></svg>
-              )}
-              {s.icon === 'eye' && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-              )}
-              {s.icon === 'hammer' && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m15 12-8 8a2 2 0 0 1-3-3l8-8"/><path d="M17.6 6.4 22 2l-1.4 4.4-2.4 2.4-3-3z"/></svg>
-              )}
-              {s.icon === 'rocket' && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.7-.83.69-2.1-.05-2.85a2.07 2.07 0 0 0-2.95-.15z"/><path d="M9 12c-1-2 0-7 8-9 1 4-3 8-3 8"/><path d="M14 4c2 1 4 3 5 5"/><path d="m9 12 6 6"/></svg>
-              )}
+        <li class="card p-6 relative flex flex-col">
+          <div class="flex items-start justify-between mb-4">
+            <span class="font-display text-[0.78rem] tracking-[0.2em] text-accent pt-1">{s.n}</span>
+            <div class="h-16 w-16 sm:h-20 sm:w-20 rounded-xl bg-accent/10 border border-accent/30 grid place-items-center flex-shrink-0">
+              <img
+                src={s.icon}
+                alt={s.iconAlt}
+                width="1254"
+                height="1254"
+                loading="lazy"
+                decoding="async"
+                class="h-12 w-12 sm:h-14 sm:w-14 object-contain"
+                aria-hidden="true"
+              />
             </div>
           </div>
           <h3 class="font-display font-semibold text-[1.1rem] text-text mb-2">{s.title}</h3>

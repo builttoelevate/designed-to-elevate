@@ -33,17 +33,33 @@ const projects = [
 <!-- LIVE SITE SHOWCASE -->
 <section id="live-showcase" class="relative border-b border-line">
   <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
-    <div class="max-w-3xl">
-      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Proof</span>
-      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-        See It Working in Real Local Businesses
-      </h2>
-      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-        Two live projects built on the same system. Tap either to open the live site.
-      </p>
+    <div class="grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 items-center">
+      <div class="max-w-3xl">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Proof</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+          See It Working in Real Local Businesses
+        </h2>
+        <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+          Two live projects built on the same system — a barbershop and a tint/detail shop, both built around the path from Google search to booked job. Tap either card below to open the live site.
+        </p>
+      </div>
+
+      <!-- Hero phones — Fitchin + Modern Classic mockups -->
+      <div class="relative mx-auto w-full max-w-[360px] sm:max-w-[420px]">
+        <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60" aria-hidden="true"></div>
+        <img
+          src="/showcase-phones.png"
+          alt="Two phones side by side displaying the live Fitchin Tint & Detail and Modern Classic Barbershop websites."
+          width="768"
+          height="1381"
+          loading="lazy"
+          decoding="async"
+          class="relative w-full h-auto"
+        />
+      </div>
     </div>
 
-    <div class="mt-12 grid md:grid-cols-2 gap-6">
+    <div class="mt-14 sm:mt-16 grid md:grid-cols-2 gap-6">
       {projects.map((p) => (
         <article class="card card-hover overflow-hidden flex flex-col">
           <a
