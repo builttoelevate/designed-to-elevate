@@ -48,7 +48,7 @@ const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
   />
 </head>
 <body class="bg-bg text-text font-body antialiased">
-  <a class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-accent focus:text-bg" href="#audit-form">Skip to audit form</a>
+  <a class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-accent focus:text-bg" href="#apply">Skip to application form</a>
   <slot />
 
   <script>
@@ -67,11 +67,11 @@ const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
     });
 
     // Sticky mobile CTA — show only when the hero CTA has scrolled out
-    // of view AND the audit form section is not yet visible. Keeps one
+    // of view AND the apply form section is not yet visible. Keeps one
     // major orange filled CTA on screen at a time.
     const heroCta = document.querySelector<HTMLElement>('[data-hero-cta]');
     const stickyCta = document.querySelector<HTMLElement>('[data-sticky-cta]');
-    const auditFormSection = document.querySelector<HTMLElement>('#audit-form');
+    const applyFormSection = document.querySelector<HTMLElement>('#apply');
 
     if (heroCta && stickyCta) {
       let heroVisible = true;
@@ -92,14 +92,14 @@ const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
         { threshold: 0 }
       ).observe(heroCta);
 
-      if (auditFormSection) {
+      if (applyFormSection) {
         new IntersectionObserver(
           (entries) => {
             formVisible = entries[0].isIntersecting;
             update();
           },
           { threshold: 0.15 }
-        ).observe(auditFormSection);
+        ).observe(applyFormSection);
       }
     }
 

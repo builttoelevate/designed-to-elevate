@@ -1,0 +1,141 @@
+---
+const sprintIncludes = [
+  'Homepage and landing page CTA review',
+  'Contact/quote form cleanup',
+  'Google Business Profile review',
+  'Trust and review section recommendations',
+  'Tracking check',
+  'Service page recommendations',
+  'Written lead path report and priority fix list',
+  'Implementation of simple, high-impact fixes within the Sprint scope',
+];
+
+const wizardIncludes = [
+  'Custom quote or booking wizard built around your services',
+  'Tiered package logic, add-ons, and conditional questions',
+  'Lead capture at every step',
+  'Landing page wrapper designed around the wizard',
+  'Call and text CTAs throughout',
+  'Tracking setup',
+  'Thank-you and next-step flow',
+  'Hosting, technical upkeep, pricing-rule edits, and small improvements',
+];
+---
+<!-- OFFERS SECTION -->
+<section id="offers" class="relative overflow-hidden border-b border-line bg-surface-1/40">
+  <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+  <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-24 sm:py-32">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> How to Start</span>
+      <h2 class="mt-5 text-[2.1rem] sm:text-[2.9rem] lg:text-[3.2rem] leading-[1.04] font-bold tracking-tight">
+        Two Ways to <span class="text-accent">Work With Us</span>
+      </h2>
+    </div>
+
+    <div class="mt-14 grid lg:grid-cols-2 gap-5 lg:gap-6 items-stretch">
+      <!-- Offer 1: 14-Day Lead Path Sprint -->
+      <article class="card flex flex-col p-7 sm:p-8">
+        <div class="font-display text-[0.72rem] uppercase tracking-[0.2em] text-text-muted">Entry Offer</div>
+        <div class="mt-2 font-display font-semibold text-[1.55rem] text-text">14-Day Lead Path Sprint</div>
+        <p class="mt-2 text-[0.92rem] text-text-soft leading-relaxed">
+          For businesses that want the biggest lead leaks cleaned up before committing to a larger build.
+        </p>
+
+        <div class="mt-6 pt-6 border-t border-line">
+          <div class="flex items-baseline flex-wrap gap-x-3 gap-y-1">
+            <span class="font-display font-bold text-[2.4rem] sm:text-[2.6rem] leading-none text-text">$497</span>
+            <span class="text-[0.9rem] text-text-soft">founding</span>
+          </div>
+          <div class="mt-2 flex items-center gap-2 text-[0.85rem]">
+            <span class="text-text-muted line-through decoration-line-2">$797</span>
+            <span class="text-text-muted">standard</span>
+          </div>
+        </div>
+
+        <p class="mt-6 text-[0.95rem] text-text-soft leading-relaxed">
+          In 14 days we audit and fix the highest-impact gaps in your website, quote/contact path, and Google Business Profile — then hand you a written report of everything else worth fixing next.
+        </p>
+
+        <div class="mt-6 font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Includes</div>
+        <ul class="mt-3 space-y-2.5 flex-1">
+          {sprintIncludes.map((item) => (
+            <li class="flex items-start gap-2.5 text-[0.9rem] text-text-soft leading-snug">
+              <span class="mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p class="mt-6 text-[0.82rem] text-text-muted leading-relaxed">
+          <span class="text-text-soft font-medium">Does not include:</span> full website rebuild, custom wizard build, ongoing SEO, ad management, or unlimited revisions.
+        </p>
+
+        <div class="mt-6 pt-5 border-t border-line">
+          <a href="#apply" class="btn-ghost w-full">
+            Start My Sprint
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Offer 2: Custom Quote & Booking Wizard (MAIN OFFER) -->
+      <article class="relative card flex flex-col p-7 sm:p-8 border-accent/60 lg:scale-[1.02] lg:-translate-y-1 shadow-[0_30px_60px_-20px_rgba(255,107,26,0.35)]">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 font-display text-[0.7rem] font-bold uppercase tracking-[0.16em] text-bg shadow-[0_8px_20px_-6px_rgba(255,107,26,0.6)]">
+            <span aria-hidden="true">★</span> Main Offer
+          </span>
+        </div>
+
+        <div class="font-display text-[0.72rem] uppercase tracking-[0.2em] text-accent">Productized Build</div>
+        <div class="mt-2 font-display font-semibold text-[1.55rem] text-text">Custom Quote &amp; Booking Wizard</div>
+        <p class="mt-2 text-[0.92rem] text-text-soft leading-relaxed">
+          For service businesses ready to replace a basic contact form with a guided quote or booking flow built around how their business actually prices and books work.
+        </p>
+
+        <div class="mt-6 pt-6 border-t border-line">
+          <div class="flex items-baseline flex-wrap gap-x-3 gap-y-1">
+            <span class="font-display font-bold text-[2.4rem] sm:text-[2.6rem] leading-none text-text">$2,995</span>
+            <span class="text-[0.9rem] text-text-soft">setup + $147/mo founding</span>
+          </div>
+          <div class="mt-2 flex items-center gap-2 text-[0.85rem]">
+            <span class="text-text-muted line-through decoration-line-2">$3,995 setup + $197/mo</span>
+            <span class="text-text-muted">standard</span>
+          </div>
+        </div>
+
+        <div class="mt-6 font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Includes</div>
+        <ul class="mt-3 space-y-2.5 flex-1">
+          {wizardIncludes.map((item) => (
+            <li class="flex items-start gap-2.5 text-[0.9rem] text-text-soft leading-snug">
+              <span class="mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p class="mt-6 text-[0.82rem] text-text-muted leading-relaxed">
+          Monthly covers hosting, technical upkeep, pricing-rule edits, tracking checks, and small improvements to the wizard. It does not cover ad management, ongoing SEO campaigns, full website rebuilds, or major new feature builds — those are scoped separately if needed.
+        </p>
+
+        <div class="mt-5 inline-flex items-center gap-2 text-[0.82rem] text-text-soft">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="text-accent"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Delivery in 21–30 days from kickoff.</span>
+        </div>
+
+        <div class="mt-6 pt-5 border-t border-line">
+          <a href="#apply" class="btn-primary w-full">
+            Apply for a Wizard Build
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+<!-- /OFFERS SECTION -->

@@ -1,0 +1,60 @@
+---
+const cards = [
+  {
+    headline: 'Your quote form only collects names.',
+    body: "A basic contact form doesn't help the customer pick a service, understand packages, or take the next step.",
+  },
+  {
+    headline: 'Customers ask for prices, then disappear.',
+    body: "If quoting is slow, vague, or manual, they'll shop around before you ever reply.",
+  },
+  {
+    headline: 'People choose the cheapest option.',
+    body: 'Without clear packages and value framing, customers compare price instead of fit.',
+  },
+  {
+    headline: 'Paid traffic lands on a weak page.',
+    body: 'Sending Google Ads clicks to a generic homepage burns money before a visitor ever becomes a lead.',
+  },
+  {
+    headline: "The site doesn't guide the customer.",
+    body: "A real service page answers four things: what you do, who it's for, why trust you, and what to do next. Most don't.",
+  },
+];
+---
+<!-- PROBLEM SECTION -->
+<section id="problem" class="relative border-b border-line">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Real Bottleneck</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        Your Site Gets Visitors. Your Phone Doesn't Ring.
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+        Most service businesses don't have a traffic problem. They have a "what happens next" problem.
+      </p>
+      <p class="mt-4 text-text-soft text-[1.05rem] leading-relaxed">
+        A customer lands on the site. They scroll. They look at services. They want pricing. They find a contact form that asks for their name, email, and "how can we help?" — and they bounce. Off to the next shop on the list.
+      </p>
+    </div>
+
+    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {cards.map((c) => (
+        <div class="card p-6 sm:p-7 flex flex-col gap-4">
+          <h3 class="text-[1.15rem] leading-[1.3] font-semibold text-text">
+            {c.headline}
+          </h3>
+          <p class="text-[0.95rem] text-text-soft leading-relaxed">{c.body}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-14 max-w-3xl">
+      <p class="text-[1.05rem] sm:text-[1.15rem] leading-relaxed text-text">
+        The fix isn't a prettier homepage. It's replacing the dead-end contact form with
+        <span class="text-accent font-medium">a quote system that guides the sale</span>.
+      </p>
+    </div>
+  </div>
+</section>
+<!-- /PROBLEM SECTION -->

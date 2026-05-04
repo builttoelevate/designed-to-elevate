@@ -1,27 +1,28 @@
 ---
+// WizardSection — replaces QuoteFormSpotlight on the new /grow.
+// Reuses the three Fitchin wizard screenshots (step-1, step-3, step-6)
+// in the same layered triple-card layout from the prior page, plus the
+// "$674.10 — Quote requested" float chip referenced in the brief.
 const features = [
-  { title: 'Package Pricing', body: 'Show tiered packages with clear differences instead of one boring "request a quote" button.' },
-  { title: 'Smart Add-Ons', body: 'Upsell ceramic coatings, premium tints, or extra services with a click — not a phone call.' },
-  { title: 'Instant Quote Logic', body: 'Customers get a real number on the spot, so they don\'t shop around while waiting.' },
-  { title: 'Lead Capture', body: 'Every step captures name, phone, and intent — so even half-finished quotes are leads.' },
-  { title: 'Booking Options', body: 'Let customers book the appointment right after the quote, before the moment passes.' },
-  { title: 'Custom-Built', body: 'Designed around your services, your packaging, and the questions your business actually needs to ask.' },
+  { title: 'Guides the customer', body: 'Step-by-step questions tailored to your services. Customers feel helped, not interrogated.' },
+  { title: 'Shows real pricing', body: 'Tiered packages, add-ons, and conditional logic mean the customer sees a real number — not "we\'ll get back to you with a quote."' },
+  { title: 'Captures partial leads', body: 'The flow can capture contact info before the final step, so unfinished quotes still become follow-up opportunities.' },
+  { title: 'Anchors the value', body: 'Good/better/best presentation lets the customer compare your tiers against each other instead of against the cheapest shop in town.' },
+  { title: 'Sells the upgrades', body: "Add-ons appear in the flow at the moment they're easiest to say yes to — not after the fact." },
+  { title: 'Connects to the next step', body: 'Each quote ends with the action the customer is most likely to take — call, text, or quote request.' },
 ];
 ---
-<!-- QUOTE FORM SPOTLIGHT -->
-<section id="signature-quote" class="relative border-b border-line bg-surface-1/40">
+<!-- WIZARD SECTION -->
+<section id="wizard" class="relative border-b border-line bg-surface-1/40">
   <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
 
   <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-24 sm:py-32">
     <div class="grid lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-16 items-start">
       <div>
-        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Signature Tool</span>
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Wizard</span>
         <h2 class="mt-5 text-[2.1rem] sm:text-[2.9rem] leading-[1.05] font-bold">
-          Turn Your Quote Form Into a <span class="text-accent">Sales Tool</span>
+          What Changes When the Quote Form Becomes a <span class="text-accent">Sales Tool</span>
         </h2>
-        <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-2xl">
-          Most forms collect names and phone numbers. A custom quote tool can guide customers, calculate pricing, show service options, and help upsell higher-value packages.
-        </p>
 
         <div class="mt-10 grid sm:grid-cols-2 gap-4">
           {features.map((f) => (
@@ -36,19 +37,19 @@ const features = [
         </div>
 
         <div class="mt-10 flex flex-wrap gap-3">
-          <a href="#founding-pricing" class="btn-primary">
-            See Founding Pricing
-            <span aria-hidden="true">↓</span>
-          </a>
-          <a href="#audit-form" class="btn-ghost">
-            Free Lead Leak Audit
+          <a href="#apply" class="btn-primary">
+            Apply for a Wizard Build
             <span aria-hidden="true">↗</span>
+          </a>
+          <a href="#offers" class="btn-ghost">
+            See the Offers
+            <span aria-hidden="true">↓</span>
           </a>
         </div>
       </div>
 
       <!-- Right: real Fitchin wizard screenshots, layered to tell the
-           guide → upsell → close story (Step 1 → upsell tiers → final quote) -->
+           guide → upsell → close story (Step 1 → upsell tiers → final quote). -->
       <div class="relative" aria-hidden="true">
         <div class="absolute -inset-4 bg-gradient-to-br from-accent/40 via-accent/10 to-transparent rounded-[2rem] blur-3xl opacity-50" aria-hidden="true"></div>
 
@@ -91,16 +92,16 @@ const features = [
             <div class="h-8 w-8 rounded-full bg-accent grid place-items-center text-bg font-display font-bold text-[0.85rem]">$</div>
             <div class="leading-tight">
               <div class="font-display font-semibold text-[0.78rem] text-text">Quote: $674.10</div>
-              <div class="text-[0.65rem] text-text-muted">Booked online · just now</div>
+              <div class="text-[0.65rem] text-text-muted">Quote requested · just now</div>
             </div>
           </div>
         </div>
 
-        <p class="mt-4 text-center text-[0.7rem] uppercase tracking-[0.18em] text-text-muted/70 not-sr-only" aria-hidden="true">
-          Real Fitchin wizard · live at fitchin-website.vercel.app
+        <p class="mt-4 text-center text-[0.7rem] uppercase tracking-[0.18em] text-text-muted/70">
+          Real Fitchin wizard · live at fitchinautodetail.com
         </p>
       </div>
     </div>
   </div>
 </section>
-<!-- /QUOTE FORM SPOTLIGHT -->
+<!-- /WIZARD SECTION -->

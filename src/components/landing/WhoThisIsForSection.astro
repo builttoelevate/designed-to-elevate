@@ -1,0 +1,84 @@
+---
+const fitConditions = [
+  'Tiered packages (good/better/best, basic/premium/elite)',
+  'Add-ons or upsells (ceramic, extras, upgrades)',
+  'Pricing that varies by vehicle, square footage, room count, or job size',
+  'A quote process currently living in text threads or phone calls',
+  'Customers who ghost after asking "how much?"',
+];
+
+const verticals = [
+  'Auto detail',
+  'Ceramic coating',
+  'PPF',
+  'Mobile detailing',
+  'Barbershops',
+  'Cleaners',
+  'HVAC',
+  'Roofing',
+  'Pest control',
+  'Landscaping',
+  'Contractors',
+  'Fencing',
+  'Pressure washing',
+  'Mobile services',
+];
+---
+<!-- WHO THIS IS FOR SECTION -->
+<section id="who-its-for" class="relative border-b border-line bg-surface-1/40">
+  <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Right Fit</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        Built for Service Businesses With <span class="text-accent">Real Pricing Logic</span>
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+        If every job is different, your contact form shouldn't be generic. The Wizard is built for service businesses where pricing depends on packages, add-ons, job size, vehicle type, room count, square footage, or customer choices.
+      </p>
+    </div>
+
+    <div class="mt-12 grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-12 items-start">
+      <div class="card p-7 sm:p-8">
+        <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-5">
+          The Wizard fits if your service has any of these
+        </div>
+        <ul class="space-y-3">
+          {fitConditions.map((item) => (
+            <li class="flex items-start gap-3 text-[0.98rem] text-text leading-snug">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent text-bg flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-text-muted mb-4">
+          Common verticals
+        </div>
+        <ul class="flex flex-wrap gap-2">
+          {verticals.map((v) => (
+            <li class="inline-flex items-center rounded-full border border-line bg-surface-2 px-3.5 py-1.5 text-[0.85rem] text-text-soft font-display">
+              {v}
+            </li>
+          ))}
+        </ul>
+
+        <!-- Tint routing closing line -->
+        <div class="mt-8 flex items-start gap-3 rounded-xl border border-accent/30 bg-accent/5 px-5 py-4">
+          <span class="mt-0.5 inline-flex h-7 w-7 items-center justify-center rounded-full bg-accent text-bg flex-shrink-0" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </span>
+          <p class="text-[0.95rem] text-text-soft leading-relaxed">
+            <span class="text-text font-medium">Window tint shop?</span>
+            <a href="https://tintshoplaunch.com" target="_blank" rel="noopener noreferrer" class="text-accent font-medium underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">TintShopLaunch</a>
+            is the better fit — same wizard pattern, productized for tint pricing, lower setup.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /WHO THIS IS FOR SECTION -->

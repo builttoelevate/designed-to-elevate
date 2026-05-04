@@ -1,38 +1,66 @@
 ---
+// IMAGE INVENTORY (placement budget from prior /grow build):
+//
+// CURRENTLY PLACED:
+//   /wizard/step-3-pick-film-full.png   → HeroSection (right phone, full upsell visible)
+//   /customer-journey.png               → SystemSection (desktop diagram above stage cards)
+//   /showcase-phones.png                → ProofSection (intro phones)
+//   /showcase/fitchin-mobile.png        → ProofSection (Fitchin card)
+//   /showcase/modern-classic-mobile.png → ProofSection (Modern Classic card)
+//   /wizard/step-1-service.png          → WizardSection (back layered card)
+//   /wizard/step-3-pick-film.png        → WizardSection (front layered card)
+//   /wizard/step-6-final-quote.png      → WizardSection (bottom layered card)
+//   /icons/apply.png                    → ProcessSection step 01 — Apply
+//   /icons/audit.png                    → ProcessSection step 02 — Scope Call
+//   /icons/build.png                    → ProcessSection step 03 — Build
+//   /icons/launch.png                   → ProcessSection step 04 — Launch & Iterate
+//   /logo-wordmark-orange.png           → LandingHeader, FinalCTA footer
+//   /og-image.png                       → LandingLayout <head> og:image
+//
+// AVAILABLE BUT NOT REQUIRED BY THE NEW COPY (already in /public, kept for future use):
+//   /wizard/step-2-tint.png, /wizard/step-4-addons.png, /wizard/step-5-summary.png
+//   /favicon.svg, /logo-mark.png, /logo-mono.png, /logo-wordmark.png
+//
+// NO IMAGES WERE DROPPED.
+
 import LandingLayout from '../layouts/LandingLayout.astro';
 import LandingHeader from '../components/landing/LandingHeader.astro';
 import HeroSection from '../components/landing/HeroSection.astro';
-import PainPointsSection from '../components/landing/PainPointsSection.astro';
-import GrowthSystemSection from '../components/landing/GrowthSystemSection.astro';
-import OperatorBuilderSection from '../components/landing/OperatorBuilderSection.astro';
-import LiveSiteShowcase from '../components/landing/LiveSiteShowcase.astro';
-import QuoteFormSpotlight from '../components/landing/QuoteFormSpotlight.astro';
-import FoundingPricingSection from '../components/landing/FoundingPricingSection.astro';
+import ProblemSection from '../components/landing/ProblemSection.astro';
+import SystemSection from '../components/landing/SystemSection.astro';
+import WizardSection from '../components/landing/WizardSection.astro';
+import ProofSection from '../components/landing/ProofSection.astro';
+import OffersSection from '../components/landing/OffersSection.astro';
+import WhichOneFitsSection from '../components/landing/WhichOneFitsSection.astro';
+import WhoThisIsForSection from '../components/landing/WhoThisIsForSection.astro';
+import FoundingCapacitySection from '../components/landing/FoundingCapacitySection.astro';
+import AboutSection from '../components/landing/AboutSection.astro';
 import ProcessSection from '../components/landing/ProcessSection.astro';
-import GuaranteeSection from '../components/landing/GuaranteeSection.astro';
-import AuditOfferForm from '../components/landing/AuditOfferForm.astro';
 import FAQSection from '../components/landing/FAQSection.astro';
+import ApplyForm from '../components/landing/ApplyForm.astro';
 import FinalCTASection from '../components/landing/FinalCTASection.astro';
 import StickyMobileCTA from '../components/landing/StickyMobileCTA.astro';
 ---
 <LandingLayout
-  title="Founding 5 Pricing — Lead Systems for Local Service Businesses | Designed to Elevate"
-  description="We're opening 5 founding client spots at locked-in launch pricing. Get more calls, quote requests, and booked jobs from your website. Free Lead Leak Audit included."
+  title="Custom Quote & Booking Systems for Service Businesses | Designed to Elevate"
+  description="Replace your contact form with a custom quote and booking system. Built for local service businesses — auto detail, barbershops, contractors, HVAC, and more. Founding pricing open."
   pathname="grow"
 >
   <LandingHeader />
   <main class="pb-24 md:pb-0">
     <HeroSection />
-    <PainPointsSection />
-    <GrowthSystemSection />
-    <OperatorBuilderSection />
-    <LiveSiteShowcase />
-    <QuoteFormSpotlight />
-    <FoundingPricingSection />
+    <ProblemSection />
+    <SystemSection />
+    <WizardSection />
+    <ProofSection />
+    <OffersSection />
+    <WhichOneFitsSection />
+    <WhoThisIsForSection />
+    <FoundingCapacitySection />
+    <AboutSection />
     <ProcessSection />
-    <GuaranteeSection />
-    <AuditOfferForm />
     <FAQSection />
+    <ApplyForm />
     <FinalCTASection />
   </main>
   <StickyMobileCTA />

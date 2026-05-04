@@ -1,37 +1,40 @@
 ---
-// LIVE SITE SHOWCASE — proof
-// Two cards. Real mobile screenshots committed to /public/showcase.
+// ProofSection — replaces LiveSiteShowcase on the new /grow.
+// Reuses /showcase-phones.png (intro hero), /showcase/fitchin-mobile.png,
+// and /showcase/modern-classic-mobile.png from the prior page.
 const projects = [
   {
     label: 'Auto Detail · Window Tint',
-    name: 'Fitchin Auto Detailing & Window Tinting',
-    url: 'https://fitchin-website.vercel.app',
+    name: 'Fitchin Automotive Detailing & Window Tinting',
+    url: 'https://fitchinautodetail.com',
     image: '/showcase/fitchin-mobile.png',
     summary:
-      'A real local service business where the website, quote flow, and lead path were built around getting more calls, quote requests, and booked jobs.',
+      'Custom quote system built around vehicle type, tint coverage, package tiers, and add-on options.',
     bullets: [
-      'Custom quote wizard that prices 378 vehicles by tier and package',
-      'Service packaging built around the real install workflow',
-      'Mobile-first quote flow designed for paid traffic',
+      '378-vehicle pricing logic',
+      'Tiered package structure',
+      'Quote flow built around customer decisions',
+      'Designed for mobile traffic and paid ads',
     ],
   },
   {
     label: 'Barbershop',
-    name: 'Modern Classic Barbershop',
-    url: 'https://builttoelevate.github.io/modern-classic/',
+    name: 'Modern Classic Barbershop & Shave Parlor',
+    url: 'https://mdrnclassic.com',
     image: '/showcase/modern-classic-mobile.png',
     summary:
-      'A premium local barbershop brand hub built around trust, clean service presentation, and easier booking.',
+      'Booking-focused brand hub built around service clarity, trust, and an easier path to scheduling.',
     bullets: [
-      'Brand hub on Astro with Square handling bookings and Shopify handling product',
-      'Mobile-first homepage built around service clarity and booking flow',
-      'Premium positioning for a local grooming brand',
+      'Service-first page structure',
+      'Mobile booking path',
+      'Premium local brand presentation',
+      'Built around customer action, not appearance',
     ],
   },
 ];
 ---
-<!-- LIVE SITE SHOWCASE -->
-<section id="live-showcase" class="relative border-b border-line">
+<!-- PROOF SECTION -->
+<section id="proof" class="relative border-b border-line">
   <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
     <div class="grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 items-center">
       <div class="max-w-3xl">
@@ -40,7 +43,7 @@ const projects = [
           See It Working in Real Local Businesses
         </h2>
         <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-          Two live projects built on the same system — a barbershop and a tint/detail shop, both built around the path from Google search to booked job. Tap either card below to open the live site.
+          Two live projects built around the same principle: make the customer path clearer, easier, and more action-focused. Tap either to open the live site.
         </p>
       </div>
 
@@ -115,4 +118,4 @@ const projects = [
     </div>
   </div>
 </section>
-<!-- /LIVE SITE SHOWCASE -->
+<!-- /PROOF SECTION -->
