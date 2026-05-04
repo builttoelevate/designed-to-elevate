@@ -12,6 +12,16 @@ const applyingForOptions = [
   'Custom Quote & Booking Wizard ($2,995 + $147/mo founding)',
   'Not sure yet',
 ];
+
+const quoteVolumeOptions = ['0–10', '10–50', '50–200', '200+'];
+
+const heardOptions = [
+  'Google search',
+  'Google Ads',
+  'Referral from another shop owner',
+  'Social media',
+  'Other',
+];
 ---
 <!-- APPLY FORM SECTION -->
 <section id="apply" class="relative overflow-hidden bg-surface-1/60 border-y border-line">
@@ -54,10 +64,8 @@ const applyingForOptions = [
           class="card p-6 sm:p-8 space-y-5"
           novalidate
         >
-          <!-- Web3Forms wiring (public access key — designed to be client-side) -->
           <input type="hidden" name="access_key" value="1272e2dd-abff-4804-a541-beb2bd0be075" />
           <input type="hidden" name="subject" value="New Wizard Application — designedtoelevate.co" />
-          <!-- Honeypot for spam bots -->
           <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true" />
 
           <div class="grid sm:grid-cols-2 gap-5">
@@ -104,8 +112,24 @@ const applyingForOptions = [
           </label>
 
           <label class="block">
+            <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Roughly how many quote requests does your business get per month right now? <span class="text-accent">*</span></span>
+            <select required name="quote_volume" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 appearance-none bg-no-repeat bg-[right_0.85rem_center] bg-[length:1rem]" style="background-image: url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239AA0AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>&quot;); padding-right: 2.5rem;">
+              <option value="" disabled selected>Choose one…</option>
+              {quoteVolumeOptions.map((v) => <option value={v}>{v}</option>)}
+            </select>
+          </label>
+
+          <label class="block">
             <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">How do you currently quote and book work? <span class="text-accent">*</span></span>
             <textarea required name="how_quote" rows="4" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 resize-y" placeholder="A couple sentences is fine."></textarea>
+          </label>
+
+          <label class="block">
+            <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">How did you hear about us? <span class="text-text-muted">(Optional)</span></span>
+            <select name="how_heard" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 appearance-none bg-no-repeat bg-[right_0.85rem_center] bg-[length:1rem]" style="background-image: url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239AA0AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>&quot;); padding-right: 2.5rem;">
+              <option value="" selected>—</option>
+              {heardOptions.map((o) => <option value={o}>{o}</option>)}
+            </select>
           </label>
 
           <button type="submit" class="btn-primary w-full !py-3.5">

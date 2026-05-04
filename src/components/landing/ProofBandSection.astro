@@ -1,0 +1,36 @@
+---
+// ProofBandSection — thin horizontal proof band directly under the hero.
+// Visually distinct from the hero so the "live in production" status is
+// unmissable above the fold. No image — band is intentionally compact.
+---
+<!-- ABOVE-THE-FOLD PROOF BAND -->
+<section aria-label="Live product status" class="relative border-b border-line bg-accent/5">
+  <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" aria-hidden="true"></div>
+  <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" aria-hidden="true"></div>
+
+  <div class="relative mx-auto max-w-6xl px-5 sm:px-8 py-5 sm:py-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+    <div class="flex items-start sm:items-center gap-3 flex-1">
+      <span class="relative flex h-2.5 w-2.5 flex-shrink-0 mt-1.5 sm:mt-0" aria-hidden="true">
+        <span class="absolute inline-flex h-2.5 w-2.5 rounded-full bg-accent opacity-60 animate-ping"></span>
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent"></span>
+      </span>
+      <p class="text-[0.92rem] sm:text-[0.95rem] text-text leading-snug">
+        <span class="font-display font-semibold text-accent uppercase tracking-[0.14em] text-[0.7rem] sm:text-[0.72rem] mr-2">Currently running at</span>
+        <span class="font-medium">Fitchin Auto Detail &amp; Window Tinting</span>
+        <span class="text-text-soft"> — with the customer wizard, dashboard, lead tracking, scheduling, and follow-up flows live in production.</span>
+      </p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-2 sm:flex-shrink-0">
+      <a href="https://fitchinautodetail.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 font-display font-medium text-[0.85rem] text-accent hover:text-accent-hover transition-colors whitespace-nowrap">
+        Visit the live wizard
+        <span aria-hidden="true">→</span>
+      </a>
+      <a href="#system" class="inline-flex items-center gap-1.5 font-display font-medium text-[0.85rem] text-text-soft hover:text-accent transition-colors whitespace-nowrap">
+        See the system in action below
+        <span aria-hidden="true">↓</span>
+      </a>
+    </div>
+  </div>
+</section>
+<!-- /ABOVE-THE-FOLD PROOF BAND -->

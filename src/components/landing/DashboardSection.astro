@@ -1,0 +1,123 @@
+---
+// DashboardSection ("The Other Half") — 8-card grid covering everything
+// the owner gets after the lead arrives.
+// NOTE: The brief calls for a real Fitchin lead-inbox screenshot here
+// (dashboard-leads.png). That asset isn't yet in /public — when it
+// lands, drop it into the screenshot slot at the bottom of the section
+// and remove the placeholder block.
+const cards = [
+  {
+    icon: 'inbox',
+    title: 'Lead Inbox',
+    body: "Every quote, partial lead, and booking lands in one place. Filter by status (new · contacted · scheduled · completed). Open from your phone between jobs.",
+  },
+  {
+    icon: 'cal',
+    title: 'Calendar & Scheduling',
+    body: "See upcoming work at a glance. Block off shop hours. Mark blackout days. Customers self-book into the slots you've actually approved.",
+  },
+  {
+    icon: 'hard-hat',
+    title: 'Installer View',
+    body: 'Your tech logs in on their phone and sees only their assigned jobs for the day. Mark complete from the truck. No spreadsheet handoff.',
+  },
+  {
+    icon: 'chat',
+    title: 'Auto Text + Email',
+    body: "Customers get an automatic confirmation the second they submit. Booking confirmations, day-before reminders, and a post-job review request — all automatic. SMS is configured with proper customer consent language where required.",
+  },
+  {
+    icon: 'price-tag',
+    title: 'Pricing Controls',
+    body: 'Change a price in the dashboard and the wizard updates instantly. Add a service, package, or add-on without a dev call.',
+  },
+  {
+    icon: 'paint',
+    title: 'Your Brand, Not Ours',
+    body: 'Upload your logo, pick your brand color, set your shop info. The wizard, landing page, and customer emails all match your shop.',
+  },
+  {
+    icon: 'image',
+    title: 'Customer Photo Uploads',
+    body: 'Custom quote? Customers upload photos of the job (vehicle, room, exterior). Photos land on the lead so you can quote accurately the first time.',
+  },
+  {
+    icon: 'chart',
+    title: 'Performance View',
+    body: "See lead volume, lead status (new · contacted · scheduled · completed), service mix, and package selection — so you can see what's actually moving and what's stalling.",
+  },
+];
+---
+<!-- DASHBOARD / OTHER HALF SECTION -->
+<section id="dashboard" class="relative border-b border-line">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8 py-24 sm:py-32">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Other Half</span>
+      <h2 class="mt-5 text-[2.1rem] sm:text-[2.9rem] leading-[1.05] font-bold">
+        The Wizard Captures the Lead.<br class="hidden sm:block"/>
+        The <span class="text-accent">Dashboard</span> Helps Run the Job.
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+        The quote flow is the front door. The dashboard is what turns those leads into scheduled, completed work — without the owner living in their inbox.
+      </p>
+      <p class="mt-4 text-text-soft text-[1.05rem] leading-relaxed">
+        The dashboard below is built from the same core platform running at <span class="text-text font-medium">Fitchin Auto Detail &amp; Window Tinting</span> today. Every screenshot is from the actual install.
+      </p>
+    </div>
+
+    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {cards.map((c) => (
+        <div class="card p-6 flex flex-col gap-4">
+          <div class="h-11 w-11 rounded-lg bg-accent/15 text-accent grid place-items-center" aria-hidden="true">
+            {c.icon === 'inbox' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+            )}
+            {c.icon === 'cal' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+            )}
+            {c.icon === 'hard-hat' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h20"/><path d="M4 18a8 8 0 0 1 16 0"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/></svg>
+            )}
+            {c.icon === 'chat' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            )}
+            {c.icon === 'price-tag' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            )}
+            {c.icon === 'paint' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"/><circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"/><circle cx="8.5" cy="7.5" r="0.5" fill="currentColor"/><circle cx="6.5" cy="12.5" r="0.5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c3.31 0 6-2.69 6-6 0-5.52-4.48-10-10-10z"/></svg>
+            )}
+            {c.icon === 'image' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            )}
+            {c.icon === 'chart' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            )}
+          </div>
+          <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{c.title}</h3>
+          <p class="text-[0.92rem] text-text-soft leading-relaxed">{c.body}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- Lead-inbox screenshot placeholder.
+         When dashboard-leads.png is added to /public, replace this
+         placeholder with the actual <img>. -->
+    <div class="mt-14 relative card overflow-hidden p-8 sm:p-10 text-center">
+      <div class="accent-glow absolute -top-32 -left-32 w-[420px] h-[420px]" aria-hidden="true"></div>
+      <div class="relative">
+        <div class="font-display text-[0.7rem] uppercase tracking-[0.2em] text-accent">Lead Inbox · Live at Fitchin</div>
+        <p class="mt-4 max-w-2xl mx-auto text-text-soft text-[0.98rem] leading-relaxed">
+          Real production data. Filter by status, assign to a tech, mark complete from your phone between jobs.
+        </p>
+        <div class="mt-7">
+          <a href="#apply" class="btn-primary">
+            Apply for a Wizard Build
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /DASHBOARD SECTION -->
