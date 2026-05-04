@@ -1,50 +1,42 @@
 ---
-// ProcessSection — How It Works (the agency's workflow).
-// Each step has a custom orange line illustration in /public/icons/
-// (apply / audit / build / launch). The illustrations are part of
-// the brand asset set and replace the prior generic Lucide SVGs.
+// ProcessSection — How a Wizard Build Goes.
+// Reuses the four /icons/ illustrations (apply, audit, build, launch)
+// from the prior page; "audit" maps naturally to the Scope Call step.
 const steps = [
   {
     n: '01',
     icon: '/icons/apply.png',
-    iconAlt: '',
     title: 'Apply',
-    body: 'Tell us about your business and pick the package that fits — or let us recommend the right one.',
+    body: 'Tell us about your business, your services, and how you currently quote and book work.',
   },
   {
     n: '02',
     icon: '/icons/audit.png',
-    iconAlt: '',
-    title: 'Free Lead Leak Audit',
-    body: 'We review your website, Google presence, quote flow, and lead path. You get a clear report whether you hire us or not.',
+    title: 'Scope Call',
+    body: '30 minutes to walk through your pricing logic, packages, and the exact questions a customer should be asked.',
   },
   {
     n: '03',
     icon: '/icons/build.png',
-    iconAlt: '',
     title: 'Build',
-    body: "Once you're in as a founding client, we ship in 7–30 days depending on the package.",
+    body: '21–30 days to design, build, and wire up the wizard, landing page, tracking, and lead path.',
   },
   {
     n: '04',
     icon: '/icons/launch.png',
-    iconAlt: '',
-    title: 'Launch & Improve',
-    body: 'We launch, track performance, and keep optimizing the customer path.',
+    title: 'Launch & Iterate',
+    body: "We launch, watch the first quotes come through, and adjust pricing rules and copy based on what's converting.",
   },
 ];
 ---
-<!-- PROCESS / HOW IT WORKS -->
-<section class="relative border-b border-line">
+<!-- PROCESS SECTION -->
+<section id="process" class="relative border-b border-line">
   <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
     <div class="max-w-3xl">
       <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Process</span>
       <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-        How It Works
+        How a Wizard Build Goes
       </h2>
-      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-        Four steps from "I'm interested" to "the path is working."
-      </p>
     </div>
 
     <ol class="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -55,7 +47,7 @@ const steps = [
             <div class="h-16 w-16 sm:h-20 sm:w-20 rounded-xl bg-accent/10 border border-accent/30 grid place-items-center flex-shrink-0">
               <img
                 src={s.icon}
-                alt={s.iconAlt}
+                alt=""
                 width="1254"
                 height="1254"
                 loading="lazy"
@@ -72,8 +64,8 @@ const steps = [
     </ol>
 
     <div class="mt-12 flex flex-wrap gap-3">
-      <a href="#audit-form" class="btn-primary">
-        Claim My Founding 5 Spot
+      <a href="#apply" class="btn-primary">
+        Apply for a Wizard Build
         <span aria-hidden="true">↗</span>
       </a>
       <a href="tel:7406176488" class="btn-ghost">

@@ -1,27 +1,20 @@
 ---
-const reviewItems = [
-  'Website conversion review',
-  'Google Business Profile review',
-  'Quote/contact form review',
-  'Service page review',
-  'Local SEO opportunity notes',
-  'Landing page/ad readiness review',
-  'Clear next-step recommendations',
+const verticalOptions = [
+  'Auto detail / ceramic / PPF',
+  'Barbershop / personal services',
+  'HVAC / roofing / pest / home services',
+  'Contractors / landscaping / cleaning',
+  'Other',
 ];
 
-const helpOptions = [
-  'Website not bringing in leads',
-  "Not showing up high enough on Google",
-  'Need more quote requests',
-  "Ads aren't working",
-  'Need a better booking or quote flow',
-  'Getting too many cheap leads',
-  'Need help packaging services',
-  "Not sure what's wrong",
+const applyingForOptions = [
+  '14-Day Sprint ($497 founding)',
+  'Custom Quote & Booking Wizard ($2,995 + $147/mo founding)',
+  'Not sure yet',
 ];
 ---
-<!-- LEAD LEAK AUDIT FORM (the conversion section) -->
-<section id="audit-form" class="relative overflow-hidden bg-surface-1/60 border-y border-line">
+<!-- APPLY FORM SECTION -->
+<section id="apply" class="relative overflow-hidden bg-surface-1/60 border-y border-line">
   <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
   <div class="accent-glow absolute -top-40 -left-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
 
@@ -29,12 +22,12 @@ const helpOptions = [
     <div class="grid lg:grid-cols-[1fr_1.05fr] gap-10 lg:gap-16">
       <!-- Left: offer copy -->
       <div>
-        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Free Lead Leak Audit</span>
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Apply</span>
         <h2 class="mt-5 text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold">
-          Free <span class="text-accent">Lead Leak Audit</span>
+          Apply for a <span class="text-accent">Founding Wizard Build</span>
         </h2>
         <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-xl">
-          We'll review your website, Google presence, quote system, and lead path — then show you what's helping, what's hurting conversions, and what should be fixed first. Yours whether you become a founding client or not.
+          Tell us a bit about your business and how you currently quote and book work. We'll respond within 24 hours.
         </p>
 
         <!-- Phone-first option -->
@@ -50,18 +43,6 @@ const helpOptions = [
             </p>
           </div>
         </div>
-
-        <div class="mt-7 rounded-xl border border-line bg-surface-2 p-6">
-          <div class="font-display font-semibold text-[0.8rem] uppercase tracking-[0.18em] text-accent mb-4">What you get</div>
-          <ul class="space-y-3">
-            {reviewItems.map((item) => (
-              <li class="flex items-start gap-3 text-[0.95rem] text-text">
-                <span class="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent text-bg text-[0.7rem] font-bold flex-shrink-0" aria-hidden="true">✓</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
 
       <!-- Right: form -->
@@ -75,7 +56,7 @@ const helpOptions = [
         >
           <!-- Web3Forms wiring (public access key — designed to be client-side) -->
           <input type="hidden" name="access_key" value="1272e2dd-abff-4804-a541-beb2bd0be075" />
-          <input type="hidden" name="subject" value="New Founding 5 Lead — designedtoelevate.co" />
+          <input type="hidden" name="subject" value="New Wizard Application — designedtoelevate.co" />
           <!-- Honeypot for spam bots -->
           <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true" />
 
@@ -107,36 +88,28 @@ const helpOptions = [
           </div>
 
           <label class="block">
-            <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Which package interests you most? <span class="text-accent">*</span></span>
-            <select required name="package" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 appearance-none bg-no-repeat bg-[right_0.85rem_center] bg-[length:1rem]" style="background-image: url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239AA0AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>&quot;); padding-right: 2.5rem;">
+            <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">What kind of service business? <span class="text-accent">*</span></span>
+            <select required name="vertical" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 appearance-none bg-no-repeat bg-[right_0.85rem_center] bg-[length:1rem]" style="background-image: url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239AA0AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>&quot;); padding-right: 2.5rem;">
               <option value="" disabled selected>Choose one…</option>
-              <option value="audit-only">Just want the free Lead Leak Audit</option>
-              <option value="foundation">Foundation ($1,495)</option>
-              <option value="lead-engine">Lead Engine ($2,495 + $245/mo)</option>
-              <option value="custom">Custom Lead System ($4,495 + $545/mo)</option>
-              <option value="not-sure">Not sure yet</option>
+              {verticalOptions.map((v) => <option value={v}>{v}</option>)}
             </select>
           </label>
 
-          <fieldset>
-            <legend class="block font-display font-medium text-[0.82rem] text-text-soft mb-2.5">What do you need help with most? <span class="text-text-muted">(check all that apply)</span></legend>
-            <div class="grid sm:grid-cols-2 gap-2">
-              {helpOptions.map((opt) => (
-                <label class="flex items-start gap-2.5 rounded-md border border-line bg-surface-2 px-3 py-2.5 cursor-pointer hover:border-accent/50 transition-colors">
-                  <input type="checkbox" name="help[]" value={opt} class="mt-0.5 h-4 w-4 rounded border-line bg-surface-3 accent-accent flex-shrink-0" />
-                  <span class="text-[0.88rem] text-text leading-snug">{opt}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          <label class="block">
+            <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">What are you applying for? <span class="text-accent">*</span></span>
+            <select required name="applying_for" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 appearance-none bg-no-repeat bg-[right_0.85rem_center] bg-[length:1rem]" style="background-image: url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239AA0AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>&quot;); padding-right: 2.5rem;">
+              <option value="" disabled selected>Choose one…</option>
+              {applyingForOptions.map((o) => <option value={o}>{o}</option>)}
+            </select>
+          </label>
 
           <label class="block">
-            <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Anything else you want us to know? <span class="text-text-muted">(Optional)</span></span>
-            <textarea name="notes" rows="3" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 resize-y" placeholder="Anything specific about your situation, timeline, or goals."></textarea>
+            <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">How do you currently quote and book work? <span class="text-accent">*</span></span>
+            <textarea required name="how_quote" rows="4" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 resize-y" placeholder="A couple sentences is fine."></textarea>
           </label>
 
           <button type="submit" class="btn-primary w-full !py-3.5">
-            Claim My Founding 5 Spot
+            Apply Now
             <span aria-hidden="true">↗</span>
           </button>
 
@@ -148,11 +121,11 @@ const helpOptions = [
           ></p>
 
           <p class="text-[0.78rem] text-text-muted leading-relaxed">
-            Bill responds within 24 hours. No spam, no list-selling, no long-form sales calls — just a real audit and a real conversation.
+            Bill responds within 24 hours. No spam. No list-selling. Just a real conversation about whether this is a fit.
           </p>
         </form>
       </div>
     </div>
   </div>
 </section>
-<!-- /LEAD LEAK AUDIT FORM -->
+<!-- /APPLY FORM SECTION -->

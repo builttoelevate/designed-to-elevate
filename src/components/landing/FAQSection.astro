@@ -1,28 +1,37 @@
 ---
 const faqs = [
   {
-    q: "What's the catch with founding pricing?",
-    a: 'No catch. We\'re trading discounted rates for testimonials, case studies, and referrals — the things every new agency needs to grow. After 5 founding clients, prices return to standard rates.',
+    q: 'Is this just a website?',
+    a: 'No. The website or landing page is part of the system, but the main value is the quote or booking flow itself.',
   },
   {
-    q: 'What happens to my rate after the founding period ends?',
-    a: 'Founding clients keep their locked-in rate for as long as they stay subscribed. When prices go up, yours doesn\'t.',
+    q: 'Do I need a brand-new website?',
+    a: "Usually not. The wizard can be embedded into an existing site, or delivered with a focused landing page wrapper. If your full site needs rebuilt, that's scoped separately.",
   },
   {
-    q: 'Do I need a brand-new website, or can you improve what I have?',
-    a: 'Sometimes the fastest win is fixing the homepage, service pages, quote form, or landing page before rebuilding everything. The free Lead Leak Audit will tell us which.',
+    q: 'What happens to my founding rate after the 3 spots fill?',
+    a: "Founding clients keep their locked-in monthly rate for as long as they stay subscribed and the scope stays the same. When standard pricing goes up, your monthly rate stays the same.",
   },
   {
     q: 'Who is this for?',
-    a: 'Local service businesses doing $200K+/year — auto detail shops, tint shops, barbershops, contractors, cleaners, landscapers, HVAC, roofing, pest control, and similar. Not for brand-new startups, e-commerce, or non-service businesses.',
+    a: 'Local service businesses with real pricing logic — packages, add-ons, or job-size variables. Not for brand-new startups, e-commerce, or businesses without a clear service catalog.',
   },
   {
-    q: 'Do you run Google Ads for me too?',
-    a: 'Lead Engine and Custom Lead System include the landing page and strategy. Ad management itself is a separate add-on once we know the page is converting.',
+    q: 'I own a window tint shop. Should I be here or at TintShopLaunch?',
+    a: "TintShopLaunch. It's the same wizard pattern, productized for tint pricing, with lower setup. Designed to Elevate is for everything else.",
+    tintLink: true,
   },
   {
-    q: 'What makes this different from a regular agency?',
-    a: 'The system was built inside real local service businesses, not in an agency conference room. Everything I recommend has been tested where it had to actually work. If it didn\'t move the needle, I don\'t sell it.',
+    q: 'Do you run Google Ads or do SEO?',
+    a: 'The Wizard build includes the landing page and tracking — both designed to be ad-ready. Ad management itself is a separate engagement once we know the page is converting. Same for ongoing SEO.',
+  },
+  {
+    q: 'Why is there a monthly fee?',
+    a: 'It covers hosting, technical upkeep, small improvements, tracking checks, and pricing-rule edits. It keeps the system supported after launch.',
+  },
+  {
+    q: "What if I'm not ready for the full Wizard?",
+    a: 'Start with the 14-Day Sprint. Most clients use it to see what\'s broken and decide whether the Wizard is the right next step.',
   },
 ];
 ---
@@ -50,15 +59,23 @@ const faqs = [
             </span>
           </summary>
           <div class="px-6 pb-6 sm:px-7 sm:pb-7 -mt-1">
-            <p class="text-[0.95rem] text-text-soft leading-relaxed max-w-prose">{f.a}</p>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed max-w-prose">
+              {f.a}
+              {f.tintLink && (
+                <>
+                  {' '}
+                  <a href="https://tintshoplaunch.com" target="_blank" rel="noopener noreferrer" class="text-accent font-medium underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">Visit TintShopLaunch ↗</a>
+                </>
+              )}
+            </p>
           </div>
         </details>
       ))}
     </div>
 
     <div class="mt-12 flex flex-wrap gap-3">
-      <a href="#audit-form" class="btn-primary">
-        Claim My Founding 5 Spot
+      <a href="#apply" class="btn-primary">
+        Apply for a Wizard Build
         <span aria-hidden="true">↗</span>
       </a>
       <a href="tel:7406176488" class="btn-ghost">

@@ -1,9 +1,4 @@
 ---
-const miniBullets = [
-  'Websites That Convert',
-  'Quote Forms That Help Sell',
-  'Google Visibility That Grows',
-];
 ---
 <!-- HERO SECTION -->
 <section id="top" class="relative overflow-hidden border-b border-line">
@@ -14,64 +9,63 @@ const miniBullets = [
     <div class="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-center">
       <!-- LEFT: copy -->
       <div>
-        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Founding Client Offer · 5 Spots Remaining</span>
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Custom Quote &amp; Booking Systems for Service Businesses</span>
 
         <h1 class="mt-5 text-[2.4rem] sm:text-[3.1rem] lg:text-[3.6rem] leading-[1.02] font-bold text-text">
-          Get More Calls, Quote Requests, and
-          <span class="text-accent">Booked Jobs</span>
-          From Your Website
+          Replace Your Contact Form With a
+          <span class="text-accent">Quote System</span>
+          That Helps Sell the Job
         </h1>
 
         <p class="mt-6 max-w-[58ch] text-[1.05rem] sm:text-[1.12rem] leading-[1.6] text-text-soft">
-          Designed to Elevate helps local service businesses fix the online gaps that cost them leads.
-          We build the path from <span class="text-text font-medium">Google search</span> to
-          <span class="text-text font-medium">quote request</span> to
-          <span class="text-text font-medium">booked job</span> —
-          and we're opening 5 founding client spots at locked-in launch pricing.
+          We build custom quote and booking flows for local service businesses — with
+          <span class="text-text font-medium">package logic</span>,
+          <span class="text-text font-medium">add-ons</span>,
+          <span class="text-text font-medium">lead capture</span>, and a landing page
+          wrapped around the moment a customer is ready to act.
         </p>
 
         <div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-          <a href="#audit-form" data-hero-cta class="btn-primary">
-            Claim My Founding 5 Spot
+          <a href="#apply" data-hero-cta class="btn-primary">
+            Apply for a Wizard Build
             <span aria-hidden="true">↗</span>
           </a>
           <a
-            href="#founding-pricing"
+            href="#offers"
             class="hidden sm:inline-flex items-center gap-1.5 font-display font-medium text-[0.95rem] text-text-soft underline decoration-line-2 decoration-1 underline-offset-4 hover:text-accent hover:decoration-accent transition-colors"
           >
-            See the founding pricing
+            Start the 14-Day Sprint
             <span aria-hidden="true">↓</span>
           </a>
         </div>
 
-        <p class="mt-6 text-sm text-text-muted">
-          Built from real service business experience, not agency theory.
-        </p>
-
-        <ul class="mt-7 grid sm:grid-cols-3 gap-3 max-w-2xl">
-          {miniBullets.map((b) => (
-            <li class="flex items-center gap-2.5 text-[0.95rem] text-text-soft">
-              <span aria-hidden="true" class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent text-[0.7rem]">✓</span>
-              <span class="font-display font-medium">{b}</span>
-            </li>
-          ))}
-        </ul>
-
-        <!-- Fitchin proof line -->
+        <!-- Proof line -->
         <div class="mt-8 flex items-start gap-3 max-w-2xl rounded-xl border border-line bg-surface-1/60 px-4 py-3.5">
           <span class="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </span>
           <p class="text-[0.9rem] text-text-soft leading-snug">
-            Builder of the <span class="text-text font-medium">Fitchin quote wizard</span> — a custom 378-vehicle pricing system that turns Google searches into booked tint jobs.
+            Built around the same wizard pattern that powers
+            <span class="text-text font-medium">Fitchin Automotive Detailing &amp; Window Tinting's</span>
+            378-vehicle quote system.
+          </p>
+        </div>
+
+        <!-- Tint routing line -->
+        <div class="mt-4 flex items-start gap-3 max-w-2xl rounded-xl border border-accent/30 bg-accent/5 px-4 py-3.5">
+          <span class="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-accent text-bg flex-shrink-0" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </span>
+          <p class="text-[0.9rem] text-text-soft leading-snug">
+            <span class="text-text font-medium">Own a window tint shop?</span> Ask about
+            <a href="https://tintshoplaunch.com" target="_blank" rel="noopener noreferrer" class="text-accent font-medium underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">TintShopLaunch</a>
+            — our tint-specific quote system, purpose-built for your category.
           </p>
         </div>
       </div>
 
       <!-- RIGHT: real Fitchin wizard screenshot — full upsell visible
-           (Carbon $300 → Nano Ceramic $400 → Ceramic IR $500). Wrapper
-           aspect matches the image exactly so nothing crops. Width capped
-           with max-w so the right column doesn't dominate the desktop hero. -->
+           (Carbon $300 → Nano Ceramic $400 → Ceramic IR $500). -->
       <div class="relative" aria-hidden="true">
         <div class="relative mx-auto w-full max-w-[320px] sm:max-w-[340px]">
           <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60" aria-hidden="true"></div>
