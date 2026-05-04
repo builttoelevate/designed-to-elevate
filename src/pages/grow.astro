@@ -1,9 +1,9 @@
 ---
-// IMAGE INVENTORY (placement budget from prior /grow build):
+// IMAGE INVENTORY (placement budget):
 //
 // CURRENTLY PLACED:
-//   /wizard/step-3-pick-film-full.png   → HeroSection (right phone, full upsell visible)
-//   /customer-journey.png               → SystemSection (desktop diagram above stage cards)
+//   /wizard/step-3-pick-film-full.png   → HeroSection (right phone)
+//   /customer-journey.png               → SystemSection (desktop diagram)
 //   /showcase-phones.png                → ProofSection (intro phones)
 //   /showcase/fitchin-mobile.png        → ProofSection (Fitchin card)
 //   /showcase/modern-classic-mobile.png → ProofSection (Modern Classic card)
@@ -17,23 +17,27 @@
 //   /logo-wordmark-orange.png           → LandingHeader, FinalCTA footer
 //   /og-image.png                       → LandingLayout <head> og:image
 //
-// AVAILABLE BUT NOT REQUIRED BY THE NEW COPY (already in /public, kept for future use):
-//   /wizard/step-2-tint.png, /wizard/step-4-addons.png, /wizard/step-5-summary.png
-//   /favicon.svg, /logo-mark.png, /logo-mono.png, /logo-wordmark.png
+// PENDING (referenced in copy, not yet in /public — placeholders left in code):
+//   dashboard-leads.png  → DashboardSection lead-inbox screenshot
+//   bill-photo.png       → AboutSection
+//   (Hero secondary "laptop dashboard" mockup — keeping single phone visual)
 //
 // NO IMAGES WERE DROPPED.
 
 import LandingLayout from '../layouts/LandingLayout.astro';
 import LandingHeader from '../components/landing/LandingHeader.astro';
 import HeroSection from '../components/landing/HeroSection.astro';
+import ProofBandSection from '../components/landing/ProofBandSection.astro';
 import ProblemSection from '../components/landing/ProblemSection.astro';
 import SystemSection from '../components/landing/SystemSection.astro';
 import WizardSection from '../components/landing/WizardSection.astro';
+import DashboardSection from '../components/landing/DashboardSection.astro';
 import ProofSection from '../components/landing/ProofSection.astro';
 import OffersSection from '../components/landing/OffersSection.astro';
 import WhichOneFitsSection from '../components/landing/WhichOneFitsSection.astro';
 import WhoThisIsForSection from '../components/landing/WhoThisIsForSection.astro';
 import FoundingCapacitySection from '../components/landing/FoundingCapacitySection.astro';
+import PromiseSection from '../components/landing/PromiseSection.astro';
 import AboutSection from '../components/landing/AboutSection.astro';
 import ProcessSection from '../components/landing/ProcessSection.astro';
 import FAQSection from '../components/landing/FAQSection.astro';
@@ -43,20 +47,23 @@ import StickyMobileCTA from '../components/landing/StickyMobileCTA.astro';
 ---
 <LandingLayout
   title="Custom Quote & Booking Systems for Service Businesses | Designed to Elevate"
-  description="Replace your contact form with a custom quote and booking system. Built for local service businesses — auto detail, barbershops, contractors, HVAC, and more. Founding pricing open."
+  description="Replace your contact form with a custom quote and booking system. Live at Fitchin Auto Detail. Built for local service businesses — auto detail, barbershops, contractors, HVAC, and more. Founding pricing open."
   pathname="grow"
 >
   <LandingHeader />
   <main class="pb-24 md:pb-0">
     <HeroSection />
+    <ProofBandSection />
     <ProblemSection />
     <SystemSection />
     <WizardSection />
+    <DashboardSection />
     <ProofSection />
     <OffersSection />
     <WhichOneFitsSection />
     <WhoThisIsForSection />
     <FoundingCapacitySection />
+    <PromiseSection />
     <AboutSection />
     <ProcessSection />
     <FAQSection />

@@ -1,36 +1,23 @@
 ---
-// ProofSection — replaces LiveSiteShowcase on the new /grow.
-// Reuses /showcase-phones.png (intro hero), /showcase/fitchin-mobile.png,
-// and /showcase/modern-classic-mobile.png from the prior page.
-const projects = [
-  {
-    label: 'Auto Detail · Window Tint',
-    name: 'Fitchin Automotive Detailing & Window Tinting',
-    url: 'https://fitchinautodetail.com',
-    image: '/showcase/fitchin-mobile.png',
-    summary:
-      'Custom quote system built around vehicle type, tint coverage, package tiers, and add-on options.',
-    bullets: [
-      '378-vehicle pricing logic',
-      'Tiered package structure',
-      'Quote flow built around customer decisions',
-      'Designed for mobile traffic and paid ads',
-    ],
-  },
-  {
-    label: 'Barbershop',
-    name: 'Modern Classic Barbershop & Shave Parlor',
-    url: 'https://mdrnclassic.com',
-    image: '/showcase/modern-classic-mobile.png',
-    summary:
-      'Booking-focused brand hub built around service clarity, trust, and an easier path to scheduling.',
-    bullets: [
-      'Service-first page structure',
-      'Mobile booking path',
-      'Premium local brand presentation',
-      'Built around customer action, not appearance',
-    ],
-  },
+// ProofSection — "Already Running. Already Working."
+// Reuses /showcase-phones.png as the hero composite, plus
+// /showcase/fitchin-mobile.png and /showcase/modern-classic-mobile.png
+// as the per-project mobile previews from the prior page.
+const fitchinBullets = [
+  '378-vehicle pricing logic across detail, tint, and add-ons',
+  'Wizard handles quote requests and bookings end-to-end',
+  'Owner dashboard manages every lead, booking, and partial-quote',
+  'Auto text + email triggered on every customer submission',
+  "Calendar and installer view actively used by the shop's team",
+];
+
+const modernClassicBullets = [
+  "Custom-designed front end built around the shop's brand",
+  'Square API powers core booking and payments',
+  'Auto-review SMS sent to customers after appointments',
+  'Custom waitlist that auto-invites customers when slots open',
+  'Customer login — remember preferred barber, add kids to book with',
+  'Owner dashboard for review requests and waitlist management',
 ];
 ---
 <!-- PROOF SECTION -->
@@ -40,19 +27,18 @@ const projects = [
       <div class="max-w-3xl">
         <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Proof</span>
         <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-          See It Working in Real Local Businesses
+          Already Running. <span class="text-accent">Already Working.</span>
         </h2>
         <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-          Two live projects built around the same principle: make the customer path clearer, easier, and more action-focused. Tap either to open the live site.
+          Two live installs. Two real shops. Same core platform, configured around how each business actually operates.
         </p>
       </div>
 
-      <!-- Hero phones — Fitchin + Modern Classic mockups -->
       <div class="relative mx-auto w-full max-w-[360px] sm:max-w-[420px]">
         <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60" aria-hidden="true"></div>
         <img
           src="/showcase-phones.png"
-          alt="Two phones side by side displaying the live Fitchin Tint & Detail and Modern Classic Barbershop websites."
+          alt="Two phones side by side displaying the live Fitchin and Modern Classic websites"
           width="768"
           height="1381"
           loading="lazy"
@@ -62,60 +48,125 @@ const projects = [
       </div>
     </div>
 
-    <div class="mt-14 sm:mt-16 grid md:grid-cols-2 gap-6">
-      {projects.map((p) => (
-        <article class="card card-hover overflow-hidden flex flex-col">
-          <a
-            href={p.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="relative block aspect-[9/16] bg-surface-2 overflow-hidden border-b border-line group/shot"
-            aria-label={`Open ${p.name} in a new tab`}
-          >
-            <img
-              src={p.image}
-              alt={`${p.name} — mobile site preview`}
-              class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover/shot:scale-[1.02]"
-              loading="lazy"
-              decoding="async"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
-            <span class="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-bg/80 backdrop-blur px-2.5 py-1 text-[0.65rem] font-display tracking-wider uppercase text-text-soft border border-line">
-              <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
-              Live · Mobile
+    <!-- Project 1 — Fitchin (lead proof / full wizard install) -->
+    <article class="mt-14 sm:mt-16 card overflow-hidden">
+      <div class="grid md:grid-cols-[1fr_0.85fr] gap-0">
+        <div class="p-7 sm:p-10 flex flex-col">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.16em] text-bg">
+              <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
+                <span class="absolute inline-flex h-1.5 w-1.5 rounded-full bg-bg/60 animate-ping"></span>
+                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-bg"></span>
+              </span>
+              Live in Production
             </span>
-          </a>
-
-          <div class="p-7 flex-1 flex flex-col">
-            <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">{p.label}</div>
-            <h3 class="mt-2 font-display font-semibold text-[1.2rem] text-text leading-snug">{p.name}</h3>
-
-            <p class="mt-4 text-[0.95rem] text-text-soft leading-relaxed">{p.summary}</p>
-
-            <ul class="mt-5 space-y-2.5">
-              {p.bullets.map((b) => (
-                <li class="flex items-start gap-3 text-[0.9rem] text-text-soft leading-snug">
-                  <span class="mt-1.5 inline-block h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div class="mt-7 pt-5 border-t border-line">
-              <a
-                href={p.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn-ghost w-full"
-              >
-                Visit Live Site
-                <span aria-hidden="true">↗</span>
-              </a>
-            </div>
+            <span class="inline-flex items-center rounded-full border border-line px-2.5 py-1 font-display text-[0.65rem] font-medium uppercase tracking-[0.16em] text-text-soft">
+              Full Wizard Install
+            </span>
           </div>
-        </article>
-      ))}
-    </div>
+
+          <div class="mt-5 text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Auto Detail · Window Tint</div>
+          <h3 class="mt-2 font-display font-semibold text-[1.5rem] sm:text-[1.8rem] text-text leading-tight">
+            Fitchin Automotive Detailing &amp; Window Tinting
+          </h3>
+          <div class="mt-1 text-[0.92rem] text-text-muted">Coshocton, OH</div>
+
+          <p class="mt-5 text-[0.98rem] text-text-soft leading-relaxed">
+            The complete platform — customer-facing wizard, owner dashboard, calendar, installer view, and follow-up flows — running every day at a real working detail and tint shop.
+          </p>
+
+          <ul class="mt-5 space-y-2.5 flex-1">
+            {fitchinBullets.map((b) => (
+              <li class="flex items-start gap-3 text-[0.92rem] text-text-soft leading-snug">
+                <span class="mt-1.5 inline-block h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div class="mt-7 pt-5 border-t border-line">
+            <a href="https://fitchinautodetail.com" target="_blank" rel="noopener noreferrer" class="btn-primary w-full sm:w-auto">
+              Visit the live wizard
+              <span aria-hidden="true">↗</span>
+            </a>
+            <div class="mt-2 text-[0.78rem] text-text-muted">→ fitchinautodetail.com</div>
+          </div>
+        </div>
+
+        <a href="https://fitchinautodetail.com" target="_blank" rel="noopener noreferrer" class="relative block bg-surface-2 overflow-hidden border-t md:border-t-0 md:border-l border-line group/shot min-h-[300px]" aria-label="Open Fitchin in a new tab">
+          <img
+            src="/showcase/fitchin-mobile.png"
+            alt="Fitchin Auto Detail mobile site preview"
+            class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover/shot:scale-[1.02]"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="absolute inset-0 bg-gradient-to-tr from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+        </a>
+      </div>
+    </article>
+
+    <!-- Project 2 — Modern Classic (Square integration showcase) -->
+    <article class="mt-6 card overflow-hidden">
+      <div class="grid md:grid-cols-[0.85fr_1fr] gap-0">
+        <a href="https://mdrnclassic.com" target="_blank" rel="noopener noreferrer" class="relative block bg-surface-2 overflow-hidden border-b md:border-b-0 md:border-r border-line group/shot min-h-[300px] order-2 md:order-1" aria-label="Open Modern Classic in a new tab">
+          <img
+            src="/showcase/modern-classic-mobile.png"
+            alt="Modern Classic Barbershop mobile site preview"
+            class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover/shot:scale-[1.02]"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="absolute inset-0 bg-gradient-to-tl from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+        </a>
+
+        <div class="p-7 sm:p-10 flex flex-col order-1 md:order-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.16em] text-bg">
+              <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
+                <span class="absolute inline-flex h-1.5 w-1.5 rounded-full bg-bg/60 animate-ping"></span>
+                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-bg"></span>
+              </span>
+              Live in Production
+            </span>
+            <span class="inline-flex items-center rounded-full border border-line px-2.5 py-1 font-display text-[0.65rem] font-medium uppercase tracking-[0.16em] text-text-soft">
+              Custom Square Integration
+            </span>
+          </div>
+
+          <div class="mt-5 text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Barbershop</div>
+          <h3 class="mt-2 font-display font-semibold text-[1.5rem] sm:text-[1.8rem] text-text leading-tight">
+            Modern Classic Barbershop &amp; Shave Parlor
+          </h3>
+          <div class="mt-1 text-[0.92rem] text-text-muted">Zanesville, OH</div>
+
+          <p class="mt-5 text-[0.98rem] text-text-soft leading-relaxed">
+            A premium custom-designed site running on top of Square's booking and payment system. Square API powers core booking and payments behind the scenes — the customer just sees a beautiful, branded site that doesn't look like Square.
+          </p>
+
+          <ul class="mt-5 space-y-2.5 flex-1">
+            {modernClassicBullets.map((b) => (
+              <li class="flex items-start gap-3 text-[0.92rem] text-text-soft leading-snug">
+                <span class="mt-1.5 inline-block h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+
+          <p class="mt-5 text-[0.92rem] text-text font-medium italic">
+            Most shops on Square never get a site that looks like this.
+          </p>
+
+          <div class="mt-7 pt-5 border-t border-line">
+            <a href="https://mdrnclassic.com" target="_blank" rel="noopener noreferrer" class="btn-ghost w-full sm:w-auto">
+              Visit the live site
+              <span aria-hidden="true">↗</span>
+            </a>
+            <div class="mt-2 text-[0.78rem] text-text-muted">→ mdrnclassic.com</div>
+          </div>
+        </div>
+      </div>
+    </article>
   </div>
 </section>
 <!-- /PROOF SECTION -->

@@ -1,7 +1,7 @@
 ---
 // ProcessSection — How a Wizard Build Goes.
-// Reuses the four /icons/ illustrations (apply, audit, build, launch)
-// from the prior page; "audit" maps naturally to the Scope Call step.
+// Reuses the four /icons/ illustrations (apply, audit, build, launch);
+// "audit" maps naturally to Step 02 (Scope Call).
 const steps = [
   {
     n: '01',
@@ -25,7 +25,7 @@ const steps = [
     n: '04',
     icon: '/icons/launch.png',
     title: 'Launch & Iterate',
-    body: "We launch, watch the first quotes come through, and adjust pricing rules and copy based on what's converting.",
+    body: "We launch, walk you through the dashboard in a 30-minute training call, watch the first quotes come through, and adjust pricing rules and copy based on what's actually converting.",
   },
 ];
 ---
@@ -39,7 +39,17 @@ const steps = [
       </h2>
     </div>
 
-    <ol class="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+    <!-- Pre-step prep note -->
+    <div class="mt-8 max-w-3xl rounded-xl border border-line bg-surface-1/60 p-5">
+      <div class="font-display font-semibold text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">
+        Before you apply
+      </div>
+      <p class="text-[0.95rem] text-text-soft leading-relaxed">
+        A 5-minute prep makes the scope call faster: rough list of your services, current pricing, and a couple of typical jobs. We'll take it from there.
+      </p>
+    </div>
+
+    <ol class="mt-10 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
       {steps.map((s) => (
         <li class="card p-6 relative flex flex-col">
           <div class="flex items-start justify-between mb-4">

@@ -136,7 +136,7 @@ const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
 
         setDisabled(true);
         if (submitBtn) submitBtn.innerHTML = 'Sending…';
-        showStatus('Sending your audit request…', false);
+        showStatus('Sending your application…', false);
 
         try {
           // multipart/form-data — bit-for-bit what a native HTML form POST
@@ -167,7 +167,7 @@ const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
           if (submitBtn) submitBtn.innerHTML = originalBtnHTML;
           const detail = err instanceof Error ? err.message : 'Unknown error';
           showStatus(
-            `Couldn't send your request (${detail}). Please call or text Bill at 740-617-6488 and we'll handle it directly.`,
+            `Couldn't send your application (${detail}). Please call or text Bill at 740-617-6488 and we'll handle it directly.`,
             true
           );
         }
