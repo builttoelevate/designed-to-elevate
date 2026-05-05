@@ -48,18 +48,48 @@ const services = [
   },
 ];
 
-const industries = [
-  'Window tint shops',
-  'Auto detailers',
-  'Ceramic coating shops',
-  'Barbershops',
-  'Contractors',
-  'Pressure washing',
-  'Dog groomers',
-  'Mobile mechanics',
-  'Transportation',
-  'Landscapers',
-  'Cleaning companies',
+const startingPoints = [
+  {
+    name: 'Starter Site',
+    forWho: 'For businesses that need to look credible online and give customers a clear way to reach out.',
+    includes: [
+      'Mobile-first website',
+      'Core service sections',
+      'Contact or quote form',
+      'Basic SEO setup',
+      'Google-friendly structure',
+    ],
+    cta: 'Ask About a Build',
+    featured: false,
+  },
+  {
+    name: 'Lead Generation Site',
+    forWho: 'For businesses that want their site built around calls, quote requests, and booked jobs.',
+    includes: [
+      'Everything in Starter Site',
+      'Conversion-focused service pages',
+      'Stronger CTAs throughout',
+      'Local SEO structure',
+      'Landing page strategy',
+      'Tracking setup',
+    ],
+    cta: 'Get a Free Review',
+    featured: true,
+  },
+  {
+    name: 'Local Lead System',
+    forWho: 'For businesses that need more than a website.',
+    includes: [
+      'Everything in Lead Generation Site',
+      'Quote tool or intake wizard',
+      'Lead dashboard',
+      'Follow-up automation',
+      'Review request flow',
+      'Custom business logic',
+    ],
+    cta: 'Talk Through a System',
+    featured: false,
+  },
 ];
 
 const caseStudies = [
@@ -227,6 +257,9 @@ const schema = {
           <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
             Pick the piece you need. Or stack them — the website, the system behind it, and the local SEO around it all work better together.
           </p>
+          <p class="mt-4 text-text-muted text-[0.95rem] leading-relaxed italic">
+            Built for local service businesses — auto detailers, window tint shops, barbershops, contractors, pressure washing companies, party bus and transportation companies, groomers, landscapers, and cleaning companies.
+          </p>
         </div>
 
         <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
@@ -278,26 +311,65 @@ const schema = {
       </div>
     </section>
 
-    <!-- INDUSTRIES -->
-    <section class="relative border-b border-line bg-surface-1/40">
-      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-16 sm:py-20">
+    <!-- SIMPLE STARTING POINTS -->
+    <section class="relative overflow-hidden border-b border-line bg-surface-1/40">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -left-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-24 sm:py-32">
         <div class="max-w-3xl">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Industries</span>
-          <h2 class="mt-5 text-[1.7rem] sm:text-[2.1rem] leading-[1.1] font-bold">
-            Built for Local Service Businesses
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Three Common Paths</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            Simple Starting Points
           </h2>
-          <p class="mt-4 text-text-soft text-[1rem] leading-relaxed">
-            If your business runs on quotes, bookings, and repeat customers, the system fits.
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Not every business needs the same thing. Some need a clean site. Some need better local SEO and more quote requests. Some need the whole system — quote tool, dashboard, follow-up, and reviews. These are the three most common ways I help.
           </p>
         </div>
 
-        <ul class="mt-8 flex flex-wrap gap-2">
-          {industries.map((v) => (
-            <li class="inline-flex items-center rounded-full border border-line bg-surface-2 px-3.5 py-1.5 text-[0.9rem] text-text-soft font-display">
-              {v}
-            </li>
+        <div class="mt-14 grid lg:grid-cols-3 gap-5 lg:gap-6 items-stretch">
+          {startingPoints.map((p) => (
+            <article
+              class:list={[
+                'relative card flex flex-col p-7 sm:p-8',
+                p.featured ? 'border-accent/60 lg:scale-[1.02] lg:-translate-y-1 shadow-[0_30px_60px_-20px_rgba(255,107,26,0.35)]' : '',
+              ]}
+            >
+              {p.featured && (
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 font-display text-[0.7rem] font-bold uppercase tracking-[0.16em] text-bg shadow-[0_8px_20px_-6px_rgba(255,107,26,0.6)]">
+                    <span aria-hidden="true">★</span> Most Popular
+                  </span>
+                </div>
+              )}
+
+              <div class="font-display font-semibold text-[1.4rem] text-text">{p.name}</div>
+              <p class="mt-3 text-[0.95rem] text-text-soft leading-relaxed">{p.forWho}</p>
+
+              <ul class="mt-6 space-y-2.5 flex-1">
+                {p.includes.map((item) => (
+                  <li class="flex items-start gap-2.5 text-[0.9rem] text-text-soft leading-snug">
+                    <span class="mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div class="mt-7 pt-5 border-t border-line">
+                <a href="/contact" class:list={[p.featured ? 'btn-primary w-full' : 'btn-ghost w-full']}>
+                  {p.cta}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </article>
           ))}
-        </ul>
+        </div>
+
+        <p class="mt-12 mx-auto max-w-2xl text-center text-[0.95rem] text-text-soft italic leading-relaxed">
+          Every project is scoped around what your business actually needs. Not sure which fits? Send me your website and I'll tell you what I'd fix first.
+        </p>
       </div>
     </section>
 
