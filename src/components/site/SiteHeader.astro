@@ -1,15 +1,16 @@
 ---
-// SiteHeader — used on /, /pricing, /work, /contact.
-// /grow keeps its own conversion-focused LandingHeader (logo + phone + 1 CTA).
-// Mobile: <details>-driven hamburger drawer for zero-JS open/close.
-
+// SiteHeader — used on /, /custom-lead-systems, /web-design,
+// /local-seo, /case-studies, /contact.
+// /grow keeps its own conversion-focused LandingHeader; this header
+// fronts the broader marketing site.
 const currentPath = Astro.url.pathname;
 const isActive = (path: string) =>
   currentPath === path || currentPath === `${path}/` || (path !== '/' && currentPath.startsWith(`${path}/`));
 
 const navLinks: { label: string; href: string }[] = [
-  { label: 'Work', href: '/work' },
-  { label: 'Pricing', href: '/pricing' },
+  { label: 'Home', href: '/' },
+  { label: 'Services', href: '/#services' },
+  { label: 'Case Studies', href: '/case-studies' },
   { label: 'Contact', href: '/contact' },
 ];
 ---
@@ -43,14 +44,13 @@ const navLinks: { label: string; href: string }[] = [
 
     <div class="flex items-center gap-2 sm:gap-3">
       <a
-        href="/grow"
+        href="/contact"
         class="hidden sm:inline-flex btn-primary !py-2.5 !px-3.5 sm:!px-4 !text-[0.78rem] sm:!text-[0.85rem] whitespace-nowrap"
       >
-        Get Free Audit
+        Free Website Review
         <span aria-hidden="true">↗</span>
       </a>
 
-      <!-- Mobile hamburger (no JS, native <details>) -->
       <details class="md:hidden relative site-menu">
         <summary class="list-none cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-md border border-line text-text-soft hover:border-accent hover:text-accent transition-colors" aria-label="Open menu">
           <svg class="menu-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -77,8 +77,8 @@ const navLinks: { label: string; href: string }[] = [
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
               (740) 617-6488
             </a>
-            <a href="/grow" class="btn-primary w-full mt-2 !py-3 !text-[0.85rem]">
-              Get Free Audit
+            <a href="/contact" class="btn-primary w-full mt-2 !py-3 !text-[0.85rem]">
+              Free Website Review
               <span aria-hidden="true">↗</span>
             </a>
           </nav>

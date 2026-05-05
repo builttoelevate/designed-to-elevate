@@ -1,0 +1,140 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+
+const included = [
+  { title: 'Google Business Profile setup & optimization', body: 'Categories, services, photos, hours, products, posts. The free profile most local businesses still leave half-finished.' },
+  { title: 'Service-area pages', body: 'A page per real service area you cover. Structured to rank for "[service] in [town]" searches.' },
+  { title: 'On-page SEO', body: 'Page titles, meta descriptions, headings, internal linking, and image alt text — built from how your customers actually search.' },
+  { title: 'Schema markup', body: 'LocalBusiness, Service, FAQ, and Review schema so Google can pull your info into rich results.' },
+  { title: 'Review strategy', body: 'When to ask, how to ask, where to send them. Tied into the Follow-Up & Review Systems work where it makes sense.' },
+  { title: 'Citations & local listings', body: 'Consistent NAP (name, address, phone) across the directories Google actually weighs.' },
+];
+
+const realityChecks = [
+  "Local SEO compounds. The work I do this month tends to show up in rankings 30–90 days later, not overnight.",
+  "Google doesn't promise rankings. Anyone who guarantees a #1 spot is lying to you.",
+  "Reviews matter more than most people realize. A profile with 50 recent reviews beats a profile with 5 from 2022, every time.",
+  "On-page work is reusable. Set it up right once and it keeps working. The recurring work is reviews, posts, and photos.",
+];
+---
+<LandingLayout
+  title="Local SEO & Google Business Profile Optimization | Designed to Elevate"
+  description="Local SEO, service-area pages, schema, and Google Business Profile optimization for service businesses in Coshocton, Zanesville, Newark, and across Eastern Ohio."
+  pathname="local-seo"
+>
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Local SEO</span>
+        <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] lg:text-[3.6rem] leading-[1.04] font-bold tracking-tight">
+          Local SEO &amp; <span class="text-accent">Google Business Profile</span> Optimization
+        </h1>
+        <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-3xl">
+          The work that helps local customers find you when they search. Site structure, on-page SEO, GBP setup, and review strategy — built for service businesses in Coshocton, Zanesville, Newark, and across Eastern Ohio.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/contact" class="btn-primary">
+            Get a Free Website Review
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY LOCAL SEO -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Why It Matters</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+          Most Customers Pick Their Shop on Google.
+        </h2>
+        <div class="mt-6 space-y-4 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          <p>
+            Someone needs a detail, a tint, a haircut, a roof, a landscape. They open Google Maps. They tap the first three results. They read the reviews. They click through to the website. They book the one that loads fast, looks legit, and answers their question.
+          </p>
+          <p>
+            If you're not in the first three, you don't exist. The work below is what gets you there — and keeps you there.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT'S INCLUDED -->
+    <section id="gbp" class="relative border-b border-line bg-surface-1/40 scroll-mt-24">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-24 sm:py-32">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What's Included</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.7rem] leading-[1.05] font-bold">
+            What I Actually Do
+          </h2>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {included.map((i) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{i.title}</h3>
+              <p class="text-[0.92rem] text-text-soft leading-relaxed">{i.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE EXPECTATIONS -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Realistic Expectations</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+          What I Won't Promise You
+        </h2>
+        <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          Every "SEO expert" who guarantees a #1 ranking is selling something. Here's what actually happens:
+        </p>
+
+        <ul class="mt-8 space-y-4 max-w-3xl">
+          {realityChecks.map((r) => (
+            <li class="flex items-start gap-3 text-[1rem] text-text-soft leading-relaxed">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{r}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Want to know where your local SEO stands?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Send me your website and I'll review your local SEO setup as part of the free review.
+        </p>
+        <div class="mt-10">
+          <a href="/contact" class="btn-primary">
+            Get a Free Website Review
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

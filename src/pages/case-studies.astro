@@ -1,0 +1,290 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+---
+<LandingLayout
+  title="Case Studies — What I've Built | Designed to Elevate"
+  description="Three live builds for local service businesses: Fitchin Auto Detail's custom quote wizard, Modern Classic Barbershop's brand hub, and All Transport's event-rental site."
+  pathname="case-studies"
+>
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Case Studies</span>
+        <h1 class="mt-5 text-[2.5rem] sm:text-[3.4rem] lg:text-[4rem] leading-[1.02] font-bold tracking-tight">
+          What I've <span class="text-accent">Built</span>
+        </h1>
+        <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-3xl">
+          Three live builds. Three real shops. Each one solves a different problem — quote logic, brand unification, and local-search-driven conversion. All running today.
+        </p>
+      </div>
+    </section>
+
+    <!-- CASE STUDY 1: Fitchin -->
+    <section id="fitchin" class="relative border-b border-line scroll-mt-24">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-16 items-start">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.16em] text-bg">
+                <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
+                  <span class="absolute inline-flex h-1.5 w-1.5 rounded-full bg-bg/60 animate-ping"></span>
+                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-bg"></span>
+                </span>
+                Live in Production
+              </span>
+              <span class="inline-flex items-center rounded-full border border-line px-2.5 py-1 font-display text-[0.65rem] font-medium uppercase tracking-[0.16em] text-text-soft">
+                Custom Quote Wizard
+              </span>
+            </div>
+
+            <div class="mt-5 text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Auto Detail · Window Tint</div>
+            <h2 class="mt-2 font-display font-bold text-[2rem] sm:text-[2.6rem] text-text leading-[1.1]">
+              Fitchin Automotive Detailing &amp; Window Tinting
+            </h2>
+            <div class="mt-2 text-[0.95rem] text-text-muted">
+              Owner: Eric · Coshocton, OH
+            </div>
+
+            <div class="mt-7 space-y-5 text-text-soft text-[1rem] leading-relaxed">
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Challenge</div>
+                <p class="mt-2">
+                  Outdated site, no quote system, leads coming in by phone only, no way to scale.
+                </p>
+              </div>
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Built</div>
+                <p class="mt-2">
+                  Astro marketing site with a custom multi-step quote wizard, vehicle-specific pricing logic, and an admin dashboard for lead management.
+                </p>
+              </div>
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Tech</div>
+                <p class="mt-2">
+                  Astro frontend on Vercel · Node backend on Railway · 378-vehicle database.
+                </p>
+              </div>
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Outcome</div>
+                <p class="mt-2 text-text">
+                  Turned a phone-only operation into a system that captures, quotes, and tracks leads automatically.
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <a href="https://fitchinautodetail.com" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                Visit the live site
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="relative" aria-hidden="true">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
+            <div class="relative card overflow-hidden">
+              <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
+                <img
+                  src="/showcase/fitchin-mobile.png"
+                  alt="Fitchin Auto Detail mobile site preview"
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div class="p-4 grid grid-cols-3 gap-2">
+                <img src="/wizard/step-1-service.png" alt="Wizard step 1" class="w-full h-auto rounded border border-line" loading="lazy" decoding="async" />
+                <img src="/wizard/step-3-pick-film.png" alt="Wizard step 3" class="w-full h-auto rounded border border-line" loading="lazy" decoding="async" />
+                <img src="/wizard/step-6-final-quote.png" alt="Wizard final quote" class="w-full h-auto rounded border border-line" loading="lazy" decoding="async" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CASE STUDY 2: Modern Classic -->
+    <section id="modern-classic" class="relative border-b border-line bg-surface-1/40 scroll-mt-24">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="grid lg:grid-cols-[1fr_1.05fr] gap-10 lg:gap-16 items-start">
+          <div class="relative order-2 lg:order-1" aria-hidden="true">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
+            <div class="relative card overflow-hidden">
+              <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
+                <img
+                  src="/showcase/modern-classic-mobile.png"
+                  alt="Modern Classic Barbershop mobile site preview"
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="order-1 lg:order-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.16em] text-bg">
+                <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
+                  <span class="absolute inline-flex h-1.5 w-1.5 rounded-full bg-bg/60 animate-ping"></span>
+                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-bg"></span>
+                </span>
+                Live in Production
+              </span>
+              <span class="inline-flex items-center rounded-full border border-line px-2.5 py-1 font-display text-[0.65rem] font-medium uppercase tracking-[0.16em] text-text-soft">
+                Square + Shopify Integration
+              </span>
+            </div>
+
+            <div class="mt-5 text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Barbershop</div>
+            <h2 class="mt-2 font-display font-bold text-[2rem] sm:text-[2.6rem] text-text leading-[1.1]">
+              Modern Classic Barbershop &amp; Shave Parlor
+            </h2>
+            <div class="mt-2 text-[0.95rem] text-text-muted">
+              Owner: Michael · Zanesville, OH
+            </div>
+
+            <div class="mt-7 space-y-5 text-text-soft text-[1rem] leading-relaxed">
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Challenge</div>
+                <p class="mt-2">
+                  Brand split across Square (booking) and Shopify (products) with no unified marketing presence.
+                </p>
+              </div>
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Built</div>
+                <p class="mt-2">
+                  Unified Astro brand hub at mdrnclassic.com with full service menu, product showcase, booking integration, and a premium visual identity worthy of the shop's craft.
+                </p>
+              </div>
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Tech</div>
+                <p class="mt-2">
+                  Astro on Vercel · Square + Shopify integrations.
+                </p>
+              </div>
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Outcome</div>
+                <p class="mt-2 text-text">
+                  A premium brand experience that matches the quality of the in-shop service.
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <a href="https://mdrnclassic.com" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                Visit the live site
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CASE STUDY 3: All Transport -->
+    <section id="all-transport" class="relative border-b border-line scroll-mt-24">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-16 items-start">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.16em] text-bg">
+                <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
+                  <span class="absolute inline-flex h-1.5 w-1.5 rounded-full bg-bg/60 animate-ping"></span>
+                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-bg"></span>
+                </span>
+                Live in Production
+              </span>
+              <span class="inline-flex items-center rounded-full border border-line px-2.5 py-1 font-display text-[0.65rem] font-medium uppercase tracking-[0.16em] text-text-soft">
+                Local-Search Lead Site
+              </span>
+            </div>
+
+            <div class="mt-5 text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Event Transportation</div>
+            <h2 class="mt-2 font-display font-bold text-[2rem] sm:text-[2.6rem] text-text leading-[1.1]">
+              All Transport Party Bus Rentals
+            </h2>
+            <div class="mt-2 text-[0.95rem] text-text-muted">
+              Carrollton, OH (44615) · 100-mile radius covering Eastern Ohio &amp; Northwestern Pennsylvania
+            </div>
+
+            <div class="mt-7 space-y-5 text-text-soft text-[1rem] leading-relaxed">
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Challenge</div>
+                <p class="mt-2">
+                  Local transportation company needed a website that explains services, builds trust, and converts event searches — weddings, proms, bachelor parties, tailgates — into quote requests.
+                </p>
+              </div>
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Built</div>
+                <p class="mt-2">
+                  Mobile-first Astro site with service-by-occasion sections, fleet gallery, integrated quote/availability flow, FAQ section, and clear local SEO structure for event transportation keywords.
+                </p>
+              </div>
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Tech</div>
+                <p class="mt-2">
+                  Astro on Vercel.
+                </p>
+              </div>
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">SEO Focus</div>
+                <p class="mt-2">
+                  Party bus rental, wedding transportation, prom transportation, event transportation — plus local service-area visibility across the 100-mile radius.
+                </p>
+              </div>
+              <div>
+                <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Outcome</div>
+                <p class="mt-2 text-text">
+                  A local-search-driven website that turns event planners into quote requests.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative" aria-hidden="true">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
+            <div class="relative card overflow-hidden">
+              <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden grid place-items-center">
+                <div class="text-text-muted/60 text-[0.78rem] font-display uppercase tracking-[0.16em] text-center px-8 leading-relaxed">
+                  [NEEDS IMAGE:<br/>All Transport hero screenshot]
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Want to be the next one?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Send me your website and I'll tell you what I'd fix first. No pitch, no pressure.
+        </p>
+        <div class="mt-10">
+          <a href="/contact" class="btn-primary">
+            Get a Free Website Review
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

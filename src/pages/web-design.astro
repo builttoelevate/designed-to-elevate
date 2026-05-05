@@ -1,0 +1,155 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+
+const included = [
+  { title: 'Mobile-first design', body: 'Built for thumb taps. Most local-service traffic comes from a phone — the site is designed for that first, not as an afterthought.' },
+  { title: 'Conversion-focused copy', body: 'Headlines, structure, and CTAs that move a visitor from interested to in-touch. Not just "About / Services / Contact."' },
+  { title: 'Service pages that rank', body: 'One page per real service, structured for local search — what you do, who it\'s for, what it costs, what to do next.' },
+  { title: 'Quote and contact forms that work', body: "Forms tied to real lead capture. Optionally upgraded to a custom quote wizard (see Custom Lead Systems)." },
+  { title: 'Local SEO foundations', body: 'Schema markup, semantic HTML, service-area structure, page titles and metadata — all the on-page work for Google to understand who you serve.' },
+  { title: 'Fast load times via Astro', body: "Static-first builds. No bloated WordPress theme, no plugin sprawl. Pages load in under a second on a phone." },
+];
+---
+<LandingLayout
+  title="Web Design for Local Service Businesses | Designed to Elevate"
+  description="Custom mobile-first websites for local service businesses. Conversion copy, fast load times, local SEO foundations, and quote forms that actually capture leads."
+  pathname="web-design"
+>
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Web Design</span>
+        <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] lg:text-[3.6rem] leading-[1.04] font-bold tracking-tight">
+          Web Design for <span class="text-accent">Local Service Businesses</span>
+        </h1>
+        <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-3xl">
+          Custom-built sites that load fast, look sharp, and turn visitors into quote requests. Built on Astro, deployed on Vercel — none of the WordPress bloat, none of the page-builder lock-in.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/contact" class="btn-primary">
+            Get a Free Website Review
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="/case-studies" class="btn-ghost">
+            See examples
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT'S INCLUDED -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-24 sm:py-32">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What's Included</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            What You Get in a Build
+          </h2>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {included.map((i) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{i.title}</h3>
+              <p class="text-[0.92rem] text-text-soft leading-relaxed">{i.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- LANDING PAGES -->
+    <section id="landing-pages" class="relative border-b border-line bg-surface-1/40 scroll-mt-24">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Landing Pages</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+          Single-Purpose Pages for Ad Traffic
+        </h2>
+        <div class="mt-6 space-y-4 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          <p>
+            A homepage talks about everything. A landing page answers one question and pushes one action. If you're running Google Ads or Facebook Ads, sending paid traffic to a generic homepage is the fastest way to burn money.
+          </p>
+          <p>
+            Landing pages are scoped per offer or per service — built to convert one specific kind of visitor into one specific kind of lead.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXAMPLES -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+          <div>
+            <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Examples</span>
+            <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+              Real Builds
+            </h2>
+          </div>
+          <a href="/case-studies" class="inline-flex items-center gap-1.5 font-display font-medium text-[0.95rem] text-accent hover:text-accent-hover transition-colors whitespace-nowrap">
+            All case studies
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-5">
+          <a href="/case-studies#fitchin" class="card card-hover overflow-hidden flex flex-col group">
+            <div class="relative aspect-[9/12] bg-surface-2 overflow-hidden border-b border-line">
+              <img src="/showcase/fitchin-mobile.png" alt="Fitchin Auto Detail mobile site" class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+            </div>
+            <div class="p-6 flex-1">
+              <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Auto Detail · Window Tint</div>
+              <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text leading-snug">Fitchin Automotive Detailing</h3>
+              <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">Astro site + custom quote wizard with 378-vehicle pricing.</p>
+            </div>
+          </a>
+          <a href="/case-studies#modern-classic" class="card card-hover overflow-hidden flex flex-col group">
+            <div class="relative aspect-[9/12] bg-surface-2 overflow-hidden border-b border-line">
+              <img src="/showcase/modern-classic-mobile.png" alt="Modern Classic Barbershop mobile site" class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+            </div>
+            <div class="p-6 flex-1">
+              <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Barbershop</div>
+              <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text leading-snug">Modern Classic Barbershop</h3>
+              <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">Premium brand hub with Square + Shopify integration.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Ready for a site that actually pulls weight?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Send me your current website and I'll tell you what I'd fix first.
+        </p>
+        <div class="mt-10">
+          <a href="/contact" class="btn-primary">
+            Get a Free Website Review
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

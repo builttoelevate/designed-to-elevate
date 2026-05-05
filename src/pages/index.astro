@@ -2,391 +2,372 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
-import GrowthSystemSection from '../components/landing/GrowthSystemSection.astro';
-import { foundingPackages } from '../data/founding-packages';
-
-const industries = [
-  'Auto Detail',
-  'Window Tint',
-  'Barbershops',
-  'Contractors',
-  'Cleaners',
-  'Landscapers',
-  'HVAC',
-  'Home Services',
-];
-
-const painPoints = [
-  {
-    title: "People visit your site but don't call.",
-    body: "Traffic is fine. Calls aren't. Usually the page tells visitors what you do — but never what to do next.",
-  },
-  {
-    title: "Your Google profile isn't winning enough clicks.",
-    body: 'Reviews, photos, categories, and posts that compound over time make a Google Business Profile pull customers in.',
-  },
-  {
-    title: 'Your ads send traffic to pages that don\'t convert.',
-    body: 'A homepage talks about everything. A real ad landing page answers one question and pushes one action.',
-  },
-  {
-    title: 'Your quote process is too slow or too manual.',
-    body: 'Customers go to whoever answers first. A built-for-you quote flow gives prices and captures leads instantly.',
-  },
-  {
-    title: 'Your follow-up depends on memory instead of a system.',
-    body: 'Lead capture, reminders, and review requests should run themselves — not live in your head.',
-  },
-];
 
 const services = [
   {
-    title: 'Conversion Websites',
-    body: 'Built to make people call, request quotes, and trust your business faster.',
+    title: 'Web Design',
+    body: 'Custom sites, mobile-first, tuned to convert.',
+    href: '/web-design',
     icon: 'monitor',
+    primary: false,
   },
   {
-    title: 'Local SEO Foundations',
-    body: 'Google-friendly structure, service area pages, and review strategy that helps you show up locally.',
-    icon: 'pin',
+    title: 'Custom Lead Systems',
+    body: 'Quote wizards, dashboards, automations. The system behind the sale.',
+    href: '/custom-lead-systems',
+    icon: 'circuit',
+    primary: true,
   },
   {
-    title: 'Quote & Lead Systems',
-    body: 'Custom forms, quote wizards, and lead capture flows that turn visitors into real conversations.',
-    icon: 'route',
-  },
-  {
-    title: 'Ad Landing Pages',
-    body: "Focused pages built for paid traffic, so you're not wasting clicks on a generic homepage.",
+    title: 'Landing Pages',
+    body: 'Single-purpose pages built to turn ad clicks into leads.',
+    href: '/web-design#landing-pages',
     icon: 'target',
+    primary: false,
+  },
+  {
+    title: 'Local SEO',
+    body: 'On-page SEO, service-area pages, citations.',
+    href: '/local-seo',
+    icon: 'pin',
+    primary: false,
+  },
+  {
+    title: 'Google Business Profile Optimization',
+    body: 'Setup, photo strategy, review systems.',
+    href: '/local-seo#gbp',
+    icon: 'star',
+    primary: false,
+  },
+  {
+    title: 'Follow-Up & Review Systems',
+    body: 'Automated review requests, lead follow-up sequences, customer dashboards.',
+    href: '/custom-lead-systems#follow-up',
+    icon: 'mail',
+    primary: false,
   },
 ];
 
-const projectsPreview = [
+const industries = [
+  'Window tint shops',
+  'Auto detailers',
+  'Ceramic coating shops',
+  'Barbershops',
+  'Contractors',
+  'Pressure washing',
+  'Dog groomers',
+  'Mobile mechanics',
+  'Transportation',
+  'Landscapers',
+  'Cleaning companies',
+];
+
+const caseStudies = [
   {
     label: 'Auto Detail · Window Tint',
-    title: 'Fitchin Auto Detailing & Window Tinting',
-    outcome: 'A custom 378-vehicle quote wizard turning Google searches into booked tint jobs.',
+    name: 'Fitchin Automotive Detailing & Window Tinting',
+    summary: 'Custom multi-step quote wizard with 378-vehicle pricing logic and an admin dashboard for lead management.',
     image: '/showcase/fitchin-mobile.png',
+    href: '/case-studies#fitchin',
   },
   {
     label: 'Barbershop',
-    title: 'Modern Classic Barbershop',
-    outcome: 'A premium brand hub with unified booking and product flows.',
+    name: 'Modern Classic Barbershop & Shave Parlor',
+    summary: 'Unified Astro brand hub with Square booking and Shopify product, premium visual identity worthy of the craft.',
     image: '/showcase/modern-classic-mobile.png',
+    href: '/case-studies#modern-classic',
+  },
+  {
+    label: 'Event Transportation',
+    name: 'All Transport Party Bus Rentals',
+    summary: 'Mobile-first site with service-by-occasion sections, fleet gallery, and a quote/availability flow built for local search.',
+    image: null,
+    href: '/case-studies#all-transport',
   },
 ];
 
-const whyDifferent = [
-  {
-    title: 'Built from real local business experience.',
-    body: 'Every system tested where it had to actually work — not in an agency conference room.',
+// LocalBusiness schema for the homepage
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Designed to Elevate',
+  description: 'Web design, custom lead systems, and local SEO for Ohio service businesses.',
+  url: 'https://designedtoelevate.co',
+  telephone: '+1-740-617-6488',
+  email: 'bilsonxnc@gmail.com',
+  address: {
+    '@type': 'PostalAddress',
+    addressRegion: 'OH',
+    addressCountry: 'US',
   },
-  {
-    title: 'Focused on leads, not vanity design.',
-    body: "If a section doesn't help drive a call, quote, or booking, it doesn't ship.",
-  },
-  {
-    title: 'Simple systems local owners can run.',
-    body: 'You shouldn\'t need a marketing degree to keep your own website healthy. We build it that way.',
-  },
-  {
-    title: 'No long contracts. No agency fluff.',
-    body: 'No multi-year retainers. No mystery line items. Just the work and what it costs.',
-  },
-];
+  areaServed: [
+    { '@type': 'City', name: 'Coshocton' },
+    { '@type': 'City', name: 'Zanesville' },
+    { '@type': 'City', name: 'Newark' },
+    { '@type': 'City', name: 'Cambridge' },
+    { '@type': 'City', name: 'Mount Vernon' },
+    { '@type': 'City', name: 'Carrollton' },
+  ],
+  serviceType: [
+    'Web Design',
+    'Custom Lead Systems',
+    'Quote & Booking Systems',
+    'Landing Pages',
+    'Local SEO',
+    'Google Business Profile Optimization',
+    'Follow-Up & Review Systems',
+  ],
+  sameAs: [
+    // TODO: add Google Business Profile URL once live
+  ],
+};
 ---
 <LandingLayout
-  title="Designed to Elevate — Lead Systems for Local Service Businesses"
-  description="We build the path from Google search to quote request to booked job. Conversion websites, local SEO, quote tools, and ad landing pages built for how local owners actually run their business."
+  title="Web Design & Local SEO for Ohio Service Businesses | Designed to Elevate"
+  description="Web design, custom lead systems, and local SEO for service businesses in Coshocton, Zanesville, Newark, and across Eastern Ohio. More than a website — the system behind the sale."
   pathname=""
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
   <SiteHeader />
 
   <main>
     <!-- HERO -->
-    <section class="relative overflow-hidden border-b border-line">
+    <section id="top" class="relative overflow-hidden border-b border-line">
       <div class="grid-bg absolute inset-0 z-0 opacity-60" aria-hidden="true"></div>
       <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
 
-      <div class="relative z-10 mx-auto max-w-6xl px-5 sm:px-8 pt-16 sm:pt-24 pb-20 sm:pb-28 text-center">
-        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Designed to Elevate</span>
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 pt-12 sm:pt-20 pb-20 sm:pb-28">
+        <div class="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-center">
+          <div>
+            <span class="eyebrow"><span class="dot" aria-hidden="true"></span> More Than a Website. A System Behind the Sale.</span>
+            <h1 class="mt-5 text-[2.5rem] sm:text-[3.2rem] lg:text-[3.7rem] leading-[1.02] font-bold text-text">
+              Web Design &amp; Local SEO for
+              <span class="text-accent">Ohio Service Businesses</span>
+            </h1>
+            <p class="mt-6 max-w-[58ch] text-[1.05rem] sm:text-[1.15rem] leading-[1.6] text-text-soft">
+              I build websites and the systems behind them — quote tools, lead capture, dashboards, follow-up, and review flows that help local businesses turn searches into booked jobs.
+            </p>
 
-        <h1 class="mt-6 text-[2.5rem] sm:text-[3.4rem] lg:text-[4.2rem] leading-[1.02] font-bold tracking-tight max-w-4xl mx-auto">
-          Lead Systems for
-          <span class="text-accent">Local Service Businesses</span>
-        </h1>
+            <div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <a href="/contact" class="btn-primary">
+                Get a Free Website Review
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a href="/case-studies" class="btn-ghost">
+                See My Work
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
 
-        <p class="mt-6 max-w-2xl mx-auto text-[1.05rem] sm:text-[1.15rem] leading-[1.6] text-text-soft">
-          We build the path from <span class="text-text font-medium">Google search</span> to
-          <span class="text-text font-medium">quote request</span> to
-          <span class="text-text font-medium">booked job</span> — using websites, local SEO, quote tools, and ad landing pages built for how local owners actually run their business.
+            <p class="mt-6 text-[0.88rem] text-text-muted">
+              Coshocton · Zanesville · Newark · Eastern Ohio
+            </p>
+          </div>
+
+          <div class="relative" aria-hidden="true">
+            <div class="relative mx-auto w-full max-w-[400px]">
+              <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60" aria-hidden="true"></div>
+              <img
+                src="/showcase-phones.png"
+                alt="Two phones displaying live websites built by Designed to Elevate"
+                width="768"
+                height="1381"
+                loading="eager"
+                decoding="async"
+                class="relative w-full h-auto"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE PROBLEM -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Real Problem</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.8rem] leading-[1.05] font-bold tracking-tight">
+          Your business shouldn't run out of your <span class="text-accent">text inbox</span>.
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-3xl">
+          Most local businesses are juggling leads across phone calls, Facebook messages, website forms, sticky notes, and half-finished spreadsheets. Quotes get forgotten. Follow-ups slip. Customers wait too long. Good jobs walk away.
         </p>
+      </div>
+    </section>
 
-        <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
-          <a href="/grow" class="btn-primary">
-            Get a Free Lead Leak Audit
-            <span aria-hidden="true">↗</span>
-          </a>
-          <a href="/pricing" class="btn-ghost">
-            View Pricing
+    <!-- DIFFERENTIATOR -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 py-24 sm:py-32">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Why I'm Different</span>
+        <h2 class="mt-5 text-[2.1rem] sm:text-[3rem] lg:text-[3.4rem] leading-[1.04] font-bold tracking-tight">
+          More Than a Website. <span class="text-accent">A System Behind the Sale.</span>
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-3xl">
+          A good-looking website is only the first step. The real money is in what happens after someone clicks. I build quote flows, lead capture systems, follow-up automations, dashboards, and review request systems so your business can respond faster and book more jobs without juggling everything manually.
+        </p>
+        <div class="mt-8">
+          <a href="/custom-lead-systems" class="btn-primary">
+            See How It Works
             <span aria-hidden="true">→</span>
           </a>
         </div>
-
-        <p class="mt-7 text-[0.92rem] text-text-muted">
-          Built by the operator behind Fitchin's custom 378-vehicle quote system.
-        </p>
       </div>
     </section>
 
-    <!-- INDUSTRIES STRIP -->
-    <section class="relative border-b border-line bg-surface-1/30">
-      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-10 sm:py-12">
-        <div class="flex flex-col sm:flex-row items-center sm:items-baseline gap-y-4 gap-x-6 text-center sm:text-left">
-          <span class="font-display text-[0.78rem] uppercase tracking-[0.18em] text-text-muted flex-shrink-0">
-            Built for local service businesses like
-          </span>
-          <ul class="flex flex-wrap justify-center sm:justify-start gap-x-4 gap-y-2 text-[0.92rem] text-text-soft">
-            {industries.map((i, idx) => (
-              <li class="flex items-center gap-3">
-                <span>{i}</span>
-                {idx < industries.length - 1 && (
-                  <span aria-hidden="true" class="text-text-muted/50">·</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- PAIN — Most local websites leak leads -->
-    <section class="relative border-b border-line">
-      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+    <!-- SERVICES GRID -->
+    <section id="services" class="relative border-b border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-24 sm:py-32">
         <div class="max-w-3xl">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Real Problem</span>
-          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.1] font-bold">
-            Most local websites don't have a traffic problem.
-            <br class="hidden sm:block" />
-            They have a <span class="text-accent">lead leak problem</span>.
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What I Do</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            Six Things I Build for Local Service Businesses
           </h2>
           <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-            The visitors are showing up. They're just not turning into calls, quote requests, or booked jobs. Here's where the leak usually is.
+            Pick the piece you need. Or stack them — the website, the system behind it, and the local SEO around it all work better together.
           </p>
         </div>
 
-        <ul class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {painPoints.map((p, i) => (
-            <li class="card p-6 sm:p-7 flex flex-col gap-3">
-              <span class="font-display text-[0.72rem] tracking-[0.2em] uppercase text-accent">0{i + 1}</span>
-              <h3 class="font-display font-semibold text-[1.1rem] leading-snug text-text">{p.title}</h3>
-              <p class="text-[0.95rem] text-text-soft leading-relaxed">{p.body}</p>
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+          {services.map((s) => (
+            <a
+              href={s.href}
+              class:list={[
+                'card card-hover group p-7 flex flex-col gap-4',
+                s.primary ? 'border-accent/60 shadow-[0_30px_60px_-20px_rgba(255,107,26,0.3)]' : '',
+              ]}
+            >
+              {s.primary && (
+                <div class="inline-flex items-center gap-1.5 self-start rounded-full bg-accent px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.16em] text-bg">
+                  <span aria-hidden="true">★</span> The Differentiator
+                </div>
+              )}
+              <div class:list={[
+                'h-11 w-11 rounded-lg grid place-items-center',
+                s.primary ? 'bg-accent text-bg' : 'bg-accent/15 text-accent',
+              ]} aria-hidden="true">
+                {s.icon === 'monitor' && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                )}
+                {s.icon === 'circuit' && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 9V5a2 2 0 0 1 2-2h2"/><path d="M11 15v4a2 2 0 0 0 2 2h2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 12h8"/></svg>
+                )}
+                {s.icon === 'target' && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                )}
+                {s.icon === 'pin' && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                )}
+                {s.icon === 'star' && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 9 22 9.3 17 14 18.5 21 12 17.3 5.5 21 7 14 2 9.3 9 9 12 2"/></svg>
+                )}
+                {s.icon === 'mail' && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+                )}
+              </div>
+              <h3 class="font-display font-semibold text-[1.15rem] leading-snug text-text">{s.title}</h3>
+              <p class="text-[0.95rem] text-text-soft leading-relaxed">{s.body}</p>
+              <span class="mt-auto inline-flex items-center gap-1.5 text-[0.85rem] font-display font-medium text-accent group-hover:translate-x-0.5 transition-transform">
+                Learn more
+                <span aria-hidden="true">→</span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- INDUSTRIES -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-16 sm:py-20">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Industries</span>
+          <h2 class="mt-5 text-[1.7rem] sm:text-[2.1rem] leading-[1.1] font-bold">
+            Built for Local Service Businesses
+          </h2>
+          <p class="mt-4 text-text-soft text-[1rem] leading-relaxed">
+            If your business runs on quotes, bookings, and repeat customers, the system fits.
+          </p>
+        </div>
+
+        <ul class="mt-8 flex flex-wrap gap-2">
+          {industries.map((v) => (
+            <li class="inline-flex items-center rounded-full border border-line bg-surface-2 px-3.5 py-1.5 text-[0.9rem] text-text-soft font-display">
+              {v}
             </li>
           ))}
         </ul>
       </div>
     </section>
 
-    <!-- THE SYSTEM (reused customer journey) -->
-    <GrowthSystemSection />
-
-    <!-- WHAT WE BUILD -->
+    <!-- PROOF PREVIEW -->
     <section class="relative border-b border-line">
-      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
-        <div class="max-w-3xl">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What We Build</span>
-          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-            Tools that turn local visibility into <span class="text-accent">booked jobs</span>.
-          </h2>
-        </div>
-
-        <div class="mt-12 grid sm:grid-cols-2 gap-5">
-          {services.map((s) => (
-            <article class="card p-7 flex flex-col gap-4">
-              <div class="h-11 w-11 rounded-lg bg-accent/15 text-accent grid place-items-center" aria-hidden="true">
-                {s.icon === 'monitor' && (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
-                )}
-                {s.icon === 'pin' && (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                )}
-                {s.icon === 'route' && (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg>
-                )}
-                {s.icon === 'target' && (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
-                )}
-              </div>
-              <h3 class="font-display font-semibold text-[1.15rem] leading-snug text-text">{s.title}</h3>
-              <p class="text-[0.95rem] text-text-soft leading-relaxed">{s.body}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- RECENT WORK -->
-    <section class="relative border-b border-line bg-surface-1/40">
-      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
-        <div class="grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 items-center">
-          <div class="max-w-3xl">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-24 sm:py-32">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
+          <div class="max-w-2xl">
             <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Recent Work</span>
             <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-              Real systems, built inside <span class="text-accent">real local businesses</span>.
+              Real Sites. Real Systems. Already Running.
             </h2>
-            <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-              Two live projects built on the same system — a barbershop and a tint/detail shop, both built around the path from Google search to booked job.
-            </p>
           </div>
-
-          <!-- Hero phones — Fitchin + Modern Classic mockups -->
-          <div class="relative mx-auto w-full max-w-[360px] sm:max-w-[420px]">
-            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60" aria-hidden="true"></div>
-            <img
-              src="/showcase-phones.png"
-              alt="Two phones side by side displaying the live Fitchin Tint & Detail and Modern Classic Barbershop websites."
-              width="768"
-              height="1381"
-              loading="lazy"
-              decoding="async"
-              class="relative w-full h-auto"
-            />
-          </div>
+          <a href="/case-studies" class="inline-flex items-center gap-1.5 font-display font-medium text-[0.95rem] text-accent hover:text-accent-hover transition-colors whitespace-nowrap">
+            All case studies
+            <span aria-hidden="true">→</span>
+          </a>
         </div>
 
-        <div class="mt-14 sm:mt-16 grid md:grid-cols-2 gap-6">
-          {projectsPreview.map((p) => (
-            <article class="card card-hover overflow-hidden flex flex-col">
-              <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden border-b border-line">
-                <img
-                  src={p.image}
-                  alt={`${p.title} — mobile preview`}
-                  class="absolute inset-0 w-full h-full object-cover object-top"
-                  loading="lazy"
-                  decoding="async"
-                />
+        <div class="grid md:grid-cols-3 gap-5">
+          {caseStudies.map((c) => (
+            <a href={c.href} class="card card-hover overflow-hidden flex flex-col group">
+              <div class="relative aspect-[9/12] bg-surface-2 overflow-hidden border-b border-line">
+                {c.image ? (
+                  <img
+                    src={c.image}
+                    alt={`${c.name} preview`}
+                    class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <div class="absolute inset-0 grid place-items-center text-text-muted/60 text-[0.78rem] font-display uppercase tracking-[0.16em] text-center px-6 leading-relaxed">
+                    [NEEDS IMAGE:<br/>All Transport hero screenshot]
+                  </div>
+                )}
                 <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
-                <span class="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-bg/80 backdrop-blur px-2.5 py-1 text-[0.65rem] font-display tracking-wider uppercase text-text-soft border border-line">
-                  <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
-                  Live · Mobile
+              </div>
+              <div class="p-6 flex-1 flex flex-col">
+                <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">{c.label}</div>
+                <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text leading-snug">{c.name}</h3>
+                <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">{c.summary}</p>
+                <span class="mt-5 inline-flex items-center gap-1.5 text-[0.85rem] font-display font-medium text-accent group-hover:translate-x-0.5 transition-transform">
+                  Read the case study
+                  <span aria-hidden="true">→</span>
                 </span>
               </div>
-              <div class="p-7 flex-1 flex flex-col">
-                <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">{p.label}</div>
-                <h3 class="mt-2 font-display font-semibold text-[1.2rem] text-text leading-snug">{p.title}</h3>
-                <p class="mt-3 text-[0.95rem] text-text-soft leading-relaxed flex-1">{p.outcome}</p>
-                <a href="/work" class="mt-5 inline-flex items-center gap-1.5 font-display font-medium text-[0.9rem] text-accent hover:text-accent-hover transition-colors">
-                  View project
-                  <span aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
+            </a>
           ))}
-        </div>
-
-        <div class="mt-10 flex justify-center">
-          <a href="/work" class="btn-ghost">
-            View All Work
-            <span aria-hidden="true">→</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- WHY US -->
-    <section class="relative border-b border-line">
-      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
-        <div class="max-w-3xl">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Why We're Different</span>
-          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-            Built by an operator, <span class="text-accent">not an agency</span>.
-          </h2>
-        </div>
-
-        <div class="mt-12 grid sm:grid-cols-2 gap-5">
-          {whyDifferent.map((w) => (
-            <article class="card p-7 flex flex-col gap-3">
-              <div class="h-9 w-9 rounded-lg bg-accent/15 text-accent grid place-items-center" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              </div>
-              <h3 class="font-display font-semibold text-[1.1rem] leading-snug text-text">{w.title}</h3>
-              <p class="text-[0.95rem] text-text-soft leading-relaxed">{w.body}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- PRICING TEASER -->
-    <section class="relative border-b border-line bg-surface-1/40">
-      <div class="grid-bg absolute inset-0 z-0 opacity-30" aria-hidden="true"></div>
-      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
-        <div class="max-w-3xl">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Pricing</span>
-          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-            Founding pricing, <span class="text-accent">locked in for life</span>.
-          </h2>
-          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-            We're opening 5 founding client spots at discounted launch pricing while we build proof. Founding clients lock in their rate as long as they stay subscribed. After 5 spots, prices return to standard rates.
-          </p>
-        </div>
-
-        <div class="mt-12 grid md:grid-cols-3 gap-5 items-stretch">
-          {foundingPackages.map((p) => (
-            <article class:list={[
-              'relative card p-7 flex flex-col gap-4',
-              p.popular ? 'border-accent/60 lg:scale-[1.02] lg:-translate-y-1 shadow-[0_30px_60px_-20px_rgba(255,107,26,0.3)]' : '',
-            ]}>
-              {p.popular && (
-                <div class="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 font-display text-[0.7rem] font-bold uppercase tracking-[0.16em] text-bg shadow-[0_8px_20px_-6px_rgba(255,107,26,0.6)]">
-                    <span aria-hidden="true">★</span> Most Popular
-                  </span>
-                </div>
-              )}
-              <div class="font-display font-semibold text-[1.25rem] text-text">{p.name}</div>
-              <div class="flex items-baseline flex-wrap gap-x-2 gap-y-1">
-                <span class="font-display font-bold text-[2rem] leading-none text-text">{p.foundingPrice}</span>
-                <span class="text-[0.85rem] text-text-soft">{p.foundingMeta}</span>
-              </div>
-              <div class="text-[0.82rem] text-text-muted">
-                <span class="line-through decoration-line-2">{p.futurePrice}</span> future rate
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <div class="mt-10 flex justify-center">
-          <a href="/pricing" class="btn-ghost">
-            View Full Pricing
-            <span aria-hidden="true">→</span>
-          </a>
         </div>
       </div>
     </section>
 
     <!-- FINAL CTA -->
-    <section class="relative overflow-hidden">
+    <section class="relative">
       <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
       <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
 
       <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
-        <h2 class="text-[2.2rem] sm:text-[3.2rem] leading-[1.05] font-bold tracking-tight">
-          Ready to find where your <span class="text-accent">leads are leaking</span>?
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Easy Way to Start</span>
+        <h2 class="mt-6 text-[2.2rem] sm:text-[3.2rem] leading-[1.05] font-bold tracking-tight">
+          Not sure what you need yet?
         </h2>
         <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
-          Free Lead Leak Audit. We'll show you exactly what's costing you calls, quote requests, and booked jobs.
+          Send me your website and I'll tell you what I'd fix first. No pitch, no pressure.
         </p>
-
-        <div class="mt-10 flex flex-wrap justify-center gap-3">
-          <a href="/grow" class="btn-primary">
-            Get Free Audit
+        <div class="mt-10">
+          <a href="/contact" class="btn-primary">
+            Get a Free Website Review
             <span aria-hidden="true">↗</span>
-          </a>
-          <a href="/contact" class="btn-ghost">
-            Talk Through Your Project
-            <span aria-hidden="true">→</span>
           </a>
         </div>
       </div>
