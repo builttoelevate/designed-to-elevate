@@ -30,6 +30,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Defense against horizontal overflow from decorative blobs/glows that
+   extend past their section bounds. Belt-and-suspenders: each decorated
+   section also gets `overflow-hidden`, but this catches anything that
+   slips through and prevents page-level horizontal scroll on mobile. */
+html.landing,
+html.landing body {
+  overflow-x: hidden;
+}
+
 html.landing,
 html.landing body {
   background: var(--color-bg);
