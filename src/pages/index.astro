@@ -111,7 +111,7 @@ const schema = {
       <div class="hp-container hp-hero-grid-layout">
         <div class="hp-hero-copy">
           <span class="hp-eyebrow">
-            DESIGNED TO ELEVATE <span class="hp-eyebrow-dot" aria-hidden="true">·</span> LOCAL WEBSITES + LEAD SYSTEMS
+            Local Websites <span class="hp-eyebrow-plus" aria-hidden="true">+</span> Lead Systems
           </span>
 
           <h1 class="hp-h1">
@@ -487,18 +487,22 @@ const schema = {
     font-weight: 800;
     color: var(--color-text);
   }
-  /* Em-dash sits inline at full headline weight — just colored.
-     The brochure compresses its dash because the brochure has
-     much smaller headline type; at this scale, full-width reads
-     as a deliberate accent rather than a tick mark. */
+  /* Em-dash with mild horizontal compression. Uncompressed at
+     Montserrat 800 / clamp 2.4–3.7rem reads as a wall, not a
+     dash. scaleX(0.78) keeps the glyph clearly readable as a
+     dash but visually proportional to the surrounding letters. */
   .hp-accent-rule {
     color: var(--color-accent);
-    padding: 0 0.05em;
+    display: inline-block;
+    transform: scaleX(0.78);
+    transform-origin: center;
+    padding: 0 0.04em;
   }
 
-  /* Hero eyebrow — plain text label, NOT the .eyebrow pill from
-     landing.css (the pill wraps awkwardly on mobile with long
-     copy). Letter-spaced caps, orange middle separator dot. */
+  /* Hero eyebrow — short, single-line on mobile. The "+" is the
+     visual rhythm hit; keeping it slightly bolder than the rest
+     of the line ties to the orange accent vocabulary used across
+     the brochure and brand. */
   .hp-eyebrow {
     display: block;
     font-family: 'Montserrat', system-ui, sans-serif;
@@ -508,7 +512,10 @@ const schema = {
     text-transform: uppercase;
     color: var(--color-accent);
   }
-  .hp-eyebrow-dot { padding: 0 0.35em; color: var(--color-accent); }
+  .hp-eyebrow-plus {
+    padding: 0 0.18em;
+    font-weight: 800;
+  }
 
   .hp-subhead {
     margin-top: 1.4rem;
