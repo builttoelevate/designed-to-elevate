@@ -1,5 +1,6 @@
 ---
 import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
 
 const SITE = 'https://designedtoelevate.co';
 
@@ -99,18 +100,7 @@ const schema = {
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
-  <!-- HEADER — logo only, no nav. The page IS the experience. -->
-  <header class="hp-header">
-    <div class="hp-header-inner">
-      <a href="#top" class="hp-logo" aria-label="Designed to Elevate — home">
-        <img src="/logo-wordmark-orange.png" alt="Designed to Elevate" width="320" height="96" />
-      </a>
-      <a href="#contact" class="btn-primary hp-header-cta">
-        Start a Conversation
-        <span aria-hidden="true">↗</span>
-      </a>
-    </div>
-  </header>
+  <SiteHeader />
 
   <main id="main">
     <!-- ─── 1. HERO ─────────────────────────────────────────── -->
@@ -423,39 +413,9 @@ const schema = {
     .hp-container { padding: 0 2rem; }
   }
 
-  /* ── Header ── */
-  .hp-header {
-    position: sticky;
-    top: 0;
-    z-index: 30;
-    background: rgba(14, 16, 20, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(42, 47, 58, 0.6);
-  }
-  .hp-header-inner {
-    max-width: 78rem;
-    margin: 0 auto;
-    padding: 0.9rem 1.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-  .hp-logo img {
-    display: block;
-    height: 2.25rem;
-    width: auto;
-  }
-  .hp-header-cta {
-    padding: 0.6rem 1rem !important;
-    font-size: 0.82rem !important;
-    font-family: 'Montserrat', system-ui, sans-serif !important;
-  }
-  @media (max-width: 480px) {
-    .hp-header-cta { padding: 0.55rem 0.75rem !important; font-size: 0.74rem !important; }
-    .hp-logo img { height: 2rem; }
-  }
+  /* ── Header — replaced by the shared SiteHeader component for
+     multi-page nav consistency across the site. The homepage now
+     gets the same dropdown nav as every other interior page. ── */
 
   /* ── Sections ── */
   .hp-section {
