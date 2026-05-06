@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Designed to Elevate — Countertop Brochure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap">
+  <style>
+    /* ── PRINT PAGE SETUP ─────────────────────────────────────────── */
+    @page {
+      size: 8.5in 11in;
+      margin: 0;
+    }
+
+    /* Force background colors + dark fills to actually print in Chrome,
+       Safari, and most other browsers. Without this, "Print to PDF"
+       drops the dark canvas and you get black text on white. */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0F0F10;
+      color: #FFFFFF;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── PAGE FRAME ───────────────────────────────────────────────── */
+    /* Exactly 8.5x11. 0.5in safe-zone padding on all sides.
+       page-break-after avoid so this never bleeds onto a second page. */
+    .page {
+      width: 8.5in;
+      height: 11in;
+      padding: 0.5in;
+      background: #0F0F10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      page-break-after: avoid;
+      page-break-inside: avoid;
+      overflow: hidden;
+    }
+
+    /* ── 1. EYEBROW ───────────────────────────────────────────────── */
+    .eyebrow {
+      font-size: 9pt;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #B8B8BC;
+      font-weight: 500;
+      text-align: center;
+    }
+    .eyebrow .dot {
+      color: #FF7A1A;
+      padding: 0 0.04in;
+      font-weight: 700;
+    }
+
+    /* ── 2. HEADLINE ──────────────────────────────────────────────── */
+    .headline {
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-weight: 800;
+      font-size: 34pt;
+      line-height: 1.08;
+      text-align: center;
+      max-width: 6.5in;
+      margin: 0.32in 0 0;
+      color: #FFFFFF;
+      letter-spacing: -0.015em;
+    }
+    .headline .accent-rule {
+      color: #FF7A1A;
+    }
+
+    /* ── 3. SUBHEAD ───────────────────────────────────────────────── */
+    .subhead {
+      font-size: 12.5pt;
+      line-height: 1.45;
+      text-align: center;
+      max-width: 5.6in;
+      margin: 0.18in 0 0;
+      color: #B8B8BC;
+      font-weight: 400;
+    }
+
+    /* ── 4. PHONE MOCKUP + GLOW ───────────────────────────────────── */
+    /* The image is the 2-phone composite at /public/showcase-phones.png
+       (768×1381 portrait). Sized by height; width follows naturally. */
+    .mockup-wrap {
+      position: relative;
+      height: 3.6in;
+      margin: 0.22in 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mockup-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 4.5in;
+      height: 4.5in;
+      background: radial-gradient(ellipse at center,
+                  rgba(255, 122, 26, 0.36) 0%,
+                  rgba(255, 122, 26, 0.10) 45%,
+                  rgba(255, 122, 26, 0) 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .mockup {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      width: auto;
+      display: block;
+    }
+
+    /* ── 5. CAPTION + CITY TAGS ───────────────────────────────────── */
+    .caption {
+      margin-top: 0.18in;
+      text-align: center;
+      font-size: 11pt;
+      font-style: italic;
+      color: #FFFFFF;
+    }
+    .city-tags {
+      margin-top: 0.04in;
+      font-size: 9.5pt;
+      color: #B8B8BC;
+      text-align: center;
+      font-weight: 400;
+    }
+    .city-tags .sep {
+      color: #FF7A1A;
+      padding: 0 0.08in;
+      font-weight: 700;
+    }
+
+    /* ── 6. SECTION LABEL "BUILT TO HELP YOU" ─────────────────────── */
+    .section-label {
+      margin-top: 0.26in;
+      font-size: 10pt;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #FF7A1A;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* ── 7. BULLETS — 2 columns ───────────────────────────────────── */
+    .bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0.16in 0 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 0.5in;
+      row-gap: 0.1in;
+      width: 4.4in;
+    }
+    .bullets li {
+      display: flex;
+      align-items: center;
+      gap: 0.1in;
+      font-size: 12pt;
+      color: #FFFFFF;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    .bullets li::before {
+      content: '';
+      display: inline-block;
+      width: 0.085in;
+      height: 0.085in;
+      background: #FF7A1A;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── 8. THIN ORANGE DIVIDER ───────────────────────────────────── */
+    .divider {
+      width: 1in;
+      height: 1px;
+      background: #FF7A1A;
+      margin: 0.2in 0 0.16in;
+      border: 0;
+    }
+
+    /* ── 9. FEATURED BUILD ────────────────────────────────────────── */
+    .featured {
+      max-width: 6in;
+      text-align: center;
+      font-style: italic;
+      font-size: 11pt;
+      color: #B8B8BC;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    /* ── 10. CTA LINE ─────────────────────────────────────────────── */
+    .cta {
+      margin-top: 0.26in;
+      font-size: 14pt;
+      font-weight: 700;
+      color: #FFFFFF;
+      text-align: center;
+    }
+    .cta .arrow {
+      color: #FF7A1A;
+      padding-left: 0.06in;
+    }
+
+    /* ── 11. QR CODE PLACEHOLDER ──────────────────────────────────── */
+    .qr {
+      width: 1.25in;
+      height: 1.25in;
+      margin: 0.14in 0 0;
+      background: #FFFFFF;
+      border-radius: 0.05in;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0F0F10;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 10pt;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── 12. DOMAIN ───────────────────────────────────────────────── */
+    .domain {
+      margin-top: 0.12in;
+      font-size: 13pt;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: 0.005em;
+      text-align: center;
+    }
+
+    /* ── 13. FOOTER LINE ──────────────────────────────────────────── */
+    .footer-line {
+      margin-top: 0.06in;
+      font-size: 9.5pt;
+      font-style: italic;
+      color: #B8B8BC;
+      text-align: center;
+    }
+
+    /* ── PRINT-ONLY OVERRIDES ─────────────────────────────────────── */
+    @media print {
+      html, body { background: #0F0F10; }
+      .page {
+        box-shadow: none;
+        margin: 0;
+      }
+    }
+
+    /* ── SCREEN-ONLY: faint shadow so the page reads as a card
+       when previewing in Chrome before printing ──────────────────── */
+    @media screen {
+      body {
+        padding: 0.4in;
+        background: #1F1F22;
+        min-height: 100vh;
+      }
+      .page {
+        box-shadow: 0 12px 40px -8px rgba(0,0,0,0.7);
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="page">
+    <!-- 1. EYEBROW -->
+    <div class="eyebrow">
+      DESIGNED TO ELEVATE <span class="dot">·</span> LOCAL WEBSITES + LEAD SYSTEMS
+    </div>
+
+    <!-- 2. HEADLINE -->
+    <h1 class="headline">
+      Websites built to get found <span class="accent-rule">—</span> and built to convert.
+    </h1>
+
+    <!-- 3. SUBHEAD -->
+    <p class="subhead">
+      Search-optimized websites and lead systems for local businesses that want more calls, quotes, and booked jobs.
+    </p>
+
+    <!-- 4. PHONE MOCKUP — real composite at /public/showcase-phones.png.
+         Path is relative to brochure.html at the repo root, which works
+         when opening via file:// in Chrome. If you move the brochure
+         elsewhere, copy showcase-phones.png alongside it. -->
+    <div class="mockup-wrap" aria-hidden="true">
+      <div class="mockup-glow"></div>
+      <img class="mockup" src="public/showcase-phones.png" alt="" />
+    </div>
+
+    <!-- 5. CAPTION + CITY TAGS -->
+    <div class="caption">Recent local work — including this shop's website.</div>
+    <div class="city-tags">
+      Fitchin Auto Detail &amp; Tint, Coshocton<span class="sep">·</span>Modern Classic Barbershop, Zanesville
+    </div>
+
+    <!-- 6. SECTION LABEL -->
+    <div class="section-label">BUILT TO HELP YOU</div>
+
+    <!-- 7. BULLETS -->
+    <ul class="bullets">
+      <li>Get found on Google</li>
+      <li>Book more customers</li>
+      <li>Turn visitors into leads</li>
+      <li>Follow up faster</li>
+    </ul>
+
+    <!-- 8. DIVIDER -->
+    <hr class="divider" />
+
+    <!-- 9. FEATURED BUILD -->
+    <div class="featured">
+      Custom 378-vehicle quote system built for Fitchin — instant pricing, lead capture, online booking.
+    </div>
+
+    <!-- 10. CTA LINE -->
+    <div class="cta">
+      See recent local work <span class="arrow">→</span>
+    </div>
+
+    <!-- 11. QR PLACEHOLDER -->
+    <div class="qr">[QR]</div>
+
+    <!-- 12. DOMAIN -->
+    <div class="domain">designedtoelevate.co</div>
+
+    <!-- 13. FOOTER LINE -->
+    <div class="footer-line">
+      Grab a card below — or ask Michael, he'll tell you.
+    </div>
+  </section>
+</body>
+</html>
