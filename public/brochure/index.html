@@ -113,20 +113,22 @@
     }
     /* Bright, diagonal orange spread — off-centered radial so the
        light reads as coming from the lower-right (matches the
-       reference image, not a flat halo). */
+       reference image, not a flat halo). Box is sized large enough
+       and the gradient stops tight enough that alpha fully reaches
+       0 within the box on every side — so no visible square edge. */
     .mockup-glow {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 6.0in;
-      height: 6.0in;
+      width: 7in;
+      height: 7in;
       background:
-        radial-gradient(ellipse 70% 70% at 70% 65%,
+        radial-gradient(ellipse 50% 50% at 65% 60%,
                   rgba(255, 122, 26, 0.95) 0%,
-                  rgba(255, 122, 26, 0.55) 25%,
-                  rgba(255, 122, 26, 0.20) 50%,
-                  rgba(255, 122, 26, 0) 75%);
+                  rgba(255, 122, 26, 0.55) 20%,
+                  rgba(255, 122, 26, 0.20) 45%,
+                  rgba(255, 122, 26, 0) 72%);
       z-index: 0;
       pointer-events: none;
     }
