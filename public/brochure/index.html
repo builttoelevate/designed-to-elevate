@@ -99,8 +99,10 @@
     }
 
     /* ── 4. PHONE MOCKUP + GLOW ───────────────────────────────────── */
-    /* The image is the 2-phone composite at /public/showcase-phones.png
-       (768×1381 portrait). Sized by height; width follows naturally. */
+    /* Cutout PNG (transparent background) at /showcase-phones-cutout.png.
+       Drop-shadow follows the alpha channel and lands a soft phone-shaped
+       shadow on the dark canvas — much cleaner than a flat rectangular
+       shadow on the prior non-transparent version. */
     .mockup-wrap {
       position: relative;
       height: 3.6in;
@@ -129,6 +131,12 @@
       height: 100%;
       width: auto;
       display: block;
+      /* Two stacked drop-shadows: a tight ambient under the phones,
+         plus a softer wider one for depth. Both follow the PNG's
+         alpha so the shadow is phone-shaped, not box-shaped. */
+      filter:
+        drop-shadow(0 0.06in 0.10in rgba(0, 0, 0, 0.55))
+        drop-shadow(0 0.20in 0.32in rgba(0, 0, 0, 0.55));
     }
 
     /* ── 5. CAPTION + CITY TAGS ───────────────────────────────────── */
@@ -302,11 +310,12 @@
       Search-optimized websites and lead systems for local businesses that want more calls, quotes, and booked jobs.
     </p>
 
-    <!-- 4. PHONE MOCKUP — real composite served at /showcase-phones.png
-         from Astro's /public folder. -->
+    <!-- 4. PHONE MOCKUP — transparent-bg cutout served at
+         /showcase-phones-cutout.png. CSS drop-shadow on .mockup
+         provides the phone-shaped shadow. -->
     <div class="mockup-wrap" aria-hidden="true">
       <div class="mockup-glow"></div>
-      <img class="mockup" src="/showcase-phones.png" alt="" />
+      <img class="mockup" src="/showcase-phones-cutout.png" alt="" />
     </div>
 
     <!-- 5. CAPTION + CITY TAGS -->
