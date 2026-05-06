@@ -111,6 +111,17 @@ import SiteFooter from '../components/site/SiteFooter.astro';
               </div>
 
               <label class="block">
+                <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Estimated budget range <span class="text-text-muted">(optional)</span></span>
+                <select name="budget" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 appearance-none bg-no-repeat bg-[right_0.85rem_center] bg-[length:1rem]" style="background-image: url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239AA0AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>&quot;); padding-right: 2.5rem;">
+                  <option value="Not sure yet" selected>Not sure yet</option>
+                  <option value="Under $1,500">Under $1,500</option>
+                  <option value="$1,500–$3,000">$1,500–$3,000</option>
+                  <option value="$3,000–$5,000">$3,000–$5,000</option>
+                  <option value="$5,000+">$5,000+</option>
+                </select>
+              </label>
+
+              <label class="block">
                 <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">What do you need help with? <span class="text-accent">*</span></span>
                 <textarea required name="message" rows="5" class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 resize-y" placeholder="E.g., my current site isn't getting calls — I need a new site for my business — I want better Google rankings"></textarea>
               </label>

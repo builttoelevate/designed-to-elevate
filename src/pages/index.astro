@@ -68,6 +68,27 @@ const featuredBullets = [
 
 const aboutAccents = ['Local Ohio', 'Mobile-first', 'Built to convert'];
 
+const pricing = [
+  {
+    title: 'Starter Website',
+    price: 'Starting at $1,500',
+    body: 'For businesses that need a clean, professional site that ranks locally and invites contact.',
+    featured: false,
+  },
+  {
+    title: 'Lead Generation Website',
+    price: 'Starting at $3,000',
+    body: 'For businesses that want the website to bring in real calls, quote requests, and booked jobs.',
+    featured: true,
+  },
+  {
+    title: 'Custom Lead System',
+    price: 'Starting at $5,000',
+    body: 'Quote wizards, booking flows, dashboards, and integrations built around how your business actually sells.',
+    featured: false,
+  },
+];
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
@@ -128,14 +149,19 @@ const schema = {
               Search-optimized websites, landing pages, and lead systems for local Ohio businesses that want more calls, quote requests, and booked jobs.
             </p>
 
-            <div class="mt-8 flex flex-wrap gap-3">
+            <div class="mt-8">
               <a href="/contact" class="btn-primary">
-                Free Website Review
+                Get a Free Quote
                 <span aria-hidden="true">↗</span>
               </a>
             </div>
 
-            <p class="mt-7 text-text-soft text-[0.92rem] leading-relaxed max-w-2xl italic">
+            <a href="/contact" class="mt-3 inline-block text-[0.92rem] hover:text-accent transition-colors" style="color:#B8B8BC;">
+              Already have a site? Get a free review
+              <span class="text-accent" aria-hidden="true">→</span>
+            </a>
+
+            <p class="mt-6 text-text-soft text-[0.92rem] leading-relaxed max-w-2xl italic">
               Recent local work: Fitchin Auto Detail &amp; Tint, Coshocton <span class="text-accent not-italic font-bold px-1">·</span> Modern Classic Barbershop, Zanesville <span class="text-accent not-italic font-bold px-1">·</span> All Transport Party Bus, Carrollton.
             </p>
           </div>
@@ -249,7 +275,56 @@ const schema = {
       </div>
     </section>
 
-    <!-- ─── 4. FEATURED BUILD ───────────────────────────────── -->
+    <!-- ─── 4. PRICING ──────────────────────────────────────── -->
+    <section id="pricing" class="relative border-b border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> PRICING</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            Packages &amp; Starting Prices
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed italic">
+            Starting points, not ceilings. Final scope and pricing depend on your project.
+          </p>
+        </div>
+
+        <div class="mt-12 grid lg:grid-cols-3 gap-5 lg:gap-6 items-stretch">
+          {pricing.map((p) => (
+            <article
+              class:list={[
+                'card relative p-7 sm:p-8 flex flex-col',
+                p.featured
+                  ? 'border-accent/60 lg:scale-[1.02] lg:-translate-y-1 shadow-[0_30px_60px_-20px_rgba(255,107,26,0.35)]'
+                  : '',
+              ]}
+            >
+              {p.featured && (
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 font-display text-[0.7rem] font-bold uppercase tracking-[0.16em] text-bg shadow-[0_8px_20px_-6px_rgba(255,107,26,0.6)]">
+                    <span aria-hidden="true">★</span> Most Popular
+                  </span>
+                </div>
+              )}
+
+              <h3 class="font-display font-semibold text-[1.4rem] text-text leading-snug">{p.title}</h3>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="font-display font-bold text-[1.5rem] sm:text-[1.7rem] text-accent">{p.price}</span>
+              </div>
+              <p class="mt-4 text-[0.98rem] text-text-soft leading-relaxed">{p.body}</p>
+            </article>
+          ))}
+        </div>
+
+        <div class="mt-12 flex justify-center">
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 5. FEATURED BUILD ───────────────────────────────── -->
     <section class="relative border-b border-line">
       <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
         <div class="max-w-3xl mb-12">
@@ -339,37 +414,47 @@ const schema = {
       <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
 
       <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
-        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Free Website Review</span>
-        <h2 class="mt-6 text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
           Want your website to bring in more of the right customers?
         </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          If you run a local Ohio business and your website isn't helping people find you, trust you, or contact you — let's take a look.
+        </p>
 
-        <div class="mt-7 max-w-xl mx-auto space-y-2">
+        <div class="mt-8 max-w-xl mx-auto space-y-2">
           <p class="text-text text-[1.05rem] sm:text-[1.15rem] leading-relaxed">
-            <strong class="font-semibold">Have a website?</strong> I'll tell you what I'd fix first.
+            <strong class="font-semibold">Have a website?</strong> Get a free review of what I'd fix first.
           </p>
           <p class="text-text text-[1.05rem] sm:text-[1.15rem] leading-relaxed">
-            <strong class="font-semibold">Don't have one yet?</strong> I'll show you what I'd build.
+            <strong class="font-semibold">Don't have one yet?</strong> Get a free quote on what I'd build.
           </p>
           <p class="text-[0.92rem] italic" style="color:#B8B8BC;">
-            Free, no pitch, no pressure.
+            No pitch, no pressure.
           </p>
         </div>
 
-        <div class="mt-10 flex flex-wrap justify-center gap-3">
+        <div class="mt-10">
           <a href="/contact" class="btn-primary">
-            Free Website Review
+            Get a Free Quote
             <span aria-hidden="true">↗</span>
           </a>
-          <button type="button" data-call-text class="btn-ghost">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
-            Call/Text Bill
-          </button>
         </div>
 
         <p class="mt-8 text-[0.88rem] italic max-w-lg mx-auto" style="color:#B8B8BC;">
           Scanned a card? Have a site or thinking about building one — let's take a look.
         </p>
+
+        <div class="mt-10 pt-8 border-t border-line max-w-md mx-auto flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.95rem]">
+          <button type="button" data-call-text class="inline-flex items-center gap-2 text-text-soft hover:text-accent transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+            (740) 617-6488
+          </button>
+          <span class="text-text-muted" aria-hidden="true">·</span>
+          <a href="mailto:bilsonxnc@gmail.com" class="inline-flex items-center gap-2 text-text-soft hover:text-accent transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+            bilsonxnc@gmail.com
+          </a>
+        </div>
       </div>
     </section>
   </main>
