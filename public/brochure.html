@@ -3,7 +3,10 @@
 <head>
   <meta charset="utf-8">
   <title>Designed to Elevate — Countertop Brochure</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Lock the viewport to the printed page width (8.5in × 96 = 816px)
+       so mobile browsers auto-fit the brochure to the screen instead
+       of requiring pinch-zoom. Print isn't affected by viewport meta. -->
+  <meta name="viewport" content="width=816, initial-scale=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap">
@@ -299,13 +302,11 @@
       Search-optimized websites and lead systems for local businesses that want more calls, quotes, and booked jobs.
     </p>
 
-    <!-- 4. PHONE MOCKUP — real composite at /public/showcase-phones.png.
-         Path is relative to brochure.html at the repo root, which works
-         when opening via file:// in Chrome. If you move the brochure
-         elsewhere, copy showcase-phones.png alongside it. -->
+    <!-- 4. PHONE MOCKUP — real composite served at /showcase-phones.png
+         from Astro's /public folder. -->
     <div class="mockup-wrap" aria-hidden="true">
       <div class="mockup-glow"></div>
-      <img class="mockup" src="public/showcase-phones.png" alt="" />
+      <img class="mockup" src="/showcase-phones.png" alt="" />
     </div>
 
     <!-- 5. CAPTION + CITY TAGS -->
