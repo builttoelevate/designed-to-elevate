@@ -120,19 +120,16 @@ const schema = {
 
       <div class="hp-container hp-hero-grid-layout">
         <div class="hp-hero-copy">
-          <span class="eyebrow">
-            <span class="dot" aria-hidden="true"></span>
-            DESIGNED TO ELEVATE · LOCAL WEBSITES + LEAD SYSTEMS
+          <span class="hp-eyebrow">
+            DESIGNED TO ELEVATE <span class="hp-eyebrow-dot" aria-hidden="true">·</span> LOCAL WEBSITES + LEAD SYSTEMS
           </span>
 
           <h1 class="hp-h1">
-            Websites built to get found
-            <span class="hp-accent-rule" aria-hidden="true">—</span>
-            and built to convert.
+            Websites built to get found <span class="hp-accent-rule">—</span> and built to convert.
           </h1>
 
           <p class="hp-subhead">
-            Search-optimized websites, landing pages, and lead systems for local Ohio businesses that want more <span class="hp-em">calls</span>, <span class="hp-em">quote requests</span>, and <span class="hp-em">booked jobs</span>.
+            Search-optimized websites, landing pages, and lead systems for local Ohio businesses that want more calls, quote requests, and booked jobs.
           </p>
 
           <div class="hp-hero-actions">
@@ -143,7 +140,6 @@ const schema = {
           </div>
 
           <p class="hp-trust">
-            <span class="hp-trust-dot" aria-hidden="true"></span>
             <em>Recent local work:</em> Fitchin Auto Detail &amp; Tint, Coshocton <span class="hp-trust-sep" aria-hidden="true">·</span> Modern Classic Barbershop, Zanesville.
           </p>
         </div>
@@ -165,7 +161,7 @@ const schema = {
     <section class="hp-section hp-section--alt">
       <div class="hp-container">
         <header class="hp-section-head">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> RECENT LOCAL WORK</span>
+          <span class="hp-eyebrow">RECENT LOCAL WORK</span>
           <h2 class="hp-h2">Real websites built for real local businesses.</h2>
         </header>
 
@@ -202,7 +198,7 @@ const schema = {
     <section id="services" class="hp-section">
       <div class="hp-container">
         <header class="hp-section-head">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> WHAT I BUILD</span>
+          <span class="hp-eyebrow">WHAT I BUILD</span>
           <h2 class="hp-h2">Built around how local customers actually decide.</h2>
         </header>
 
@@ -235,7 +231,7 @@ const schema = {
     <section class="hp-section hp-section--alt">
       <div class="hp-container">
         <header class="hp-section-head">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> FEATURED BUILD</span>
+          <span class="hp-eyebrow">FEATURED BUILD</span>
           <h2 class="hp-h2">A custom quote system built for a real local shop.</h2>
         </header>
 
@@ -259,7 +255,7 @@ const schema = {
             </ul>
 
             <p class="hp-featured-close">
-              Not every business needs something this complex. But every local business needs a clear path from <span class="hp-em">visitor</span> to <span class="hp-em">lead</span> to <span class="hp-em">customer</span>.
+              Not every business needs something this complex. But every local business needs a clear path from visitor to lead to customer.
             </p>
           </div>
         </div>
@@ -270,7 +266,7 @@ const schema = {
     <section class="hp-section">
       <div class="hp-container hp-about-container">
         <header class="hp-section-head">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> ABOUT</span>
+          <span class="hp-eyebrow">ABOUT</span>
           <h2 class="hp-h2">Built from inside real local businesses.</h2>
         </header>
 
@@ -527,16 +523,33 @@ const schema = {
   .hp-h1 {
     margin-top: 1.25rem;
     font-size: clamp(2.4rem, 6.5vw, 3.7rem);
-    line-height: 1.02;
+    line-height: 1.04;
     font-weight: 800;
     color: var(--color-text);
   }
+  /* Em-dash sits inline at full headline weight — just colored.
+     The brochure compresses its dash because the brochure has
+     much smaller headline type; at this scale, full-width reads
+     as a deliberate accent rather than a tick mark. */
   .hp-accent-rule {
     color: var(--color-accent);
-    display: inline-block;
-    transform: scaleX(0.6);
-    transform-origin: center;
+    padding: 0 0.05em;
   }
+
+  /* Hero eyebrow — plain text label, NOT the .eyebrow pill from
+     landing.css (the pill wraps awkwardly on mobile with long
+     copy). Letter-spaced caps, orange middle separator dot. */
+  .hp-eyebrow {
+    display: block;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .hp-eyebrow-dot { padding: 0 0.35em; color: var(--color-accent); }
+
   .hp-subhead {
     margin-top: 1.4rem;
     max-width: 36rem;
@@ -545,25 +558,18 @@ const schema = {
     color: var(--color-text-soft);
   }
   .hp-hero-actions { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; }
+
+  /* Trust line — single clean italic gray line, no leading bullet
+     (the prior dot column was creating awkward two-column wrapping
+     on narrow viewports). */
   .hp-trust {
     margin-top: 1.6rem;
     max-width: 38rem;
     font-size: 0.92rem;
-    line-height: 1.5;
+    line-height: 1.55;
     color: var(--color-text-soft);
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
   }
   .hp-trust em { font-style: italic; color: var(--color-text); margin-right: 0.15rem; font-weight: 500; }
-  .hp-trust-dot {
-    margin-top: 0.45rem;
-    flex-shrink: 0;
-    width: 0.4rem; height: 0.4rem;
-    border-radius: 50%;
-    background: var(--color-accent);
-    box-shadow: 0 0 0 0.2rem rgba(255, 122, 26, 0.18);
-  }
   .hp-trust-sep { color: var(--color-accent); padding: 0 0.25rem; font-weight: 700; }
 
   /* Hero phones art */
