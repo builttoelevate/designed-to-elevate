@@ -1,0 +1,221 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const principles = [
+  {
+    title: 'Local-first, every time',
+    body: 'Every site is built around how local customers actually search, scan, and decide — not generic SaaS templates designed for the entire internet.',
+  },
+  {
+    title: 'Clarity over cleverness',
+    body: "If a customer can't tell what you do, who you help, and how to reach you within five seconds, the design failed. Plain language, real photos, real services.",
+  },
+  {
+    title: 'Built once, owned by you',
+    body: "No proprietary CMS lock-in, no monthly platform tax. Sites are clean Astro builds on Vercel. You own the code; you keep the keys.",
+  },
+  {
+    title: 'Mobile-first, always',
+    body: "Most local-search traffic comes from a phone. Sites are designed for thumb taps and one-handed reads first, then scaled up to desktop — not the other way around.",
+  },
+];
+
+const fitFor = [
+  'Auto detail, ceramic coating, and tint shops',
+  'Barbershops and personal-service businesses',
+  'HVAC, roofing, pest, and home-service contractors',
+  'Cleaning, landscaping, and pressure washing companies',
+  'Event transportation and party-bus rentals',
+  'Any local Ohio service business that lives or dies on quote requests',
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Bill Chicha',
+    jobTitle: 'Web Designer & Developer',
+    worksFor: { '@type': 'Organization', name: 'Designed to Elevate' },
+    address: { '@type': 'PostalAddress', addressRegion: 'OH', addressCountry: 'US' },
+    email: 'bilsonxnc@gmail.com',
+    telephone: '+1-740-617-6488',
+    url: `${SITE}/about`,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Designed to Elevate',
+    url: SITE,
+    founder: { '@type': 'Person', name: 'Bill Chicha' },
+    email: 'bilsonxnc@gmail.com',
+    telephone: '+1-740-617-6488',
+    areaServed: ['Coshocton, OH', 'Zanesville, OH', 'Newark, OH', 'Cambridge, OH', 'Mount Vernon, OH', 'Carrollton, OH'],
+    logo: `${SITE}/logo-wordmark-orange.png`,
+  },
+];
+---
+<LandingLayout
+  title="About Bill Chicha | Designed to Elevate"
+  description="Designed to Elevate is built and run by Bill Chicha — local Ohio web designer focused on search-optimized websites and lead systems for service businesses in Coshocton, Zanesville, Newark, and surrounding Ohio."
+  pathname="about"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> About</span>
+        <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] lg:text-[3.6rem] leading-[1.04] font-bold tracking-tight">
+          Built and run by one person who actually <span class="text-accent">picks up the phone.</span>
+        </h1>
+        <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-3xl">
+          Designed to Elevate is built and run by <strong class="text-text font-semibold">Bill Chicha</strong> — based in Ohio, working with local service businesses across Coshocton, Zanesville, Newark, and the surrounding region. No agency layers. No account managers. The person you talk to is the person who builds your site.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/contact" class="btn-primary">
+            Start a Conversation
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="/case-studies" class="btn-ghost">
+            See recent work
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE STORY -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-3xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Background</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+          Built from inside real local businesses.
+        </h2>
+
+        <div class="mt-7 space-y-5 text-text-soft text-[1.05rem] leading-relaxed">
+          <p>
+            Designed to Elevate didn't start from a marketing playbook. It started from sitting next to local shop owners, watching how customers actually find them, what kills a lead before it ever becomes a quote, and what makes someone pick one detailer or barbershop over another in a Google search.
+          </p>
+          <p>
+            The first projects were exactly that — hands-on builds for real shops. <strong class="text-text font-semibold">Fitchin Auto Detail &amp; Tint</strong> in Coshocton needed a site that could quote 378 different vehicle configurations without anyone picking up the phone. <strong class="text-text font-semibold">Modern Classic Barbershop</strong> in Zanesville needed a brand presence that matched the in-shop experience and made appointments easy. <strong class="text-text font-semibold">All Transport Party Bus Rentals</strong> in Carrollton needed a site that turned occasion-first Google searches — weddings, proms, tailgates — into real quote requests across a 100-mile service radius.
+          </p>
+          <p>
+            All three projects landed the same way: the person who pitched the work also wrote the code, picked the colors, structured the SEO, and answered the customer questions afterward. That stays the model. Every site, every landing page, and every lead system shown on this site was built hands-on — not handed off to a team or dropped into a generic template.
+          </p>
+          <p>
+            The work focuses on what actually moves the needle for local service businesses: showing up on Google, building trust fast, and making it easy for customers to call, book, or request a quote.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRINCIPLES -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Work Philosophy</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            Four things every project gets right.
+          </h2>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 gap-5 lg:gap-6">
+          {principles.map((p) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.1rem] text-text leading-snug">{p.title}</h3>
+              <p class="text-[0.95rem] text-text-soft leading-relaxed">{p.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- WHO IT'S FOR -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-14 items-start">
+          <div>
+            <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Right Fit</span>
+            <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+              Why local Ohio businesses choose Designed to Elevate.
+            </h2>
+            <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+              The shops that get the most out of working together usually share a few things in common: they care about the work, they want their online presence to match the in-shop quality, and they've outgrown the contact form on their old website.
+            </p>
+          </div>
+
+          <div>
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-5">
+              The fit is right for
+            </div>
+            <ul class="space-y-3">
+              {fitFor.map((item) => (
+                <li class="flex items-start gap-3 text-[0.98rem] text-text leading-snug">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent text-bg flex-shrink-0" aria-hidden="true">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOCAL CONTEXT -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Service Area</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+          Local Ohio. Real shops. Real reach.
+        </h2>
+        <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-2xl">
+          Based in Ohio with a primary service area across <strong class="text-text font-medium">Coshocton, Zanesville, Newark, Cambridge, Mount Vernon, and Carrollton</strong>. Local availability for in-person scope calls, photo shoots, and shop visits across this region; the build itself happens online so distance isn't a blocker for shops anywhere in the state.
+        </p>
+        <p class="mt-4 text-text-soft text-[1.05rem] leading-relaxed max-w-2xl">
+          Most clients find Designed to Elevate the same way their own customers find them — through a Google search for a local service. That's not a coincidence. It's the same playbook, applied to itself.
+        </p>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Want to talk through your project?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Send your website. I'll tell you what I'd fix first. No pitch, no pressure.
+        </p>
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a href="/contact" class="btn-primary">
+            Start a Conversation
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="tel:7406176488" class="btn-ghost">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+            Call/Text Bill
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

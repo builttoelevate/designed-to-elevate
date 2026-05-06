@@ -1,0 +1,228 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const included = [
+  {
+    title: 'One offer, one page, one action',
+    body: 'Landing pages are scoped per offer or per service — built to convert one specific kind of visitor into one specific kind of lead. No site nav, no distractions, no escape routes.',
+  },
+  {
+    title: 'Mobile-first by default',
+    body: 'Most paid traffic for local services lands on a phone. The page is designed for thumb taps and one-handed reads first. Desktop is a nice-to-have.',
+  },
+  {
+    title: 'Conversion-focused copy structure',
+    body: "Hero promise → proof → offer specifics → call/quote CTA. Same structure every time because it's the structure that converts.",
+  },
+  {
+    title: 'Lead capture that respects intent',
+    body: 'Forms ask only for what you actually need to follow up. Phone-first option for shops where customers prefer to call. Quote wizards available where pricing logic justifies it.',
+  },
+  {
+    title: 'Tracking + ad-readiness baked in',
+    body: 'GA4 events for form submissions and phone clicks. Conversion-import setup for Google Ads. Page is ready for paid traffic the day it ships.',
+  },
+  {
+    title: 'Fast load, clean code',
+    body: 'Built on Astro, deployed on Vercel. Static-first, no WordPress bloat, no plugin sprawl. Sub-second loads on a phone — which Google Ads Quality Score notices.',
+  },
+];
+
+const reasons = [
+  "A homepage talks about everything you do. A landing page answers one question — the one your ad just promised to answer.",
+  "Sending paid clicks to a generic homepage is the fastest way to burn budget on traffic that bounces. The ad cost the same; the page is what converts.",
+  "Google Ads Quality Score weighs landing page experience. Faster load + tighter copy + clearer offer = lower CPC. The math works in your favor.",
+  "Tracking what's actually converting tells you which ad campaigns to scale and which to kill. Without page-level tracking, you're optimizing blind.",
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Google Ads Landing Page Design',
+  name: 'Google Ads Landing Pages',
+  description:
+    'Custom Google Ads landing page design for local Ohio service businesses. Conversion-focused, mobile-first, with tracking and lead capture built in.',
+  provider: {
+    '@type': 'LocalBusiness',
+    name: 'Designed to Elevate',
+    url: SITE,
+    telephone: '+1-740-617-6488',
+    email: 'bilsonxnc@gmail.com',
+  },
+  areaServed: ['Coshocton, OH', 'Zanesville, OH', 'Newark, OH', 'Cambridge, OH', 'Mount Vernon, OH', 'Carrollton, OH'],
+  url: `${SITE}/google-ads-landing-pages`,
+};
+---
+<LandingLayout
+  title="Google Ads Landing Page Design for Ohio Service Businesses | Designed to Elevate"
+  description="Custom Google Ads landing pages for local service businesses in Ohio. Conversion-focused, mobile-first, with tracking, lead capture, and ad-ready performance built in."
+  pathname="google-ads-landing-pages"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Google Ads Landing Pages</span>
+        <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] lg:text-[3.6rem] leading-[1.04] font-bold tracking-tight">
+          Stop sending paid clicks to a <span class="text-accent">generic homepage.</span>
+        </h1>
+        <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-3xl">
+          Single-purpose landing pages for local Ohio service businesses running Google Ads. Built around one offer, one action, and one customer at a time — so the clicks you're already paying for actually become quote requests.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/contact" class="btn-primary">
+            Start a Conversation
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="/case-studies" class="btn-ghost">
+            See examples
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY IT MATTERS -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Why It Matters</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+          The page is doing more of the work than the ad.
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          Local-service Google Ads in Ohio cost real money per click — often $5 to $25+ for high-intent service queries. The ad gets the click; the landing page is what turns the click into a quote request. If the page bounces, the ad spend is gone whether the page was good or not.
+        </p>
+
+        <ul class="mt-8 space-y-4 max-w-3xl">
+          {reasons.map((r) => (
+            <li class="flex items-start gap-3 text-[1rem] text-text-soft leading-relaxed">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{r}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- WHAT'S INCLUDED -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-24 sm:py-32">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What's Included</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.7rem] leading-[1.05] font-bold">
+            What you get in a Google Ads landing page build.
+          </h2>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {included.map((i) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{i.title}</h3>
+              <p class="text-[0.92rem] text-text-soft leading-relaxed">{i.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- EXAMPLES -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+          <div class="max-w-2xl">
+            <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Examples</span>
+            <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+              Real builds, ad-ready.
+            </h2>
+            <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+              The same conversion-focused approach drives both the case-study websites and the dedicated Google Ads pages built around them.
+            </p>
+          </div>
+          <a href="/case-studies" class="inline-flex items-center gap-1.5 font-display font-medium text-[0.95rem] text-accent hover:text-accent-hover transition-colors whitespace-nowrap">
+            All case studies
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-5">
+          <a href="/case-studies/fitchin-auto-detail-tint" class="card card-hover overflow-hidden flex flex-col group">
+            <div class="relative aspect-[9/12] bg-surface-2 overflow-hidden border-b border-line">
+              <img src="/showcase/fitchin-mobile.png" alt="Fitchin Auto Detail mobile site" class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+            </div>
+            <div class="p-6 flex-1">
+              <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Auto Detail · Window Tint</div>
+              <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text leading-snug">Fitchin Automotive Detailing</h3>
+              <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">Conversion-focused service pages plus a custom 378-vehicle quote system, designed to take paid clicks straight to a quote request.</p>
+            </div>
+          </a>
+          <a href="/case-studies/modern-classic-barbershop" class="card card-hover overflow-hidden flex flex-col group">
+            <div class="relative aspect-[9/12] bg-surface-2 overflow-hidden border-b border-line">
+              <img src="/showcase/modern-classic-mobile.png" alt="Modern Classic Barbershop mobile site" class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+            </div>
+            <div class="p-6 flex-1">
+              <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Barbershop</div>
+              <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text leading-snug">Modern Classic Barbershop</h3>
+              <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">Booking-focused brand hub built around the in-shop experience — the same conversion structure that fits a paid-traffic landing page.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHO IT'S FOR -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Right Fit</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+          Built for service businesses already running ads — or about to.
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          The Google Ads landing page service fits best for local Ohio service businesses with real pricing, real photos of real work, and a clear primary offer. Auto detail, window tint, ceramic coating, HVAC, roofing, contractors, cleaning, transportation, and similar service categories are the strongest fits.
+        </p>
+        <p class="mt-4 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          Already running ads and the conversions feel low? The fastest fix is usually the page, not the ad. Send the campaign + the current landing URL — first review is free.
+        </p>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Running ads to the wrong page?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Send the URL of your current landing page and the campaign you're running it against. I'll tell you what I'd fix first.
+        </p>
+        <div class="mt-10">
+          <a href="/contact" class="btn-primary">
+            Start a Conversation
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

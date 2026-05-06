@@ -1,20 +1,55 @@
 ---
-// SiteHeader — used on /, /custom-lead-systems, /web-design,
-// /local-seo, /case-studies, /contact.
-// /grow keeps its own conversion-focused LandingHeader; this header
-// fronts the broader marketing site.
-const currentPath = Astro.url.pathname;
-const isActive = (path: string) =>
-  currentPath === path || currentPath === `${path}/` || (path !== '/' && currentPath.startsWith(`${path}/`));
+// SiteHeader — used on every interior page (case-studies, service
+// pages, about, contact, legal). The homepage at / has its own
+// minimal logo+CTA header inline; do not apply this nav there.
+//
+// Structure: 5 top-level items. Services and Case Studies expand
+// to dropdowns on desktop (CSS hover + focus-within), and flatten
+// to a single inline list inside the mobile <details> menu.
 
-const navLinks: { label: string; href: string }[] = [
+interface NavLink {
+  label: string;
+  href: string;
+  children?: { label: string; href: string }[];
+}
+
+const currentPath = Astro.url.pathname;
+const isActive = (path: string) => {
+  if (path === '/') return currentPath === '/';
+  if (path.includes('#')) return false; // anchor fragments don't drive active state
+  return currentPath === path || currentPath === `${path}/` || currentPath.startsWith(`${path}/`);
+};
+
+const nav: NavLink[] = [
   { label: 'Home', href: '/' },
-  { label: 'Services', href: '/#services' },
-  { label: 'Case Studies', href: '/case-studies' },
+  {
+    label: 'Services',
+    href: '/#services',
+    children: [
+      { label: 'Web Design', href: '/web-design' },
+      { label: 'Google Ads Landing Pages', href: '/google-ads-landing-pages' },
+      { label: 'Local SEO & GBP', href: '/local-seo' },
+      { label: 'Custom Lead Systems', href: '/custom-lead-systems' },
+    ],
+  },
+  {
+    label: 'Case Studies',
+    href: '/case-studies',
+    children: [
+      { label: 'Fitchin Auto Detail & Tint', href: '/case-studies/fitchin-auto-detail-tint' },
+      { label: 'Modern Classic Barbershop', href: '/case-studies/modern-classic-barbershop' },
+      { label: 'All Transport Party Bus', href: '/case-studies/all-transport-party-bus' },
+      { label: 'All Case Studies', href: '/case-studies' },
+    ],
+  },
+  { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ];
+
+const groupActive = (link: NavLink) =>
+  isActive(link.href) || (link.children?.some((c) => isActive(c.href)) ?? false);
 ---
-<header class="relative z-30 w-full border-b border-line/60 bg-bg/80 backdrop-blur supports-[backdrop-filter]:bg-bg/60">
+<header class="relative z-30 w-full border-b border-line/60 bg-bg/85 backdrop-blur supports-[backdrop-filter]:bg-bg/65">
   <div class="mx-auto max-w-7xl px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-3 sm:gap-6">
     <a href="/" class="flex items-center flex-shrink-0" aria-label="Designed to Elevate — home">
       <img
@@ -27,18 +62,56 @@ const navLinks: { label: string; href: string }[] = [
     </a>
 
     <!-- Desktop nav -->
-    <nav class="hidden md:flex items-center gap-7 lg:gap-9 font-display font-medium text-[0.95rem]" aria-label="Primary">
-      {navLinks.map((link) => (
-        <a
-          href={link.href}
-          class:list={[
-            'transition-colors hover:text-accent',
-            isActive(link.href) ? 'text-accent' : 'text-text-soft',
-          ]}
-          aria-current={isActive(link.href) ? 'page' : undefined}
-        >
-          {link.label}
-        </a>
+    <nav class="hidden md:flex items-center gap-6 lg:gap-8 font-display font-medium text-[0.92rem]" aria-label="Primary">
+      {nav.map((link) => (
+        link.children ? (
+          <div class="dt-dropdown relative">
+            <a
+              href={link.href}
+              class:list={[
+                'dt-dropdown-trigger inline-flex items-center gap-1 transition-colors hover:text-accent',
+                groupActive(link) ? 'text-accent' : 'text-text-soft',
+              ]}
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-current={groupActive(link) ? 'page' : undefined}
+            >
+              {link.label}
+              <svg class="dt-caret transition-transform" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </a>
+            <div class="dt-dropdown-menu absolute left-0 top-full pt-3 min-w-[230px] z-40">
+              <ul class="rounded-lg border border-line bg-surface-1 shadow-2xl p-1.5">
+                {link.children.map((c) => (
+                  <li>
+                    <a
+                      href={c.href}
+                      class:list={[
+                        'block px-3.5 py-2.5 rounded-md text-[0.9rem] transition-colors',
+                        isActive(c.href)
+                          ? 'text-accent bg-accent/10'
+                          : 'text-text-soft hover:text-accent hover:bg-surface-2',
+                      ]}
+                      aria-current={isActive(c.href) ? 'page' : undefined}
+                    >
+                      {c.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : (
+          <a
+            href={link.href}
+            class:list={[
+              'transition-colors hover:text-accent',
+              isActive(link.href) ? 'text-accent' : 'text-text-soft',
+            ]}
+            aria-current={isActive(link.href) ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        )
       ))}
     </nav>
 
@@ -57,30 +130,55 @@ const navLinks: { label: string; href: string }[] = [
           <svg class="menu-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </summary>
 
-        <div class="absolute right-0 top-[calc(100%+0.5rem)] w-[260px] rounded-xl border border-line bg-surface-1 shadow-2xl p-2 z-40">
+        <div class="absolute right-0 top-[calc(100%+0.5rem)] w-[280px] max-h-[80vh] overflow-y-auto rounded-xl border border-line bg-surface-1 shadow-2xl p-2 z-40">
           <nav aria-label="Mobile">
-            {navLinks.map((link) => (
-              <a
-                href={link.href}
-                class:list={[
-                  'block px-4 py-3 rounded-lg font-display font-medium text-[0.95rem] transition-colors',
-                  isActive(link.href)
-                    ? 'text-accent bg-accent/10'
-                    : 'text-text-soft hover:text-accent hover:bg-surface-2',
-                ]}
-                aria-current={isActive(link.href) ? 'page' : undefined}
-              >
-                {link.label}
-              </a>
+            {nav.map((link) => (
+              <>
+                <a
+                  href={link.href}
+                  class:list={[
+                    'block px-4 py-2.5 rounded-lg font-display font-medium text-[0.95rem] transition-colors',
+                    groupActive(link)
+                      ? 'text-accent bg-accent/10'
+                      : 'text-text-soft hover:text-accent hover:bg-surface-2',
+                  ]}
+                  aria-current={isActive(link.href) ? 'page' : undefined}
+                >
+                  {link.label}
+                </a>
+                {link.children && (
+                  <ul class="ml-3 mb-1 border-l border-line/60 pl-2 space-y-0.5">
+                    {link.children.map((c) => (
+                      <li>
+                        <a
+                          href={c.href}
+                          class:list={[
+                            'block px-3 py-2 rounded-md text-[0.85rem] transition-colors',
+                            isActive(c.href)
+                              ? 'text-accent bg-accent/10'
+                              : 'text-text-muted hover:text-accent hover:bg-surface-2',
+                          ]}
+                          aria-current={isActive(c.href) ? 'page' : undefined}
+                        >
+                          {c.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
             ))}
-            <a href="tel:7406176488" class="flex items-center gap-2 px-4 py-3 rounded-lg text-text-soft hover:text-accent hover:bg-surface-2 transition-colors font-display font-medium text-[0.95rem]">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
-              (740) 617-6488
-            </a>
-            <a href="/contact" class="btn-primary w-full mt-2 !py-3 !text-[0.85rem]">
-              Free Website Review
-              <span aria-hidden="true">↗</span>
-            </a>
+
+            <div class="mt-2 pt-2 border-t border-line/60">
+              <a href="tel:7406176488" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-text-soft hover:text-accent hover:bg-surface-2 transition-colors font-display font-medium text-[0.9rem]">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+                (740) 617-6488
+              </a>
+              <a href="/contact" class="btn-primary w-full mt-2 !py-3 !text-[0.85rem]">
+                Free Website Review
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
           </nav>
         </div>
       </details>
@@ -93,4 +191,24 @@ const navLinks: { label: string; href: string }[] = [
   .site-menu .menu-close { display: none; }
   .site-menu[open] .menu-open { display: none; }
   .site-menu[open] .menu-close { display: block; }
+
+  /* Desktop dropdowns: hover + focus-within (keyboard accessible).
+     The pt-3 buffer on the menu prevents flicker when the cursor
+     moves from the trigger label down into the menu. */
+  .dt-dropdown-menu {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+  .dt-dropdown:hover > .dt-dropdown-menu,
+  .dt-dropdown:focus-within > .dt-dropdown-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .dt-dropdown:hover > .dt-dropdown-trigger .dt-caret,
+  .dt-dropdown:focus-within > .dt-dropdown-trigger .dt-caret {
+    transform: rotate(180deg);
+  }
 </style>

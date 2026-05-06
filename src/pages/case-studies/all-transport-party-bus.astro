@@ -1,0 +1,280 @@
+---
+import LandingLayout from '../../layouts/LandingLayout.astro';
+import SiteHeader from '../../components/site/SiteHeader.astro';
+import SiteFooter from '../../components/site/SiteFooter.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const buildBullets = [
+  'Mobile-first Astro site optimized for sub-second loads on a phone',
+  'Service-by-occasion sections (weddings, proms, bachelor parties, tailgates, concerts)',
+  'Fleet gallery built for at-a-glance inventory scan',
+  'Integrated quote / availability flow that captures event date + party size up front',
+  'FAQ section answering the questions every event planner actually asks',
+  'Local SEO structure for "party bus rental" + occasion-specific queries across the 100-mile service radius',
+];
+
+const techStack = [
+  { label: 'Frontend', value: 'Astro on Vercel' },
+  { label: 'Lead capture', value: 'Quote / availability form with event-context fields' },
+  { label: 'SEO focus', value: 'Local-search across Eastern Ohio + NW Pennsylvania' },
+  { label: 'Service area', value: '100-mile radius from Carrollton, OH' },
+];
+
+const seoTargets = [
+  'Party bus rental',
+  'Wedding transportation',
+  'Prom transportation',
+  'Bachelor party transportation',
+  'Tailgate / event transportation',
+  'Local service-area visibility across Eastern OH + NW PA',
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: 'All Transport Party Bus Rentals — Local-Search Lead Site',
+  description:
+    'Mobile-first website with service-by-occasion sections, fleet gallery, and an integrated quote/availability flow built by Designed to Elevate for All Transport Party Bus Rentals in Carrollton, Ohio.',
+  creator: { '@type': 'Person', name: 'Bill Chicha' },
+  about: {
+    '@type': 'LocalBusiness',
+    name: 'All Transport Party Bus Rentals',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Carrollton',
+      addressRegion: 'OH',
+      postalCode: '44615',
+      addressCountry: 'US',
+    },
+    url: 'https://www.alltransportbusco.com',
+  },
+  url: `${SITE}/case-studies/all-transport-party-bus`,
+};
+---
+<LandingLayout
+  title="Case Study: All Transport Party Bus Rentals — Local-Search Lead Site | Designed to Elevate"
+  description="How Designed to Elevate built a mobile-first, local-search-driven website for All Transport Party Bus Rentals in Carrollton, Ohio — covering Eastern Ohio and Northwestern Pennsylvania."
+  pathname="case-studies/all-transport-party-bus"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <div class="mb-6">
+          <a href="/case-studies" class="inline-flex items-center gap-1.5 font-display text-[0.85rem] text-text-muted hover:text-accent transition-colors">
+            <span aria-hidden="true">←</span>
+            All case studies
+          </a>
+        </div>
+
+        <div class="grid lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-14 items-center">
+          <div>
+            <div class="flex flex-wrap items-center gap-2 mb-5">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.16em] text-bg">
+                <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
+                  <span class="absolute inline-flex h-1.5 w-1.5 rounded-full bg-bg/60 animate-ping"></span>
+                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-bg"></span>
+                </span>
+                Live in Production
+              </span>
+              <span class="inline-flex items-center rounded-full border border-line px-2.5 py-1 font-display text-[0.65rem] font-medium uppercase tracking-[0.16em] text-text-soft">
+                Local-Search Lead Site
+              </span>
+            </div>
+
+            <h1 class="text-[2.2rem] sm:text-[3rem] lg:text-[3.4rem] leading-[1.04] font-bold tracking-tight">
+              All Transport Party Bus Rentals
+            </h1>
+            <div class="mt-3 text-text-muted text-[0.95rem]">
+              Carrollton, Ohio · 100-mile service radius across Eastern Ohio &amp; NW Pennsylvania
+            </div>
+
+            <p class="mt-7 text-text-soft text-[1.05rem] leading-relaxed">
+              A local transportation operator that needed a website built for the way event planners actually search — by occasion, by date, and by trust. Designed to Elevate built a mobile-first site organized around weddings, proms, bachelor parties, tailgates, and concerts, with a quote and availability flow that turns Google searches into real lead requests.
+            </p>
+
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href="https://www.alltransportbusco.com" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                Visit the live site
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a href="/contact" class="btn-ghost">
+                Want one like this?
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="relative" aria-hidden="true">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
+            <div class="relative card overflow-hidden">
+              <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
+                <img
+                  src="/showcase/all-transport-mobile.png"
+                  alt="All Transport Party Bus Rentals mobile site preview"
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROBLEM / APPROACH / OUTCOME -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="space-y-12">
+          <div>
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-3">The challenge</div>
+            <h2 class="text-[1.7rem] sm:text-[2.1rem] leading-[1.15] font-bold mb-5">
+              Event planners search by occasion, not by company name.
+            </h2>
+            <div class="space-y-4 text-text-soft text-[1.05rem] leading-relaxed">
+              <p>
+                Most party-bus and event-transportation companies have generic websites that describe their fleet and ask for a phone call. The problem: nobody plans a wedding by Googling "Carrollton transportation." They Google "wedding transportation near me," "prom limo," "tailgate party bus" — occasion-first queries with date, party size, and trust as the deciding factors.
+              </p>
+              <p>
+                All Transport needed a site that met those queries on their own terms — fast on mobile, structured by event type, with enough detail in each section that a planner could trust the booking before ever calling.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-3">The approach</div>
+            <h2 class="text-[1.7rem] sm:text-[2.1rem] leading-[1.15] font-bold mb-5">
+              Build the site around the events, not the fleet.
+            </h2>
+            <div class="space-y-4 text-text-soft text-[1.05rem] leading-relaxed">
+              <p>
+                Most competitor sites lead with the bus. Designed to Elevate flipped that — every key section is organized around a customer occasion: weddings, proms, bachelor / bachelorette parties, tailgates, concerts. Each section answers the questions specific to that event type and points to the right next step.
+              </p>
+              <p>
+                The fleet still gets a proper gallery, but it's positioned as evidence rather than as the lead. The quote and availability flow asks for event date and party size up front so the operator can respond with a real, useful answer — not a request to call back for details.
+              </p>
+              <p>
+                Underneath the content, the site is structured for local search across the full 100-mile service radius covering Eastern Ohio and Northwestern Pennsylvania — schema, meta, and on-page SEO all aligned to occasion-first queries.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-3">The outcome</div>
+            <h2 class="text-[1.7rem] sm:text-[2.1rem] leading-[1.15] font-bold mb-5">
+              A local-search-driven website that turns event planners into quote requests.
+            </h2>
+            <div class="space-y-4 text-text-soft text-[1.05rem] leading-relaxed">
+              <p>
+                The site now ranks across the service area for occasion-specific queries and converts visitors with date and party-size context already in hand. Operator follow-up doesn't start at "tell me about your event" — it starts at a real quote conversation.
+              </p>
+              <p>
+                The mobile experience matters most here: planners do this research on a phone late at night, between other errands. The site loads fast, looks credible, and makes the next step obvious whether the planner wants to call, text, or send a quote request.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUILD COVERAGE -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Build</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            What the build covers.
+          </h2>
+        </div>
+
+        <ul class="mt-10 space-y-3 max-w-3xl">
+          {buildBullets.map((b) => (
+            <li class="flex items-start gap-3 text-[1rem] text-text-soft leading-relaxed">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- SEO TARGETS -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Search Focus</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+          The queries the site is built to answer.
+        </h2>
+        <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          Local SEO across the service area is structured around occasion-first queries — the same way real event planners search.
+        </p>
+
+        <ul class="mt-8 flex flex-wrap gap-2">
+          {seoTargets.map((t) => (
+            <li class="inline-flex items-center rounded-full border border-line bg-surface-2 px-3.5 py-1.5 text-[0.88rem] text-text-soft font-display">
+              {t}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- TECH STACK -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Stack</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+          Tech under the hood.
+        </h2>
+
+        <div class="mt-10 grid sm:grid-cols-2 gap-5">
+          {techStack.map((t) => (
+            <div class="card p-6">
+              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">{t.label}</div>
+              <div class="text-[1.02rem] text-text font-medium">{t.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Run a service business that lives or dies on local search?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Send your website. I'll tell you what I'd fix first.
+        </p>
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a href="/contact" class="btn-primary">
+            Start a Conversation
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="/case-studies" class="btn-ghost">
+            See more work
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

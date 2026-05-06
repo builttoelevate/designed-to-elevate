@@ -1,0 +1,251 @@
+---
+import LandingLayout from '../../layouts/LandingLayout.astro';
+import SiteHeader from '../../components/site/SiteHeader.astro';
+import SiteFooter from '../../components/site/SiteFooter.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const buildBullets = [
+  'Custom-designed front end built around the shop\'s brand — not a Square template',
+  'Square API powering core booking and payments behind the scenes',
+  'Auto-review SMS sent to customers after appointments',
+  'Custom waitlist that auto-invites customers when slots open',
+  'Customer login — remember preferred barber, add kids to book with',
+  'Owner dashboard for review requests and waitlist management',
+];
+
+const techStack = [
+  { label: 'Frontend', value: 'Astro on Vercel' },
+  { label: 'Booking + payments', value: 'Square API' },
+  { label: 'Product catalog', value: 'Shopify integration' },
+  { label: 'Custom layer', value: 'Waitlist · Reviews · Customer login' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: 'Modern Classic Barbershop & Shave Parlor — Brand Hub & Booking Integration',
+  description:
+    'A premium custom-designed website running on top of Square booking and Shopify product, built by Designed to Elevate for Modern Classic Barbershop in Zanesville, Ohio.',
+  creator: { '@type': 'Person', name: 'Bill Chicha' },
+  about: {
+    '@type': 'LocalBusiness',
+    name: 'Modern Classic Barbershop & Shave Parlor',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Zanesville',
+      addressRegion: 'OH',
+      addressCountry: 'US',
+    },
+    url: 'https://mdrnclassic.com',
+  },
+  url: `${SITE}/case-studies/modern-classic-barbershop`,
+};
+---
+<LandingLayout
+  title="Case Study: Modern Classic Barbershop — Custom Square Integration | Designed to Elevate"
+  description="How Designed to Elevate built a premium brand hub on top of Square booking and Shopify product for Modern Classic Barbershop & Shave Parlor in Zanesville, Ohio."
+  pathname="case-studies/modern-classic-barbershop"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <div class="mb-6">
+          <a href="/case-studies" class="inline-flex items-center gap-1.5 font-display text-[0.85rem] text-text-muted hover:text-accent transition-colors">
+            <span aria-hidden="true">←</span>
+            All case studies
+          </a>
+        </div>
+
+        <div class="grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-14 items-center">
+          <div class="relative order-2 lg:order-1" aria-hidden="true">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
+            <div class="relative card overflow-hidden">
+              <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
+                <img
+                  src="/showcase/modern-classic-mobile.png"
+                  alt="Modern Classic Barbershop mobile site preview"
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="order-1 lg:order-2">
+            <div class="flex flex-wrap items-center gap-2 mb-5">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.16em] text-bg">
+                <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
+                  <span class="absolute inline-flex h-1.5 w-1.5 rounded-full bg-bg/60 animate-ping"></span>
+                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-bg"></span>
+                </span>
+                Live in Production
+              </span>
+              <span class="inline-flex items-center rounded-full border border-line px-2.5 py-1 font-display text-[0.65rem] font-medium uppercase tracking-[0.16em] text-text-soft">
+                Custom Square Integration
+              </span>
+            </div>
+
+            <h1 class="text-[2.2rem] sm:text-[3rem] lg:text-[3.4rem] leading-[1.04] font-bold tracking-tight">
+              Modern Classic Barbershop &amp; Shave Parlor
+            </h1>
+            <div class="mt-3 text-text-muted text-[0.95rem]">Zanesville, Ohio</div>
+
+            <p class="mt-7 text-text-soft text-[1.05rem] leading-relaxed">
+              A premium barbershop running its booking on Square and its product catalog on Shopify — but with a custom-designed front end that doesn't look like either platform's template. Designed to Elevate built the brand hub around the in-shop experience and made the path to a booked appointment as smooth as the cuts.
+            </p>
+
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href="https://mdrnclassic.com" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                Visit the live site
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a href="/contact" class="btn-ghost">
+                Want one like this?
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROBLEM / APPROACH / OUTCOME -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="space-y-12">
+          <div>
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-3">The challenge</div>
+            <h2 class="text-[1.7rem] sm:text-[2.1rem] leading-[1.15] font-bold mb-5">
+              A premium shop with its brand split across Square, Shopify, and a stale website.
+            </h2>
+            <div class="space-y-4 text-text-soft text-[1.05rem] leading-relaxed">
+              <p>
+                Modern Classic was already running a high-quality operation in Zanesville — clean cuts, traditional shave service, in-shop product retail, loyal regulars. But online, the brand was fragmented. Booking lived on a generic Square page that looked like every other Square shop. Products lived on Shopify. The website that tied it together didn't match the in-shop quality at all.
+              </p>
+              <p>
+                The shop needed a presence that matched the craft — and that made the booking flow as easy as scrolling through Instagram.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-3">The approach</div>
+            <h2 class="text-[1.7rem] sm:text-[2.1rem] leading-[1.15] font-bold mb-5">
+              Use Square + Shopify behind the scenes. Use a real brand hub up front.
+            </h2>
+            <div class="space-y-4 text-text-soft text-[1.05rem] leading-relaxed">
+              <p>
+                Most barbershops on Square accept whatever the platform's default booking page looks like. Designed to Elevate built a custom Astro front end on top of Square's booking and payment APIs — meaning customers see a beautiful, branded site, while Square handles the actual booking, calendar, and payment flow under the hood.
+              </p>
+              <p>
+                Same approach for product: Shopify handles inventory, payments, and fulfillment. The customer sees the products living naturally inside the shop's brand, not on a Shopify storefront.
+              </p>
+              <p>
+                On top of those integrations, the build added a custom layer: an auto-review SMS triggered after appointments, a waitlist that auto-invites customers when openings appear, and a customer login that remembers preferred barber and lets parents add kids to book with.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-3">The outcome</div>
+            <h2 class="text-[1.7rem] sm:text-[2.1rem] leading-[1.15] font-bold mb-5">
+              A premium brand experience that matches the quality of the in-shop service.
+            </h2>
+            <div class="space-y-4 text-text-soft text-[1.05rem] leading-relaxed">
+              <p>
+                The shop now has a digital presence that actually represents the work. New customers find Modern Classic on Google, land on a site that signals "this is a real, premium operation," and book without friction. Regulars use the customer login to rebook with the same barber in two taps.
+              </p>
+              <p>
+                Most shops on Square never get a site that looks like this. The platforms doing the heavy lifting (Square + Shopify) stay invisible to the customer — which is exactly the point.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUILD COVERAGE -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Build</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            What the build covers.
+          </h2>
+        </div>
+
+        <ul class="mt-10 space-y-3 max-w-3xl">
+          {buildBullets.map((b) => (
+            <li class="flex items-start gap-3 text-[1rem] text-text-soft leading-relaxed">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p class="mt-10 max-w-3xl text-text font-medium italic text-[1.02rem] leading-relaxed">
+          Most shops on Square never get a site that looks like this.
+        </p>
+      </div>
+    </section>
+
+    <!-- TECH STACK -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Stack</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+          Tech under the hood.
+        </h2>
+
+        <div class="mt-10 grid sm:grid-cols-2 gap-5">
+          {techStack.map((t) => (
+            <div class="card p-6">
+              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">{t.label}</div>
+              <div class="text-[1.02rem] text-text font-medium">{t.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Already on Square or Shopify?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          You don't have to look like every other shop on the platform. Send your site, I'll tell you what I'd fix first.
+        </p>
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a href="/contact" class="btn-primary">
+            Start a Conversation
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="/case-studies" class="btn-ghost">
+            See more work
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

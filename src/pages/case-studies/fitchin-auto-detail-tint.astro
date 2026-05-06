@@ -1,0 +1,274 @@
+---
+import LandingLayout from '../../layouts/LandingLayout.astro';
+import SiteHeader from '../../components/site/SiteHeader.astro';
+import SiteFooter from '../../components/site/SiteFooter.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const wizardSteps = [
+  { src: '/wizard/step-1-service.png', label: 'Step 1 · Service selection' },
+  { src: '/wizard/step-3-pick-film.png', label: 'Step 3 · Tint film tier upgrade' },
+  { src: '/wizard/step-6-final-quote.png', label: 'Step 6 · Final quote + booking' },
+];
+
+const buildBullets = [
+  '378-vehicle pricing logic across detail, tint, and add-ons',
+  'Tiered film upgrades (Carbon → Nano Ceramic → Ceramic IR) shown inline so customers see the value gap',
+  'Lead capture before the final step — partial quotes still land in the dashboard',
+  'Mobile-first quote flow designed for paid traffic and Google Business Profile clicks',
+  'Local SEO structure: Coshocton service-area pages, schema, and review-aligned content',
+];
+
+const techStack = [
+  { label: 'Frontend', value: 'Astro on Vercel' },
+  { label: 'Backend', value: 'Node API on Railway' },
+  { label: 'Pricing engine', value: '378-vehicle database with tier + add-on logic' },
+  { label: 'Lead capture', value: 'Custom dashboard + auto text/email confirmation' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: 'Fitchin Automotive Detailing & Window Tinting — Web Design & Quote System',
+  description:
+    "Custom website plus a 378-vehicle quote wizard for Fitchin Auto Detail & Tint in Coshocton, Ohio. Built by Designed to Elevate.",
+  creator: { '@type': 'Person', name: 'Bill Chicha' },
+  about: {
+    '@type': 'LocalBusiness',
+    name: 'Fitchin Automotive Detailing & Window Tinting',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Coshocton',
+      addressRegion: 'OH',
+      addressCountry: 'US',
+    },
+    url: 'https://fitchinautodetail.com',
+  },
+  url: `${SITE}/case-studies/fitchin-auto-detail-tint`,
+};
+---
+<LandingLayout
+  title="Case Study: Fitchin Auto Detail & Tint — 378-Vehicle Quote System | Designed to Elevate"
+  description="How Designed to Elevate built a custom website and 378-vehicle quote wizard for Fitchin Automotive Detailing & Window Tinting in Coshocton, Ohio."
+  pathname="case-studies/fitchin-auto-detail-tint"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <div class="mb-6">
+          <a href="/case-studies" class="inline-flex items-center gap-1.5 font-display text-[0.85rem] text-text-muted hover:text-accent transition-colors">
+            <span aria-hidden="true">←</span>
+            All case studies
+          </a>
+        </div>
+
+        <div class="grid lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-14 items-center">
+          <div>
+            <div class="flex flex-wrap items-center gap-2 mb-5">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.16em] text-bg">
+                <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
+                  <span class="absolute inline-flex h-1.5 w-1.5 rounded-full bg-bg/60 animate-ping"></span>
+                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-bg"></span>
+                </span>
+                Live in Production
+              </span>
+              <span class="inline-flex items-center rounded-full border border-line px-2.5 py-1 font-display text-[0.65rem] font-medium uppercase tracking-[0.16em] text-text-soft">
+                Auto Detail · Window Tint
+              </span>
+            </div>
+
+            <h1 class="text-[2.2rem] sm:text-[3rem] lg:text-[3.4rem] leading-[1.04] font-bold tracking-tight">
+              Fitchin Automotive Detailing &amp; Window Tinting
+            </h1>
+            <div class="mt-3 text-text-muted text-[0.95rem]">Coshocton, Ohio</div>
+
+            <p class="mt-7 text-text-soft text-[1.05rem] leading-relaxed">
+              A real local detail and tint shop that needed a website capable of pricing the work — not just describing it. Designed to Elevate built a conversion-focused site plus a custom quote wizard that handles 378 vehicle configurations, tier upgrades, and add-ons end to end.
+            </p>
+
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href="https://fitchinautodetail.com" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                Visit the live site
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a href="/contact" class="btn-ghost">
+                Want one like this?
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="relative" aria-hidden="true">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
+            <div class="relative card overflow-hidden">
+              <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
+                <img
+                  src="/showcase/fitchin-mobile.png"
+                  alt="Fitchin Auto Detail mobile site preview"
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROBLEM / APPROACH / OUTCOME -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="space-y-12">
+          <div>
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-3">The challenge</div>
+            <h2 class="text-[1.7rem] sm:text-[2.1rem] leading-[1.15] font-bold mb-5">
+              An outdated site, no quote system, and a phone-only lead path.
+            </h2>
+            <div class="space-y-4 text-text-soft text-[1.05rem] leading-relaxed">
+              <p>
+                Before the rebuild, every quote request meant a phone call. Customers wanted to know roughly what tint or detail would cost on their specific vehicle — and the site couldn't answer that. Pricing varies wildly by vehicle (a sedan vs. a four-door truck vs. a Tesla all need different glass coverage), so a generic "request a quote" form pushed the entire conversation onto the shop's phone.
+              </p>
+              <p>
+                The site itself was outdated — slow on mobile, weak local SEO, and no path from a Google search result to a real lead. Every customer who didn't want to call was lost.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-3">The approach</div>
+            <h2 class="text-[1.7rem] sm:text-[2.1rem] leading-[1.15] font-bold mb-5">
+              Replace the contact form with a quote system that matches how the shop actually sells.
+            </h2>
+            <div class="space-y-4 text-text-soft text-[1.05rem] leading-relaxed">
+              <p>
+                Instead of a generic site refresh, the build started by mapping the shop's real pricing logic. Every vehicle type Fitchin services was catalogued. Tint film tiers (Carbon, Nano Ceramic, Ceramic IR) were structured so customers could see the value progression instead of staring at a single confusing price. Detail packages, ceramic coatings, and add-ons all got modelled.
+              </p>
+              <p>
+                Then the wizard was built around it: a guided, mobile-first flow that walks a customer through vehicle type → service options → film or coating tier → add-ons → contact details. Every step captures partial lead data, so someone who bails on step 4 still shows up in the shop's dashboard for follow-up.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-3">The outcome</div>
+            <h2 class="text-[1.7rem] sm:text-[2.1rem] leading-[1.15] font-bold mb-5">
+              A phone-only operation became a system that captures, quotes, and tracks leads automatically.
+            </h2>
+            <div class="space-y-4 text-text-soft text-[1.05rem] leading-relaxed">
+              <p>
+                The shop now runs paid traffic and Google Business Profile clicks straight to the quote wizard. Every submission lands in a dashboard with the full configuration the customer chose — service, vehicle, tier, add-ons, and contact info — so follow-up isn't a phone tag exercise.
+              </p>
+              <p>
+                The site itself now ranks locally for service-specific queries (window tint Coshocton, ceramic coating, etc.) and loads in under a second on mobile, which keeps Google Ads Quality Score where it should be.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE WIZARD CENTERPIECE -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Centerpiece</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            378 vehicles. One quote flow.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            The quote wizard is the engine that turns Fitchin's site into a real lead system. Three real screens from the live install:
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-3 gap-5">
+          {wizardSteps.map((s) => (
+            <figure class="card overflow-hidden flex flex-col">
+              <div class="relative aspect-[10/13] bg-surface-2 overflow-hidden border-b border-line">
+                <img
+                  src={s.src}
+                  alt={s.label}
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <figcaption class="px-5 py-4 text-[0.85rem] text-text-soft font-display">
+                {s.label}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <div class="mt-14 max-w-3xl">
+          <h3 class="font-display font-semibold text-[1.4rem] sm:text-[1.6rem] mb-5">What the build covers</h3>
+          <ul class="space-y-3">
+            {buildBullets.map((b) => (
+              <li class="flex items-start gap-3 text-[1rem] text-text-soft leading-relaxed">
+                <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECH STACK -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Stack</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+          Tech under the hood.
+        </h2>
+
+        <div class="mt-10 grid sm:grid-cols-2 gap-5">
+          {techStack.map((t) => (
+            <div class="card p-6">
+              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">{t.label}</div>
+              <div class="text-[1.02rem] text-text font-medium">{t.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Want a system like this for your shop?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Send your website. I'll tell you what I'd fix first.
+        </p>
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a href="/contact" class="btn-primary">
+            Start a Conversation
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="/case-studies" class="btn-ghost">
+            See more work
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>
