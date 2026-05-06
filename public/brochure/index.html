@@ -249,27 +249,45 @@
     }
 
     /* ── DOMAIN ───────────────────────────────────────────────────── */
-    /* QR moved to the printed business card. Margin here picks up the
-       vertical breathing room the QR card used to occupy, so the
-       closing block (CTA → domain → footer) reads as a deliberate
-       finishing flourish instead of a cliff. */
+    /* Anchored lower-LEFT, not centered. The brochure sits in an
+       acrylic countertop holder whose business-card pocket covers
+       roughly the bottom-right 3.5in × 2in of the printed face — so
+       the domain + footer pull to the left to stay clear of that
+       dead zone, and the right side is intentional negative space
+       that the physical card pocket will fill. */
     .domain {
-      margin-top: 0.55in;
+      align-self: flex-start;
+      margin: 0.55in 0 0 0.5in;   /* 0.5in here + 0.5in page padding = ~1in from page edge */
       font-size: 13pt;
       font-weight: 700;
       color: #FFFFFF;
       letter-spacing: 0.005em;
-      text-align: center;
+      text-align: left;
     }
 
     /* ── FOOTER LINE ──────────────────────────────────────────────── */
+    /* Two orange arrows literally point right at the card pocket
+       sitting next to them in the holder. The reader's eye flows
+       "Grab a card → →" straight onto the physical cards. */
     .footer-line {
-      margin-top: 0.10in;
-      font-size: 9.5pt;
+      align-self: flex-start;
+      margin: 0.12in 0 0 0.5in;
+      font-size: 10pt;
       font-style: italic;
       color: #B8B8BC;
-      text-align: center;
+      text-align: left;
     }
+    .footer-line .ptr {
+      display: inline-block;
+      color: #FF7A1A;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 12pt;
+      line-height: 1;
+      vertical-align: -0.04em;
+    }
+    .footer-line .ptr-gap-sm { margin-left: 0.14in; }
+    .footer-line .ptr-gap-md { margin-left: 0.22in; }
 
     /* ── PRINT-ONLY OVERRIDES ─────────────────────────────────────── */
     @media print {
@@ -347,9 +365,10 @@
     <!-- DOMAIN -->
     <div class="domain">designedtoelevate.co</div>
 
-    <!-- FOOTER LINE -->
+    <!-- FOOTER LINE — left-anchored; orange arrows point right
+         at the physical business-card pocket on the holder. -->
     <div class="footer-line">
-      Grab a card below — or ask Michael, he'll tell you.
+      Grab a card<span class="ptr ptr-gap-sm">→</span><span class="ptr ptr-gap-md">→</span>
     </div>
   </section>
 </body>
