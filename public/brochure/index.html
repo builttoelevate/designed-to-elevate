@@ -131,12 +131,16 @@
       height: 100%;
       width: auto;
       display: block;
-      /* Two stacked drop-shadows: a tight ambient under the phones,
-         plus a softer wider one for depth. Both follow the PNG's
-         alpha so the shadow is phone-shaped, not box-shaped. */
+      /* Three stacked drop-shadows = a hovering-above-the-page effect.
+         Each follows the PNG's alpha channel, so the cast lands as a
+         phone-shaped shadow on the dark canvas, not a hard rectangle.
+           1. Tight ambient shadow right under the phones
+           2. Mid-distance softer cast for body
+           3. Long, dark, wide cast that anchors them above a surface */
       filter:
-        drop-shadow(0 0.06in 0.10in rgba(0, 0, 0, 0.55))
-        drop-shadow(0 0.20in 0.32in rgba(0, 0, 0, 0.55));
+        drop-shadow(0 0.06in 0.08in rgba(0, 0, 0, 0.55))
+        drop-shadow(0 0.22in 0.28in rgba(0, 0, 0, 0.80))
+        drop-shadow(0 0.45in 0.55in rgba(0, 0, 0, 0.95));
     }
 
     /* ── 5. CAPTION + CITY TAGS ───────────────────────────────────── */
