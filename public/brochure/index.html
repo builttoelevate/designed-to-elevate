@@ -7,6 +7,10 @@
        so mobile browsers auto-fit the brochure to the screen instead
        of requiring pinch-zoom. Print isn't affected by viewport meta. -->
   <meta name="viewport" content="width=816, initial-scale=1">
+  <!-- Stop iOS Safari from auto-linkifying the phone number on the
+       business-card mockup (it adds a default blue + underline that
+       fights the dark card design). -->
+  <meta name="format-detection" content="telephone=no">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap">
@@ -240,44 +244,44 @@
        business-card back, this CTA had nothing to point at and
        was orphaned. Removed entirely. ────────────────────── */
 
-    /* ── DOMAIN ───────────────────────────────────────────────────── */
-    /* Anchored lower-LEFT around the card pocket dead zone. The CTA
-       above was removed (cards section handles "see more" via the
-       QR on the back), so domain sits closer to the bullets — gap
-       trimmed ~45% from the prior 0.55in. */
-    .domain {
+    /* ── CLOSING BLOCK ────────────────────────────────────────────
+       Three left-aligned lines anchored in the lower-left
+       quadrant, clear of the bottom-right card-pocket dead zone.
+       Reader's eye flows: see → scan → URL. The arrow on line 2
+       physically points right at the card pocket on the holder. */
+    .closing {
       align-self: flex-start;
       margin: 0.30in 0 0 0.5in;
+      display: flex;
+      flex-direction: column;
+      gap: 0.06in;
+      text-align: left;
+    }
+    .closing-line {
+      font-size: 11pt;
+      color: #FFFFFF;
+      font-weight: 500;
+      letter-spacing: 0.005em;
+      line-height: 1.25;
+    }
+    .closing-line.muted {
+      color: #B8B8BC;
+      font-weight: 400;
+    }
+    .closing-line.domain {
+      margin-top: 0.10in;
       font-size: 13pt;
       font-weight: 700;
-      color: #FFFFFF;
-      letter-spacing: 0.005em;
-      text-align: left;
     }
-
-    /* ── FOOTER LINE ──────────────────────────────────────────────── */
-    /* Two orange arrows literally point right at the card pocket
-       sitting next to them in the holder. The reader's eye flows
-       "Grab a card → →" straight onto the physical cards. */
-    .footer-line {
-      align-self: flex-start;
-      margin: 0.12in 0 0 0.5in;
-      font-size: 10pt;
-      font-style: italic;
-      color: #B8B8BC;
-      text-align: left;
-    }
-    .footer-line .ptr {
+    .closing-line .ptr {
       display: inline-block;
       color: #FF7A1A;
-      font-style: normal;
       font-weight: 700;
-      font-size: 12pt;
+      font-size: 13pt;
       line-height: 1;
-      vertical-align: -0.04em;
+      margin-left: 0.10in;
+      vertical-align: -0.03em;
     }
-    .footer-line .ptr-gap-sm { margin-left: 0.14in; }
-    .footer-line .ptr-gap-md { margin-left: 0.22in; }
 
     /* ── BUSINESS CARDS MOCKUP ─────────────────────────────────────
        Lives below the brochure on screen as a digital proof of the
@@ -437,15 +441,29 @@
       margin-top: 0.02in;
       margin-bottom: 0.08in;
     }
+    /* !important here defends against iOS Safari's data-detector
+       overriding the phone-line color/underline (it auto-styles
+       phone-shaped strings as tap-to-call links even without an
+       <a> wrapper). The format-detection meta in <head> handles
+       this at the source; this is the belt-and-suspenders. */
     .card-line {
       font-size: 8.5pt;
-      color: #FFFFFF;
+      color: #FFFFFF !important;
       font-weight: 500;
       letter-spacing: 0.005em;
+      text-decoration: none !important;
     }
     .card-line.subtle {
-      color: #B8B8BC;
+      color: #B8B8BC !important;
       font-weight: 400;
+    }
+    .card-line a,
+    .card-line a:link,
+    .card-line a:visited,
+    .card-line a:hover,
+    .card-line a:active {
+      color: inherit !important;
+      text-decoration: none !important;
     }
     /* ── CARD BACK ── */
     .card-back {
@@ -537,7 +555,7 @@
 
     <!-- 3. SUBHEAD -->
     <p class="subhead">
-      Search-optimized websites and lead systems for local businesses that want more calls, quotes, and booked jobs.
+      Search-optimized websites and lead systems for local businesses that want more calls, quote requests, and booked jobs.
     </p>
 
     <!-- 4. PHONE MOCKUP — transparent-bg cutout served at
@@ -568,13 +586,13 @@
       <li>Follow up faster</li>
     </ul>
 
-    <!-- DOMAIN -->
-    <div class="domain">designedtoelevate.co</div>
-
-    <!-- FOOTER LINE — left-anchored; orange arrows point right
-         at the physical business-card pocket on the holder. -->
-    <div class="footer-line">
-      Grab a card<span class="ptr ptr-gap-sm">→</span><span class="ptr ptr-gap-md">→</span>
+    <!-- CLOSING BLOCK — three left-aligned lines in the lower-left
+         quadrant. The arrow on line 2 points right at the physical
+         card-pocket sitting next to it on the holder. -->
+    <div class="closing">
+      <div class="closing-line">See recent local work</div>
+      <div class="closing-line">Scan the card below <span class="ptr" aria-hidden="true">→</span></div>
+      <div class="closing-line domain">designedtoelevate.co</div>
     </div>
   </section>
 
