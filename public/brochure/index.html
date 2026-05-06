@@ -111,36 +111,58 @@
       align-items: center;
       justify-content: center;
     }
+    /* Bright, diagonal orange spread — off-centered radial so the
+       light reads as coming from the lower-right (matches the
+       reference image, not a flat halo). */
     .mockup-glow {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 4.5in;
-      height: 4.5in;
-      background: radial-gradient(ellipse at center,
-                  rgba(255, 122, 26, 0.36) 0%,
-                  rgba(255, 122, 26, 0.10) 45%,
-                  rgba(255, 122, 26, 0) 70%);
+      width: 6.0in;
+      height: 6.0in;
+      background:
+        radial-gradient(ellipse 70% 70% at 70% 65%,
+                  rgba(255, 122, 26, 0.95) 0%,
+                  rgba(255, 122, 26, 0.55) 25%,
+                  rgba(255, 122, 26, 0.20) 50%,
+                  rgba(255, 122, 26, 0) 75%);
       z-index: 0;
+      pointer-events: none;
+    }
+    /* Hard horizontal contact-shadow band sitting right under the
+       phones — gives the "phones on a surface" look from the
+       reference image. Sits above the orange glow but below the
+       phones so the phones cleanly occlude its top half. */
+    .mockup-ground {
+      position: absolute;
+      bottom: -0.04in;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2.4in;
+      height: 0.32in;
+      background: radial-gradient(ellipse at center,
+                  rgba(0, 0, 0, 1) 0%,
+                  rgba(0, 0, 0, 0.85) 25%,
+                  rgba(0, 0, 0, 0.45) 55%,
+                  rgba(0, 0, 0, 0) 85%);
+      filter: blur(4px);
+      z-index: 1;
       pointer-events: none;
     }
     .mockup {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       height: 100%;
       width: auto;
       display: block;
-      /* Three stacked drop-shadows = a hovering-above-the-page effect.
-         Each follows the PNG's alpha channel, so the cast lands as a
-         phone-shaped shadow on the dark canvas, not a hard rectangle.
-           1. Tight ambient shadow right under the phones
-           2. Mid-distance softer cast for body
-           3. Long, dark, wide cast that anchors them above a surface */
+      /* Tight close shadow on the phone bodies (the ground band
+         below now does the heavy "they're sitting somewhere"
+         lifting; this just keeps the silhouettes from looking
+         pasted on against the orange). */
       filter:
-        drop-shadow(0 0.06in 0.08in rgba(0, 0, 0, 0.55))
-        drop-shadow(0 0.22in 0.28in rgba(0, 0, 0, 0.80))
-        drop-shadow(0 0.45in 0.55in rgba(0, 0, 0, 0.95));
+        drop-shadow(0 0.04in 0.06in rgba(0, 0, 0, 0.55))
+        drop-shadow(0 0.12in 0.18in rgba(0, 0, 0, 0.65));
     }
 
     /* ── 5. CAPTION + CITY TAGS ───────────────────────────────────── */
@@ -315,10 +337,13 @@
     </p>
 
     <!-- 4. PHONE MOCKUP — transparent-bg cutout served at
-         /showcase-phones-cutout.png. CSS drop-shadow on .mockup
-         provides the phone-shaped shadow. -->
+         /showcase-phones-cutout.png. Three layered effects:
+           - .mockup-glow:   bright diagonal orange spread behind
+           - .mockup-ground: dark horizontal contact-shadow band
+           - .mockup:        the cutout itself with a tight phone-shaped shadow -->
     <div class="mockup-wrap" aria-hidden="true">
       <div class="mockup-glow"></div>
+      <div class="mockup-ground"></div>
       <img class="mockup" src="/showcase-phones-cutout.png" alt="" />
     </div>
 
