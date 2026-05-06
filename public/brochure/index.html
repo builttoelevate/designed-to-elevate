@@ -111,11 +111,10 @@
       align-items: center;
       justify-content: center;
     }
-    /* Bright, diagonal orange spread — off-centered radial so the
-       light reads as coming from the lower-right (matches the
-       reference image, not a flat halo). Box is sized large enough
-       and the gradient stops tight enough that alpha fully reaches
-       0 within the box on every side — so no visible square edge. */
+    /* Bright orange spread centered behind the phones. Box sized
+       large enough and the gradient stops tight enough that alpha
+       fully reaches 0 within the box on every side — no visible
+       square edge. */
     .mockup-glow {
       position: absolute;
       top: 50%;
@@ -124,7 +123,7 @@
       width: 7in;
       height: 7in;
       background:
-        radial-gradient(ellipse 50% 50% at 65% 60%,
+        radial-gradient(ellipse 50% 50% at 50% 50%,
                   rgba(255, 122, 26, 0.95) 0%,
                   rgba(255, 122, 26, 0.55) 20%,
                   rgba(255, 122, 26, 0.20) 45%,
