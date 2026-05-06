@@ -1,6 +1,7 @@
 ---
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
 
 const SITE = 'https://designedtoelevate.co';
 
@@ -9,46 +10,52 @@ const services = [
     title: 'Search-optimized websites',
     body: 'Built around local keywords, service pages, and trust signals so customers can find you on Google.',
     icon: 'search',
+    href: '/web-design',
   },
   {
     title: 'Google Ads landing pages',
     body: 'Focused pages designed to turn paid clicks into real calls and quote requests.',
     icon: 'target',
+    href: '/google-ads-landing-pages',
   },
   {
-    title: 'Google Business Profile optimization',
+    title: 'Local SEO & GBP',
     body: 'Service areas, categories, photos, and review strategy aligned with the website.',
     icon: 'pin',
+    href: '/local-seo',
   },
   {
     title: 'Custom quote & booking systems',
     body: 'Lead forms, pricing logic, and booking flows that help turn visitors into real customer opportunities.',
     icon: 'flow',
+    href: '/custom-lead-systems',
   },
 ];
 
 const projects = [
   {
-    label: 'Modern Classic Barbershop · Zanesville, OH',
-    image: '/showcase/modern-classic-mobile.png',
-    blurb: 'A premium, booking-focused website built to match the in-shop experience and make appointments easy.',
-    bullets: [
-      'Mobile-first homepage',
-      'Booking-focused CTAs',
-      'Product visibility for retail sales',
-    ],
-    href: 'https://mdrnclassic.com',
+    label: 'Auto Detail · Window Tint',
+    name: 'Fitchin Auto Detail & Tint',
+    location: 'Coshocton, OH',
+    summary: 'Custom website plus a 378-vehicle quote wizard, designed to take paid clicks straight to a quote request.',
+    image: '/showcase/fitchin-mobile.png',
+    href: '/case-studies/fitchin-auto-detail-tint',
   },
   {
-    label: 'Fitchin Auto Detail & Tint · Coshocton, OH',
-    image: '/showcase/fitchin-mobile.png',
-    blurb: 'A conversion-focused website plus a custom 378-vehicle quote system.',
-    bullets: [
-      'Local SEO structure',
-      'Custom quote system',
-      'Lead capture + booking flow',
-    ],
-    href: 'https://fitchinautodetail.com',
+    label: 'Barbershop',
+    name: 'Modern Classic Barbershop',
+    location: 'Zanesville, OH',
+    summary: 'Premium custom-designed brand hub running on top of Square booking and Shopify product.',
+    image: '/showcase/modern-classic-mobile.png',
+    href: '/case-studies/modern-classic-barbershop',
+  },
+  {
+    label: 'Event Transportation',
+    name: 'All Transport Party Bus Rentals',
+    location: 'Carrollton, OH',
+    summary: 'Mobile-first site organized by occasion — weddings, proms, tailgates — built for local search across a 100-mile radius.',
+    image: '/showcase/all-transport-mobile.png',
+    href: '/case-studies/all-transport-party-bus',
   },
 ];
 
@@ -104,825 +111,258 @@ const schema = {
 
   <main id="main">
     <!-- ─── 1. HERO ─────────────────────────────────────────── -->
-    <section id="top" class="hp-section hp-hero">
-      <div class="grid-bg hp-hero-grid" aria-hidden="true"></div>
-      <div class="accent-glow hp-hero-glow" aria-hidden="true"></div>
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
 
-      <div class="hp-container hp-hero-grid-layout">
-        <div class="hp-hero-copy">
-          <span class="hp-eyebrow">
-            Local Websites <span class="hp-eyebrow-plus" aria-hidden="true">+</span> Lead Systems
-          </span>
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <div class="grid lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-14 items-center">
+          <div>
+            <span class="eyebrow"><span class="dot" aria-hidden="true"></span> LOCAL WEBSITES + LEAD SYSTEMS</span>
 
-          <h1 class="hp-h1">
-            Websites built to get found <span class="hp-accent-rule">—</span> and built to convert.
-          </h1>
+            <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] lg:text-[3.6rem] leading-[1.04] font-bold tracking-tight">
+              Websites built to get found <span class="text-accent">— and built to convert.</span>
+            </h1>
 
-          <p class="hp-subhead">
-            Search-optimized websites, landing pages, and lead systems for local Ohio businesses that want more calls, quote requests, and booked jobs.
-          </p>
+            <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-2xl">
+              Search-optimized websites, landing pages, and lead systems for local Ohio businesses that want more calls, quote requests, and booked jobs.
+            </p>
 
-          <div class="hp-hero-actions">
-            <a href="#contact" class="btn-primary">
-              Start a Conversation
-              <span aria-hidden="true">↗</span>
-            </a>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href="/contact" class="btn-primary">
+                Start a Conversation
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a href="/case-studies" class="btn-ghost">
+                See recent work
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+
+            <p class="mt-7 text-text-soft text-[0.92rem] leading-relaxed max-w-2xl italic">
+              Recent local work: Fitchin Auto Detail &amp; Tint, Coshocton <span class="text-accent not-italic font-bold px-1">·</span> Modern Classic Barbershop, Zanesville.
+            </p>
           </div>
 
-          <p class="hp-trust">
-            <em>Recent local work:</em> Fitchin Auto Detail &amp; Tint, Coshocton <span class="hp-trust-sep" aria-hidden="true">·</span> Modern Classic Barbershop, Zanesville.
-          </p>
-        </div>
-
-        <div class="hp-hero-art" aria-hidden="true">
-          <div class="hp-hero-art-glow"></div>
-          <img
-            class="hp-hero-phones"
-            src="/showcase-phones-cutout.png"
-            alt=""
-            loading="eager"
-            decoding="async"
-          />
+          <div class="relative" aria-hidden="true">
+            <div class="absolute -inset-4 bg-gradient-to-br from-accent/35 via-accent/8 to-transparent rounded-[2rem] blur-3xl opacity-70"></div>
+            <img
+              src="/showcase-phones-cutout.png"
+              alt=""
+              width="768"
+              height="1235"
+              loading="eager"
+              decoding="async"
+              class="relative w-full h-auto max-w-[400px] mx-auto"
+              style="filter: drop-shadow(0 0.4rem 0.8rem rgba(0,0,0,0.55)) drop-shadow(0 1.2rem 2rem rgba(0,0,0,0.65));"
+            />
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ─── 2. RECENT LOCAL WORK ────────────────────────────── -->
-    <section class="hp-section hp-section--alt">
-      <div class="hp-container">
-        <header class="hp-section-head">
-          <span class="hp-eyebrow">RECENT LOCAL WORK</span>
-          <h2 class="hp-h2">Real websites built for real local businesses.</h2>
-        </header>
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
+          <div class="max-w-2xl">
+            <span class="eyebrow"><span class="dot" aria-hidden="true"></span> RECENT LOCAL WORK</span>
+            <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+              Real websites built for real local businesses.
+            </h2>
+          </div>
+          <a href="/case-studies" class="inline-flex items-center gap-1.5 font-display font-medium text-[0.95rem] text-accent hover:text-accent-hover transition-colors whitespace-nowrap">
+            All case studies
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
 
-        <div class="hp-projects">
+        <div class="grid md:grid-cols-3 gap-5">
           {projects.map((p) => (
-            <article class="card card-hover hp-project">
-              <a href={p.href} target="_blank" rel="noopener noreferrer" class="hp-project-shot" aria-label={`Visit ${p.label}`}>
-                <img src={p.image} alt={`${p.label} mobile site preview`} loading="lazy" decoding="async" />
-                <span class="hp-project-live">
-                  <span class="hp-project-live-dot" aria-hidden="true"></span>
+            <a href={p.href} class="card card-hover overflow-hidden flex flex-col group">
+              <div class="relative aspect-[9/12] bg-surface-2 overflow-hidden border-b border-line">
+                <img
+                  src={p.image}
+                  alt={`${p.name} mobile site preview`}
+                  class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+                <span class="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-bg/85 backdrop-blur px-2.5 py-1 text-[0.65rem] font-display tracking-wider uppercase text-text-soft border border-line">
+                  <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
                   Live
                 </span>
-              </a>
-              <div class="hp-project-body">
-                <div class="hp-project-label">{p.label}</div>
-                <p class="hp-project-blurb">{p.blurb}</p>
-                <ul class="hp-project-bullets">
-                  {p.bullets.map((b) => (
-                    <li><span class="hp-bullet-dot" aria-hidden="true"></span>{b}</li>
-                  ))}
-                </ul>
-                <a href={p.href} target="_blank" rel="noopener noreferrer" class="hp-project-link">
-                  Visit live site
-                  <span aria-hidden="true">→</span>
-                </a>
               </div>
-            </article>
+              <div class="p-6 flex-1 flex flex-col">
+                <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">{p.label}</div>
+                <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text leading-snug">{p.name}</h3>
+                <div class="mt-1 text-[0.85rem] text-text-muted">{p.location}</div>
+                <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">{p.summary}</p>
+                <span class="mt-5 inline-flex items-center gap-1.5 text-[0.85rem] font-display font-medium text-accent group-hover:translate-x-0.5 transition-transform">
+                  Read the case study
+                  <span aria-hidden="true">→</span>
+                </span>
+              </div>
+            </a>
           ))}
         </div>
       </div>
     </section>
 
     <!-- ─── 3. WHAT I BUILD ─────────────────────────────────── -->
-    <section id="services" class="hp-section">
-      <div class="hp-container">
-        <header class="hp-section-head">
-          <span class="hp-eyebrow">WHAT I BUILD</span>
-          <h2 class="hp-h2">Built around how local customers actually decide.</h2>
-        </header>
+    <section id="services" class="relative border-b border-line bg-surface-1/40">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> WHAT I BUILD</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            Built around how local customers actually decide.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Pick the piece you need. Or stack them — the website, the system behind it, and the local SEO around it all work better together.
+          </p>
+        </div>
 
-        <div class="hp-services">
+        <div class="mt-12 grid sm:grid-cols-2 gap-5">
           {services.map((s) => (
-            <article class="card hp-service">
-              <div class="hp-service-icon" aria-hidden="true">
+            <a href={s.href} class="card card-hover group p-7 flex flex-col gap-4">
+              <div class="h-11 w-11 rounded-lg bg-accent/15 text-accent grid place-items-center" aria-hidden="true">
                 {s.icon === 'search' && (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 )}
                 {s.icon === 'target' && (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                 )}
                 {s.icon === 'pin' && (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
                 )}
                 {s.icon === 'flow' && (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h7a4 4 0 0 1 0 8H8a4 4 0 0 0 0 8h13"/><path d="m17 17 4 4-4 4"/></svg>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h7a4 4 0 0 1 0 8H8a4 4 0 0 0 0 8h13"/><path d="m17 17 4 4-4 4"/></svg>
                 )}
               </div>
-              <h3 class="hp-service-title">{s.title}</h3>
-              <p class="hp-service-body">{s.body}</p>
-            </article>
+              <h3 class="font-display font-semibold text-[1.15rem] leading-snug text-text">{s.title}</h3>
+              <p class="text-[0.95rem] text-text-soft leading-relaxed">{s.body}</p>
+              <span class="mt-auto inline-flex items-center gap-1.5 text-[0.85rem] font-display font-medium text-accent group-hover:translate-x-0.5 transition-transform">
+                Learn more
+                <span aria-hidden="true">→</span>
+              </span>
+            </a>
           ))}
         </div>
       </div>
     </section>
 
     <!-- ─── 4. FEATURED BUILD ───────────────────────────────── -->
-    <section class="hp-section hp-section--alt">
-      <div class="hp-container">
-        <header class="hp-section-head">
-          <span class="hp-eyebrow">FEATURED BUILD</span>
-          <h2 class="hp-h2">A custom quote system built for a real local shop.</h2>
-        </header>
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl mb-12">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> FEATURED BUILD</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            A custom quote system built for a real local shop.
+          </h2>
+        </div>
 
-        <div class="hp-featured">
-          <div class="hp-featured-art" aria-hidden="true">
-            <div class="hp-featured-glow"></div>
-            <div class="hp-featured-phone">
-              <img src="/wizard/step-3-pick-film-full.png" alt="" loading="lazy" decoding="async" />
+        <div class="grid lg:grid-cols-[0.9fr_1fr] gap-10 lg:gap-14 items-center">
+          <div class="relative" aria-hidden="true">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/35 via-accent/8 to-transparent rounded-[2rem] blur-3xl opacity-65"></div>
+            <div class="relative aspect-[847/1857] max-w-[20rem] mx-auto rounded-[1.6rem] overflow-hidden border border-accent/40 shadow-[0_30px_80px_-20px_rgba(255,107,26,0.5)] bg-surface-2 rotate-[-2deg]">
+              <img
+                src="/wizard/step-3-pick-film-full.png"
+                alt=""
+                class="absolute inset-0 w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           </div>
 
-          <div class="hp-featured-copy">
-            <p class="hp-featured-body">
+          <div>
+            <p class="text-text-soft text-[1.05rem] leading-relaxed">
               For Fitchin Auto Detail &amp; Tint, I built a custom quote system around how the shop actually sells window tint. Instead of sending every customer to a basic contact form, the system guides them through vehicle type, service options, film upgrades, add-ons, and contact details — then helps the shop follow up with a more complete lead.
             </p>
 
-            <ul class="hp-featured-bullets">
+            <ul class="mt-7 space-y-3">
               {featuredBullets.map((b) => (
-                <li><span class="hp-bullet-dot" aria-hidden="true"></span>{b}</li>
+                <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <span>{b}</span>
+                </li>
               ))}
             </ul>
 
-            <p class="hp-featured-close">
+            <p class="mt-7 pt-6 border-t border-line text-text-soft text-[0.98rem] italic leading-relaxed">
               Not every business needs something this complex. But every local business needs a clear path from visitor to lead to customer.
             </p>
+
+            <div class="mt-7">
+              <a href="/case-studies/fitchin-auto-detail-tint" class="btn-ghost">
+                Read the full case study
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ─── 5. ABOUT ────────────────────────────────────────── -->
-    <section class="hp-section">
-      <div class="hp-container hp-about-container">
-        <header class="hp-section-head">
-          <span class="hp-eyebrow">ABOUT</span>
-          <h2 class="hp-h2">Built from inside real local businesses.</h2>
-        </header>
-
-        <p class="hp-about-body">
-          Designed to Elevate is built and run by <span class="hp-em">Bill Chicha</span>, based in Ohio. Every site, landing page, and lead system shown here was built hands-on — not handed off to a team or dropped into a generic template. The work focuses on what actually moves the needle for local service businesses: showing up on Google, building trust fast, and making it easy for customers to call, book, or request a quote.
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> ABOUT</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+          Built from inside real local businesses.
+        </h2>
+        <p class="mt-7 text-text-soft text-[1.05rem] leading-relaxed">
+          Designed to Elevate is built and run by <strong class="text-text font-semibold">Bill Chicha</strong>, based in Ohio. Every site, landing page, and lead system shown here was built hands-on — not handed off to a team or dropped into a generic template. The work focuses on what actually moves the needle for local service businesses: showing up on Google, building trust fast, and making it easy for customers to call, book, or request a quote.
         </p>
 
-        <ul class="hp-about-accents">
+        <ul class="mt-7 flex flex-wrap gap-x-6 gap-y-3">
           {aboutAccents.map((a) => (
-            <li><span class="hp-bullet-dot" aria-hidden="true"></span>{a}</li>
+            <li class="inline-flex items-center gap-2 font-display text-[0.78rem] font-semibold uppercase tracking-[0.2em] text-text-soft">
+              <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+              {a}
+            </li>
           ))}
         </ul>
+
+        <div class="mt-10">
+          <a href="/about" class="btn-ghost">
+            More about Bill
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
       </div>
     </section>
 
-    <!-- ─── 6. CONTACT ──────────────────────────────────────── -->
-    <section id="contact" class="hp-section hp-section--contact">
-      <div class="grid-bg hp-contact-grid" aria-hidden="true"></div>
-      <div class="accent-glow hp-contact-glow" aria-hidden="true"></div>
+    <!-- ─── 6. FINAL CTA ────────────────────────────────────── -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
 
-      <div class="hp-container hp-contact-layout">
-        <header class="hp-section-head">
-          <h2 class="hp-h2">Want your website to bring in more of the right customers?</h2>
-          <p class="hp-contact-sub">
-            If you run a local Ohio business and your website isn't helping people find you, trust you, or contact you — let's take a look.
-          </p>
-        </header>
-
-        <div class="hp-contact-grid-layout">
-          <!-- LEFT: form -->
-          <form
-            data-audit-form
-            action="https://api.web3forms.com/submit"
-            method="POST"
-            class="card hp-form"
-            novalidate
-          >
-            <!-- Wired to Web3Forms (working). Resend migration is a future task —
-                 needs the Vercel serverless adapter + RESEND_API_KEY. -->
-            <input type="hidden" name="access_key" value="1272e2dd-abff-4804-a541-beb2bd0be075" />
-            <input type="hidden" name="subject" value="New Homepage Lead — designedtoelevate.co" />
-            <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true" />
-
-            <label class="hp-field">
-              <span class="hp-field-label">Name <span class="hp-req">*</span></span>
-              <input required name="name" type="text" autocomplete="name" placeholder="Your name" />
-            </label>
-
-            <label class="hp-field">
-              <span class="hp-field-label">Business name</span>
-              <input name="business" type="text" autocomplete="organization" placeholder="Acme Auto Detail" />
-            </label>
-
-            <label class="hp-field">
-              <span class="hp-field-label">Phone or email <span class="hp-req">*</span></span>
-              <input required name="contact" type="text" autocomplete="email" placeholder="(555) 555-5555 or you@yourshop.com" />
-            </label>
-
-            <label class="hp-field">
-              <span class="hp-field-label">What do you need help with? <span class="hp-req">*</span></span>
-              <textarea required name="message" rows="5" placeholder="A couple of sentences is fine — what's stuck, what you're hoping to fix."></textarea>
-            </label>
-
-            <button type="submit" class="btn-primary hp-form-submit">
-              Send
-              <span aria-hidden="true">↗</span>
-            </button>
-
-            <p
-              data-audit-status
-              class="hp-form-status hidden"
-              role="status"
-              aria-live="polite"
-            ></p>
-
-            <p class="hp-form-fine">
-              Bill responds within 24 hours. No spam, no list-selling, no long-form sales calls.
-            </p>
-          </form>
-
-          <!-- RIGHT: direct contact -->
-          <aside class="hp-direct">
-            <div class="hp-direct-block">
-              <div class="hp-direct-label">Or text Bill directly</div>
-              <a href="tel:7406176488" class="hp-direct-value">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
-                (740) 617-6488
-              </a>
-            </div>
-
-            <div class="hp-direct-block">
-              <div class="hp-direct-label">Email</div>
-              <a href="mailto:bilsonxnc@gmail.com" class="hp-direct-value">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
-                bilsonxnc@gmail.com
-              </a>
-            </div>
-
-            <div class="hp-direct-block">
-              <div class="hp-direct-label">Service area</div>
-              <div class="hp-direct-meta">Coshocton, Zanesville, Newark &amp; surrounding Ohio.</div>
-            </div>
-
-            <div class="hp-direct-block">
-              <div class="hp-direct-label">Response time</div>
-              <div class="hp-direct-meta">Within 24 hours.</div>
-            </div>
-          </aside>
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Easy Way to Start</span>
+        <h2 class="mt-6 text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Want your website to bring in more of the right customers?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Send your website. I'll tell you what I'd fix first. No pitch, no pressure.
+        </p>
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a href="/contact" class="btn-primary">
+            Start a Conversation
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="tel:7406176488" class="btn-ghost">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+            Call/Text Bill
+          </a>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ─── FOOTER ────────────────────────────────────────────── -->
-  <footer class="hp-footer">
-    <div class="hp-container hp-footer-inner">
-      <a href="#top" class="hp-footer-mark" aria-label="Designed to Elevate — home">
-        <img src="/logo-wordmark-orange.png" alt="Designed to Elevate" width="320" height="96" />
-      </a>
-      <div class="hp-footer-tagline">
-        Local websites + lead systems · Serving Coshocton, Zanesville, Newark, and surrounding Ohio.
-      </div>
-      <div class="hp-footer-meta">
-        <a href="https://designedtoelevate.co">designedtoelevate.co</a>
-        <span class="hp-footer-sep" aria-hidden="true">·</span>
-        <a href="mailto:bilsonxnc@gmail.com">bilsonxnc@gmail.com</a>
-        <span class="hp-footer-sep" aria-hidden="true">·</span>
-        <a href="tel:7406176488">(740) 617-6488</a>
-      </div>
-      <div class="hp-footer-legal">
-        © {new Date().getFullYear()} Designed to Elevate.
-        <a href="/privacy">Privacy</a>
-        <span class="hp-footer-sep" aria-hidden="true">·</span>
-        <a href="/terms">Terms</a>
-      </div>
-    </div>
-  </footer>
+  <SiteFooter />
 </LandingLayout>
-
-<style>
-  /* Homepage — uses the global landing.css token system (--color-bg,
-     --color-accent, .btn-primary, .card, .eyebrow, .grid-bg,
-     .accent-glow) and adds Montserrat for headings to match the
-     brochure aesthetic. Body type stays Inter (already loaded). */
-
-  /* Container */
-  .hp-container {
-    width: 100%;
-    max-width: 78rem;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-  }
-  @media (min-width: 768px) {
-    .hp-container { padding: 0 2rem; }
-  }
-
-  /* ── Header — replaced by the shared SiteHeader component for
-     multi-page nav consistency across the site. The homepage now
-     gets the same dropdown nav as every other interior page. ── */
-
-  /* ── Sections ── */
-  .hp-section {
-    position: relative;
-    padding: 4rem 0;
-    overflow: hidden;
-  }
-  @media (min-width: 768px) {
-    .hp-section { padding: 6rem 0; }
-  }
-  .hp-section--alt { background: rgba(22, 25, 31, 0.4); border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); }
-
-  /* All h1/h2/h3 inside the homepage use Montserrat */
-  .hp-h1,
-  .hp-h2,
-  .hp-h3,
-  .hp-section h1,
-  .hp-section h2,
-  .hp-section h3 {
-    font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
-    letter-spacing: -0.02em;
-    margin: 0;
-  }
-
-  .hp-section-head { max-width: 44rem; margin-bottom: 2.75rem; }
-  .hp-h2 {
-    margin-top: 1rem;
-    font-size: clamp(1.85rem, 4.5vw, 2.6rem);
-    line-height: 1.08;
-    font-weight: 700;
-    color: var(--color-text);
-  }
-
-  .hp-em { color: var(--color-accent); font-weight: 600; }
-
-  /* ── Hero ── */
-  .hp-hero { padding-top: 3.5rem; padding-bottom: 4rem; }
-  @media (min-width: 768px) {
-    .hp-hero { padding-top: 5rem; padding-bottom: 6rem; }
-  }
-  .hp-hero-grid {
-    position: absolute; inset: 0;
-    opacity: 0.5;
-    z-index: 0;
-  }
-  .hp-hero-glow {
-    position: absolute;
-    top: -10rem; right: -10rem;
-    width: 40rem; height: 40rem;
-    z-index: 0;
-  }
-  .hp-hero-grid-layout {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    gap: 2.5rem;
-  }
-  @media (min-width: 1024px) {
-    .hp-hero-grid-layout {
-      grid-template-columns: 1.1fr 1fr;
-      align-items: center;
-      gap: 3.5rem;
-    }
-  }
-  .hp-h1 {
-    margin-top: 1.25rem;
-    font-size: clamp(2.4rem, 6.5vw, 3.7rem);
-    line-height: 1.04;
-    font-weight: 800;
-    color: var(--color-text);
-  }
-  /* Em-dash with mild horizontal compression. Uncompressed at
-     Montserrat 800 / clamp 2.4–3.7rem reads as a wall, not a
-     dash. scaleX(0.78) keeps the glyph clearly readable as a
-     dash but visually proportional to the surrounding letters. */
-  .hp-accent-rule {
-    color: var(--color-accent);
-    display: inline-block;
-    transform: scaleX(0.78);
-    transform-origin: center;
-    padding: 0 0.04em;
-  }
-
-  /* Hero eyebrow — short, single-line on mobile. The "+" is the
-     visual rhythm hit; keeping it slightly bolder than the rest
-     of the line ties to the orange accent vocabulary used across
-     the brochure and brand. */
-  .hp-eyebrow {
-    display: block;
-    font-family: 'Montserrat', system-ui, sans-serif;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-  }
-  .hp-eyebrow-plus {
-    padding: 0 0.18em;
-    font-weight: 800;
-  }
-
-  .hp-subhead {
-    margin-top: 1.4rem;
-    max-width: 36rem;
-    font-size: clamp(1.05rem, 2.2vw, 1.18rem);
-    line-height: 1.55;
-    color: var(--color-text-soft);
-  }
-  .hp-hero-actions { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; }
-
-  /* Trust line — single clean italic gray line, no leading bullet
-     (the prior dot column was creating awkward two-column wrapping
-     on narrow viewports). */
-  .hp-trust {
-    margin-top: 1.6rem;
-    max-width: 38rem;
-    font-size: 0.92rem;
-    line-height: 1.55;
-    color: var(--color-text-soft);
-  }
-  .hp-trust em { font-style: italic; color: var(--color-text); margin-right: 0.15rem; font-weight: 500; }
-  .hp-trust-sep { color: var(--color-accent); padding: 0 0.25rem; font-weight: 700; }
-
-  /* Hero phones art */
-  .hp-hero-art {
-    position: relative;
-    width: 100%;
-    max-width: 26rem;
-    margin: 0 auto;
-    aspect-ratio: 768 / 1235;
-  }
-  .hp-hero-art-glow {
-    position: absolute;
-    inset: -2rem;
-    background: radial-gradient(ellipse 65% 65% at 50% 50%,
-                rgba(255, 122, 26, 0.45) 0%,
-                rgba(255, 122, 26, 0.12) 45%,
-                rgba(255, 122, 26, 0) 75%);
-    z-index: 0;
-    pointer-events: none;
-  }
-  .hp-hero-phones {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter:
-      drop-shadow(0 0.6rem 1rem rgba(0, 0, 0, 0.55))
-      drop-shadow(0 1.2rem 2.4rem rgba(0, 0, 0, 0.65));
-  }
-
-  /* ── Recent Local Work ── */
-  .hp-projects {
-    display: grid;
-    gap: 1.4rem;
-  }
-  @media (min-width: 900px) {
-    .hp-projects { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-  }
-  .hp-project { overflow: hidden; transition: transform 0.2s ease, border-color 0.2s ease; }
-  .hp-project:hover { transform: translateY(-3px); border-color: var(--color-line-2); }
-  .hp-project-shot {
-    position: relative;
-    display: block;
-    aspect-ratio: 9 / 11;
-    background: var(--color-surface-2);
-    border-bottom: 1px solid var(--color-line);
-    overflow: hidden;
-  }
-  .hp-project-shot img {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: top;
-    transition: transform 0.4s ease;
-  }
-  .hp-project-shot:hover img { transform: scale(1.02); }
-  .hp-project-live {
-    position: absolute;
-    top: 0.85rem; left: 0.85rem;
-    z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.3rem 0.7rem;
-    border-radius: 999px;
-    background: rgba(15, 16, 20, 0.85);
-    backdrop-filter: blur(6px);
-    border: 1px solid var(--color-line);
-    font-family: 'Montserrat', system-ui, sans-serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    color: var(--color-text-soft);
-  }
-  .hp-project-live-dot {
-    width: 0.4rem; height: 0.4rem;
-    border-radius: 50%;
-    background: var(--color-accent);
-    box-shadow: 0 0 0 0.18rem rgba(255, 122, 26, 0.25);
-  }
-  .hp-project-body { padding: 1.5rem 1.5rem 1.6rem; display: flex; flex-direction: column; gap: 0.75rem; }
-  .hp-project-label {
-    font-family: 'Montserrat', system-ui, sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    color: var(--color-text);
-    letter-spacing: -0.01em;
-  }
-  .hp-project-blurb { font-size: 0.95rem; color: var(--color-text-soft); line-height: 1.5; margin: 0; }
-  .hp-project-bullets { list-style: none; padding: 0; margin: 0.4rem 0 0; display: flex; flex-direction: column; gap: 0.5rem; }
-  .hp-project-bullets li {
-    display: flex; align-items: center; gap: 0.6rem;
-    font-size: 0.9rem; color: var(--color-text-soft);
-  }
-  .hp-project-link {
-    margin-top: 0.6rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: 'Montserrat', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 0.88rem;
-    color: var(--color-accent);
-    transition: gap 0.2s ease;
-  }
-  .hp-project-link:hover { gap: 0.55rem; color: var(--color-accent-hover); }
-  .hp-bullet-dot {
-    flex-shrink: 0;
-    width: 0.4rem; height: 0.4rem;
-    border-radius: 50%;
-    background: var(--color-accent);
-  }
-
-  /* ── What I Build (services) ── */
-  .hp-services { display: grid; gap: 1.2rem; }
-  @media (min-width: 768px) { .hp-services { grid-template-columns: 1fr 1fr; gap: 1.4rem; } }
-  .hp-service { padding: 1.75rem; transition: transform 0.2s ease, border-color 0.2s ease; }
-  .hp-service:hover { transform: translateY(-3px); border-color: var(--color-line-2); }
-  .hp-service-icon {
-    width: 2.75rem; height: 2.75rem;
-    border-radius: 0.6rem;
-    background: rgba(255, 122, 26, 0.15);
-    color: var(--color-accent);
-    display: grid;
-    place-items: center;
-    margin-bottom: 1.1rem;
-  }
-  .hp-service-title {
-    font-family: 'Montserrat', system-ui, sans-serif;
-    font-weight: 700;
-    font-size: 1.05rem;
-    color: var(--color-text);
-    line-height: 1.3;
-    margin: 0 0 0.6rem;
-  }
-  .hp-service-body { font-size: 0.95rem; color: var(--color-text-soft); line-height: 1.55; margin: 0; }
-
-  /* ── Featured Build ── */
-  .hp-featured {
-    display: grid;
-    gap: 2.5rem;
-    align-items: center;
-  }
-  @media (min-width: 1024px) {
-    .hp-featured { grid-template-columns: 0.9fr 1fr; gap: 3.5rem; }
-  }
-  .hp-featured-art {
-    position: relative;
-    width: 100%;
-    max-width: 22rem;
-    margin: 0 auto;
-  }
-  .hp-featured-glow {
-    position: absolute;
-    inset: -2rem;
-    background: radial-gradient(ellipse 70% 70% at 50% 50%,
-                rgba(255, 122, 26, 0.42) 0%,
-                rgba(255, 122, 26, 0.10) 45%,
-                rgba(255, 122, 26, 0) 75%);
-    z-index: 0;
-  }
-  .hp-featured-phone {
-    position: relative;
-    z-index: 1;
-    aspect-ratio: 847 / 1857;
-    border-radius: 1.6rem;
-    overflow: hidden;
-    border: 1px solid rgba(255, 122, 26, 0.4);
-    box-shadow: 0 30px 80px -20px rgba(255, 122, 26, 0.5);
-    background: var(--color-surface-2);
-    transform: rotate(-2deg);
-  }
-  .hp-featured-phone img { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .hp-featured-body {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--color-text-soft);
-    margin: 0 0 1.5rem;
-  }
-  @media (min-width: 768px) { .hp-featured-body { font-size: 1.05rem; } }
-  .hp-featured-bullets { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.7rem; }
-  .hp-featured-bullets li {
-    display: flex; align-items: center; gap: 0.7rem;
-    font-size: 0.98rem; color: var(--color-text); font-weight: 500;
-  }
-  .hp-featured-close {
-    margin-top: 1.6rem;
-    padding-top: 1.4rem;
-    border-top: 1px solid var(--color-line);
-    font-size: 0.95rem;
-    font-style: italic;
-    color: var(--color-text-soft);
-    line-height: 1.55;
-  }
-
-  /* ── About ── */
-  .hp-about-container { max-width: 56rem; }
-  .hp-about-body {
-    font-size: 1.05rem;
-    line-height: 1.65;
-    color: var(--color-text-soft);
-    margin: 0;
-  }
-  @media (min-width: 768px) { .hp-about-body { font-size: 1.12rem; } }
-  .hp-about-accents {
-    list-style: none;
-    padding: 0;
-    margin: 2rem 0 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.4rem 2rem;
-  }
-  .hp-about-accents li {
-    display: inline-flex; align-items: center; gap: 0.6rem;
-    font-family: 'Montserrat', system-ui, sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--color-text-soft);
-  }
-
-  /* ── Contact ── */
-  .hp-section--contact { padding-top: 5rem; padding-bottom: 5rem; }
-  @media (min-width: 768px) { .hp-section--contact { padding-top: 7rem; padding-bottom: 7rem; } }
-  .hp-contact-grid {
-    position: absolute; inset: 0;
-    opacity: 0.45;
-    z-index: 0;
-  }
-  .hp-contact-glow {
-    position: absolute;
-    bottom: -10rem; left: -10rem;
-    width: 40rem; height: 40rem;
-    z-index: 0;
-  }
-  .hp-contact-layout { position: relative; z-index: 1; }
-  .hp-contact-sub {
-    margin-top: 1.4rem;
-    max-width: 42rem;
-    font-size: 1.05rem;
-    line-height: 1.55;
-    color: var(--color-text-soft);
-  }
-  .hp-contact-grid-layout {
-    margin-top: 2.5rem;
-    display: grid;
-    gap: 2rem;
-  }
-  @media (min-width: 1024px) {
-    .hp-contact-grid-layout { grid-template-columns: 1.15fr 0.85fr; gap: 3rem; align-items: start; }
-  }
-  .hp-form { padding: 1.75rem; display: flex; flex-direction: column; gap: 1.1rem; }
-  @media (min-width: 768px) { .hp-form { padding: 2rem; } }
-  .hp-field { display: flex; flex-direction: column; gap: 0.45rem; }
-  .hp-field-label {
-    font-family: 'Montserrat', system-ui, sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--color-text-soft);
-    letter-spacing: 0.04em;
-  }
-  .hp-req { color: var(--color-accent); }
-  .hp-field input,
-  .hp-field textarea {
-    width: 100%;
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-line);
-    border-radius: 0.5rem;
-    padding: 0.75rem 0.85rem;
-    font-size: 0.95rem;
-    font-family: inherit;
-    color: var(--color-text);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-  .hp-field input::placeholder,
-  .hp-field textarea::placeholder { color: rgba(154, 160, 170, 0.6); }
-  .hp-field input:focus,
-  .hp-field textarea:focus {
-    outline: none;
-    border-color: rgba(255, 122, 26, 0.6);
-    box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.18);
-  }
-  .hp-field textarea { resize: vertical; min-height: 6rem; }
-  .hp-form-submit {
-    margin-top: 0.4rem;
-    width: 100%;
-    padding: 0.95rem 1.4rem !important;
-    font-family: 'Montserrat', system-ui, sans-serif !important;
-  }
-  .hp-form-status {
-    font-size: 0.9rem;
-    color: var(--color-accent);
-    font-family: 'Montserrat', system-ui, sans-serif;
-    font-weight: 500;
-  }
-  .hp-form-status.hidden { display: none; }
-  .hp-form-fine {
-    font-size: 0.78rem;
-    color: var(--color-text-muted);
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  /* Right column — direct contact */
-  .hp-direct {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  .hp-direct-block {
-    padding: 1.2rem 1.4rem;
-    border: 1px solid var(--color-line);
-    border-radius: 0.7rem;
-    background: rgba(22, 25, 31, 0.5);
-  }
-  .hp-direct-label {
-    font-family: 'Montserrat', system-ui, sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--color-accent);
-    margin-bottom: 0.55rem;
-  }
-  .hp-direct-value {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    font-family: 'Montserrat', system-ui, sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--color-text);
-    transition: color 0.2s ease;
-    word-break: break-all;
-  }
-  .hp-direct-value:hover { color: var(--color-accent); }
-  .hp-direct-meta { font-size: 0.95rem; color: var(--color-text-soft); line-height: 1.4; }
-
-  /* ── Footer ── */
-  .hp-footer {
-    border-top: 1px solid var(--color-line);
-    background: rgba(22, 25, 31, 0.4);
-    padding: 2.5rem 0 2rem;
-  }
-  .hp-footer-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.85rem;
-  }
-  .hp-footer-mark img { display: block; height: 2.2rem; width: auto; }
-  .hp-footer-tagline {
-    font-size: 0.92rem;
-    color: var(--color-text-soft);
-    line-height: 1.5;
-    max-width: 36rem;
-  }
-  .hp-footer-meta {
-    margin-top: 0.4rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 0.4rem;
-    font-size: 0.88rem;
-  }
-  .hp-footer-meta a {
-    color: var(--color-text-soft);
-    transition: color 0.2s ease;
-  }
-  .hp-footer-meta a:hover { color: var(--color-accent); }
-  .hp-footer-sep { color: var(--color-text-muted); }
-  .hp-footer-legal {
-    margin-top: 0.4rem;
-    font-size: 0.82rem;
-    color: var(--color-text-muted);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .hp-footer-legal a {
-    color: var(--color-text-muted);
-    transition: color 0.2s ease;
-  }
-  .hp-footer-legal a:hover { color: var(--color-accent); }
-</style>
