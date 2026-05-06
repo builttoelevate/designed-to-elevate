@@ -5,12 +5,14 @@ interface Props {
   title?: string;
   description?: string;
   pathname?: string;
+  noindex?: boolean;
 }
 
 const {
   title = 'Founding 5 Pricing — Lead Systems for Local Service Businesses | Designed to Elevate',
   description = "We're opening 5 founding client spots at locked-in launch pricing. Get more calls, quote requests, and booked jobs from your website. Free Lead Leak Audit included.",
   pathname = 'grow',
+  noindex = false,
 } = Astro.props;
 
 const SITE_URL = 'https://designedtoelevate.co';
@@ -24,6 +26,7 @@ const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
   <meta name="theme-color" content="#0E1014" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  {noindex && <meta name="robots" content="noindex" />}
   <link rel="canonical" href={canonical} />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
