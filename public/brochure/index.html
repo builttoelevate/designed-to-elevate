@@ -286,11 +286,21 @@
        etc.), not Chrome. Brand language matches the brochure: dark
        canvas, orange accent rule, Montserrat for the wordmark and
        hero CTA, Inter for body. */
+    /* Surface that the cards sit ON. The card itself is the same
+       dark #0F0F10 as the brochure (because that IS the printed
+       card design), so we need a contrasting surface or the cards
+       would vanish into the background. Subtle radial gradient
+       gives a "lit-from-above stage" feel — lighter near the cards,
+       darker at the edges. */
     .cards-page {
       width: 8.5in;
       margin: 0 auto;
       padding: 0.7in 0.5in 0.9in;
-      background: #0F0F10;
+      background:
+        radial-gradient(ellipse 75% 65% at center 45%,
+                  #2A2D34 0%,
+                  #1F2128 55%,
+                  #161820 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -337,24 +347,41 @@
       font-weight: 500;
     }
     /* The card itself: real print proportions (3.5 × 2), printed
-       paper feel via stacked shadows + a hairline top-edge highlight
+       paper feel via a crisp 1px edge against the lighter surface,
+       stacked shadows for depth, plus a hairline top inset highlight
        that suggests light catching the printed paper. */
     .card {
       position: relative;
       width: 3.5in;
       height: 2in;
       background: #0F0F10;
+      /* Crisp paper edge against the lighter cards-page surface —
+         this is what makes the card silhouette obvious instead of
+         blending into the dark canvas. */
+      border: 1px solid #353B48;
       border-radius: 0.06in;
       box-shadow:
-        /* hairline top-edge highlight (paper sheen) */
-        inset 0 0.005in 0 rgba(255, 255, 255, 0.06),
-        /* close ambient — anchors the card to the page */
-        0 0.03in 0.06in rgba(0, 0, 0, 0.55),
-        /* mid drop — gives body */
-        0 0.10in 0.18in rgba(0, 0, 0, 0.65),
-        /* long ambient cast — reads as floating just above a surface */
-        0 0.28in 0.45in rgba(0, 0, 0, 0.55);
+        /* paper sheen — top edge catches light */
+        inset 0 0.008in 0 rgba(255, 255, 255, 0.10),
+        /* close contact shadow — anchors to the surface */
+        0 0.04in 0.08in rgba(0, 0, 0, 0.65),
+        /* mid drop — body */
+        0 0.12in 0.20in rgba(0, 0, 0, 0.70),
+        /* long cast — physical card hovering just above the desk */
+        0 0.30in 0.50in rgba(0, 0, 0, 0.60);
       overflow: hidden;
+    }
+    /* Very faint diagonal sheen overlay on the printed surface —
+       reads as light glancing across the matte black card stock. */
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg,
+                  rgba(255, 255, 255, 0.03) 0%,
+                  rgba(255, 255, 255, 0) 35%);
+      pointer-events: none;
+      border-radius: inherit;
     }
     /* Slight, opposite-direction tilt on each card so they feel
        physically placed instead of grid-aligned. Disabled when
