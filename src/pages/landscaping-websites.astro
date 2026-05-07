@@ -1,0 +1,257 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+
+const needs = [
+  { title: 'A real visual portfolio', body: "Landscaping is bought with the eyes. The site has to lead with high-quality before/after photos of real work — not stock images of generic green lawns." },
+  { title: 'Service-by-season clarity', body: "Spring cleanup, mowing contracts, mulching, hardscape installs, fall cleanup, snow removal. Customers shop by what they need this month — the navigation has to match." },
+  { title: 'Service area + scope', body: "Counties, cities, ZIP codes. Plus what kind of property you actually take on — quarter-acre lots vs. estate maintenance vs. commercial. Vague service descriptions kill conversion." },
+  { title: 'Project gallery with categories', body: "Patio installs. Retaining walls. Fire pits. Sod jobs. Customers want to see your work in the category they're hiring for — not scroll through 80 random photos." },
+  { title: 'Recurring vs. one-time split', body: "A weekly mowing contract is a different lead than a one-time hardscape install. The flow should split early so each customer lands on the right CTA." },
+  { title: 'Mobile-first quote forms', body: "Most quote requests come from a homeowner standing in their backyard, looking at the problem. The form has to fit one thumb." },
+  { title: 'Trust signals (insurance, equipment, crew size)', body: "Customers letting a crew on their property need to see proof you're insured, equipped, and not a one-truck Craigslist operation." },
+  { title: 'Local SEO for service-area searches', body: "'Landscaping in [town]' searches dominate. Service-area pages, LocalBusiness schema, and Google Business Profile alignment are how you show up on the first map result." },
+];
+---
+<LandingLayout
+  title="Landscaping Website Design for Quote Requests and Bookings | Designed to Elevate"
+  description="Landscaping website design built around how homeowners actually buy. Visual portfolio, service-area structure, recurring vs. one-time split, and local SEO that gets you ranking for landscaping searches in your market."
+  pathname="landscaping-websites"
+>
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Landscaping Websites</span>
+        <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] lg:text-[3.6rem] leading-[1.04] font-bold tracking-tight">
+          Landscaping websites that turn <span class="text-accent">project interest into quote requests.</span>
+        </h1>
+        <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-3xl">
+          Landscaping website design that splits the recurring-maintenance customer from the one-time install customer, leads with real project photos, and ranks for the seasonal searches that drive your business.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="#what-landscaping-needs" class="btn-ghost">
+            What landscaping sites need
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT LANDSCAPING SITES NEED -->
+    <section id="what-landscaping-needs" class="relative border-b border-line scroll-mt-24">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What Landscaping Sites Need</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            What landscaping sites need.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Landscaping has more visual sell than almost any other trade — and almost none of the websites in this category use that to their advantage. Most look like a contractor template with a green color scheme.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {needs.map((n) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{n.title}</h3>
+              <p class="text-[0.92rem] text-text-soft leading-relaxed">{n.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- HONESTY: PRINCIPLES THAT WORK -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Real Execution Proof</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+          Principles that work — backed by real builds.
+        </h2>
+        <div class="mt-6 space-y-4 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          <p>
+            Straight talk: my recent local work has been in auto detail, barbershop, and event transportation — not landscaping. I'm not putting fake landscaping case studies in front of you.
+          </p>
+          <p>
+            What I will tell you is that the conversion principles that drive every site I build apply directly to landscaping: visual-first hero sections, real project galleries, mobile-first quote flows, trust signals up front, and local SEO that ranks for service-area searches.
+          </p>
+        </div>
+
+        <div class="mt-12 grid md:grid-cols-2 gap-5">
+          <a href="/case-studies/modern-classic-barbershop" class="card card-hover overflow-hidden flex flex-col group">
+            <div class="relative aspect-[9/12] bg-surface-2 overflow-hidden border-b border-line">
+              <img src="/showcase/modern-classic-mobile.png" alt="Modern Classic Barbershop mobile site" class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+            </div>
+            <div class="p-6 flex-1">
+              <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Barbershop</div>
+              <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text leading-snug">Modern Classic Barbershop</h3>
+              <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">A premium brand built around real photos and frictionless booking. The same visual-first, two-tap-to-action approach maps directly to a landscaping site selling visible, finished work.</p>
+            </div>
+          </a>
+          <a href="/case-studies/all-transport-party-bus" class="card card-hover overflow-hidden flex flex-col group">
+            <div class="relative aspect-[9/12] bg-surface-2 overflow-hidden border-b border-line">
+              <img src="/showcase/all-transport-mobile.png" alt="All Transport Party Bus mobile site" class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+            </div>
+            <div class="p-6 flex-1">
+              <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Event Transportation</div>
+              <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text leading-snug">All Transport Party Bus</h3>
+              <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">Mobile-first build organized by occasion with service-area structure — the same multi-path navigation pattern that fits a landscaper splitting recurring maintenance from one-time installs.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICE CATEGORIES -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Service Pages</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+            One page per real service — not a single "Services" bullet list.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Landscaping covers four genuinely different buyers. Bundling them onto one page hurts both ranking and conversion. The build gives each service its own page, structured for the specific search and the specific decision.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 gap-5">
+          <div class="card p-7 flex flex-col gap-3">
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Lawn Care &amp; Maintenance</div>
+            <h3 class="font-display font-semibold text-[1.1rem] leading-snug text-text">Recurring contracts, weekly visits</h3>
+            <p class="text-[0.92rem] text-text-soft leading-relaxed">Per-visit and seasonal pricing tiers shown clearly. Auto-pay sign-up and route-area filtering up front so customers self-qualify before they ever fill out a form.</p>
+          </div>
+          <div class="card p-7 flex flex-col gap-3">
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Hardscaping &amp; Installs</div>
+            <h3 class="font-display font-semibold text-[1.1rem] leading-snug text-text">One-time projects, five-figure budgets</h3>
+            <p class="text-[0.92rem] text-text-soft leading-relaxed">Patio, retaining wall, fire pit, walkway galleries with material breakdowns. Quote forms ask for square footage and project type so the first response is a real estimate, not a callback.</p>
+          </div>
+          <div class="card p-7 flex flex-col gap-3">
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Landscape Design</div>
+            <h3 class="font-display font-semibold text-[1.1rem] leading-snug text-text">Designer-led, slower decision cycle</h3>
+            <p class="text-[0.92rem] text-text-soft leading-relaxed">Portfolio-led page with full project case studies, designer bio, and a longer consultation form. Different buyer, different commitment, different page treatment.</p>
+          </div>
+          <div class="card p-7 flex flex-col gap-3">
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Seasonal Cleanups</div>
+            <h3 class="font-display font-semibold text-[1.1rem] leading-snug text-text">Spring + fall windows, urgency-driven</h3>
+            <p class="text-[0.92rem] text-text-soft leading-relaxed">Date-window booking with capacity caps, so customers see real availability instead of a "we'll get back to you" form. Repeats annually — easy upsell to recurring maintenance.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> FAQ</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+          Common questions from landscaping owners.
+        </h2>
+
+        <div class="mt-10 space-y-4">
+          <details class="card p-6 group">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-4 font-display font-semibold text-[1.05rem] text-text">
+              How much does a landscaping website cost?
+              <span class="text-accent transition-transform group-open:rotate-45 text-2xl leading-none" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-4 text-[0.95rem] text-text-soft leading-relaxed">
+              Most landscaping builds land between the Starter ($1,500) and Lead Generation ($3,000) packages. If the build needs deeper project-gallery infrastructure or a recurring-billing portal for maintenance contracts, it moves toward the Custom Lead System tier. The free quote covers what I'd actually scope for your shop.
+            </p>
+          </details>
+
+          <details class="card p-6 group">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-4 font-display font-semibold text-[1.05rem] text-text">
+              Can you handle the project gallery if I don't have professional photos?
+              <span class="text-accent transition-transform group-open:rotate-45 text-2xl leading-none" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-4 text-[0.95rem] text-text-soft leading-relaxed">
+              Phone photos work — what matters is they're your real work, not stock. Most landscapers already have hundreds of job-site photos sitting on their phone. The build process includes organizing those into a real gallery (by service category, by season) so the work actually pulls weight on the site.
+            </p>
+          </details>
+
+          <details class="card p-6 group">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-4 font-display font-semibold text-[1.05rem] text-text">
+              How do you handle seasonal updates after launch?
+              <span class="text-accent transition-transform group-open:rotate-45 text-2xl leading-none" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-4 text-[0.95rem] text-text-soft leading-relaxed">
+              Two options. Either you take the keys and update content yourself (the site is built so swapping seasonal banners or adding a new project takes a few minutes), or I keep a light retainer for recurring updates — your choice. No lock-in either way.
+            </p>
+          </details>
+
+          <details class="card p-6 group">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-4 font-display font-semibold text-[1.05rem] text-text">
+              You haven't built for landscapers — should I be concerned?
+              <span class="text-accent transition-transform group-open:rotate-45 text-2xl leading-none" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-4 text-[0.95rem] text-text-soft leading-relaxed">
+              Honest answer: the conversion principles are the same across service trades. Visual-first hero, real project gallery, mobile-first quote flow, structured local SEO. Different work, same playbook. The real builds you can verify (Fitchin, Modern Classic, All Transport) are the proof of execution capability.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOCAL SEO -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Local SEO</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+          Local SEO for landscapers.
+        </h2>
+        <div class="mt-6 space-y-4 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          <p>
+            Landscaping searches are seasonal, local, and visual. "Landscaper near me" and "[service] in [town]" dominate — and the local 3-pack is where most of those clicks go. The on-page work that earns those rankings is service-area pages, LocalBusiness and Service schema, and a Google Business Profile that's actually filled out (with real photos, posts, and a steady review cadence).
+          </p>
+          <p>
+            None of it is fast — but it compounds. The work I do this month tends to start showing up 30–90 days later, and stays working as long as the site stays maintained.
+          </p>
+        </div>
+
+        <div class="mt-8">
+          <a href="/local-seo" class="btn-ghost">
+            More on local SEO
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Want a landscaping site that books real work?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Send me your current site (or the Facebook page you're running instead). I'll scope a rebuild that leads with your work and routes the right customer to the right ask.
+        </p>
+        <div class="mt-10">
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

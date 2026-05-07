@@ -3,6 +3,15 @@ import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
 
+const industries = [
+  { label: 'Barbershop Websites', body: 'Booking + brand sites that sit on top of Square or Booksy. Auto-review SMS, waitlist, and customer login.', href: '/barbershop-websites' },
+  { label: 'Auto Detailing Websites', body: 'Vehicle-by-vehicle quote flows that capture leads instead of phone calls. Real pricing, mobile-first.', href: '/auto-detail-websites' },
+  { label: 'Window Tint Websites', body: 'Custom quote wizards built around per-section pricing, film tier comparison, and split-darkness logic.', href: '/window-tint-websites' },
+  { label: 'Contractor Websites', body: 'Trust-first sites built around how homeowners actually decide. License visible, real photos, fast response.', href: '/contractor-websites' },
+  { label: 'HVAC Websites', body: 'Two-path navigation that splits emergency calls from replacement estimates, with financing visible up front.', href: '/hvac-websites' },
+  { label: 'Landscaping Websites', body: 'Visual-first builds with seasonal service splits, project galleries, and recurring vs. one-time customer paths.', href: '/landscaping-websites' },
+];
+
 const included = [
   { title: 'Mobile-first design', body: 'Built for thumb taps. Most local-service traffic comes from a phone — the site is designed for that first, not as an afterthought.' },
   { title: 'Conversion-focused copy', body: 'Headlines, structure, and CTAs that move a visitor from interested to in-touch. Not just "About / Services / Contact."' },
@@ -13,8 +22,8 @@ const included = [
 ];
 ---
 <LandingLayout
-  title="Web Design for Local Service Businesses | Designed to Elevate"
-  description="Custom mobile-first websites for local service businesses. Conversion copy, fast load times, local SEO foundations, and quote forms that actually capture leads."
+  title="Small Business Website Design for Ohio Service Businesses | Designed to Elevate"
+  description="Small business website design for Ohio service businesses. Mobile-first builds with conversion copy, fast load times, local SEO foundations, and quote forms that actually capture leads."
   pathname="web-design"
 >
   <SiteHeader />
@@ -28,10 +37,10 @@ const included = [
       <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
         <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Web Design</span>
         <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] lg:text-[3.6rem] leading-[1.04] font-bold tracking-tight">
-          Web Design for <span class="text-accent">Local Service Businesses</span>
+          Small Business <span class="text-accent">Website Design</span> built around how local customers actually decide.
         </h1>
         <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-3xl">
-          Custom-built sites that load fast, look sharp, and turn visitors into quote requests. Built on Astro, deployed on Vercel — none of the WordPress bloat, none of the page-builder lock-in.
+          Custom-built sites for Ohio service businesses — fast, sharp, and structured to turn visitors into quote requests. Built on Astro, deployed on Vercel. No WordPress bloat, no page-builder lock-in.
         </p>
 
         <div class="mt-8 flex flex-wrap gap-3">
@@ -125,6 +134,34 @@ const included = [
               <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">Premium brand hub with Square + Shopify integration.</p>
             </div>
           </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- INDUSTRIES -->
+    <section id="industries" class="relative border-b border-line bg-surface-1/40 scroll-mt-24">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Industries</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            Industries we build for.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Same conversion playbook, tuned to how each trade actually gets bought. Pages below have the full breakdown for each.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {industries.map((i) => (
+            <a href={i.href} class="card card-hover group p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{i.label}</h3>
+              <p class="text-[0.92rem] text-text-soft leading-relaxed">{i.body}</p>
+              <span class="mt-auto inline-flex items-center gap-1.5 text-[0.85rem] font-display font-medium text-accent group-hover:translate-x-0.5 transition-transform">
+                See the page
+                <span aria-hidden="true">→</span>
+              </span>
+            </a>
+          ))}
         </div>
       </div>
     </section>

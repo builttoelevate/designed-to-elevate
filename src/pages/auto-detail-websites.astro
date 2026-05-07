@@ -1,0 +1,192 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+
+const needs = [
+  { title: 'Pricing that knows the vehicle', body: "A base detail on a Civic is not the same job as a full ceramic on a four-door truck. The site should price like the shop prices — by vehicle, not by guess." },
+  { title: 'Package complexity made simple', body: 'Express, full interior, paint correction, ceramic tier, PPF — most shops have a service menu that takes ten minutes to explain. The site should make it ten seconds.' },
+  { title: 'Lead capture before the customer leaves', body: "Capture name, vehicle, and contact early in the flow. Even half-finished quotes still land in the dashboard for follow-up — no lost leads." },
+  { title: 'Mobile-first quote flow', body: "Customers are usually quoting their car from the driver's seat or the parking lot. If the form makes them pinch-zoom, the lead is gone." },
+  { title: 'Local SEO for service-area searches', body: 'Service-area pages, schema, and Google Business Profile alignment so the shop ranks for "[service] in [town]" — not just for the shop\'s exact name.' },
+  { title: 'Trust signals up front', body: 'Real shop photos, before/after work, reviews, certifications, brand affiliations (Ceramic Pro, XPEL, etc.). The decision is made in the first scroll.' },
+];
+
+const wizardSteps = [
+  { src: '/wizard/step-1-service.png', label: 'Step 1 · Pick the service' },
+  { src: '/wizard/step-3-pick-film.png', label: 'Step 3 · Tier comparison shown inline' },
+  { src: '/wizard/step-6-final-quote.png', label: 'Step 6 · Real quote + booking step' },
+];
+---
+<LandingLayout
+  title="Auto Detailing Website Design Built for Quote Requests | Designed to Elevate"
+  description="Auto detailing website design built around real vehicle-by-vehicle pricing logic. Mobile-first quote flow, lead capture before the final step, and local SEO that ranks for service-area searches."
+  pathname="auto-detail-websites"
+>
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Auto Detailing Websites</span>
+        <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] lg:text-[3.6rem] leading-[1.04] font-bold tracking-tight">
+          Detailing websites that turn curious visitors into <span class="text-accent">quote requests.</span>
+        </h1>
+        <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-3xl">
+          Auto detailing website design built around real vehicle-by-vehicle pricing — not a generic contact form. Mobile-first, fast on a phone, and structured to capture leads before the customer can bounce to the next shop.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="/case-studies/fitchin-auto-detail-tint" class="btn-ghost">
+            See it live at Fitchin
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT DETAIL SHOPS NEED -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What Shops Need</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            What detail shops actually need from a website.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            A generic "Contact Us" form is a tax on your phone. Every quote request that could have been priced online instead becomes a phone tag exercise — and most customers won't wait.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {needs.map((n) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{n.title}</h3>
+              <p class="text-[0.92rem] text-text-soft leading-relaxed">{n.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- FITCHIN FEATURE -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl mb-12">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Featured Build</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            Fitchin Automotive Detailing &amp; Window Tinting
+          </h2>
+          <div class="mt-3 text-text-muted text-[0.95rem]">Coshocton, Ohio</div>
+          <p class="mt-6 text-text-soft text-[1.05rem] leading-relaxed">
+            Before the rebuild, every quote request meant a phone call. The site couldn't price work because the work has real complexity — vehicle type, package tier, paint correction, ceramic level, add-ons. The new build replaced the contact form with a guided quote system that handles all of it end to end.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-5 mb-12">
+          {wizardSteps.map((s) => (
+            <figure class="card overflow-hidden flex flex-col">
+              <div class="relative aspect-[10/13] bg-surface-2 overflow-hidden border-b border-line">
+                <img
+                  src={s.src}
+                  alt={s.label}
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <figcaption class="px-5 py-4 text-[0.85rem] text-text-soft font-display">
+                {s.label}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <ul class="space-y-3 max-w-3xl">
+          {[
+            '378-vehicle pricing logic across detail, tint, and add-ons',
+            'Tiered packages (Express → Full Interior → Full Detail → Ceramic) with the value gap shown inline',
+            'Lead capture before the final step — partial quotes still land in the dashboard',
+            'Mobile-first quote flow built for paid traffic and Google Business Profile clicks',
+            'Local SEO structure: Coshocton service-area pages, schema, and review-aligned content',
+          ].map((b) => (
+            <li class="flex items-start gap-3 text-[1rem] text-text-soft leading-relaxed">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div class="mt-10 flex flex-wrap gap-3">
+          <a href="/case-studies/fitchin-auto-detail-tint" class="btn-ghost">
+            Read the full case study
+            <span aria-hidden="true">→</span>
+          </a>
+          <a href="https://fitchinautodetail.com" target="_blank" rel="noopener noreferrer" class="btn-ghost">
+            Visit the live site
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOCAL SEO -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Local SEO</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+          Local SEO for service-area shops.
+        </h2>
+        <div class="mt-6 space-y-4 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          <p>
+            Most detail customers find their shop on Google Maps. They tap the first three results, scan reviews, and click through to the website that loads fastest and looks most legit. If you're not in those first three, you don't exist.
+          </p>
+          <p>
+            The build covers the on-page work — service-area pages, LocalBusiness schema, fast Astro front end — so the site earns its way into the local 3-pack instead of relying on paid ads to make up the gap.
+          </p>
+        </div>
+
+        <div class="mt-8">
+          <a href="/local-seo" class="btn-ghost">
+            More on local SEO
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Want a detail shop site that actually quotes work?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Send me what you've got. I'll scope a rebuild that prices the way your shop prices — and stops sending every customer to a phone call.
+        </p>
+        <div class="mt-10">
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

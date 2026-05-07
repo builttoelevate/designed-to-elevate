@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://designedtoelevate.co/sitemap-index.xml
+# /grow and /brochure carry <meta name="robots" content="noindex"> in
+# their HTML — intentionally NOT blocked here so Googlebot can crawl
+# them and honor the noindex directive.
+
+Sitemap: https://designedtoelevate.co/sitemap.xml

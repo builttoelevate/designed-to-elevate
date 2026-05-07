@@ -1,0 +1,257 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+
+const needs = [
+  { title: 'Emergency framing up front', body: "Half of HVAC traffic is 'my AC died.' The header should make 'Call now for emergency service' impossible to miss — not bury it under a hero slider." },
+  { title: 'Service area + dispatch radius', body: "Customers want to know if you'll actually drive to them today. List counties, cities, and ZIP codes — and put it where they can see it without scrolling." },
+  { title: 'Emergency vs. scheduled split', body: "A failed furnace is a different conversation than a 'my unit is 18 years old, time to replace.' Two paths through the site. Two different CTAs." },
+  { title: 'Financing options visible', body: "A new system is a five-figure decision. One line about financing options moves customers from 'getting quotes' to 'booking the install.'" },
+  { title: 'Trust signals (license, NATE, BBB)', body: "License number, manufacturer certifications, NATE-certified techs, BBB rating. The customer needs to see these before they'll let a stranger into their basement." },
+  { title: 'Sub-second mobile load', body: "Furnace dies on a Tuesday morning. Homeowner is on a phone, panicked. If your site takes 5 seconds to load, they're already calling the next result." },
+  { title: 'Maintenance plan signups', body: "Recurring revenue is the real business. The site should make joining a seasonal maintenance plan as easy as booking a one-time call." },
+  { title: 'Real photos of trucks and crews', body: "Stock photos of generic HVAC techs hurt trust. Real photos of your real trucks and your real techs do the opposite." },
+];
+---
+<LandingLayout
+  title="HVAC Website Design for Service Calls and Estimates | Designed to Elevate"
+  description="HVAC website design built to capture emergency service calls and replacement estimates. Emergency framing up front, service-area structure, financing visibility, and local SEO that ranks for HVAC searches in your market."
+  pathname="hvac-websites"
+>
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> HVAC Websites</span>
+        <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] lg:text-[3.6rem] leading-[1.04] font-bold tracking-tight">
+          HVAC websites built for <span class="text-accent">urgent repair calls and scheduled estimates.</span>
+        </h1>
+        <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-3xl">
+          HVAC website design that splits the two real customer paths — broken-system repairs and replacement estimates — and routes each one to the right CTA. Plus the on-page SEO work that ranks you for HVAC searches in your market.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="#what-hvac-needs" class="btn-ghost">
+            What HVAC sites need
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT HVAC SITES NEED -->
+    <section id="what-hvac-needs" class="relative border-b border-line scroll-mt-24">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What HVAC Sites Need</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            What HVAC sites need that generic websites miss.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Most HVAC websites look like they were built for a generic "service business" — same hero slider, same Lorem-ipsum-feeling about page, same single contact form. None of that matches the way HVAC actually gets bought.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {needs.map((n) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{n.title}</h3>
+              <p class="text-[0.92rem] text-text-soft leading-relaxed">{n.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- HONESTY: PRINCIPLES THAT WORK -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Real Execution Proof</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+          Principles that work — backed by real builds.
+        </h2>
+        <div class="mt-6 space-y-4 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          <p>
+            Straight talk: my recent local work has been in auto detail, barbershop, and event transportation — not HVAC. I'm not putting fake HVAC screenshots or invented testimonials in front of you.
+          </p>
+          <p>
+            What I will tell you is that the conversion principles that work for HVAC — fast mobile load, urgency framing, trust signals, two-path navigation, structured local SEO — are the same principles that drive every site I build. The trade is different; the math is the same.
+          </p>
+        </div>
+
+        <div class="mt-12 grid md:grid-cols-2 gap-5">
+          <a href="/case-studies/fitchin-auto-detail-tint" class="card card-hover overflow-hidden flex flex-col group">
+            <div class="relative aspect-[9/12] bg-surface-2 overflow-hidden border-b border-line">
+              <img src="/showcase/fitchin-mobile.png" alt="Fitchin Auto Detail mobile site" class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+            </div>
+            <div class="p-6 flex-1">
+              <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Auto Detail · Window Tint</div>
+              <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text leading-snug">Fitchin Automotive Detailing</h3>
+              <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">A custom quote system that maps real pricing logic — the same kind of multi-variable quote logic that fits an HVAC replacement estimate (system size, efficiency tier, financing option, install scope).</p>
+            </div>
+          </a>
+          <a href="/case-studies/all-transport-party-bus" class="card card-hover overflow-hidden flex flex-col group">
+            <div class="relative aspect-[9/12] bg-surface-2 overflow-hidden border-b border-line">
+              <img src="/showcase/all-transport-mobile.png" alt="All Transport Party Bus mobile site" class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+            </div>
+            <div class="p-6 flex-1">
+              <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Event Transportation</div>
+              <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text leading-snug">All Transport Party Bus</h3>
+              <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">Mobile-first build organized around urgent quote requests with service-area structure — the same pattern that fits an HVAC company splitting emergency calls from scheduled estimates.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TWO-PATH NAVIGATION -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Build Pattern</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+            Two paths, one site.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            HVAC has two completely different customers landing on the same homepage. The build separates them at the door so neither one has to scroll past content meant for the other.
+          </p>
+        </div>
+
+        <div class="mt-12 grid md:grid-cols-2 gap-5">
+          <div class="card p-7 flex flex-col gap-4">
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Path A · Urgent Repair</div>
+            <h3 class="font-display font-semibold text-[1.2rem] leading-snug text-text">"My system died and it's 92° out."</h3>
+            <ul class="space-y-2.5 text-[0.95rem] text-text-soft leading-relaxed">
+              <li>– One-tap call button pinned at the top of every page</li>
+              <li>– Same-day / after-hours availability shown above the fold</li>
+              <li>– Service area and dispatch radius visible without scrolling</li>
+              <li>– Trust signals (license, insured, NATE) where the eye lands first</li>
+            </ul>
+          </div>
+          <div class="card p-7 flex flex-col gap-4">
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">Path B · Replacement Estimate</div>
+            <h3 class="font-display font-semibold text-[1.2rem] leading-snug text-text">"Our unit is 18 years old. Time to budget."</h3>
+            <ul class="space-y-2.5 text-[0.95rem] text-text-soft leading-relaxed">
+              <li>– Estimate request form with home size + system age fields</li>
+              <li>– Financing options visible — moves the customer past sticker shock</li>
+              <li>– Manufacturer affiliations and efficiency-tier explainers</li>
+              <li>– Maintenance plan signup as the secondary CTA</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> FAQ</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+          Common questions from HVAC owners.
+        </h2>
+
+        <div class="mt-10 space-y-4">
+          <details class="card p-6 group">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-4 font-display font-semibold text-[1.05rem] text-text">
+              How much does an HVAC website rebuild cost?
+              <span class="text-accent transition-transform group-open:rotate-45 text-2xl leading-none" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-4 text-[0.95rem] text-text-soft leading-relaxed">
+              Most HVAC builds land between the Starter ($1,500) and Lead Generation ($3,000) packages. If the build needs deeper financing-calculator integration or service-management software hooks (ServiceTitan, Housecall Pro), it moves toward the Custom Lead System tier. Final scope depends on your project — the free quote covers what I'd actually scope for your shop.
+            </p>
+          </details>
+
+          <details class="card p-6 group">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-4 font-display font-semibold text-[1.05rem] text-text">
+              Can the site integrate with our scheduling or dispatch software?
+              <span class="text-accent transition-transform group-open:rotate-45 text-2xl leading-none" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-4 text-[0.95rem] text-text-soft leading-relaxed">
+              Usually, yes. Most field-service platforms expose lead-capture APIs or webhooks. The site can push form submissions directly into your existing dispatch flow so your office team isn't double-entering anything. Specifics depend on the platform — happy to scope this on the call.
+            </p>
+          </details>
+
+          <details class="card p-6 group">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-4 font-display font-semibold text-[1.05rem] text-text">
+              Do I have to commit to a long-term marketing contract?
+              <span class="text-accent transition-transform group-open:rotate-45 text-2xl leading-none" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-4 text-[0.95rem] text-text-soft leading-relaxed">
+              No. The site is yours when it ships. No monthly retainer required. If you want me to keep optimizing local SEO or running ad tests after launch, that's a separate conversation — but the build itself is one project, one fee, and you own the code.
+            </p>
+          </details>
+
+          <details class="card p-6 group">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-4 font-display font-semibold text-[1.05rem] text-text">
+              You haven't built for HVAC before — does that matter?
+              <span class="text-accent transition-transform group-open:rotate-45 text-2xl leading-none" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-4 text-[0.95rem] text-text-soft leading-relaxed">
+              Honest answer: it matters less than it sounds like. The conversion principles — fast mobile load, urgency framing, two-path navigation, trust signals, structured local SEO — are the same across service trades. I'd rather tell you that up front than hand you a fabricated case study. You can decide if my real builds (Fitchin, Modern Classic, All Transport) prove the execution chops you need.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOCAL SEO -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Local SEO</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+          Local SEO for HVAC.
+        </h2>
+        <div class="mt-6 space-y-4 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          <p>
+            HVAC searches are seasonal and urgent. "AC repair near me" spikes in July. "Furnace repair" spikes in December. The on-page work — service-area pages per real city you cover, schema markup, fast Astro front end — is what gets you in the local 3-pack when those spikes hit.
+          </p>
+          <p>
+            Service-area structure also matters more for HVAC than for almost any other trade because the dispatch radius is real. Customers want to see their town listed before they'll click your number.
+          </p>
+        </div>
+
+        <div class="mt-8">
+          <a href="/local-seo" class="btn-ghost">
+            More on local SEO
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Want an HVAC site that captures both calls and estimates?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Send me your current site. I'll scope a rebuild that splits the urgent and the scheduled paths — and stops sending every customer to one generic contact form.
+        </p>
+        <div class="mt-10">
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

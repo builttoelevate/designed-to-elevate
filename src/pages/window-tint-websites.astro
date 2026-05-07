@@ -1,0 +1,194 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+
+const needs = [
+  { title: 'Per-vehicle quoting', body: "A 2024 F-150 with a rear bench is a different glass count than a coupe. The site has to know the vehicle before it tries to quote it." },
+  { title: 'Per-section selection', body: 'Customers want to tint two fronts, two fronts plus rears, full vehicle, or strip-and-redo. The flow has to support every combination without making the customer think.' },
+  { title: 'Tier comparison shown inline', body: 'Carbon vs. Nano Ceramic vs. Ceramic IR — most customers don\'t know the difference. Showing the tiers side by side raises average ticket more than any sales script.' },
+  { title: 'Split darkness logic', body: 'Most jobs are 70% in front, 20% in back. The flow has to capture that without forcing the customer into a generic "pick one" dropdown.' },
+  { title: 'Lead capture before the deposit step', body: 'Even the customers who don\'t book today should land in the dashboard with their full configuration, ready for follow-up.' },
+  { title: 'Window tint SEO', body: 'On-page work and local citations targeting "window tint [city]" and related variations. Tint is one of the most searched local-service terms in any market.' },
+];
+---
+<LandingLayout
+  title="Window Tint Shop Websites with Custom Quote Systems | Designed to Elevate"
+  description="Window tint shop website design built around vehicle-specific quote flows. Per-section pricing, tier comparison, split darkness logic, and SEO targeting window tint searches in your market."
+  pathname="window-tint-websites"
+>
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Window Tint Websites</span>
+        <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] lg:text-[3.6rem] leading-[1.04] font-bold tracking-tight">
+          Window tint websites built for <span class="text-accent">vehicle-specific quote flows.</span>
+        </h1>
+        <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-3xl">
+          Window tint shop website design built around how tint actually gets sold — by vehicle, by section, by film tier. Plus the local SEO work that gets you ranking for window tint searches in your market.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="#wizard" class="btn-ghost">
+            See the wizard
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT TINT SHOPS NEED -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What Tint Shops Need</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            What tint shops actually need.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Tint pricing has more variables than almost any other service trade. Vehicle, sections, darkness, tier, ceramic vs. carbon, removal of old film, warranty. A generic contact form throws all of that on your phone.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {needs.map((n) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{n.title}</h3>
+              <p class="text-[0.92rem] text-text-soft leading-relaxed">{n.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- THE WIZARD -->
+    <section id="wizard" class="relative border-b border-line bg-surface-1/40 scroll-mt-24">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl mb-12">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Featured Build</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            The 378-vehicle quote wizard at Fitchin.
+          </h2>
+          <div class="mt-3 text-text-muted text-[0.95rem]">Coshocton, Ohio</div>
+          <p class="mt-6 text-text-soft text-[1.05rem] leading-relaxed">
+            For Fitchin Auto Detail &amp; Tint, the centerpiece of the build is a guided quote flow that handles 378 vehicle configurations. The customer picks the vehicle, picks the sections, picks the tier — and the system returns a real quote priced against live API logic, not a "we'll get back to you."
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {[
+            { src: '/wizard/step-1-service.png', label: 'Step 1 · Service selection' },
+            { src: '/wizard/step-2-tint.png', label: 'Step 2 · Section + darkness' },
+            { src: '/wizard/step-3-pick-film.png', label: 'Step 3 · Film tier comparison' },
+            { src: '/wizard/step-3-pick-film-full.png', label: 'Step 3 (alt) · Full-screen tier view' },
+            { src: '/wizard/step-4-addons.png', label: 'Step 4 · Add-ons + removal' },
+            { src: '/wizard/step-6-final-quote.png', label: 'Step 6 · Real quote + booking' },
+          ].map((s) => (
+            <figure class="card overflow-hidden flex flex-col">
+              <div class="relative aspect-[10/13] bg-surface-2 overflow-hidden border-b border-line">
+                <img
+                  src={s.src}
+                  alt={s.label}
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <figcaption class="px-5 py-4 text-[0.85rem] text-text-soft font-display">
+                {s.label}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <ul class="mt-12 space-y-3 max-w-3xl">
+          {[
+            '378-vehicle pricing logic with per-section coverage',
+            'Tiered films (Carbon → Nano Ceramic → Ceramic IR) shown inline so customers see the value gap',
+            'Split-darkness flow: front shades vs. rear shades handled in one step',
+            'Lead capture before the final step — partial quotes still land in the dashboard',
+            'Booking flow with deposit, calendar, and confirmation built in',
+            'Live API pricing — owner can update prices once and the wizard updates everywhere',
+          ].map((b) => (
+            <li class="flex items-start gap-3 text-[1rem] text-text-soft leading-relaxed">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div class="mt-10 flex flex-wrap gap-3">
+          <a href="/case-studies/fitchin-auto-detail-tint" class="btn-ghost">
+            Read the full case study
+            <span aria-hidden="true">→</span>
+          </a>
+          <a href="https://fitchinautodetail.com" target="_blank" rel="noopener noreferrer" class="btn-ghost">
+            Visit the live site
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEAD CAPTURE + BOOKING -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Lead Capture + Booking</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+          From quote to deposit in one flow.
+        </h2>
+        <div class="mt-6 space-y-4 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          <p>
+            The point of the wizard isn't to generate quotes. It's to <span class="text-text font-semibold">book the work.</span> After the customer sees the quote, the next step is a booking flow with deposit collection, calendar selection, and an automatic confirmation text plus email.
+          </p>
+          <p>
+            Even if the customer bails before paying the deposit, the system has their full vehicle configuration, contact info, and quoted price — sitting in a dashboard ready for the shop to follow up on the same day.
+          </p>
+        </div>
+
+        <div class="mt-8">
+          <a href="/custom-lead-systems" class="btn-ghost">
+            More on custom lead systems
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Want a quote system like this for your tint shop?
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Send me your current site (or the Facebook page you're running instead). I'll scope a rebuild that prices the way your shop prices.
+        </p>
+        <div class="mt-10">
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

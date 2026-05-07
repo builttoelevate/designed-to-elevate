@@ -1,0 +1,231 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+
+const signs = [
+  { title: 'It loads slow on a phone', body: "Most local-service traffic is mobile. If your homepage takes more than 2 seconds to paint, half the people who clicked are already gone." },
+  { title: 'It looks broken on mobile', body: 'Stretched images, tiny tap targets, menus that overflow the screen. A site that "looks fine on desktop" can be unusable in someone\'s hand.' },
+  { title: "It doesn't bring in any leads", body: "No calls, no quote requests, no booked jobs. The site is essentially a digital business card — and a slow one at that." },
+  { title: 'The design feels dated', body: "Stock photos, generic templates, fonts from 2013. Visitors decide if you're a real business in three seconds — and the design is most of that decision." },
+  { title: "You can't update it without paying someone", body: 'Every change is a support ticket. Adding a service, swapping a photo, changing your hours — none of it should require an outside vendor.' },
+  { title: 'There is no clear next step', body: 'No phone-prominent header. No quote button. No path from "interested" to "in touch." Just paragraphs of text that hope the customer figures it out.' },
+  { title: "It doesn't show up on Google", body: 'No service-area pages, no schema, no real on-page SEO. Even when people search for what you do in your town, your site isn\'t there.' },
+];
+
+const rebuilds = [
+  { title: 'A real conversion structure', body: 'Headlines that name the customer\'s problem. CTAs above the fold and after every section. One clear path from visitor to lead — not a maze.' },
+  { title: 'Mobile-first from the ground up', body: 'Built for thumb taps before anything else. The desktop view follows the phone, not the other way around.' },
+  { title: 'Fast load times via Astro', body: 'Static-first builds deployed on Vercel. Pages paint in under a second on a phone — Google rewards it, customers stay for it.' },
+  { title: 'On-page SEO that ranks locally', body: 'Page titles, meta descriptions, headings, internal links, schema markup, service-area structure. The work that gets you into the local 3-pack.' },
+  { title: 'Quote and contact flows that convert', body: 'Forms tied to real lead capture. Optional upgrade to a custom quote wizard if your pricing has real logic to it.' },
+  { title: 'A site you can actually update', body: 'Clean code, clear structure, documented edit points. No agency lock-in. If you ever want to take it elsewhere, you can.' },
+];
+
+const process = [
+  { step: '1', title: 'Audit what you have', body: "I look at your current site, your Google Business Profile, and how you actually get customers today. Then I tell you what's losing leads and why." },
+  { step: '2', title: 'Map the rebuild', body: 'We agree on what stays, what gets cut, and what needs to be added. Scope is locked in writing before any code gets written.' },
+  { step: '3', title: 'Build and launch', body: 'Custom design, mobile-first, on-page SEO baked in. Most rebuilds ship in 2–4 weeks depending on scope.' },
+  { step: '4', title: 'Hand off and support', body: "You get a site you can update. I'm here if you want me to keep optimizing — but you're not stuck with me." },
+];
+---
+<LandingLayout
+  title="Small Business Website Redesign in Ohio | Designed to Elevate"
+  description="Small business website redesigns built around conversion, not just visual refresh. Mobile-first rebuilds with real on-page SEO and lead capture, for Ohio service businesses ready to replace a website that isn't earning its keep."
+  pathname="website-redesign"
+>
+  <SiteHeader />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Website Redesign</span>
+        <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] lg:text-[3.6rem] leading-[1.04] font-bold tracking-tight">
+          Your website should bring you customers <span class="text-accent">— not embarrass you.</span>
+        </h1>
+        <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-3xl">
+          Small business website redesigns built around conversion, not just a visual refresh. Mobile-first, fast, and structured so the site actually earns the calls and quote requests your business needs.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="#signs" class="btn-ghost">
+            Signs you need a redesign
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIGNS YOU NEED A REDESIGN -->
+    <section id="signs" class="relative border-b border-line scroll-mt-24">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Signs It's Time</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            Signs your website needs a redesign.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            If three or more of these sound like your site, the rebuild conversation is already overdue.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {signs.map((s) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{s.title}</h3>
+              <p class="text-[0.92rem] text-text-soft leading-relaxed">{s.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT I REBUILD -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What I Rebuild</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            What I rebuild — and why.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            A redesign that's only a visual refresh leaves the same lead-leaking structure underneath. The point is to fix what isn't converting — not to repaint a broken room.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {rebuilds.map((r) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{r.title}</h3>
+              <p class="text-[0.92rem] text-text-soft leading-relaxed">{r.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Process</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+          How a rebuild actually goes.
+        </h2>
+
+        <ol class="mt-12 space-y-5">
+          {process.map((p) => (
+            <li class="card p-6 sm:p-7 flex gap-5 items-start">
+              <span class="flex-shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent/15 text-accent font-display font-bold text-[1.05rem]" aria-hidden="true">{p.step}</span>
+              <div>
+                <h3 class="font-display font-semibold text-[1.1rem] leading-snug text-text">{p.title}</h3>
+                <p class="mt-2 text-[0.95rem] text-text-soft leading-relaxed">{p.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- RECENT WORK PROOF -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+          <div class="max-w-2xl">
+            <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Recent Work</span>
+            <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+              What rebuilt sites look like.
+            </h2>
+          </div>
+          <a href="/case-studies" class="inline-flex items-center gap-1.5 font-display font-medium text-[0.95rem] text-accent hover:text-accent-hover transition-colors whitespace-nowrap">
+            All case studies
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-5">
+          <a href="/case-studies/fitchin-auto-detail-tint" class="card card-hover overflow-hidden flex flex-col group">
+            <div class="relative aspect-[9/12] bg-surface-2 overflow-hidden border-b border-line">
+              <img src="/showcase/fitchin-mobile.png" alt="Fitchin Auto Detail mobile site" class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+            </div>
+            <div class="p-6 flex-1">
+              <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Auto Detail · Window Tint</div>
+              <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text leading-snug">Fitchin Automotive Detailing</h3>
+              <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">A phone-only operation rebuilt as a 378-vehicle quote system that captures leads automatically.</p>
+            </div>
+          </a>
+          <a href="/case-studies/modern-classic-barbershop" class="card card-hover overflow-hidden flex flex-col group">
+            <div class="relative aspect-[9/12] bg-surface-2 overflow-hidden border-b border-line">
+              <img src="/showcase/modern-classic-mobile.png" alt="Modern Classic Barbershop mobile site" class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none"></div>
+            </div>
+            <div class="p-6 flex-1">
+              <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">Barbershop</div>
+              <h3 class="mt-2 font-display font-semibold text-[1.1rem] text-text leading-snug">Modern Classic Barbershop</h3>
+              <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">A premium brand hub built on top of Square booking and Shopify product — none of the platform-template look.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING REFERENCE -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-28">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Pricing</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+          What a redesign costs.
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] leading-relaxed">
+          Most small-business redesigns land between the Starter Website and Lead Generation Website packages — somewhere in the <span class="text-text font-semibold">$1,500–$3,000</span> range, depending on how much existing content can be reused and whether the rebuild needs custom quote logic on top.
+        </p>
+        <p class="mt-4 text-text-soft text-[1.05rem] leading-relaxed">
+          Final scope and pricing depend on your project. The free quote covers what I'd actually scope for your site.
+        </p>
+
+        <div class="mt-10 flex flex-wrap gap-3">
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="/#pricing" class="btn-ghost">
+            See full pricing
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          Send me your current site.
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          I'll tell you exactly what I'd rebuild first — and roughly what it would cost. No pitch, no pressure.
+        </p>
+        <div class="mt-10">
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</LandingLayout>

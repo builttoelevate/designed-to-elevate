@@ -68,6 +68,15 @@ const featuredBullets = [
 
 const aboutAccents = ['Local Ohio', 'Mobile-first', 'Built to convert'];
 
+const industries = [
+  { label: 'Barbershop', body: 'Booking + brand sites that sit on top of Square or Booksy.', href: '/barbershop-websites' },
+  { label: 'Auto Detail', body: 'Vehicle-by-vehicle quote flows that capture leads instead of phone calls.', href: '/auto-detail-websites' },
+  { label: 'Window Tint', body: 'Custom quote wizards built for tier comparison and per-section pricing.', href: '/window-tint-websites' },
+  { label: 'Contractors', body: 'Trust-first sites built around how homeowners actually decide.', href: '/contractor-websites' },
+  { label: 'HVAC', body: 'Two-path navigation: emergency calls and replacement estimates.', href: '/hvac-websites' },
+  { label: 'Landscaping', body: 'Visual-first builds with seasonal service splits and project galleries.', href: '/landscaping-websites' },
+];
+
 const pricing = [
   {
     title: 'Starter Website',
@@ -122,8 +131,8 @@ const schema = {
 };
 ---
 <LandingLayout
-  title="Designed to Elevate | Local Web Design & Lead Systems in Ohio"
-  description="Designed to Elevate builds search-optimized websites, landing pages, and lead systems for local Ohio businesses that want more calls, quote requests, and booked jobs. Recent work includes Fitchin Auto Detail & Tint and Modern Classic Barbershop."
+  title="Small Business Web Designer in Ohio | Designed to Elevate"
+  description="Designed to Elevate is a small business web designer based in Ohio, building search-optimized websites, landing pages, and lead systems for local service businesses that want more calls, quote requests, and booked jobs. Recent work includes Fitchin Auto Detail & Tint and Modern Classic Barbershop."
   pathname=""
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
@@ -324,6 +333,34 @@ const schema = {
       </div>
     </section>
 
+    <!-- ─── 4b. INDUSTRIES WE BUILD FOR ─────────────────────── -->
+    <section id="industries" class="relative border-b border-line bg-surface-1/40 scroll-mt-24">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> INDUSTRIES WE BUILD FOR</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            Built for the trades that actually live or die by their website.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Same conversion playbook, tuned to how each trade actually gets bought.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {industries.map((i) => (
+            <a href={i.href} class="card card-hover group p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{i.label} Websites</h3>
+              <p class="text-[0.92rem] text-text-soft leading-relaxed">{i.body}</p>
+              <span class="mt-auto inline-flex items-center gap-1.5 text-[0.85rem] font-display font-medium text-accent group-hover:translate-x-0.5 transition-transform">
+                See the page
+                <span aria-hidden="true">→</span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
     <!-- ─── 5. FEATURED BUILD ───────────────────────────────── -->
     <section class="relative border-b border-line">
       <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
@@ -387,7 +424,7 @@ const schema = {
           Built from inside real local businesses.
         </h2>
         <p class="mt-7 text-text-soft text-[1.05rem] leading-relaxed">
-          I'm <strong class="text-text font-semibold">Bill Chicha</strong>, the builder behind Designed to Elevate. I'm based in Ohio, and every site, landing page, and lead system shown here was built hands-on — not outsourced, not handed to a team, and not dropped into a generic template. The work focuses on what local service businesses actually need: showing up on Google, building trust fast, and making it easy for customers to call, book, or request a quote.
+          I'm <strong class="text-text font-semibold">Bill Chicha</strong>, the builder behind Designed to Elevate — a small business web designer based in Ohio. Every site, landing page, and lead system shown here was built hands-on by me — not outsourced, not handed to a team, and not dropped into a generic template. The work focuses on what local service businesses actually need: showing up on Google, building trust fast, and making it easy for customers to call, book, or request a quote.
         </p>
 
         <ul class="mt-7 flex flex-wrap gap-x-6 gap-y-3">
