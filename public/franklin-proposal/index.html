@@ -1,0 +1,890 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <title>Designed to Elevate — Proposal for Franklin Printing</title>
+  <meta name="viewport" content="width=816, initial-scale=1">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap">
+  <style>
+    @page {
+      size: 8.5in 11in;
+      margin: 0;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0F0F10;
+      color: #F5F2EC;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      position: relative;
+      width: 8.5in;
+      height: 11in;
+      padding: 0.6in 0.7in;
+      background: #0F0F10;
+      page-break-after: always;
+      page-break-inside: avoid;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .page:last-child { page-break-after: auto; }
+
+    /* On screen, stack pages with a soft surround so they read like a printed document. */
+    @media screen {
+      body {
+        background: #1A1B1F;
+        padding: 0.5in 0;
+      }
+      .page {
+        margin: 0.4in auto;
+        box-shadow:
+          0 0.05in 0.1in rgba(0,0,0,0.5),
+          0 0.2in 0.4in rgba(0,0,0,0.6);
+      }
+    }
+
+    /* ── HEADER (pages 2+) ─────────────────────────────────────── */
+    .pg-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 0.18in;
+      border-bottom: 1px solid #2A2F3A;
+      margin-bottom: 0.34in;
+    }
+    .pg-header .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.12in;
+    }
+    .pg-header .brand img {
+      height: 0.26in;
+      width: auto;
+      display: block;
+    }
+    .pg-header .brand .brand-tag {
+      font-size: 8pt;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #9AA0AA;
+      font-weight: 500;
+    }
+    .pg-header .doc-tag {
+      font-size: 8pt;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #9AA0AA;
+      font-weight: 500;
+    }
+
+    /* ── FOOTER ────────────────────────────────────────────────── */
+    .pg-footer {
+      margin-top: auto;
+      padding-top: 0.18in;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 8pt;
+      color: #9AA0AA;
+      letter-spacing: 0.04em;
+    }
+    .pg-footer .accent-dot {
+      color: #FF7A1A;
+      padding: 0 0.04in;
+      font-weight: 700;
+    }
+
+    /* ── SECTION HEADING ──────────────────────────────────────── */
+    .section-head {
+      display: grid;
+      grid-template-columns: 0.7in 1fr;
+      align-items: start;
+      gap: 0.18in;
+      margin-bottom: 0.22in;
+    }
+    .section-numeral {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-style: italic;
+      font-size: 26pt;
+      line-height: 1;
+      color: #FF7A1A;
+      letter-spacing: -0.01em;
+      padding-top: 0.08in;
+    }
+    .section-eyebrow {
+      font-size: 9pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #9AA0AA;
+      font-weight: 600;
+      margin-bottom: 0.08in;
+    }
+    .section-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 26pt;
+      line-height: 1.08;
+      color: #F5F2EC;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    /* ── BODY TYPE ────────────────────────────────────────────── */
+    p {
+      font-size: 11.5pt;
+      line-height: 1.55;
+      color: #C9CCD2;
+      margin: 0 0 0.16in;
+    }
+    p strong { color: #F5F2EC; font-weight: 600; }
+    em { color: #F5F2EC; }
+
+    .lede {
+      font-style: italic;
+      font-size: 12.5pt;
+      color: #F5F2EC;
+      line-height: 1.5;
+      margin-bottom: 0.18in;
+    }
+
+    .label {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #F5F2EC;
+      margin: 0.06in 0 0.08in;
+    }
+
+    ul.bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 0.18in;
+    }
+    ul.bullets li {
+      position: relative;
+      padding-left: 0.28in;
+      font-size: 11.5pt;
+      line-height: 1.5;
+      color: #C9CCD2;
+      margin-bottom: 0.09in;
+    }
+    ul.bullets li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.13in;
+      width: 0.14in;
+      height: 1.5px;
+      background: #FF7A1A;
+    }
+
+    /* ── COVER PAGE ───────────────────────────────────────────── */
+    .cover {
+      padding: 0.8in 0.8in 0.7in;
+      height: 11in;
+      display: flex;
+      flex-direction: column;
+    }
+    .cover-logo {
+      width: 3.4in;
+      height: auto;
+      display: block;
+    }
+    .cover-meta-row {
+      margin-top: 0.34in;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 9pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #9AA0AA;
+      font-weight: 500;
+    }
+    .cover-meta-row .right { text-align: right; line-height: 1.7; }
+
+    .cover-rule {
+      height: 1px;
+      background: #2A2F3A;
+      margin: 0.36in 0 0.5in;
+    }
+
+    .cover-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.14in;
+      font-size: 10pt;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #FF7A1A;
+      font-weight: 700;
+      margin-bottom: 0.30in;
+    }
+    .cover-eyebrow::before {
+      content: '';
+      width: 0.36in;
+      height: 2px;
+      background: #FF7A1A;
+      display: inline-block;
+    }
+    .cover-for {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-style: italic;
+      font-size: 28pt;
+      color: #C9CCD2;
+      letter-spacing: -0.015em;
+      line-height: 1;
+      margin: 0 0 0.10in;
+    }
+    .cover-headline {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 56pt;
+      line-height: 0.98;
+      color: #F5F2EC;
+      letter-spacing: -0.025em;
+      margin: 0 0 0.42in;
+    }
+    .cover-headline .accent-dot { color: #FF7A1A; }
+
+    .cover-sub {
+      font-style: italic;
+      font-size: 14pt;
+      line-height: 1.5;
+      color: #C9CCD2;
+      max-width: 5.6in;
+      margin: 0;
+    }
+
+    .cover-spacer { flex: 1; }
+
+    .cover-rule-bottom {
+      height: 1px;
+      background: #2A2F3A;
+      margin: 0 0 0.28in;
+    }
+
+    .prep-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5in;
+    }
+    .prep-block .prep-label {
+      font-size: 8.5pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #9AA0AA;
+      font-weight: 600;
+      margin-bottom: 0.12in;
+    }
+    .prep-block .prep-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13pt;
+      color: #F5F2EC;
+      margin-bottom: 0.06in;
+      letter-spacing: -0.01em;
+    }
+    .prep-block .prep-line {
+      font-size: 10.5pt;
+      color: #C9CCD2;
+      line-height: 1.5;
+    }
+
+    /* ── CALLOUT (mockup link) ─────────────────────────────────── */
+    .callout {
+      background: #16191F;
+      border-left: 3px solid #FF7A1A;
+      padding: 0.22in 0.30in;
+      margin: 0.18in 0 0.28in;
+      border-radius: 0.04in;
+    }
+    .callout .callout-eyebrow {
+      font-size: 9pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #9AA0AA;
+      font-weight: 600;
+      margin-bottom: 0.08in;
+    }
+    .callout .callout-link {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 16pt;
+      color: #FF7A1A;
+      letter-spacing: -0.005em;
+      text-decoration: underline;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 0.04in;
+    }
+
+    /* ── INVESTMENT CARDS ─────────────────────────────────────── */
+    .invest-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.24in;
+      margin: 0.10in 0 0.24in;
+    }
+    .invest-card {
+      background: #16191F;
+      border: 1px solid #2A2F3A;
+      border-radius: 0.06in;
+      padding: 0.28in 0.30in;
+    }
+    .invest-card.primary {
+      background: linear-gradient(180deg, #1B1E26 0%, #14161C 100%);
+      border-color: #353B48;
+    }
+    .invest-card .invest-eyebrow {
+      font-size: 9pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #FF7A1A;
+      font-weight: 700;
+      margin-bottom: 0.10in;
+    }
+    .invest-card .invest-price {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 36pt;
+      color: #F5F2EC;
+      letter-spacing: -0.025em;
+      line-height: 1;
+      margin-bottom: 0.12in;
+    }
+    .invest-card .invest-price .per {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 14pt;
+      color: #9AA0AA;
+      letter-spacing: 0;
+      margin-left: 0.04in;
+    }
+    .invest-card .invest-body {
+      font-size: 10.5pt;
+      line-height: 1.5;
+      color: #C9CCD2;
+      margin: 0;
+    }
+
+    /* ── ADD-ONS ──────────────────────────────────────────────── */
+    .addons {
+      margin: 0.10in 0 0.18in;
+    }
+    .addon-row {
+      display: grid;
+      grid-template-columns: 1.5in 1fr;
+      gap: 0.30in;
+      padding: 0.22in 0;
+      border-top: 1px solid #2A2F3A;
+    }
+    .addon-row:last-child { border-bottom: 1px solid #2A2F3A; }
+    .addon-price {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-style: italic;
+      font-size: 22pt;
+      color: #FF7A1A;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .addon-cadence {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-style: normal;
+      font-size: 8pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #9AA0AA;
+      margin-top: 0.08in;
+    }
+    .addon-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 14pt;
+      color: #F5F2EC;
+      margin: 0 0 0.06in;
+      letter-spacing: -0.01em;
+    }
+    .addon-body {
+      font-size: 10.5pt;
+      line-height: 1.5;
+      color: #C9CCD2;
+      margin: 0;
+    }
+
+    /* ── RECOMMENDATIONS ──────────────────────────────────────── */
+    .rec-block { margin-top: 0.16in; }
+    .rec-block + .rec-block { margin-top: 0.24in; }
+    .rec-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13pt;
+      color: #F5F2EC;
+      margin: 0 0 0.08in;
+      letter-spacing: -0.005em;
+    }
+
+    /* ── TIMELINE STEPS ───────────────────────────────────────── */
+    .timeline { margin-top: 0.10in; }
+    .step {
+      display: grid;
+      grid-template-columns: 0.7in 1fr;
+      gap: 0.20in;
+      padding: 0.20in 0;
+      border-top: 1px solid #2A2F3A;
+    }
+    .step:last-child { border-bottom: 1px solid #2A2F3A; }
+    .step-num {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-style: italic;
+      font-size: 22pt;
+      color: #FF7A1A;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+    .step-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13pt;
+      color: #F5F2EC;
+      margin: 0 0 0.06in;
+      letter-spacing: -0.005em;
+    }
+    .step-body {
+      font-size: 10.5pt;
+      line-height: 1.5;
+      color: #C9CCD2;
+      margin: 0;
+    }
+    .step-body strong { color: #F5F2EC; font-weight: 600; }
+
+    /* ── CTA BLOCK ────────────────────────────────────────────── */
+    .cta-block {
+      background: #16191F;
+      border: 1px solid #2A2F3A;
+      border-radius: 0.08in;
+      padding: 0.30in 0.30in 0.26in;
+      margin: 0.16in 0 0.30in;
+      text-align: center;
+    }
+    .cta-eyebrow {
+      font-size: 9pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #9AA0AA;
+      font-weight: 600;
+      margin-bottom: 0.16in;
+    }
+    .cta-button {
+      display: inline-block;
+      background: #FF7A1A;
+      color: #0F0F10;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 13pt;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.18in 0.42in;
+      border-radius: 999px;
+      box-shadow:
+        0 0.06in 0.18in rgba(255, 122, 26, 0.30),
+        0 0.02in 0.04in rgba(0, 0, 0, 0.4);
+    }
+    .cta-link {
+      display: block;
+      margin-top: 0.14in;
+      font-style: italic;
+      font-size: 9.5pt;
+      color: #9AA0AA;
+      letter-spacing: 0.01em;
+    }
+    .cta-fineprint {
+      margin-top: 0.10in;
+      font-size: 9pt;
+      color: #9AA0AA;
+      line-height: 1.45;
+    }
+
+    /* ── SIGNATURE ────────────────────────────────────────────── */
+    .sig-block {
+      margin-top: 0.30in;
+      padding-top: 0.22in;
+      border-top: 1px solid #2A2F3A;
+    }
+    .sig-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-style: italic;
+      font-size: 22pt;
+      color: #F5F2EC;
+      letter-spacing: -0.01em;
+      margin: 0 0 0.10in;
+    }
+    .sig-line {
+      font-size: 9pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #9AA0AA;
+      font-weight: 600;
+      margin-bottom: 0.06in;
+    }
+    .sig-contact {
+      font-size: 10.5pt;
+      color: #C9CCD2;
+    }
+    .sig-contact .sep {
+      color: #FF7A1A;
+      padding: 0 0.06in;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─────────────── PAGE 1 — COVER ─────────────── -->
+<section class="page cover">
+  <img class="cover-logo" src="/logo-wordmark-orange.png" alt="Designed to Elevate">
+
+  <div class="cover-meta-row">
+    <div class="left">Studio <span style="color:#FF7A1A;font-weight:700;">·</span> Zanesville, OH</div>
+    <div class="right">
+      Proposal No. 001<br>
+      May 8, 2026
+    </div>
+  </div>
+
+  <div class="cover-rule"></div>
+
+  <div class="cover-eyebrow">A Website Proposal</div>
+
+  <div class="cover-for">For</div>
+  <h1 class="cover-headline">Franklin Printing<br>Company<span class="accent-dot">.</span></h1>
+
+  <p class="cover-sub">A custom-coded website built specifically for Franklin — quiet, considered, and made to last.</p>
+
+  <div class="cover-spacer"></div>
+
+  <div class="cover-rule-bottom"></div>
+  <div class="prep-grid">
+    <div class="prep-block">
+      <div class="prep-label">Prepared For</div>
+      <div class="prep-name">Franklin Printing Company</div>
+      <div class="prep-line">984 Beverly Avenue</div>
+      <div class="prep-line">Zanesville, Ohio 43701</div>
+    </div>
+    <div class="prep-block">
+      <div class="prep-label">Prepared By</div>
+      <div class="prep-name">Bill Chicha</div>
+      <div class="prep-line">Designed to Elevate</div>
+      <div class="prep-line">(740) 617-6488 <span style="color:#FF7A1A;font-weight:700;">·</span> bilsonxnc@gmail.com</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── PAGE 2 — PRELUDE + BUILD ─────────────── -->
+<section class="page">
+  <header class="pg-header">
+    <div class="brand">
+      <img src="/logo-wordmark-orange.png" alt="Designed to Elevate">
+    </div>
+    <div class="doc-tag">A Proposal for Franklin Printing</div>
+  </header>
+
+  <div class="section-head">
+    <div class="section-numeral">i.</div>
+    <div>
+      <div class="section-eyebrow">Prelude</div>
+      <h2 class="section-title">A note before the details.</h2>
+    </div>
+  </div>
+
+  <p class="lede">I built this mockup as a starting point — not a finished site.</p>
+  <p>Everything you see was put together from publicly available information about Franklin Printing, the existing site, and the brand you've built over seventy-five years on Beverly Avenue. It's meant to show what's possible, not to dictate the direction.</p>
+  <p>If you like where it's headed, we'll refine it together. If you'd rather take it somewhere completely different, we'll start from your direction. Either way, the design is fully custom and built around what works for Franklin — not a template.</p>
+
+  <div class="callout">
+    <div class="callout-eyebrow">View the mockup</div>
+    <a class="callout-link" href="https://franklin-print-site.vercel.app">franklin-print-site.vercel.app</a>
+  </div>
+
+  <div class="section-head" style="margin-top:0.18in;">
+    <div class="section-numeral">ii.</div>
+    <div>
+      <div class="section-eyebrow">The Build</div>
+      <h2 class="section-title">What's included in the build.</h2>
+    </div>
+  </div>
+
+  <p>A complete, custom-coded website built specifically for Franklin Printing. No templates, no page builders, no monthly website-builder platform fees. Hand-written code that loads quickly and reads cleanly on every device.</p>
+  <div class="label">The build includes:</div>
+  <ul class="bullets">
+    <li>A full homepage built around your brand, story, and services.</li>
+    <li>Dedicated sections for business printing, mailing services, QSL cards, and any specialty work you want to feature.</li>
+    <li>A custom quote estimator (you can see a working version in the mockup) that lets customers describe their project and request pricing in four simple steps.</li>
+    <li>A "Sample Work" gallery section — built into the site at no additional cost, ready to fill with photos of past work.</li>
+    <li>Mobile-optimized layouts, fast page loads, and clean typography throughout.</li>
+  </ul>
+
+  <footer class="pg-footer">
+    <div>Bill Chicha <span class="accent-dot">·</span> Designed to Elevate</div>
+    <div>Page 2 of 6</div>
+  </footer>
+</section>
+
+<!-- ─────────────── PAGE 3 — BUILD CONT + INVESTMENT ─────────────── -->
+<section class="page">
+  <header class="pg-header">
+    <div class="brand">
+      <img src="/logo-wordmark-orange.png" alt="Designed to Elevate">
+    </div>
+    <div class="doc-tag">A Proposal for Franklin Printing</div>
+  </header>
+
+  <ul class="bullets" style="margin-top:0;">
+    <li>Hosting setup, domain configuration, and deployment.</li>
+    <li>Full handoff: you own the code outright. If you ever choose to take the site elsewhere, you're not locked into a proprietary platform.</li>
+  </ul>
+
+  <p>The included quote estimator covers a clean project-intake flow based on the version shown in the mockup. It gives customers an easier way to start the conversation, while giving Franklin better project details before the first call. If you ever want deeper functionality — detailed pricing logic, advanced product configurators, mailing-list intake, or more complex workflows — those can be added later as separate enhancements.</p>
+
+  <div class="section-head" style="margin-top:0.20in;">
+    <div class="section-numeral">iii.</div>
+    <div>
+      <div class="section-eyebrow">Investment</div>
+      <h2 class="section-title">Investment.</h2>
+    </div>
+  </div>
+
+  <div class="invest-grid">
+    <div class="invest-card primary">
+      <div class="invest-eyebrow">One-Time Build</div>
+      <div class="invest-price">$2,500</div>
+      <p class="invest-body">Covers everything in the build above. After deposit, we schedule a phone or in-person meeting to walk through your direction — what to keep, what to change, what to build differently. The site is then built, refined with your feedback, and deployed. You own the code.</p>
+    </div>
+    <div class="invest-card">
+      <div class="invest-eyebrow">Optional Ongoing Care</div>
+      <div class="invest-price">$97<span class="per">/month</span></div>
+      <p class="invest-body">Normal content updates, small copy changes, image swaps, seasonal notices, and minor site adjustments. No surprise invoices, no hourly billing.</p>
+    </div>
+  </div>
+
+  <p>Larger new features, new page builds, advanced integrations, or redesign work fall outside the monthly plan and would be quoted separately before any work is started.</p>
+  <p>If you'd rather just have the site built and handle changes yourself (or have someone in-house do them), the build alone is <strong>$2,500</strong> and we hand off the code. No obligation to continue.</p>
+
+  <footer class="pg-footer">
+    <div>Bill Chicha <span class="accent-dot">·</span> Designed to Elevate</div>
+    <div>Page 3 of 6</div>
+  </footer>
+</section>
+
+<!-- ─────────────── PAGE 4 — ADD-ONS + RECOMMENDATIONS ─────────────── -->
+<section class="page">
+  <header class="pg-header">
+    <div class="brand">
+      <img src="/logo-wordmark-orange.png" alt="Designed to Elevate">
+    </div>
+    <div class="doc-tag">A Proposal for Franklin Printing</div>
+  </header>
+
+  <div class="section-head">
+    <div class="section-numeral">iv.</div>
+    <div>
+      <div class="section-eyebrow">Add-Ons</div>
+      <h2 class="section-title">Optional add-ons.</h2>
+    </div>
+  </div>
+
+  <div class="addons">
+    <div class="addon-row">
+      <div>
+        <div class="addon-price">$600</div>
+        <span class="addon-cadence">One-Time</span>
+      </div>
+      <div>
+        <h3 class="addon-name">Professional photography</h3>
+        <p class="addon-body">I work with a photographer who can come to the shop and capture your space, your equipment, your team, and your work. Real photos of Franklin tell the story far better than stock imagery. She'll spend the time needed to capture what you want shown — the Heidelberg, the bindery, finished pieces, the shop itself. Includes the on-site session and edited image delivery for website use.</p>
+      </div>
+    </div>
+    <div class="addon-row">
+      <div>
+        <div class="addon-price">$197</div>
+        <span class="addon-cadence">/ Month</span>
+      </div>
+      <div>
+        <h3 class="addon-name">Social media management</h3>
+        <p class="addon-body">Ongoing Facebook (and optional Instagram) content. I'd set up a monthly posting schedule — graphics, copy, and photos drawn from your work — that you approve before anything goes live. Consistent posting, no time investment from you.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head" style="margin-top:0.24in;">
+    <div class="section-numeral">v.</div>
+    <div>
+      <div class="section-eyebrow">Recommendations</div>
+      <h2 class="section-title">A few recommendations beyond the website.</h2>
+    </div>
+  </div>
+
+  <p>These aren't sales asks. Just things worth knowing.</p>
+
+  <div class="rec-block">
+    <h3 class="rec-title">Your Google Business profile.</h3>
+    <p>It could be optimized further for local search. Categories, services listed, photos, post frequency, and review-response cadence all factor into how Franklin shows up when someone in Zanesville searches "printing near me." I can make basic recommendations during the build. If you ever want deeper help with local search, that can be handled separately.</p>
+  </div>
+
+  <div class="rec-block">
+    <h3 class="rec-title">Facebook posting cadence.</h3>
+    <p>A consistent posting rhythm — even just a few posts a week — meaningfully improves how often your page reaches local customers. The social management offer above covers this, but it's also something you can do in-house if you'd prefer.</p>
+  </div>
+
+  <footer class="pg-footer">
+    <div>Bill Chicha <span class="accent-dot">·</span> Designed to Elevate</div>
+    <div>Page 4 of 6</div>
+  </footer>
+</section>
+
+<!-- ─────────────── PAGE 5 — TIMELINE + NEXT STEPS ─────────────── -->
+<section class="page">
+  <header class="pg-header">
+    <div class="brand">
+      <img src="/logo-wordmark-orange.png" alt="Designed to Elevate">
+    </div>
+    <div class="doc-tag">A Proposal for Franklin Printing</div>
+  </header>
+
+  <div class="section-head">
+    <div class="section-numeral">vi.</div>
+    <div>
+      <div class="section-eyebrow">Timeline</div>
+      <h2 class="section-title">How this works.</h2>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div>
+        <h3 class="step-title">You decide if the direction is right.</h3>
+        <p class="step-body">Look through the mockup. Notice what feels like Franklin and what doesn't. Bring questions.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div>
+        <h3 class="step-title">Deposit and kickoff.</h3>
+        <p class="step-body">A 50% deposit (<strong>$1,250</strong>) starts the project. We schedule a call or in-person meeting to walk through your direction in detail.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div>
+        <h3 class="step-title">Build and refinement.</h3>
+        <p class="step-body">I build the site, you give feedback, we refine. Typical timeline is 3–4 weeks from kickoff to launch, depending on timely feedback, content, and approvals.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div>
+        <h3 class="step-title">Launch and handoff.</h3>
+        <p class="step-body">Remaining <strong>$1,250</strong> is due 14 days after kickoff or before the site goes live, whichever comes first. Site goes live. You receive the code, the deployment access, and a brief written walkthrough of how to update content if you're handling it yourself.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <div>
+        <h3 class="step-title">Ongoing (optional).</h3>
+        <p class="step-body">If you opt into the <strong>$97 / month</strong> plan, edits and updates start the month after launch.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head" style="margin-top:0.30in;">
+    <div class="section-numeral">vii.</div>
+    <div>
+      <div class="section-eyebrow">Next Steps</div>
+      <h2 class="section-title">What I need from you to start.</h2>
+    </div>
+  </div>
+
+  <ul class="bullets">
+    <li>Confirmation that this is the direction you'd like to pursue, or notes on what you'd like changed.</li>
+    <li>The 50% deposit.</li>
+    <li>A scheduled time for the kickoff call.</li>
+  </ul>
+
+  <footer class="pg-footer">
+    <div>Bill Chicha <span class="accent-dot">·</span> Designed to Elevate</div>
+    <div>Page 5 of 6</div>
+  </footer>
+</section>
+
+<!-- ─────────────── PAGE 6 — CTA + CLOSING ─────────────── -->
+<section class="page">
+  <header class="pg-header">
+    <div class="brand">
+      <img src="/logo-wordmark-orange.png" alt="Designed to Elevate">
+    </div>
+    <div class="doc-tag">A Proposal for Franklin Printing</div>
+  </header>
+
+  <p style="margin-top:0;">That's it. Everything else gets handled in the kickoff conversation.</p>
+
+  <div class="cta-block">
+    <div class="cta-eyebrow">Pay deposit to start the project</div>
+    <a class="cta-button" href="https://buy.stripe.com/dRm4gz0mc7xzbYY4uY9AA01">Begin the Project →</a>
+    <div class="cta-link">buy.stripe.com/dRm4gz0mc7xzbYY4uY9AA01</div>
+    <p class="cta-fineprint">Payment of the deposit confirms acceptance of this proposal as a working agreement covering scope, timeline, and payment terms as described above.</p>
+  </div>
+
+  <div class="section-head" style="margin-top:0.20in;">
+    <div class="section-numeral">viii.</div>
+    <div>
+      <div class="section-eyebrow">Closing</div>
+      <h2 class="section-title">A closing note.</h2>
+    </div>
+  </div>
+
+  <p>Franklin has been on Beverly Avenue for three generations. The website should feel like that — careful, considered, built to last, made by someone who actually paid attention. That's what I'd like to build for you.</p>
+  <p>If anything in this proposal isn't clear, or if you'd like to talk through it before deciding, I'm a phone call away.</p>
+
+  <div class="sig-block">
+    <div class="sig-name">Bill Chicha</div>
+    <div class="sig-line">Bill Chicha <span style="color:#FF7A1A;font-weight:700;">·</span> Designed to Elevate</div>
+    <div class="sig-contact">(740) 617-6488 <span class="sep">·</span> bilsonxnc@gmail.com</div>
+  </div>
+
+  <footer class="pg-footer">
+    <div>Bill Chicha <span class="accent-dot">·</span> Designed to Elevate</div>
+    <div>Page 6 of 6</div>
+  </footer>
+</section>
+
+</body>
+</html>
