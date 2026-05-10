@@ -1,0 +1,35 @@
+---
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  buildPrice: number;
+  careMonthly: number;
+}
+const { buildPrice, careMonthly } = Astro.props;
+const fmt = (n: number) => `$${n.toLocaleString('en-US')}`;
+---
+<section>
+  <div class="wrap">
+    <SectionHead eyebrow="The investment" title="Two numbers, no surprises." />
+
+    <div class="invest-grid">
+      <div class="invest-card primary">
+        <div class="invest-eyebrow small-caps">One-time build</div>
+        <div class="invest-price">{fmt(buildPrice)}</div>
+        <p class="invest-card-tag">Custom website, full handoff.</p>
+        <p class="invest-card-body">
+          A complete custom-coded site. No templates, no monthly platform fees. Hand-written code that loads fast and reads clean on every device. You own the code outright when it's done.
+        </p>
+      </div>
+
+      <div class="invest-card">
+        <div class="invest-eyebrow small-caps">Optional ongoing care</div>
+        <div class="invest-price">{fmt(careMonthly)}<span class="per">/month</span></div>
+        <p class="invest-card-tag">Edits, updates, peace of mind.</p>
+        <p class="invest-card-body">
+          Content updates, copy changes, image swaps, seasonal notices, small adjustments. No surprise invoices, no hourly billing. Cancel anytime — you still own the site.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

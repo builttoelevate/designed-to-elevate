@@ -1,0 +1,96 @@
+---
+import { getCollection, render } from 'astro:content';
+import ProposalLayout from '../../layouts/ProposalLayout.astro';
+import Hero from '../../components/proposal/Hero.astro';
+import SectionHead from '../../components/proposal/SectionHead.astro';
+import Testimonials from '../../components/proposal/Testimonials.astro';
+import Included from '../../components/proposal/Included.astro';
+import WhyCustomCode from '../../components/proposal/WhyCustomCode.astro';
+import Investment from '../../components/proposal/Investment.astro';
+import Recommendations from '../../components/proposal/Recommendations.astro';
+import Timeline from '../../components/proposal/Timeline.astro';
+import Ownership from '../../components/proposal/Ownership.astro';
+import Closing from '../../components/proposal/Closing.astro';
+
+export async function getStaticPaths() {
+  const proposals = await getCollection('proposals');
+  return proposals.map((p) => ({
+    params: { slug: p.id },
+    props: { proposal: p },
+  }));
+}
+
+const { proposal } = Astro.props;
+const data = proposal.data;
+const { Content } = await render(proposal);
+
+const fmtDeposit = `$${data.depositAmount.toLocaleString('en-US')}`;
+---
+<ProposalLayout client={data.client}>
+  <header class="strip">
+    <div class="wrap">
+      <div class="strip-inner">
+        <a class="strip-logo" href="/" aria-label="Designed to Elevate">
+          <img src="/logo-wordmark-orange.png" alt="Designed to Elevate" />
+        </a>
+        <div class="small-caps">Project proposal</div>
+      </div>
+    </div>
+  </header>
+
+  <Hero
+    client={data.client}
+    location={data.location}
+    date={data.date}
+    headline={data.headline}
+    subhead={data.subhead}
+    stats={data.stats}
+    heroImage={data.heroImage}
+    heroAlt={data.heroAlt}
+    previewUrl={data.previewUrl}
+  />
+
+  <section>
+    <div class="wrap">
+      <SectionHead eyebrow="Prelude" title="A note before the details." />
+      <Content />
+    </div>
+  </section>
+
+  <Testimonials testimonials={data.testimonials} />
+
+  <Included items={data.included} />
+
+  <WhyCustomCode title={data.whyCustomCode.title} body={data.whyCustomCode.body} />
+
+  <Investment buildPrice={data.buildPrice} careMonthly={data.careMonthly} />
+
+  <Recommendations items={data.recommendations} />
+
+  <Timeline steps={data.timeline} />
+
+  <Ownership ownership={data.ownership} paymentTerms={data.paymentTerms} />
+
+  <Closing
+    headline={data.closing.headline}
+    body={data.closing.body}
+    depositAmount={data.depositAmount}
+    stripeUrl={data.stripeUrl}
+    contactEmail={data.contactEmail}
+    contactPhone={data.contactPhone}
+  />
+
+  <footer class="page-foot">
+    Designed to Elevate <span class="sep">·</span> Built from the bay, not a boardroom.
+  </footer>
+
+  <div class="sticky-pay" data-sticky-pay>
+    <div class="sticky-amount">
+      {fmtDeposit}
+      <span class="sticky-amount-label">Deposit</span>
+    </div>
+    <a class="btn btn-primary" href={data.stripeUrl} target="_blank" rel="noopener" data-track="sticky-pay">
+      Pay deposit →
+    </a>
+  </div>
+</ProposalLayout>

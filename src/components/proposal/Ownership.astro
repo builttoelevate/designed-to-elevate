@@ -1,0 +1,30 @@
+---
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  ownership: string[];
+  paymentTerms: string[];
+}
+const { ownership, paymentTerms } = Astro.props;
+---
+<section>
+  <div class="wrap">
+    <SectionHead eyebrow="The fine print, in plain language" title="What you own. How you pay." />
+
+    <div class="own-grid">
+      <div class="own-card">
+        <h3 class="own-card-title">What you own</h3>
+        <ul class="own-list">
+          {ownership.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+
+      <div class="own-card">
+        <h3 class="own-card-title">Payment terms</h3>
+        <ul class="own-list">
+          {paymentTerms.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,8 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /p/
 
 # /grow and /brochure carry <meta name="robots" content="noindex"> in
 # their HTML — intentionally NOT blocked here so Googlebot can crawl
 # them and honor the noindex directive.
+#
+# /p/* is the private proposal namespace — fully blocked from crawl.
+# Each proposal also carries noindex, nofollow as belt-and-suspenders.
 
 Sitemap: https://designedtoelevate.co/sitemap.xml
