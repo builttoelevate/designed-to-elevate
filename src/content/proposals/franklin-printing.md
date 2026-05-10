@@ -54,12 +54,12 @@ whyCustomCode:
   body: "Franklin has been on Beverly for seventy-five years. The shop doesn't run on shortcuts. The website shouldn't either. A platform like Wix or Squarespace gets you to a generic site fast, then locks you into a monthly subscription with rising prices over time and turns sluggish the minute you outgrow the template. Hand-written code is faster, lighter, and yours. When the build is done you own it. No platform lock-in, no surprises if you ever decide to take it elsewhere."
 
 recommendations:
-  - title: "Google Business Profile"
-    body: "Your profile could do more lifting than it currently does. Categories, services listed, photos, post frequency, and how you respond to reviews all factor into when Franklin shows up for a Zanesville search. I'll make basic recommendations during the build. If you ever want a deeper local-search pass, that can be handled separately."
-  - title: "Automated review collection"
-    body: "Most of the printing shops Franklin competes with for online attention have more reviews. Not because they do better work, but because they ask. A simple text or email after a job, sent automatically, gets reviews flowing without anyone in the shop having to remember. Worth setting up."
-  - title: "Social media presence"
-    body: "A consistent posting rhythm, even just a few posts a week, meaningfully improves how often your page reaches local customers. Photos of finished work, a busy bindery day, the team in motion. Real shop content. The optional ongoing-care plan can cover this. You can also do it in-house if you'd rather."
+  - title: "Get to 100 Google reviews."
+    body: "Most printing shops in your area sit under thirty. Franklin has the customer base to do far better. Reviews don't come on their own. You have to ask. A short text or email after every job, sent automatically, gets you toward a hundred within a year. More reviews directly raise how often Franklin shows up when somebody searches \"printing near me.\" Highest-leverage move on this list."
+  - title: "Post on Facebook twice a week."
+    body: "You don't need viral content. You need consistency. Photos of finished work, a busy bindery day, the team in motion. Two posts a week, every week, and Facebook starts showing your page to more local customers. Cheapest way to stay top-of-mind with people already nearby."
+  - title: "Optimize your Google Business Profile."
+    body: "Categories listed correctly, services filled in, photos refreshed, posts going up regularly, reviews getting responses. Most local-search decisions get made on the GBP card before anyone ever clicks through to a website. Getting this right amplifies everything else."
 
 timeline:
   - when: "Day 0"
@@ -89,6 +89,16 @@ paymentTerms:
   - "Larger new features or redesigns quoted separately before any work starts."
   - "Stripe payment confirms acceptance of the proposal as a working agreement."
   - "Pricing in this proposal is good for three months from the date above."
+
+fullPackage:
+  intro: "If running the reviews and Facebook side isn't realistic for the team, I do this work as a separate complete digital marketing service:"
+  services:
+    - "Google Ads landing pages"
+    - "Social media content and posting"
+    - "Google Business Profile management"
+    - "Review-collection systems"
+    - "Ongoing local SEO"
+  footnote: "Quoted separately based on what Franklin actually needs. Some shops want just the website. Some want the whole stack run by one person."
 
 closing:
   headline: "Ready to <em>begin?</em>"

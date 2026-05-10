@@ -1,0 +1,23 @@
+---
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  intro: string;
+  services: string[];
+  footnote: string;
+}
+const { intro, services, footnote } = Astro.props;
+---
+<section>
+  <div class="wrap">
+    <SectionHead eyebrow="If you want help with the rest" title="I run the whole growth engine, too." />
+
+    <p>{intro}</p>
+
+    <ul class="own-list" style="margin-top: 0.5em; margin-bottom: 1.4em;">
+      {services.map((s) => <li>{s}</li>)}
+    </ul>
+
+    <p class="muted" style="font-size: 15px;">{footnote}</p>
+  </div>
+</section>

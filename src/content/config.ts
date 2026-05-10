@@ -51,6 +51,11 @@ const proposals = defineCollection({
     })),
     ownership: z.array(z.string()),
     paymentTerms: z.array(z.string()),
+    fullPackage: z.object({
+      intro: z.string(),
+      services: z.array(z.string()),
+      footnote: z.string(),
+    }).optional(),
     closing: z.object({
       headline: z.string(),
       body: z.string(),
