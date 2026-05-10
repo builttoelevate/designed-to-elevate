@@ -1,0 +1,9 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+}
+const { eyebrow, title } = Astro.props;
+---
+<div class="section-eyebrow small-caps">{eyebrow}</div>
+<h2 class="section-title" set:html={title} />

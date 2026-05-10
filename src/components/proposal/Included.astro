@@ -1,0 +1,23 @@
+---
+import SectionHead from './SectionHead.astro';
+
+interface Item { title: string; body: string; }
+interface Props { items: Item[]; }
+const { items } = Astro.props;
+const numerals = ['i.', 'ii.', 'iii.', 'iv.', 'v.', 'vi.', 'vii.', 'viii.'];
+---
+<section>
+  <div class="wrap">
+    <SectionHead eyebrow="What's included" title="Built into the price, not bolted on." />
+
+    {items.map((item, idx) => (
+      <div class="included-row">
+        <div class="included-numeral">{numerals[idx] ?? `${idx + 1}.`}</div>
+        <div>
+          <h3 class="included-title">{item.title}</h3>
+          <p class="included-body">{item.body}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

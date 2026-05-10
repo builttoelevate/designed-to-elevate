@@ -1,0 +1,55 @@
+---
+interface Stat { value: string; label: string; }
+interface Props {
+  client: string;
+  location: string;
+  date: string;
+  headline: string;
+  subhead: string;
+  stats: Stat[];
+  heroImage: string;
+  heroAlt?: string;
+  previewUrl: string;
+}
+const { client, location, date, headline, subhead, stats, heroImage, heroAlt, previewUrl } = Astro.props;
+const previewLabel = previewUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+---
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow small-caps">Prepared for {client}</div>
+
+    <h1 set:html={headline} />
+
+    <p class="hero-meta">
+      {client}
+      <span class="sep">·</span>
+      {location}
+      <span class="sep">·</span>
+      {date}
+    </p>
+
+    <div class="hero-stats">
+      {stats.map((s) => (
+        <div>
+          <div class="stat-value">{s.value}</div>
+          <div class="stat-label">{s.label}</div>
+        </div>
+      ))}
+    </div>
+
+    <p class="lede">{subhead}</p>
+
+    <div class="hero-image">
+      <img src={heroImage} alt={heroAlt ?? `${client} mockup preview`} loading="eager" />
+    </div>
+
+    <div class="hero-cta-row">
+      <a class="btn btn-secondary" href={previewUrl} target="_blank" rel="noopener" data-track="hero-preview">
+        Review your future site →
+      </a>
+      <div class="hero-preview-url">{previewLabel}</div>
+    </div>
+
+    <div data-hero-end></div>
+  </div>
+</section>

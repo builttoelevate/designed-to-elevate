@@ -1,0 +1,34 @@
+---
+interface Props {
+  headline: string;
+  body: string;
+  depositAmount: number;
+  stripeUrl: string;
+  contactEmail: string;
+  contactPhone: string;
+}
+const { headline, body, depositAmount, stripeUrl, contactEmail, contactPhone } = Astro.props;
+const fmt = `$${depositAmount.toLocaleString('en-US')}`;
+const phoneHref = contactPhone.replace(/[^0-9+]/g, '');
+---
+<section data-closing-cta>
+  <div class="wrap">
+    <div class="closing">
+      <h2 set:html={headline} />
+      <p>{body}</p>
+      <div class="closing-cta">
+        <a class="btn btn-primary" href={stripeUrl} target="_blank" rel="noopener" data-track="pay-deposit">
+          Pay {fmt} deposit →
+        </a>
+        <div class="closing-meta">Secure payment via Stripe</div>
+      </div>
+
+      <div class="closing-contact">
+        Questions before you commit? &nbsp;
+        <a href={`mailto:${contactEmail}`} data-track="contact-email">{contactEmail}</a>
+        <span class="sep">·</span>
+        <a href={`tel:${phoneHref}`} data-track="contact-phone">{contactPhone}</a>
+      </div>
+    </div>
+  </div>
+</section>

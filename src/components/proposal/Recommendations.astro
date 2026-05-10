@@ -1,0 +1,20 @@
+---
+import SectionHead from './SectionHead.astro';
+
+interface Item { title: string; body: string; }
+interface Props { items: Item[]; }
+const { items } = Astro.props;
+---
+<section>
+  <div class="wrap">
+    <SectionHead eyebrow="A few recommendations" title="Beyond the website." />
+    <p class="rec-subtitle">Not part of the proposal — just observations that could move the needle.</p>
+
+    {items.map((item) => (
+      <div class="rec-row">
+        <h3 class="rec-title">{item.title}</h3>
+        <p>{item.body}</p>
+      </div>
+    ))}
+  </div>
+</section>

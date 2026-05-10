@@ -1,0 +1,33 @@
+---
+import SectionHead from './SectionHead.astro';
+
+interface Testimonial {
+  business: string;
+  location: string;
+  url: string;
+  quote: string;
+  attribution: string;
+}
+interface Props { testimonials: Testimonial[]; }
+const { testimonials } = Astro.props;
+---
+<section>
+  <div class="wrap">
+    <SectionHead eyebrow="Recent local work" title="A look at sites already live." />
+
+    {testimonials.map((t) => (
+      <div class="testimonial">
+        <div class="testimonial-business">{t.business}</div>
+        <div class="testimonial-meta">
+          {t.location}
+          <span class="muted"> · </span>
+          <a href={`https://${t.url}`} target="_blank" rel="noopener" data-track="testimonial-url">
+            {t.url}
+          </a>
+        </div>
+        <blockquote class="testimonial-quote">&ldquo;{t.quote}&rdquo;</blockquote>
+        <div class="testimonial-attr">— {t.attribution}</div>
+      </div>
+    ))}
+  </div>
+</section>

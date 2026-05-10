@@ -1,0 +1,22 @@
+---
+import SectionHead from './SectionHead.astro';
+
+interface Step { when: string; title: string; body: string; }
+interface Props { steps: Step[]; }
+const { steps } = Astro.props;
+---
+<section>
+  <div class="wrap">
+    <SectionHead eyebrow="The timeline" title="How this actually goes." />
+
+    {steps.map((s) => (
+      <div class="timeline-row">
+        <div class="timeline-when">{s.when}</div>
+        <div>
+          <h3 class="timeline-title">{s.title}</h3>
+          <p>{s.body}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
