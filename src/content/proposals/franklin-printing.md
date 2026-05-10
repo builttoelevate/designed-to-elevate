@@ -45,7 +45,7 @@ included:
   - title: "Service pages that match how customers shop."
     body: "Dedicated sections for business printing, mailing services, and any specialty work you want to feature. Each page written for a specific customer with a specific job, not one giant catch-all that nobody reads."
   - title: "A custom quote estimator, built into the site."
-    body: "A working four-step intake flow you can see live in the mockup. Customers describe their project in plain language and you get a full request before the first phone call. Quantity, finish, deadline, contact info, all of it. Easier on them, better for you."
+    body: "A working five-step intake flow you can see live in the mockup. Customers describe their project in plain language and you get a full request before the first phone call. Quantity, finish, deadline, contact info, all of it. Easier on them, better for you."
   - title: "Mobile-fast, search-clean, hand-coded throughout."
     body: "Every page hand-written, not stitched together by a page builder. Loads quickly on a phone. Reads cleanly on a laptop. Structured so Google understands what Franklin actually does. Categories, services, locations, hours. The things that decide who shows up first when somebody searches \"printing near me.\""
 
