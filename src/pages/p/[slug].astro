@@ -26,7 +26,7 @@ const { Content } = await render(proposal);
 
 const fmtDeposit = `$${data.depositAmount.toLocaleString('en-US')}`;
 ---
-<ProposalLayout client={data.client}>
+<ProposalLayout client={data.client} slug={proposal.id}>
   <header class="strip">
     <div class="wrap">
       <div class="strip-inner">
@@ -90,7 +90,7 @@ const fmtDeposit = `$${data.depositAmount.toLocaleString('en-US')}`;
       {fmtDeposit}
       <span class="sticky-amount-label">Deposit</span>
     </div>
-    <a class="btn btn-primary" href={data.stripeUrl} target="_blank" rel="noopener" data-track="sticky-pay">
+    <a class="btn btn-primary" href={data.stripeUrl} target="_blank" rel="noopener" data-event="pay_button_click" data-amount={data.depositAmount}>
       Pay deposit →
     </a>
   </div>

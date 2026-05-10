@@ -1,12 +1,14 @@
 ---
 import '../styles/proposal.css';
+import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   client: string;
+  slug: string;
   noindex?: boolean;
 }
 
-const { client, noindex = true } = Astro.props;
+const { client, slug, noindex = true } = Astro.props;
 const title = `Proposal · ${client} · Designed to Elevate`;
 ---
 <!doctype html>
@@ -28,10 +30,13 @@ const title = `Proposal · ${client} · Designed to Elevate`;
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap"
   />
 </head>
-<body>
+<body data-slug={slug}>
   <slot />
+  <Analytics />
 
   <script>
+    import { track } from '@vercel/analytics';
+
     // Sticky mobile pay bar — appears once the user scrolls past the
     // hero CTA, hides when the closing CTA enters view so we don't show
     // the pay button twice on screen at once.
@@ -48,7 +53,6 @@ const title = `Proposal · ${client} · Designed to Elevate`;
         stickyEl.classList.toggle('visible', shouldShow);
       };
 
-      // pastHero = user has scrolled past the hero CTA
       new IntersectionObserver(
         ([entry]) => {
           pastHero = !entry.isIntersecting && entry.boundingClientRect.top < 0;
@@ -57,7 +61,6 @@ const title = `Proposal · ${client} · Designed to Elevate`;
         { threshold: 0 },
       ).observe(heroSentinel);
 
-      // closingVisible = the actual closing CTA is on screen
       new IntersectionObserver(
         ([entry]) => {
           closingVisible = entry.isIntersecting;
@@ -66,6 +69,27 @@ const title = `Proposal · ${client} · Designed to Elevate`;
         { threshold: 0.1 },
       ).observe(closingSentinel);
     }
+
+    // Vercel Analytics custom events. Any element with [data-event]
+    // fires a track() call on click. Per-event extra properties come
+    // from data-* attributes on the element itself; slug is read once
+    // from <body data-slug>.
+    const slug = document.body.dataset.slug ?? '';
+
+    document.addEventListener('click', (e) => {
+      const target = (e.target as HTMLElement | null)?.closest('[data-event]');
+      if (!target) return;
+      const event = target.getAttribute('data-event');
+      if (!event) return;
+
+      const props: Record<string, string | number> = { slug };
+      const business = target.getAttribute('data-business');
+      const amount = target.getAttribute('data-amount');
+      if (business) props.business = business;
+      if (amount) props.amount = Number(amount);
+
+      track(event, props);
+    });
   </script>
 </body>
 </html>

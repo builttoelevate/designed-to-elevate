@@ -21,7 +21,7 @@ const { testimonials } = Astro.props;
         <div class="testimonial-meta">
           {t.location}
           <span class="muted"> · </span>
-          <a href={`https://${t.url}`} target="_blank" rel="noopener" data-track="testimonial-url">
+          <a href={`https://${t.url}`} target="_blank" rel="noopener" data-event="testimonial_url_click" data-business={t.business}>
             {t.url}
           </a>
         </div>
