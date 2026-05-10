@@ -43,7 +43,16 @@ const proposals = defineCollection({
     recommendations: z.array(z.object({
       title: z.string(),
       body: z.string(),
-    })),
+    })).optional(),
+    biggerPicture: z.object({
+      lede: z.string(),
+      intro: z.array(z.string()),
+      items: z.array(z.object({
+        title: z.string(),
+        body: z.string(),
+      })),
+      closing: z.string(),
+    }).optional(),
     timeline: z.array(z.object({
       when: z.string(),
       title: z.string(),
