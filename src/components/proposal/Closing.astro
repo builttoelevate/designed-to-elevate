@@ -17,7 +17,7 @@ const phoneHref = contactPhone.replace(/[^0-9+]/g, '');
       <h2 set:html={headline} />
       <p>{body}</p>
       <div class="closing-cta">
-        <a class="btn btn-primary" href={stripeUrl} target="_blank" rel="noopener" data-track="pay-deposit">
+        <a class="btn btn-primary" href={stripeUrl} target="_blank" rel="noopener" data-event="pay_button_click" data-amount={depositAmount}>
           Pay {fmt} deposit →
         </a>
         <div class="closing-meta">Secure payment via Stripe</div>
