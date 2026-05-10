@@ -53,20 +53,6 @@ whyCustomCode:
   title: "Why custom code, instead of a builder."
   body: "Franklin has been on Beverly for seventy-five years. The shop doesn't run on shortcuts. The website shouldn't either. A platform like Wix or Squarespace gets you to a generic site fast, then locks you into a monthly subscription with rising prices over time and turns sluggish the minute you outgrow the template. Hand-written code is faster, lighter, and yours. When the build is done you own it. No platform lock-in, no surprises if you ever decide to take it elsewhere."
 
-biggerPicture:
-  lede: "The website is one piece. Here's the rest."
-  intro:
-    - "A new website is the foundation. It changes how Franklin shows up online, how customers find you, how serious the shop looks compared to whoever they were considering before. That alone moves the needle."
-    - "But the three highest-impact growth opportunities for a shop like Franklin aren't really about the website itself. They're about everything around it."
-  items:
-    - title: "More reviews."
-      body: "Franklin sits at thirteen Google reviews. The shops you compete with for online attention are well past fifty. A new customer searching for a printer in Zanesville sees the review count before they ever click. Getting Franklin to a hundred reviews over the next year is one of the single highest-return moves available, and it costs almost nothing if it's set up right."
-    - title: "A consistent social presence."
-      body: "Two posts a week on Facebook is the floor for staying visible to local customers. Real shop content, finished work, the team in motion. Not lifestyle stock photos. Not generic \"happy National Coffee Day\" posts. Actual Franklin."
-    - title: "A working Google Business Profile."
-      body: "Most local businesses treat their GBP like a phonebook listing. Done well, it's the single most important local-search asset a shop has. Better than the website for local visibility. The website I'm proposing comes search-engine-clean, which gives Franklin a strong foundation. The GBP is what tells Google where to send the traffic."
-  closing: "If any of these are worth talking about, we can. Designed to Elevate also handles full digital marketing programs, including Google Ads, landing pages, ongoing social, SEO, and review management. None of it is part of this proposal. All of it is available when the timing is right."
-
 timeline:
   - when: "Day 0"
     title: "Deposit and kickoff."
