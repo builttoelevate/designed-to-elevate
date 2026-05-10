@@ -1,20 +1,21 @@
 ---
 client: Franklin Printing Company
-clientShort: Franklin
+preparedFor: Franklin Printing Company
 location: Zanesville, OH
 date: May 2026
 heroImage: /proposals/franklin-printing/hero.png
 heroAlt: Franklin Printing custom website mockup. Homepage, mailing services page, and quote estimator wizard.
 previewUrl: https://franklin-print-site.vercel.app
 stripeUrl: https://buy.stripe.com/dRm4gz0mc7xzbYY4uY9AA01
-contactEmail: bilsonxnc@gmail.com
+contactEmail: bill@designedtoelevate.co
 contactPhone: 740-617-6488
+footerTagline: "Built from the bay, not a boardroom."
 buildPrice: 2500
 depositAmount: 1250
 careMonthly: 97
 
-headline: "A new website,<br/>built for <em>Franklin</em>."
-subhead: "A custom-coded site that reads like the shop reads. Careful, considered, made by someone who actually paid attention."
+headline: "A new website, built for <em>Franklin</em>."
+subhead: "A custom-coded site that reads like the shop reads."
 
 stats:
   - value: "75 years"
@@ -39,10 +40,10 @@ testimonials:
     attribution: "Eric Fitch, owner"
 
 included:
-  - title: "A homepage that earns the seventy-five years."
+  - title: "A homepage built around your seventy-five years."
     body: "Built around your brand, your story, and the way Franklin actually works. Not a template skin. Not a generic printer site. The Beverly Avenue version of a printing-shop homepage, with your equipment, your team, and your specialties up front."
-  - title: "Service pages that match how customers actually shop."
-    body: "Dedicated sections for business printing, mailing services, QSL cards, and any specialty work you want to feature. Each page written for a specific customer with a specific job, not one giant catch-all that nobody reads."
+  - title: "Service pages that match how customers shop."
+    body: "Dedicated sections for business printing, mailing services, and any specialty work you want to feature. Each page written for a specific customer with a specific job, not one giant catch-all that nobody reads."
   - title: "A custom quote estimator, built into the site."
     body: "A working four-step intake flow you can see live in the mockup. Customers describe their project in plain language and you get a full request before the first phone call. Quantity, finish, deadline, contact info, all of it. Easier on them, better for you."
   - title: "Mobile-fast, search-clean, hand-coded throughout."
@@ -50,7 +51,7 @@ included:
 
 whyCustomCode:
   title: "Why custom code, instead of a builder."
-  body: "Franklin has been on Beverly for seventy-five years. The shop doesn't run on shortcuts. The website shouldn't either. A platform like Wix or Squarespace gets you to a generic site fast, then locks you into a monthly subscription forever and turns sluggish the minute you outgrow the template. Hand-written code is faster, lighter, and yours. When the build is done you own it. No platform, no monthly hostage situation, no surprises if you ever decide to take it elsewhere."
+  body: "Franklin has been on Beverly for seventy-five years. The shop doesn't run on shortcuts. The website shouldn't either. A platform like Wix or Squarespace gets you to a generic site fast, then locks you into a monthly subscription with rising prices over time and turns sluggish the minute you outgrow the template. Hand-written code is faster, lighter, and yours. When the build is done you own it. No platform lock-in, no surprises if you ever decide to take it elsewhere."
 
 recommendations:
   - title: "Google Business Profile"
@@ -58,7 +59,7 @@ recommendations:
   - title: "Automated review collection"
     body: "Most of the printing shops Franklin competes with for online attention have more reviews. Not because they do better work, but because they ask. A simple text or email after a job, sent automatically, gets reviews flowing without anyone in the shop having to remember. Worth setting up."
   - title: "Social media presence"
-    body: "A consistent posting rhythm, even just a few posts a week, meaningfully improves how often your page reaches local customers. Photos of finished work, the Heidelberg running, a busy bindery day. Real shop content. The optional ongoing-care plan can cover this. You can also do it in-house if you'd rather."
+    body: "A consistent posting rhythm, even just a few posts a week, meaningfully improves how often your page reaches local customers. Photos of finished work, a busy bindery day, the team in motion. Real shop content. The optional ongoing-care plan can cover this. You can also do it in-house if you'd rather."
 
 timeline:
   - when: "Day 0"
@@ -72,7 +73,7 @@ timeline:
     body: "Remaining $1,250 is due 14 days after kickoff or before the site goes live, whichever comes first. Site launches. You receive the code, the deployment access, and a short written walkthrough for handling content updates yourself if you'd like."
   - when: "Ongoing"
     title: "Optional care plan kicks in."
-    body: "If you opt into the $97 / month plan, edits and updates start the month after launch. If you'd rather handle changes yourself, the build is a clean handoff. No obligation to continue."
+    body: "If you opt into the $97/month plan, edits and updates start the month after launch. If you'd rather handle changes yourself, the build is a clean handoff. No obligation to continue."
 
 ownership:
   - "The complete code, on day one of launch."
@@ -84,7 +85,7 @@ ownership:
 paymentTerms:
   - "50% deposit ($1,250) starts the project."
   - "Remaining 50% ($1,250) due 14 days after kickoff or before launch, whichever comes first."
-  - "Optional $97 / month care plan billed the month after launch. Cancel anytime."
+  - "Optional $97/month care plan billed the month after launch. Cancel anytime."
   - "Larger new features or redesigns quoted separately before any work starts."
   - "Stripe payment confirms acceptance of the proposal as a working agreement."
 
@@ -97,4 +98,4 @@ This site was built from publicly available information about Franklin Printing.
 
 The point of the mockup is to make this real. Not a deck of slides or a stack of stock screenshots, but an actual working version you can click around. If the direction feels right, we refine it together. If you'd rather take it somewhere completely different, we start from your direction. Either way, the design is fully custom and built around what works for Franklin, not a template anybody else has.
 
-The offer, in one breath: a hand-coded website that reads like the shop reads, a quote estimator that gives customers an easier way to ask and gives you a better request when they do, and a clean handoff so the site is yours when it ships. Two thousand five hundred to build. Optional ninety-seven a month if you want me to keep the lights on. No platform fees, no contracts longer than a month, no surprises.
+The offer, in one breath: a hand-coded website that reads like the shop reads, a quote estimator that gives customers an easier way to ask and gives you a better request when they do, and a clean handoff so the site is yours when it ships. $2,500 to build. Optional $97 a month if you want me to keep the lights on. No platform fees, no contracts longer than a month, no surprises.
