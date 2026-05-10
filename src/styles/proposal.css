@@ -670,24 +670,6 @@
 .proposal .sticky-pay.visible {
   transform: translateY(0);
 }
-.proposal .sticky-pay .sticky-amount {
-  flex: 0 0 auto;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 22px;
-  color: var(--p-text);
-  line-height: 1;
-  font-weight: 500;
-}
-.proposal .sticky-pay .sticky-amount-label {
-  display: block;
-  font-family: 'Inter', sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--p-text-muted);
-  margin-top: 4px;
-  font-weight: 600;
-}
 .proposal .sticky-pay .btn {
   flex: 1;
   font-size: 13px;
