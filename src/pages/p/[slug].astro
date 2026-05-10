@@ -40,6 +40,7 @@ const fmtDeposit = `$${data.depositAmount.toLocaleString('en-US')}`;
 
   <Hero
     client={data.client}
+    preparedFor={data.preparedFor}
     location={data.location}
     date={data.date}
     headline={data.headline}
@@ -81,7 +82,7 @@ const fmtDeposit = `$${data.depositAmount.toLocaleString('en-US')}`;
   />
 
   <footer class="page-foot">
-    Designed to Elevate <span class="sep">·</span> Built from the bay, not a boardroom.
+    Designed to Elevate <span class="sep">·</span> {data.footerTagline}
   </footer>
 
   <div class="sticky-pay" data-sticky-pay>

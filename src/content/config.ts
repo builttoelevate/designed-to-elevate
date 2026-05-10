@@ -5,7 +5,8 @@ const proposals = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/proposals' }),
   schema: z.object({
     client: z.string(),
-    clientShort: z.string(),
+    clientShort: z.string().optional(),
+    preparedFor: z.string().optional(),
     location: z.string(),
     date: z.string(),
     heroImage: z.string(),
@@ -14,6 +15,7 @@ const proposals = defineCollection({
     stripeUrl: z.string().url(),
     contactEmail: z.string().default('bilsonxnc@gmail.com'),
     contactPhone: z.string().default('740-617-6488'),
+    footerTagline: z.string().default('Built from the bay, not a boardroom.'),
     buildPrice: z.number(),
     depositAmount: z.number(),
     careMonthly: z.number(),

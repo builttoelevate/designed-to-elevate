@@ -2,6 +2,7 @@
 interface Stat { value: string; label: string; }
 interface Props {
   client: string;
+  preparedFor?: string;
   location: string;
   date: string;
   headline: string;
@@ -11,12 +12,13 @@ interface Props {
   heroAlt?: string;
   previewUrl: string;
 }
-const { client, location, date, headline, subhead, stats, heroImage, heroAlt, previewUrl } = Astro.props;
+const { client, preparedFor, location, date, headline, subhead, stats, heroImage, heroAlt, previewUrl } = Astro.props;
+const eyebrowName = preparedFor ?? client;
 const previewLabel = previewUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
 ---
 <section class="hero">
   <div class="wrap">
-    <div class="hero-eyebrow small-caps">Prepared for {client}</div>
+    <div class="hero-eyebrow small-caps">Prepared for {eyebrowName}</div>
 
     <h1 set:html={headline} />
 
