@@ -219,9 +219,10 @@ html.proposal { scroll-behavior: smooth; }
 .proposal .hero-cta-row {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 14px;
   margin-bottom: 24px;
+  text-align: center;
 }
 .proposal .hero-preview-url {
   font-family: 'Cormorant Garamond', serif;
