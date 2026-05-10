@@ -23,8 +23,6 @@ export async function getStaticPaths() {
 const { proposal } = Astro.props;
 const data = proposal.data;
 const { Content } = await render(proposal);
-
-const fmtDeposit = `$${data.depositAmount.toLocaleString('en-US')}`;
 ---
 <ProposalLayout client={data.client} slug={proposal.id}>
   <header class="strip">
@@ -86,12 +84,8 @@ const fmtDeposit = `$${data.depositAmount.toLocaleString('en-US')}`;
   </footer>
 
   <div class="sticky-pay" data-sticky-pay>
-    <div class="sticky-amount">
-      {fmtDeposit}
-      <span class="sticky-amount-label">Deposit</span>
-    </div>
-    <a class="btn btn-primary" href={data.stripeUrl} target="_blank" rel="noopener" data-event="pay_button_click" data-amount={data.depositAmount}>
-      Pay deposit →
+    <a class="btn btn-primary" href={data.previewUrl} target="_blank" rel="noopener" data-event="preview_button_click">
+      Preview your site →
     </a>
   </div>
 </ProposalLayout>

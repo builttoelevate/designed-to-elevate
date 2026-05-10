@@ -88,6 +88,7 @@ paymentTerms:
   - "Optional $97/month care plan billed the month after launch. Cancel anytime."
   - "Larger new features or redesigns quoted separately before any work starts."
   - "Stripe payment confirms acceptance of the proposal as a working agreement."
+  - "Pricing in this proposal is good for three months from the date above."
 
 closing:
   headline: "Ready to <em>begin?</em>"
@@ -98,4 +99,6 @@ This site was built from publicly available information about Franklin Printing.
 
 The point of the mockup is to make this real. Not a deck of slides or a stack of stock screenshots, but an actual working version you can click around. If the direction feels right, we refine it together. If you'd rather take it somewhere completely different, we start from your direction. Either way, the design is fully custom and built around what works for Franklin, not a template anybody else has.
 
-The offer, in one breath: a hand-coded website that reads like the shop reads, a quote estimator that gives customers an easier way to ask and gives you a better request when they do, and a clean handoff so the site is yours when it ships. $2,500 to build. Optional $97 a month if you want me to keep the lights on. No platform fees, no contracts longer than a month, no surprises.
+The offer, in one breath: a hand-coded website that reads like the shop reads, a quote estimator that gives customers an easier way to ask and gives you a better request when they do, and a clean handoff so the site is yours when it ships. $2,500 to build. Optional $97 a month for ongoing maintenance. No platform fees, no contracts longer than a month, no surprises.
+
+This pricing is good for three months from today.
