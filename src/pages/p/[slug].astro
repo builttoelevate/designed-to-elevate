@@ -8,6 +8,7 @@ import Included from '../../components/proposal/Included.astro';
 import WhyCustomCode from '../../components/proposal/WhyCustomCode.astro';
 import Investment from '../../components/proposal/Investment.astro';
 import Recommendations from '../../components/proposal/Recommendations.astro';
+import BiggerPicture from '../../components/proposal/BiggerPicture.astro';
 import Timeline from '../../components/proposal/Timeline.astro';
 import Ownership from '../../components/proposal/Ownership.astro';
 import Closing from '../../components/proposal/Closing.astro';
@@ -64,7 +65,16 @@ const { Content } = await render(proposal);
 
   <Investment buildPrice={data.buildPrice} careMonthly={data.careMonthly} />
 
-  <Recommendations items={data.recommendations} />
+  {data.biggerPicture && (
+    <BiggerPicture
+      lede={data.biggerPicture.lede}
+      intro={data.biggerPicture.intro}
+      items={data.biggerPicture.items}
+      closing={data.biggerPicture.closing}
+    />
+  )}
+
+  {data.recommendations && <Recommendations items={data.recommendations} />}
 
   <Timeline steps={data.timeline} />
 

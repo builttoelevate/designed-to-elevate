@@ -1,0 +1,67 @@
+---
+import SectionHead from './SectionHead.astro';
+
+interface Item { title: string; body: string; }
+interface Props {
+  lede: string;
+  intro: string[];
+  items: Item[];
+  closing: string;
+}
+const { lede, intro, items, closing } = Astro.props;
+---
+<section>
+  <div class="wrap">
+    <SectionHead eyebrow="Beyond the website" title="The bigger picture." />
+    <p class="lede">{lede}</p>
+
+    {intro.map((para) => <p>{para}</p>)}
+
+    <div class="bp-items">
+      {items.map((item) => (
+        <div class="bp-row">
+          <p><strong class="bp-lever">{item.title}</strong> {item.body}</p>
+        </div>
+      ))}
+    </div>
+
+    <p class="bp-closing">{closing}</p>
+  </div>
+</section>
+
+<style>
+  .bp-items {
+    margin: 0.4em 0 1.6em;
+  }
+  .bp-row {
+    padding: 18px 0;
+    border-top: 1px solid var(--p-border-soft);
+  }
+  .bp-row:last-child {
+    border-bottom: 1px solid var(--p-border-soft);
+  }
+  .bp-row p {
+    margin: 0;
+  }
+  .bp-lever {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--p-text);
+    letter-spacing: -0.005em;
+    display: inline;
+    margin-right: 0.35em;
+  }
+  @media (min-width: 768px) {
+    .bp-lever { font-size: 24px; }
+  }
+  .bp-closing {
+    margin-top: 0.5em;
+    padding-top: 1.2em;
+    border-top: 1px solid var(--p-border-soft);
+    color: var(--p-text-muted);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+</style>
