@@ -5,6 +5,8 @@
 
 @import "tailwindcss";
 
+html.proposal { scroll-behavior: smooth; }
+
 .proposal {
   --p-bg: #181614;
   --p-bg-soft: #1f1c19;
@@ -302,6 +304,23 @@
 }
 .proposal .btn-secondary:hover {
   background: rgba(255, 107, 26, 0.08);
+}
+.proposal .btn-hero {
+  font-size: 16px;
+  padding: 20px 32px;
+  min-height: 60px;
+  letter-spacing: 0.10em;
+  box-shadow:
+    0 10px 30px -8px rgba(255, 107, 26, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+  animation: heroBtnPulse 2.4s ease-in-out 1.2s 2;
+}
+@keyframes heroBtnPulse {
+  0%, 100% { transform: translateY(0); box-shadow: 0 10px 30px -8px rgba(255, 107, 26, 0.55), 0 2px 6px rgba(0, 0, 0, 0.4); }
+  50%      { transform: translateY(-3px); box-shadow: 0 18px 44px -8px rgba(255, 107, 26, 0.75), 0 2px 6px rgba(0, 0, 0, 0.4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .proposal .btn-hero { animation: none; }
 }
 
 /* ── TESTIMONIALS ────────────────────────────────────────────── */
@@ -672,8 +691,10 @@
 }
 .proposal .sticky-pay .btn {
   flex: 1;
-  font-size: 13px;
-  padding: 14px 18px;
+  font-size: 12px;
+  padding: 14px 10px;
+  letter-spacing: 0.08em;
+  min-width: 0;
 }
 @media (min-width: 768px) {
   .proposal .sticky-pay { display: none; }
