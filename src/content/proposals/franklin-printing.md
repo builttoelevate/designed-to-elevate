@@ -95,9 +95,9 @@ closing:
   body: "Pay the deposit and we kick this off. If you want to talk first about the direction, the timeline, anything in here, call or text. I'm a Zanesville number away."
 ---
 
-This site was built from publicly available information about Franklin Printing. The existing site, the brand you've spent seventy-five years building on Beverly Avenue, the work you're already known for. It's a starting point, not a finished site.
+This site was built from publicly available information about Franklin Printing, the brand you've spent seventy-five years building on Beverly Avenue, the work you're already known for. It's a starting point, not a finished site.
 
-The point of the mockup is to make this real. Not a deck of slides or a stack of stock screenshots, but an actual working version you can click around. If the direction feels right, we refine it together. If you'd rather take it somewhere completely different, we start from your direction. Either way, the design is fully custom and built around what works for Franklin, not a template anybody else has.
+The point of the mockup is to make this real: an actual working version you can click around, not a deck of slides. If the direction feels right, we refine it together. If you'd rather take it somewhere different, we start from yours. Either way, the design is fully custom. Built around Franklin, not pulled from a template.
 
 The offer, in one breath: a hand-coded website that reads like the shop reads, a quote estimator that gives customers an easier way to ask and gives you a better request when they do, and a clean handoff so the site is yours when it ships. $2,500 to build. Optional $97 a month for ongoing maintenance. No platform fees, no contracts longer than a month, no surprises.
 
