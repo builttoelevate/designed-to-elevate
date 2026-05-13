@@ -1,0 +1,92 @@
+---
+// UpgradeFinalCTA — final CTA + "Not on Square?" secondary block + footer.
+// Mirrors the FinalCTASection pattern from /grow (footer baked in since
+// landing pages don't use SiteFooter).
+---
+<!-- FINAL CTA SECTION -->
+<section class="relative overflow-hidden">
+  <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+  <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+    <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Last Step</span>
+
+    <h2 class="mt-6 text-[2.2rem] sm:text-[3.2rem] leading-[1.05] font-bold tracking-tight">
+      Want to see what your site <span class="text-accent">could become?</span>
+    </h2>
+    <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+      I'll review your current site and send you 3 specific changes I'd make to help it look more premium, feel easier to use, and make booking smoother.
+    </p>
+
+    <div class="mt-10 flex flex-wrap justify-center gap-3">
+      <a href="#apply" class="btn-primary">
+        Get My Free 10-Minute Website Review
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    <p class="mt-6 text-[0.95rem] text-text-soft">
+      Or text Bill directly:
+      <button type="button" data-call-text class="text-accent font-medium underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors whitespace-nowrap">(740) 617-6488</button>
+    </p>
+
+    <p class="mt-8 max-w-xl mx-auto text-[0.9rem] text-text-muted leading-relaxed">
+      No hard pitch. No weird pressure. Just useful.
+    </p>
+  </div>
+
+  <!-- Not on Square? secondary path -->
+  <div class="relative z-10 border-t border-line bg-surface-1/40">
+    <div class="mx-auto max-w-5xl px-5 sm:px-8 py-14 sm:py-16">
+      <div class="grid md:grid-cols-[1fr_auto] gap-6 items-center">
+        <div>
+          <div class="font-display font-semibold text-[0.72rem] uppercase tracking-[0.18em] text-text-muted mb-2">
+            Not on Square?
+          </div>
+          <h3 class="font-display font-bold text-[1.3rem] sm:text-[1.5rem] text-text leading-snug">
+            We can still help.
+          </h3>
+          <p class="mt-3 text-[0.98rem] text-text-soft leading-relaxed max-w-2xl">
+            Square upgrades are our specialty, but the bigger goal is the same for any local business: build a site that turns visitors into customers. We also build custom quote systems, local service websites, booking and lead-gen pages, SEO-focused service pages, and trust-building sites for professional services.
+          </p>
+        </div>
+        <div class="flex md:justify-end">
+          <a href="/grow" class="btn-ghost whitespace-nowrap">
+            Tell me about my business
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="relative z-10 border-t border-line">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8 py-10 flex flex-col gap-6">
+      <div class="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6">
+        <a href="#top" class="flex items-center" aria-label="Designed to Elevate">
+          <img
+            src="/logo-wordmark-orange.png"
+            alt="Designed to Elevate"
+            width="320"
+            height="96"
+            class="h-9 w-auto"
+          />
+        </a>
+        <div class="text-[0.85rem] text-text-muted text-center sm:text-right">
+          <div>© 2026 Designed to Elevate · Zanesville, OH</div>
+          <div class="mt-1 flex flex-wrap gap-4 justify-center sm:justify-end">
+            <button type="button" data-call-text class="hover:text-accent transition-colors">Call/Text: (740) 617-6488</button>
+            <a href="/privacy" class="hover:text-text transition-colors">Privacy</a>
+            <a href="/terms" class="hover:text-text transition-colors">Terms</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-line pt-6 text-center sm:text-right text-[0.85rem] text-text-muted italic">
+        Serving local service businesses across Southeast Ohio.
+      </div>
+    </div>
+  </footer>
+</section>
+<!-- /FINAL CTA SECTION -->

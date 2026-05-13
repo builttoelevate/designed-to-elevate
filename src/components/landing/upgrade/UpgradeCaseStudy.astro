@@ -1,0 +1,137 @@
+---
+// UpgradeCaseStudy — Modern Classic as the dominant proof anchor.
+// Before → After → What changed → Business value structure.
+const whatChanged = [
+  'Branded homepage with live next-available appointment',
+  'Custom 5-step booking flow',
+  'Staff profiles with direct booking links',
+  'Magic-link customer accounts (no passwords)',
+  'One-tap rebooking for regulars',
+  'Self-service reschedule and cancel',
+  'Waitlist with automatic slot alerts',
+  'Automated Google review requests',
+  'Product showcase for MDRN Classic Grooming Essentials',
+  'Per-barber and admin dashboards',
+  'Daily Square catalog sync',
+];
+
+const businessValue = [
+  'Reduce booking friction',
+  'Promote each barber individually',
+  'Bring regulars back faster',
+  'Fill cancellations automatically',
+  'Grow Google reviews on autopilot',
+  'Make the online brand match the real shop',
+];
+---
+<!-- MODERN CLASSIC CASE STUDY -->
+<section id="case-study" class="relative border-b border-line">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Featured Build</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        Modern Classic Barbershop — <span class="text-accent">Zanesville, OH</span>
+      </h2>
+    </div>
+
+    <div class="mt-12 grid lg:grid-cols-[1fr_0.85fr] gap-10 lg:gap-14">
+      <!-- LEFT: story -->
+      <div class="space-y-10">
+        <!-- BEFORE -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="inline-flex items-center rounded-full border border-line bg-surface-2 px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.18em] text-text-muted">
+              Before
+            </span>
+          </div>
+          <p class="text-[1.02rem] text-text-soft leading-relaxed">
+            Modern Classic already had the hard parts — talented barbers, a strong local brand, great chairs, a growing product line, loyal customers. Online, the experience felt too basic for the shop they'd become.
+          </p>
+        </div>
+
+        <!-- AFTER -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.18em] text-bg">
+              After
+            </span>
+          </div>
+          <p class="text-[1.02rem] text-text-soft leading-relaxed">
+            We rebuilt the site around Square. Same booking engine, same customer records, same calendar. Completely different customer experience.
+          </p>
+        </div>
+
+        <!-- WHAT CHANGED -->
+        <div>
+          <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-4">
+            What changed
+          </div>
+          <ul class="grid sm:grid-cols-2 gap-x-6 gap-y-2.5">
+            {whatChanged.map((item) => (
+              <li class="flex items-start gap-3 text-[0.95rem] text-text-soft leading-snug">
+                <span class="mt-1.5 inline-block h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- BUSINESS VALUE -->
+        <div>
+          <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-4">
+            Built to help
+          </div>
+          <ul class="grid sm:grid-cols-2 gap-x-6 gap-y-2.5">
+            {businessValue.map((item) => (
+              <li class="flex items-start gap-3 text-[0.95rem] text-text leading-snug">
+                <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="pt-2 flex flex-wrap gap-3">
+          <a href="https://mdrnclassic.com" target="_blank" rel="noopener noreferrer" class="btn-primary">
+            See the live build
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="#apply" class="btn-ghost">
+            Get a review like this
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="text-[0.85rem] text-text-muted">→ mdrnclassic.com</div>
+      </div>
+
+      <!-- RIGHT: screenshot -->
+      <div class="relative">
+        <a href="https://mdrnclassic.com" target="_blank" rel="noopener noreferrer" class="block group" aria-label="Open Modern Classic in a new tab">
+          <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60" aria-hidden="true"></div>
+          <div class="relative aspect-[9/19] rounded-[1.6rem] overflow-hidden border border-accent/40 shadow-[0_30px_80px_-20px_rgba(255,107,26,0.5)] bg-surface-2 max-w-[360px] mx-auto">
+            <img
+              src="/showcase/modern-classic-mobile.png"
+              alt="Modern Classic Barbershop — custom Square-powered booking site"
+              class="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </a>
+
+        <!-- Pull-quote placeholder until Michael sends one -->
+        <figure class="mt-8 card p-6 sm:p-7 max-w-md mx-auto">
+          <blockquote class="text-[0.98rem] text-text leading-relaxed italic">
+            "Quote from Michael — pending."
+          </blockquote>
+          <figcaption class="mt-3 text-[0.85rem] text-text-muted font-display">
+            — Michael, Owner, Modern Classic Barbershop
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /MODERN CLASSIC CASE STUDY -->

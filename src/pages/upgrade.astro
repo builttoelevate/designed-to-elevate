@@ -1,0 +1,63 @@
+---
+// /upgrade — Square Website Upgrade ads landing page.
+//
+// Single conversion goal: the "Get My Free 10-Minute Website Review" audit
+// form at #apply. The same CTA text appears in the header, hero, pricing,
+// FAQ, founder, final CTA, and sticky mobile bar — one promise, repeated.
+//
+// Shares LandingLayout with /grow:
+//   - sticky mobile CTA reveal logic (watches [data-hero-cta] + #apply)
+//   - Web3Forms submission ([data-audit-form])
+//   - Call/Text popup ([data-call-text])
+//   - Smooth-scroll for in-page anchors
+//
+// IMAGE INVENTORY:
+//   /showcase/modern-classic-mobile.png → Hero (right phone) + Before/After (after) + Case study
+//   /showcase/fitchin-mobile.png        → Other Proof (Fitchin card)
+//   /showcase/all-transport-mobile.png  → Other Proof (All Transport card)
+//   /logo-wordmark-orange.png           → Header, footer
+//
+// Before/After "before" mock is rendered in HTML/CSS as a placeholder
+// stock-Square page until a real before-state screenshot is captured.
+
+import LandingLayout from '../layouts/LandingLayout.astro';
+import UpgradeHeader from '../components/landing/upgrade/UpgradeHeader.astro';
+import UpgradeHero from '../components/landing/upgrade/UpgradeHero.astro';
+import UpgradeBeforeAfter from '../components/landing/upgrade/UpgradeBeforeAfter.astro';
+import UpgradeProblem from '../components/landing/upgrade/UpgradeProblem.astro';
+import UpgradeWhatStays from '../components/landing/upgrade/UpgradeWhatStays.astro';
+import UpgradeWhoFor from '../components/landing/upgrade/UpgradeWhoFor.astro';
+import UpgradeBig5 from '../components/landing/upgrade/UpgradeBig5.astro';
+import UpgradeCaseStudy from '../components/landing/upgrade/UpgradeCaseStudy.astro';
+import UpgradeOtherProof from '../components/landing/upgrade/UpgradeOtherProof.astro';
+import UpgradePricing from '../components/landing/upgrade/UpgradePricing.astro';
+import UpgradeFAQ from '../components/landing/upgrade/UpgradeFAQ.astro';
+import UpgradeFounder from '../components/landing/upgrade/UpgradeFounder.astro';
+import UpgradeAuditForm from '../components/landing/upgrade/UpgradeAuditForm.astro';
+import UpgradeFinalCTA from '../components/landing/upgrade/UpgradeFinalCTA.astro';
+import UpgradeStickyCTA from '../components/landing/upgrade/UpgradeStickyCTA.astro';
+---
+<LandingLayout
+  title="Keep Square. Upgrade the Website Your Customers Actually See. | Designed to Elevate"
+  description="Premium Square website upgrades for barbershops, salons, spas, studios, and local service businesses. Keep Square as the engine — get a branded site, cleaner booking flow, live availability, customer accounts, waitlist, and review automation. Free 10-minute website review."
+  pathname="upgrade"
+  noindex={true}
+>
+  <UpgradeHeader />
+  <main class="pb-24 md:pb-0">
+    <UpgradeHero />
+    <UpgradeBeforeAfter />
+    <UpgradeProblem />
+    <UpgradeWhatStays />
+    <UpgradeWhoFor />
+    <UpgradeBig5 />
+    <UpgradeCaseStudy />
+    <UpgradeOtherProof />
+    <UpgradePricing />
+    <UpgradeFAQ />
+    <UpgradeFounder />
+    <UpgradeAuditForm />
+    <UpgradeFinalCTA />
+  </main>
+  <UpgradeStickyCTA />
+</LandingLayout>

@@ -1,0 +1,85 @@
+---
+// UpgradeBig5 — five hero features up top, with a "we also build…"
+// line at the end for the bigger system. Avoids the scroll-tunnel of
+// a 9-feature grid while still signalling depth.
+const features = [
+  {
+    icon: 'eye',
+    title: 'Live availability before they click',
+    body: 'Show the next available appointment on your homepage, staff cards, and service sections — so customers know when they can get in right away.',
+  },
+  {
+    icon: 'steps',
+    title: 'A cleaner, branded booking flow',
+    body: 'Guide customers through service → staff → date → info → confirm in a flow that feels like your shop, not a stock template. One clean service menu instead of duplicate tiles for every staff member.',
+  },
+  {
+    icon: 'user',
+    title: 'Staff profiles that actually sell',
+    body: 'Each barber, stylist, or provider gets a real profile with bio, specialties, photos, and a direct booking link.',
+  },
+  {
+    icon: 'key',
+    title: 'Customer accounts without passwords',
+    body: 'Returning customers tap one link in their email and they\'re in. View past bookings, manage their info, one-tap rebook their usual, reschedule or cancel — no passwords, no friction.',
+  },
+  {
+    icon: 'bell',
+    title: 'Waitlist + automated review follow-up',
+    body: 'Open slots fill automatically when matching customers are waiting. Happy customers get a one-click Google review email two days after their visit. Both run on autopilot.',
+  },
+];
+---
+<!-- BIG 5 UPGRADES SECTION -->
+<section id="upgrades" class="relative border-b border-line">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Upgrade</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        The Square site you wish <span class="text-accent">Square built.</span>
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+        Square is a strong engine. We build the premium customer experience on top of it.
+      </p>
+    </div>
+
+    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {features.map((f, i) => (
+        <div class={`card p-7 flex flex-col gap-4 ${i === 4 ? 'sm:col-span-2 lg:col-span-1' : ''}`}>
+          <div class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 border border-accent/30 text-accent">
+            {f.icon === 'eye' && (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            )}
+            {f.icon === 'steps' && (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            )}
+            {f.icon === 'user' && (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            )}
+            {f.icon === 'key' && (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2l-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/><path d="M15.5 7.5l3 3"/></svg>
+            )}
+            {f.icon === 'bell' && (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            )}
+          </div>
+          <h3 class="font-display font-semibold text-[1.12rem] leading-snug text-text">
+            {f.title}
+          </h3>
+          <p class="text-[0.95rem] text-text-soft leading-relaxed">{f.body}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- "Need more?" buffet line -->
+    <div class="mt-10 max-w-4xl rounded-2xl border border-line bg-surface-1/60 p-6 sm:p-7">
+      <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-3">
+        Need more?
+      </div>
+      <p class="text-[1rem] text-text-soft leading-relaxed">
+        We can also build <span class="text-text">family and group bookings</span>, <span class="text-text">per-barber dashboards</span>, <span class="text-text">retail product sections</span>, <span class="text-text">admin tools</span>, <span class="text-text">daily service sync from Square</span>, and <span class="text-text">custom automations</span>. Most shops don't need all of it on day one — we build what fits you.
+      </p>
+    </div>
+  </div>
+</section>
+<!-- /BIG 5 UPGRADES SECTION -->

@@ -1,0 +1,87 @@
+---
+// UpgradeWhatStays — "What stays / What changes" reassurance section.
+// Highest-converting objection-killer for a Square user worried about
+// having to relearn their tooling. Side-by-side cards keep it scannable.
+const stays = [
+  'Appointments',
+  'Payments',
+  'Calendar',
+  'Staff schedules',
+  'Customer records',
+  'The tools your team already knows',
+];
+
+const changes = [
+  'Your website design',
+  'Your booking flow',
+  'Your staff presentation',
+  'Your rebooking path',
+  'Your review follow-up',
+  'Your customer experience',
+];
+---
+<!-- WHAT STAYS / WHAT CHANGES SECTION -->
+<section id="what-stays" class="relative border-b border-line">
+  <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Reassurance</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        You keep Square. <span class="text-accent">We upgrade the customer experience.</span>
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+        Your team keeps the system they already know. Your customers get a better one.
+      </p>
+    </div>
+
+    <div class="mt-12 grid md:grid-cols-2 gap-5">
+      <!-- WHAT STAYS -->
+      <div class="card p-7 sm:p-8">
+        <div class="flex items-center gap-2 mb-5">
+          <span class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-line-2 bg-surface-3 text-text-soft" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-text-soft">
+            What stays the same
+          </div>
+        </div>
+        <ul class="space-y-3">
+          {stays.map((item) => (
+            <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full border border-line-2 text-text-soft flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- WHAT CHANGES -->
+      <div class="card p-7 sm:p-8 border-accent/30 bg-gradient-to-br from-surface-1 via-surface-2 to-[#241712]">
+        <div class="flex items-center gap-2 mb-5">
+          <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-accent text-bg" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/></svg>
+          </span>
+          <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent">
+            What gets upgraded
+          </div>
+        </div>
+        <ul class="space-y-3">
+          {changes.map((item) => (
+            <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent text-bg flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <p class="mt-10 text-center text-[1.15rem] sm:text-[1.3rem] font-display font-medium text-text">
+      Square stays the engine. <span class="text-accent">Your shop becomes the storefront.</span>
+    </p>
+  </div>
+</section>
+<!-- /WHAT STAYS / WHAT CHANGES SECTION -->

@@ -1,0 +1,81 @@
+---
+// UpgradeFAQ — removes objections before the CTA. Six tight questions
+// straight from the brief.
+const faqs = [
+  {
+    q: 'Do we have to leave Square?',
+    a: 'No. Square stays the engine — booking, payments, calendar, and customer records all stay where they are. Your team keeps using the system they already know.',
+  },
+  {
+    q: 'Will my staff need to learn a new system?',
+    a: 'For most builds, no. Your team keeps using Square the way they already do. The upgrade is what your customers see — not what your team logs into.',
+  },
+  {
+    q: 'Can this work with my existing Square account?',
+    a: 'Yes, depending on your setup. The free review identifies what\'s possible with how your Square account is currently configured and what (if anything) needs to shift.',
+  },
+  {
+    q: 'How long does a project take?',
+    a: 'Simple Square site upgrades can ship in 7–14 days. Premium custom builds with accounts, waitlist, and automations typically run 3–6 weeks depending on scope.',
+  },
+  {
+    q: 'Do you only work with barbershops?',
+    a: 'No. This is a strong fit for any appointment-based business on Square — salons, lash and brow studios, tattoo studios, massage therapy, spas, training studios, detailers, tint shops, and more.',
+  },
+  {
+    q: 'Can you just improve my current site instead of rebuilding it?',
+    a: 'Sometimes, yes. Not every shop needs a full rebuild. Part of the free review is figuring out which path actually makes sense for you — sometimes that\'s a focused upgrade, not a full custom build.',
+  },
+];
+---
+<!-- FAQ SECTION -->
+<section id="faq" class="relative border-b border-line bg-surface-1/40">
+  <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-28">
+    <div>
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> FAQ</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        Common questions
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-2xl">
+        If something's not answered here, call or text Bill at
+        <button type="button" data-call-text class="text-accent font-medium underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors whitespace-nowrap">(740) 617-6488</button>.
+      </p>
+    </div>
+
+    <div class="mt-10 space-y-3">
+      {faqs.map((f) => (
+        <details class="faq-item card group p-0 overflow-hidden">
+          <summary class="cursor-pointer list-none flex items-start justify-between gap-4 px-6 py-5 sm:px-7 sm:py-6 select-none">
+            <span class="font-display font-semibold text-[1.02rem] sm:text-[1.08rem] text-text leading-snug">{f.q}</span>
+            <span class="mt-0.5 inline-flex h-7 w-7 items-center justify-center rounded-full border border-line text-text-soft group-hover:border-accent group-hover:text-accent transition-colors flex-shrink-0" aria-hidden="true">
+              <svg class="faq-chevron transition-transform duration-200" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </summary>
+          <div class="px-6 pb-6 sm:px-7 sm:pb-7 -mt-1">
+            <p class="text-[0.95rem] text-text-soft leading-relaxed max-w-prose">
+              {f.a}
+            </p>
+          </div>
+        </details>
+      ))}
+    </div>
+
+    <div class="mt-12 flex flex-wrap gap-3">
+      <a href="#apply" class="btn-primary">
+        Get My Free 10-Minute Website Review
+        <span aria-hidden="true">↗</span>
+      </a>
+      <button type="button" data-call-text class="btn-ghost">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+        Call or Text Bill
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item[open] .faq-chevron { transform: rotate(180deg); }
+  .faq-item[open] { border-color: rgba(255, 107, 26, 0.4); }
+</style>
+<!-- /FAQ SECTION -->
