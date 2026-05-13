@@ -320,6 +320,22 @@ const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
           console.log('[audit-form] web3forms response:', response.status, result);
 
           if (response.ok && result.success) {
+            // Dispatch a page-level event so per-page scripts (e.g. /upgrade
+            // analytics) can react without re-implementing the fetch.
+            document.dispatchEvent(new CustomEvent('audit-form:success', {
+              detail: { source: (formData.get('source') as string) || form.getAttribute('action') || '' },
+            }));
+
+            // Opt-in redirect: forms with [data-redirect="/path"] navigate
+            // to a thank-you page after a successful submit. Forms without
+            // the attribute keep the existing inline-confirmation flow.
+            const redirectTo = form.getAttribute('data-redirect');
+            if (redirectTo) {
+              if (submitBtn) submitBtn.innerHTML = 'Sent ✓';
+              window.location.assign(redirectTo);
+              return;
+            }
+
             if (submitBtn) submitBtn.innerHTML = 'Sent ✓';
             showStatus(
               "Thanks! Bill will reach out within 24 hours. If you'd like to talk now, call or text (740) 617-6488.",
@@ -332,6 +348,9 @@ const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
           setDisabled(false);
           if (submitBtn) submitBtn.innerHTML = originalBtnHTML;
           const detail = err instanceof Error ? err.message : 'Unknown error';
+          document.dispatchEvent(new CustomEvent('audit-form:error', {
+            detail: { message: detail },
+          }));
           showStatus(
             `Couldn't send your application (${detail}). Please call or text Bill at (740) 617-6488 and we'll handle it directly.`,
             true

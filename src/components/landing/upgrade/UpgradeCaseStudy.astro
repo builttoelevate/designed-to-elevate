@@ -1,6 +1,15 @@
 ---
 // UpgradeCaseStudy — Modern Classic as the dominant proof anchor.
 // Before → After → What changed → Business value structure.
+//
+// Testimonial copy lives in src/data/upgrade-testimonials.ts. When the
+// quote string is empty, the blockquote is omitted entirely (no empty
+// box rendered).
+
+import { upgradeTestimonials } from '../../../data/upgrade-testimonials';
+
+const testimonial = upgradeTestimonials['modern-classic'];
+
 const whatChanged = [
   'Branded homepage with live next-available appointment',
   'Custom 5-step booking flow',
@@ -121,15 +130,16 @@ const businessValue = [
           </div>
         </a>
 
-        <!-- Pull-quote placeholder until Michael sends one -->
-        <figure class="mt-8 card p-6 sm:p-7 max-w-md mx-auto">
-          <blockquote class="text-[0.98rem] text-text leading-relaxed italic">
-            "Quote from Michael — pending."
-          </blockquote>
-          <figcaption class="mt-3 text-[0.85rem] text-text-muted font-display">
-            — Michael, Owner, Modern Classic Barbershop
-          </figcaption>
-        </figure>
+        {testimonial?.quote && (
+          <figure class="mt-8 card p-6 sm:p-7 max-w-md mx-auto">
+            <blockquote class="text-[0.98rem] text-text leading-relaxed italic">
+              "{testimonial.quote}"
+            </blockquote>
+            <figcaption class="mt-3 text-[0.85rem] text-text-muted font-display">
+              — {testimonial.author}{testimonial.role && `, ${testimonial.role}`}
+            </figcaption>
+          </figure>
+        )}
       </div>
     </div>
   </div>

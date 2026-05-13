@@ -1,0 +1,139 @@
+---
+// /upgrade/thank-you — confirmation page after audit form submission.
+//
+// Reached via redirect from the audit form on /upgrade. Headline + body
+// match the spec verbatim. Below the body sits a calendar embed
+// placeholder — when the Cal.com / Calendly URL is ready, drop it in
+// the data-calendar-embed div (or replace the placeholder block entirely).
+//
+// Tracking: this page fires a `calendar_booking_view` dataLayer event
+// on load so we can measure form-to-thank-you conversion rate. If the
+// visitor later clicks through to the calendar, that's the next step
+// we'll wire up once the embed lands.
+//
+// TODO(calendar): replace CALENDAR_EMBED_URL with the live Cal.com or
+// Calendly slot URL for the 10-minute review call.
+
+import LandingLayout from '../../layouts/LandingLayout.astro';
+import UpgradeHeader from '../../components/landing/upgrade/UpgradeHeader.astro';
+
+const CALENDAR_EMBED_URL = ''; // e.g. 'https://cal.com/bill-chicha/10-minute-website-review'
+const PHONE_NUMBER = '(740) 617-6488';
+---
+<LandingLayout
+  title="You're in. Here's what happens next. | Designed to Elevate"
+  description="Your free 10-minute website review request is in. Book a 10-minute call with Bill, or wait to hear back within 24 hours."
+  pathname="upgrade/thank-you"
+  noindex={true}
+>
+  <UpgradeHeader />
+
+  <main class="relative">
+    <!-- Hero confirmation -->
+    <section class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-3xl px-5 sm:px-8 pt-16 sm:pt-24 pb-12 sm:pb-16 text-center">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Confirmed</span>
+
+        <h1 class="mt-6 text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
+          You're in. <span class="text-accent">Here's what happens next.</span>
+        </h1>
+
+        <div class="mt-7 space-y-5 text-[1.05rem] sm:text-[1.15rem] leading-relaxed text-text-soft max-w-2xl mx-auto">
+          <p>
+            I'll review your site and send 3 specific ideas within 24 hours.
+          </p>
+          <p>
+            If you'd rather just talk, book a 10-minute call here:
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calendar embed slot -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="mx-auto max-w-3xl px-5 sm:px-8 py-12 sm:py-16">
+        {CALENDAR_EMBED_URL ? (
+          <div class="card p-2 sm:p-3 overflow-hidden">
+            <iframe
+              src={CALENDAR_EMBED_URL}
+              title="Book a 10-minute website review call with Bill"
+              loading="lazy"
+              class="block w-full h-[680px] rounded-[10px] border-0 bg-bg"
+            ></iframe>
+          </div>
+        ) : (
+          <div class="card p-8 sm:p-10 text-center">
+            <div class="font-display font-semibold text-[0.78rem] uppercase tracking-[0.18em] text-accent mb-4">
+              Calendar coming soon
+            </div>
+            <h2 class="font-display font-bold text-[1.4rem] sm:text-[1.6rem] text-text leading-snug max-w-md mx-auto">
+              Want to talk now instead of waiting 24 hours?
+            </h2>
+            <p class="mt-4 text-[1rem] text-text-soft max-w-md mx-auto leading-relaxed">
+              The 10-minute booking calendar will live here. In the meantime, text Bill directly and we'll find a time.
+            </p>
+            <div class="mt-7 flex flex-wrap items-center justify-center gap-3">
+              <a href={`tel:${PHONE_NUMBER.replace(/\D/g, '')}`} class="btn-primary">
+                Call {PHONE_NUMBER}
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a href={`sms:${PHONE_NUMBER.replace(/\D/g, '')}`} class="btn-ghost">
+                Text Bill
+              </a>
+            </div>
+          </div>
+        )}
+
+        <p class="mt-8 text-center text-[0.95rem] text-text-soft">
+          Or text Bill directly:
+          <a href={`sms:${PHONE_NUMBER.replace(/\D/g, '')}`} class="text-accent font-medium underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors whitespace-nowrap">{PHONE_NUMBER}</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative border-t border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-10 flex flex-col gap-6">
+        <div class="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6">
+          <a href="/upgrade" class="flex items-center" aria-label="Back to /upgrade">
+            <img
+              src="/logo-wordmark-orange.png"
+              alt="Designed to Elevate"
+              width="320"
+              height="96"
+              class="h-9 w-auto"
+            />
+          </a>
+          <div class="text-[0.85rem] text-text-muted text-center sm:text-right">
+            <div>© 2026 Designed to Elevate · Zanesville, OH</div>
+            <div class="mt-1 flex flex-wrap gap-4 justify-center sm:justify-end">
+              <a href={`tel:${PHONE_NUMBER.replace(/\D/g, '')}`} class="hover:text-accent transition-colors">Call/Text: {PHONE_NUMBER}</a>
+              <a href="/privacy" class="hover:text-text transition-colors">Privacy</a>
+              <a href="/terms" class="hover:text-text transition-colors">Terms</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // calendar_booking_view — fires on every load of the thank-you page.
+    type Payload = Record<string, string | number | boolean | undefined>;
+    interface DataLayerWindow extends Window { dataLayer?: Array<Payload & { event: string }> }
+    const w = window as DataLayerWindow;
+    w.dataLayer = w.dataLayer || [];
+    w.dataLayer.push({ event: 'calendar_booking_view', page: '/upgrade/thank-you' });
+
+    // Track phone taps on this page too so the funnel is consistent.
+    document.querySelectorAll<HTMLElement>('a[href^="tel:"], a[href^="sms:"]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const kind = el.getAttribute('href')?.startsWith('sms:') ? 'sms_link' : 'tel_link';
+        w.dataLayer!.push({ event: 'phone_tap', section: 'thank_you', kind });
+      });
+    });
+  </script>
+</LandingLayout>

@@ -72,6 +72,7 @@ const squareOptions = [
       <div>
         <form
           data-audit-form
+          data-redirect="/upgrade/thank-you"
           action="https://api.web3forms.com/submit"
           method="POST"
           class="card p-6 sm:p-8 space-y-5"
@@ -106,7 +107,7 @@ const squareOptions = [
           <fieldset class="block">
             <legend class="block font-display font-medium text-[0.82rem] text-text-soft mb-2.5">Are you using Square? <span class="text-accent">*</span></legend>
             <div class="space-y-2">
-              {squareOptions.map((opt, i) => (
+              {squareOptions.map((opt) => (
                 <label class="flex items-start gap-3 cursor-pointer rounded-md border border-line bg-surface-2 px-3.5 py-2.5 hover:border-accent/60 transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent/5">
                   <input
                     required
@@ -114,13 +115,25 @@ const squareOptions = [
                     name="uses_square"
                     value={opt}
                     class="mt-0.5 h-4 w-4 accent-[#FF6B1A] flex-shrink-0"
-                    checked={i === 0 ? false : undefined}
                   />
                   <span class="text-[0.95rem] text-text leading-snug">{opt}</span>
                 </label>
               ))}
             </div>
           </fieldset>
+
+          <label class="block">
+            <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">
+              What do you want improved? <span class="text-text-muted">(Optional)</span>
+            </span>
+            <textarea
+              name="goals"
+              rows="3"
+              maxlength="500"
+              class="w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 resize-y"
+              placeholder="Bookings, brand feel, staff pages, anything…"
+            ></textarea>
+          </label>
 
           <button type="submit" class="btn-primary w-full !py-3.5">
             Get My Free Review
