@@ -1,0 +1,42 @@
+---
+// UpgradeWhoFor — moved early per the brief so a salon/spa owner doesn't
+// bounce thinking this is barbershop-only. Pill list, no checkboxes.
+const verticals = [
+  'Barbershops & salons',
+  'Lash & brow studios',
+  'Tattoo studios',
+  'Massage therapy',
+  'Spas & med spas',
+  'Personal training studios',
+  'Detail shops & tint shops',
+  'Any local service business on Square',
+];
+---
+<!-- WHO IT'S FOR SECTION -->
+<section id="who-its-for" class="relative border-b border-line bg-surface-1/40">
+  <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-24">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Right Fit</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        Built for appointment-based businesses <span class="text-accent">on Square.</span>
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+        This is a fit if customers book time with you:
+      </p>
+    </div>
+
+    <ul class="mt-8 flex flex-wrap gap-2.5">
+      {verticals.map((v) => (
+        <li class="inline-flex items-center gap-2 rounded-full border border-line-2 bg-surface-2 px-4 py-2 text-[0.92rem] text-text font-display font-medium">
+          <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+          {v}
+        </li>
+      ))}
+    </ul>
+
+    <p class="mt-10 max-w-2xl text-[1.05rem] sm:text-[1.15rem] leading-relaxed text-text font-display">
+      If customers book time with you, Square can stay the engine — and <span class="text-accent">your website can become the sales floor.</span>
+    </p>
+  </div>
+</section>
+<!-- /WHO IT'S FOR SECTION -->

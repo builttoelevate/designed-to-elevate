@@ -1,0 +1,82 @@
+---
+// UpgradeOtherProof — compressed Fitchin + All Transport.
+// Keeps proof of range on the page without competing with the dominant
+// Modern Classic case study above.
+const others = [
+  {
+    name: 'Fitchin Auto Detail & Tint',
+    location: 'Coshocton, OH',
+    image: '/showcase/fitchin-mobile.png',
+    url: 'https://fitchinautodetail.com',
+    problem: 'Customers kept asking the same pricing questions over and over.',
+    solution: 'A guided quote wizard that walks them through their car, their service, and their package — then books the appointment.',
+    badge: 'Quote Wizard Build',
+  },
+  {
+    name: 'All Transport Bus Co.',
+    location: 'Coshocton, OH',
+    image: '/showcase/all-transport-mobile.png',
+    url: '#',
+    problem: 'Schools, churches, and organizations were comparing transportation options.',
+    solution: 'A trust-building site that closes the credibility gap on the first scroll, with a clean quote-request path.',
+    badge: 'Trust-Building Site',
+  },
+];
+---
+<!-- OTHER PROOF SECTION -->
+<section id="other-proof" class="relative border-b border-line bg-surface-1/40">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-24">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Proof of Range</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        Not every business needs <span class="text-accent">the same system.</span>
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+        Different businesses. Same principle: build the path that helps a visitor take the next step.
+      </p>
+    </div>
+
+    <div class="mt-10 grid md:grid-cols-2 gap-5">
+      {others.map((p) => (
+        <article class="card overflow-hidden flex flex-col">
+          <div class="relative aspect-[16/10] bg-surface-2 overflow-hidden border-b border-line">
+            <img
+              src={p.image}
+              alt={`${p.name} site preview`}
+              class="absolute inset-0 w-full h-full object-cover object-top"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent pointer-events-none"></div>
+            <div class="absolute top-3 left-3">
+              <span class="inline-flex items-center rounded-full border border-line bg-bg/70 backdrop-blur px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.16em] text-text-soft">
+                {p.badge}
+              </span>
+            </div>
+          </div>
+          <div class="p-6 sm:p-7 flex flex-col gap-4 flex-1">
+            <div>
+              <h3 class="font-display font-semibold text-[1.2rem] text-text leading-tight">{p.name}</h3>
+              <div class="mt-1 text-[0.85rem] text-text-muted">{p.location}</div>
+            </div>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">
+              <span class="text-text font-medium">Needed:</span> {p.problem}
+            </p>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">
+              <span class="text-text font-medium">Built:</span> {p.solution}
+            </p>
+            {p.url !== '#' && (
+              <div class="mt-auto pt-2">
+                <a href={p.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 font-display font-medium text-[0.92rem] text-accent hover:text-accent-hover transition-colors">
+                  Visit the live site
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+<!-- /OTHER PROOF SECTION -->

@@ -1,0 +1,116 @@
+---
+// UpgradeBeforeAfter — side-by-side visual.
+// "After" uses the real Modern Classic screenshot. "Before" is a styled
+// HTML mock of a generic Square-hosted booking page (placeholder until
+// we capture a real before-state screenshot).
+---
+<!-- BEFORE / AFTER SECTION -->
+<section id="before-after" class="relative border-b border-line">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-24">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Before / After</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        Before: a basic Square page. <span class="text-accent">After: a branded booking experience.</span>
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+        Same Square engine. Same calendar. Completely different first impression.
+      </p>
+    </div>
+
+    <div class="mt-12 grid md:grid-cols-2 gap-6 lg:gap-10 items-start">
+      <!-- BEFORE -->
+      <div class="relative">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="inline-flex items-center rounded-full border border-line bg-surface-2 px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.18em] text-text-muted">
+            Before
+          </span>
+          <span class="text-[0.85rem] text-text-muted">Stock Square booking page</span>
+        </div>
+        <div class="relative mx-auto w-full max-w-[300px]">
+          <div class="relative aspect-[9/19] rounded-[1.6rem] overflow-hidden border border-line bg-[#f7f7f5] rotate-[1.5deg] shadow-[0_20px_60px_-20px_rgba(0,0,0,0.7)]">
+            <!-- Faux Square page header -->
+            <div class="absolute inset-x-0 top-0 h-9 bg-white border-b border-zinc-200 flex items-center justify-center">
+              <div class="h-3 w-20 bg-zinc-300 rounded"></div>
+            </div>
+            <div class="absolute inset-x-0 top-9 px-4 pt-6 pb-4 bg-white">
+              <div class="h-4 w-3/4 bg-zinc-800 rounded mb-2"></div>
+              <div class="h-3 w-1/2 bg-zinc-300 rounded"></div>
+            </div>
+            <!-- Duplicate service tiles -->
+            <div class="absolute inset-x-0 top-[6.5rem] px-3 space-y-2">
+              {[
+                'Haircut · Michael',
+                'Haircut · Rick',
+                'Haircut · Clayton',
+                'Beard Trim · Michael',
+                'Beard Trim · Rick',
+                'Shave · Clayton',
+              ].map((label) => (
+                <div class="flex items-center justify-between gap-2 rounded-md border border-zinc-200 bg-white px-2.5 py-2">
+                  <div>
+                    <div class="text-[0.6rem] font-semibold text-zinc-900 leading-tight">{label}</div>
+                    <div class="text-[0.55rem] text-zinc-500 mt-0.5">45 min · $35</div>
+                  </div>
+                  <div class="text-[0.55rem] font-semibold text-zinc-600 border border-zinc-300 rounded px-1.5 py-0.5">Book</div>
+                </div>
+              ))}
+            </div>
+            <!-- Faux URL bar -->
+            <div class="absolute inset-x-0 bottom-0 h-7 bg-zinc-100 border-t border-zinc-200 flex items-center px-3">
+              <div class="h-2 w-2/3 bg-zinc-300 rounded"></div>
+            </div>
+          </div>
+        </div>
+        <ul class="mt-6 space-y-2 max-w-xs mx-auto">
+          {[
+            'Duplicate service tiles per barber',
+            'Generic Square template — no brand',
+            'No live availability surfaced',
+            'No staff profiles or work samples',
+          ].map((item) => (
+            <li class="flex items-start gap-2.5 text-[0.88rem] text-text-muted leading-snug">
+              <span class="mt-1.5 inline-block h-1 w-1 rounded-full bg-text-muted flex-shrink-0" aria-hidden="true"></span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- AFTER -->
+      <div class="relative">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.18em] text-bg">
+            After
+          </span>
+          <span class="text-[0.85rem] text-text-soft">Premium Square-powered site</span>
+        </div>
+        <div class="relative mx-auto w-full max-w-[300px]">
+          <div class="absolute -inset-4 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-70" aria-hidden="true"></div>
+          <div class="relative aspect-[9/19] rounded-[1.6rem] overflow-hidden border border-accent/40 shadow-[0_30px_80px_-20px_rgba(255,107,26,0.5)] bg-surface-2 rotate-[-1.5deg]">
+            <img
+              src="/showcase/modern-classic-mobile.png"
+              alt="Modern Classic Barbershop — branded Square-powered website"
+              class="absolute inset-0 w-full h-full object-cover object-top"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </div>
+        <ul class="mt-6 space-y-2 max-w-xs mx-auto">
+          {[
+            'One clean service menu — barber chosen separately',
+            'Live "next available" pill on the homepage',
+            'Real staff profiles with direct booking links',
+            'A booking flow that feels like the shop',
+          ].map((item) => (
+            <li class="flex items-start gap-2.5 text-[0.88rem] text-text leading-snug">
+              <span class="mt-1.5 inline-block h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /BEFORE / AFTER SECTION -->

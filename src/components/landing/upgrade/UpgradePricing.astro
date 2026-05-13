@@ -1,0 +1,103 @@
+---
+// UpgradePricing — ranges, not exact numbers. Filters tire-kickers,
+// prevents sticker shock, signals seriousness. Three tier cards.
+const tiers = [
+  {
+    name: 'Square Site Upgrade',
+    range: '$1,500–$2,500',
+    summary: 'A focused refresh of the website wrapped around your Square booking, tightened to drive more bookings without rebuilding everything.',
+    fits: [
+      'You already have a Square setup that works',
+      'You want a cleaner customer-facing site',
+      'You need it shipped in 1–2 weeks',
+    ],
+    cta: 'Most popular starting point',
+    highlight: false,
+  },
+  {
+    name: 'Premium Square Website',
+    range: '$3,500–$6,500',
+    summary: 'A full custom Square-powered site with branded booking flow, staff profiles, live availability, and the rebooking + review essentials.',
+    fits: [
+      'You want the Modern Classic-style customer experience',
+      'You need staff profiles, live availability, and rebooking',
+      'You want review-request automation built in',
+    ],
+    cta: 'The Big 5 build',
+    highlight: true,
+  },
+  {
+    name: 'Custom Square System',
+    range: '$6,500–$10,000+',
+    summary: 'Adds advanced flows — customer accounts, family/group bookings, per-staff dashboards, retail, daily catalog sync, and custom automations.',
+    fits: [
+      'You\'re running multiple barbers or providers',
+      'You sell retail products alongside services',
+      'You want admin tools shaped to how you actually run the shop',
+    ],
+    cta: 'Everything under one roof',
+    highlight: false,
+  },
+];
+---
+<!-- PRICING SECTION -->
+<section id="pricing" class="relative border-b border-line">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+    <div class="max-w-3xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Scope &amp; Pricing</span>
+      <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+        What does it cost?
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+        Every shop needs something different. The free review helps us figure out what you actually need — and what you don't.
+      </p>
+    </div>
+
+    <div class="mt-12 grid md:grid-cols-3 gap-5">
+      {tiers.map((t) => (
+        <div class={`card p-7 flex flex-col gap-5 ${t.highlight ? 'border-accent/40 bg-gradient-to-br from-surface-1 via-surface-2 to-[#241712] relative md:scale-[1.02]' : ''}`}>
+          {t.highlight && (
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.18em] text-bg shadow-[0_8px_24px_-8px_rgba(255,107,26,0.7)]">
+              Most chosen
+            </div>
+          )}
+
+          <div>
+            <div class="font-display font-semibold text-[0.7rem] uppercase tracking-[0.18em] text-accent mb-2">
+              {t.cta}
+            </div>
+            <h3 class="font-display font-bold text-[1.4rem] text-text leading-tight">{t.name}</h3>
+            <div class="mt-3 flex items-baseline gap-1.5">
+              <span class="font-display font-bold text-[1.8rem] text-text">{t.range}</span>
+            </div>
+            <div class="text-[0.78rem] text-text-muted mt-1">one-time build · scope-dependent</div>
+          </div>
+
+          <p class="text-[0.95rem] text-text-soft leading-relaxed">{t.summary}</p>
+
+          <ul class="space-y-2.5 flex-1">
+            {t.fits.map((item) => (
+              <li class="flex items-start gap-2.5 text-[0.92rem] text-text-soft leading-snug">
+                <span class={`mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full ${t.highlight ? 'bg-accent text-bg' : 'bg-accent/15 text-accent'} flex-shrink-0`} aria-hidden="true">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-12 flex flex-col items-center gap-3 text-center">
+      <a href="#apply" class="btn-primary">
+        Get My Free 10-Minute Website Review
+        <span aria-hidden="true">↗</span>
+      </a>
+      <p class="text-[0.9rem] text-text-muted max-w-xl">
+        The review tells us which tier fits — or whether a smaller fix gets you most of the way there.
+      </p>
+    </div>
+  </div>
+</section>
+<!-- /PRICING SECTION -->
