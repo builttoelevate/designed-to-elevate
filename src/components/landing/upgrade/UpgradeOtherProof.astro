@@ -2,8 +2,15 @@
 // UpgradeOtherProof — compressed Fitchin + All Transport.
 // Keeps proof of range on the page without competing with the dominant
 // Modern Classic case study above.
+//
+// Testimonial copy is sourced from src/data/upgrade-testimonials.ts and
+// rendered only when a non-empty quote exists.
+
+import { upgradeTestimonials } from '../../../data/upgrade-testimonials';
+
 const others = [
   {
+    key: 'fitchin',
     name: 'Fitchin Auto Detail & Tint',
     location: 'Coshocton, OH',
     image: '/showcase/fitchin-mobile.png',
@@ -13,6 +20,7 @@ const others = [
     badge: 'Quote Wizard Build',
   },
   {
+    key: 'all-transport',
     name: 'All Transport Bus Co.',
     location: 'Coshocton, OH',
     image: '/showcase/all-transport-mobile.png',
@@ -37,7 +45,9 @@ const others = [
     </div>
 
     <div class="mt-10 grid md:grid-cols-2 gap-5">
-      {others.map((p) => (
+      {others.map((p) => {
+        const testimonial = upgradeTestimonials[p.key];
+        return (
         <article class="card overflow-hidden flex flex-col">
           <div class="relative aspect-[16/10] bg-surface-2 overflow-hidden border-b border-line">
             <img
@@ -65,6 +75,19 @@ const others = [
             <p class="text-[0.95rem] text-text-soft leading-relaxed">
               <span class="text-text font-medium">Built:</span> {p.solution}
             </p>
+            {testimonial?.quote && (
+              <figure class="mt-2 rounded-lg border border-line bg-bg/40 p-4">
+                <blockquote class="text-[0.92rem] text-text leading-relaxed italic">
+                  "{testimonial.quote}"
+                </blockquote>
+                {(testimonial.author || testimonial.role) && (
+                  <figcaption class="mt-2 text-[0.8rem] text-text-muted font-display">
+                    — {testimonial.author}{testimonial.author && testimonial.role && ', '}{testimonial.role}
+                  </figcaption>
+                )}
+              </figure>
+            )}
+
             {p.url !== '#' && (
               <div class="mt-auto pt-2">
                 <a href={p.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 font-display font-medium text-[0.92rem] text-accent hover:text-accent-hover transition-colors">
@@ -75,7 +98,8 @@ const others = [
             )}
           </div>
         </article>
-      ))}
+      );
+      })}
     </div>
   </div>
 </section>

@@ -19,6 +19,16 @@
 //
 // Before/After "before" mock is rendered in HTML/CSS as a placeholder
 // stock-Square page until a real before-state screenshot is captured.
+//
+// TODO(images): replace the HTML "before" mock in UpgradeBeforeAfter.astro
+// with a real screenshot of a stock Square booking page. Drop it at
+// /public/upgrade/before-square.png (or .webp). Update the component to
+// render an <img> with proper srcset.
+//
+// TODO(images): add a /upgrade-specific OG share image showing the
+// before/after composite. Drop at /public/og-upgrade.png and pass it
+// to LandingLayout (would require extending the layout to accept an
+// `ogImage` prop). For now the page uses the default /og-image.png.
 
 import LandingLayout from '../layouts/LandingLayout.astro';
 import UpgradeHeader from '../components/landing/upgrade/UpgradeHeader.astro';
@@ -36,13 +46,63 @@ import UpgradeFounder from '../components/landing/upgrade/UpgradeFounder.astro';
 import UpgradeAuditForm from '../components/landing/upgrade/UpgradeAuditForm.astro';
 import UpgradeFinalCTA from '../components/landing/upgrade/UpgradeFinalCTA.astro';
 import UpgradeStickyCTA from '../components/landing/upgrade/UpgradeStickyCTA.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+// LocalBusiness JSON-LD scoped to the Square upgrade offer.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Designed to Elevate — Square Website Upgrades',
+  description:
+    'Premium custom websites for local service businesses using Square for booking and payments. Keep Square as the engine; upgrade what your customers see.',
+  url: `${SITE}/upgrade`,
+  telephone: '+1-740-617-6488',
+  email: 'bilsonxnc@gmail.com',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Zanesville',
+    addressRegion: 'OH',
+    addressCountry: 'US',
+  },
+  areaServed: [
+    { '@type': 'City', name: 'Zanesville' },
+    { '@type': 'City', name: 'Coshocton' },
+    { '@type': 'City', name: 'Newark' },
+    { '@type': 'City', name: 'Cambridge' },
+  ],
+  serviceType: [
+    'Square Website Upgrade',
+    'Premium Square-Powered Website',
+    'Custom Square System for Local Service Businesses',
+  ],
+  founder: { '@type': 'Person', name: 'Bill Chicha' },
+  makesOffer: [
+    {
+      '@type': 'Offer',
+      name: 'Square Site Upgrade',
+      priceSpecification: { '@type': 'PriceSpecification', priceCurrency: 'USD', minPrice: 1500, maxPrice: 2500 },
+    },
+    {
+      '@type': 'Offer',
+      name: 'Premium Square Website',
+      priceSpecification: { '@type': 'PriceSpecification', priceCurrency: 'USD', minPrice: 3500, maxPrice: 6500 },
+    },
+    {
+      '@type': 'Offer',
+      name: 'Custom Square System',
+      priceSpecification: { '@type': 'PriceSpecification', priceCurrency: 'USD', minPrice: 6500 },
+    },
+  ],
+};
 ---
 <LandingLayout
-  title="Keep Square. Upgrade the Website Your Customers Actually See. | Designed to Elevate"
-  description="Premium Square website upgrades for barbershops, salons, spas, studios, and local service businesses. Keep Square as the engine — get a branded site, cleaner booking flow, live availability, customer accounts, waitlist, and review automation. Free 10-minute website review."
+  title="Premium Square Website Upgrade for Local Service Businesses | Designed to Elevate"
+  description="Keep Square for booking and payments. Get a custom premium website built around it. Featured builds: Modern Classic Barbershop, Fitchin Auto Detail. Built in Zanesville, OH."
   pathname="upgrade"
-  noindex={true}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
   <UpgradeHeader />
   <main class="pb-24 md:pb-0">
     <UpgradeHero />
@@ -60,4 +120,74 @@ import UpgradeStickyCTA from '../components/landing/upgrade/UpgradeStickyCTA.ast
     <UpgradeFinalCTA />
   </main>
   <UpgradeStickyCTA />
+
+  <!--
+    Conversion tracking for /upgrade.
+    Pushes events to window.dataLayer so GTM (or GA4 directly via a tag)
+    can pick them up. Add the GTM container snippet separately when the
+    GTM_ID is provisioned; this code is safe to run with or without GTM
+    present (dataLayer is just an array push).
+
+    Events:
+      cta_click               — primary CTA tapped (with `section` payload)
+      phone_tap               — call/text trigger or tel: link tapped
+      form_view               — audit form scrolled into view (one-shot)
+      form_submit_success     — Web3Forms returned success
+      form_submit_error       — Web3Forms returned an error
+  -->
+  <script>
+    type Payload = Record<string, string | number | boolean | undefined>;
+    interface DataLayerWindow extends Window { dataLayer?: Array<Payload & { event: string }> }
+
+    const w = window as DataLayerWindow;
+    w.dataLayer = w.dataLayer || [];
+    const trackEvent = (event: string, payload: Payload = {}): void => {
+      w.dataLayer!.push({ event, ...payload });
+    };
+
+    // 1. cta_click — every primary CTA pointing at #apply. Section is
+    //    derived from the nearest <section id="…"> ancestor.
+    document.querySelectorAll<HTMLElement>('a[href="#apply"], a[href^="#apply"]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const section = el.closest('section')?.id || 'unknown';
+        trackEvent('cta_click', { cta: 'audit_review', section, label: el.textContent?.trim().slice(0, 80) });
+      });
+    });
+
+    // 2. phone_tap — call/text popup triggers and any direct tel: link.
+    document.querySelectorAll<HTMLElement>('[data-call-text], a[href^="tel:"], a[href^="sms:"]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const section = el.closest('section')?.id || 'header_or_footer';
+        const kind = el.tagName === 'A' ? (el.getAttribute('href')?.startsWith('sms:') ? 'sms_link' : 'tel_link') : 'popup_trigger';
+        trackEvent('phone_tap', { section, kind });
+      });
+    });
+
+    // 3. form_view — fire once when the audit form scrolls into view.
+    const formSection = document.getElementById('apply');
+    if (formSection && 'IntersectionObserver' in window) {
+      const obs = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            trackEvent('form_view', { form: 'audit_review' });
+            obs.disconnect();
+          }
+        }
+      }, { threshold: 0.25 });
+      obs.observe(formSection);
+    }
+
+    // 4. form_submit — listen for Web3Forms success/error fired by
+    //    LandingLayout's submission handler. The layout fires custom
+    //    events (`audit-form:success` / `audit-form:error`) so pages
+    //    can react without re-implementing fetch logic.
+    document.addEventListener('audit-form:success', (e) => {
+      const detail = (e as CustomEvent).detail || {};
+      trackEvent('form_submit_success', { form: 'audit_review', source: detail.source || '/upgrade' });
+    });
+    document.addEventListener('audit-form:error', (e) => {
+      const detail = (e as CustomEvent).detail || {};
+      trackEvent('form_submit_error', { form: 'audit_review', message: detail.message });
+    });
+  </script>
 </LandingLayout>
