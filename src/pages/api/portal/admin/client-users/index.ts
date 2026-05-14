@@ -3,23 +3,26 @@
  *
  * Admin-only. Adds a user to a client.
  *
- * Flow:
- *   1. If the email doesn't exist in auth.users yet → call
- *      supabase.auth.admin.inviteUserByEmail(). Supabase creates the auth
- *      user AND sends the "Invite user" template (configured branded HTML
- *      in the Supabase dashboard) with a confirmation link that lands at
- *      /portal/auth/callback after acceptance.
+ * Strategy: try to invite first, fall back to magic link only if Supabase
+ * tells us the user already exists.
  *
- *   2. If the email already exists → send a magic link via signInWithOtp.
- *      They've already gone through some onboarding, so the "Magic Link"
- *      template is the right one.
+ * Why not pre-check with listUsers? Two problems:
+ *   1. listUsers paginates — at the default page size it can silently miss
+ *      a user further down the list, then we'd try to invite them and 422.
+ *   2. Any prior flow that ever created the auth.users row (an earlier
+ *      test, a magic-link sign-in attempt with shouldCreateUser:true,
+ *      etc.) would make the user "exist" even though they've never been
+ *      invited or onboarded. We'd send them the wrong template.
  *
- *   3. In both cases, ensure a profiles row exists and link the user to
- *      the client via client_users (idempotent upsert) so they're scoped
- *      correctly the moment they sign in.
+ * inviteUserByEmail is the source of truth: it either succeeds (the user
+ * was truly new and Supabase fired the "Invite user" template) or it
+ * errors with a "user already exists" message (we fall back to magic link).
  *
- * Service role is used for everything that touches auth.users or writes
- * across tenants. Never expose the service role key client-side.
+ * In both cases we then upsert the profile + link the user to the client
+ * via client_users, so they're scoped correctly the moment they sign in.
+ *
+ * Service role for everything that touches auth.users or writes across
+ * tenants. Never expose the service role key client-side.
  */
 
 export const prerender = false;
@@ -53,31 +56,39 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const admin = createServiceSupabase();
   const redirectTo = `${SITE_URL}/portal/auth/callback`;
 
-  // Is this a brand-new portal user?
-  const { data: existing } = await admin.auth.admin.listUsers({ perPage: 200 });
-  const match = existing?.users.find((u) => u.email?.toLowerCase() === email);
+  // 1) Try invite first — let Supabase tell us if the user is new or not.
+  const { data: invited, error: inviteErr } =
+    await admin.auth.admin.inviteUserByEmail(email, { redirectTo });
 
-  let userId: string | undefined = match?.id;
-  let emailKind: 'invite' | 'magic_link' = 'invite';
+  let userId: string | undefined;
+  let emailKind: 'invite' | 'magic_link';
 
-  if (!userId) {
-    // New user → fire the "Invite user" template (branded HTML in Supabase).
-    const { data: invited, error: inviteErr } = await admin.auth.admin.inviteUserByEmail(
-      email,
-      { redirectTo }
-    );
-    if (inviteErr || !invited?.user) {
-      return json({ error: inviteErr?.message || 'Could not invite user' }, 500);
-    }
+  if (invited?.user) {
+    // Brand-new user. Supabase already sent the "Invite user" template.
     userId = invited.user.id;
-  } else {
-    // Existing user — they've signed in before. Send a magic link, not an invite.
+    emailKind = 'invite';
+  } else if (inviteErr && isAlreadyExistsError(inviteErr)) {
+    // 2) User already exists in auth. Look them up so we can link them,
+    //    then send a magic link below instead of an invite.
+    const found = await findUserIdByEmail(admin, email);
+    if (!found) {
+      console.error('[invite] user exists in auth but lookup failed', { email });
+      return json({ error: 'User exists but could not be found' }, 500);
+    }
+    userId = found;
     emailKind = 'magic_link';
+  } else {
+    console.error('[invite] inviteUserByEmail failed', {
+      email,
+      status: inviteErr?.status,
+      message: inviteErr?.message,
+    });
+    return json({ error: inviteErr?.message || 'Could not invite user' }, 500);
   }
 
   // Defensive profile upsert. The on_auth_user_created trigger normally
-  // handles this, but doing it here is idempotent and protects against
-  // any rare cases where the trigger didn't run.
+  // handles this, but doing it here is idempotent and protects against any
+  // rare cases where the trigger didn't run.
   await admin.from('profiles').upsert({ id: userId }, { onConflict: 'id' });
 
   // Link to client (idempotent).
@@ -86,8 +97,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     .upsert({ user_id: userId, client_id, role }, { onConflict: 'user_id,client_id' });
   if (linkErr) return json({ error: linkErr.message }, 500);
 
-  // For existing users we still need to send them a sign-in link. New
-  // invites already got their email from inviteUserByEmail above.
+  // Existing users still need a sign-in link. New invitees already got
+  // their email from inviteUserByEmail above.
   if (emailKind === 'magic_link' && SUPABASE_URL && SUPABASE_ANON_KEY) {
     const anon = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
@@ -100,6 +111,41 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   return json({ ok: true, emailKind });
 };
+
+/**
+ * Supabase signals "user already exists" via a 422 (or sometimes 400) with
+ * a message like "A user with this email address has already been registered".
+ * Check both status and message to be robust across versions.
+ */
+function isAlreadyExistsError(err: { status?: number; message?: string }): boolean {
+  if (err.status === 422) return true;
+  const msg = (err.message || '').toLowerCase();
+  return /already|exists|registered|duplicate/.test(msg);
+}
+
+/**
+ * Walk Supabase's listUsers pages until we find the user by email. Paginated
+ * so we don't miss a user past the first 200 if the project ever grows.
+ */
+async function findUserIdByEmail(
+  admin: ReturnType<typeof createServiceSupabase>,
+  email: string
+): Promise<string | undefined> {
+  const target = email.toLowerCase();
+  const perPage = 200;
+  for (let page = 1; page <= 20; page++) {
+    const { data, error } = await admin.auth.admin.listUsers({ page, perPage });
+    if (error) {
+      console.error('[invite] listUsers failed during lookup', error);
+      return undefined;
+    }
+    const users = data?.users ?? [];
+    const match = users.find((u) => u.email?.toLowerCase() === target);
+    if (match) return match.id;
+    if (users.length < perPage) return undefined; // no more pages
+  }
+  return undefined;
+}
 
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
