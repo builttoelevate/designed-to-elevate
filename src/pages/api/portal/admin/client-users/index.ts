@@ -1,13 +1,25 @@
 /**
  * POST /api/portal/admin/client-users  { email, client_id, role }
  *
- * Admin-only. Invites a user by email:
- *   1. Find or create the auth.users record (Supabase admin API).
- *   2. Ensure a profiles row exists (the on-signup trigger normally handles it).
- *   3. Link the user to the client via client_users.
- *   4. Send a magic-link sign-in email.
+ * Admin-only. Adds a user to a client.
  *
- * Idempotent: if the user is already linked, return ok.
+ * Flow:
+ *   1. If the email doesn't exist in auth.users yet → call
+ *      supabase.auth.admin.inviteUserByEmail(). Supabase creates the auth
+ *      user AND sends the "Invite user" template (configured branded HTML
+ *      in the Supabase dashboard) with a confirmation link that lands at
+ *      /portal/auth/callback after acceptance.
+ *
+ *   2. If the email already exists → send a magic link via signInWithOtp.
+ *      They've already gone through some onboarding, so the "Magic Link"
+ *      template is the right one.
+ *
+ *   3. In both cases, ensure a profiles row exists and link the user to
+ *      the client via client_users (idempotent upsert) so they're scoped
+ *      correctly the moment they sign in.
+ *
+ * Service role is used for everything that touches auth.users or writes
+ * across tenants. Never expose the service role key client-side.
  */
 
 export const prerender = false;
@@ -39,24 +51,33 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (!client_id) return json({ error: 'Missing client_id' }, 400);
 
   const admin = createServiceSupabase();
+  const redirectTo = `${SITE_URL}/portal/auth/callback`;
 
-  // Find or create the auth user.
-  let userId: string | undefined;
+  // Is this a brand-new portal user?
   const { data: existing } = await admin.auth.admin.listUsers({ perPage: 200 });
   const match = existing?.users.find((u) => u.email?.toLowerCase() === email);
-  if (match) userId = match.id;
+
+  let userId: string | undefined = match?.id;
+  let emailKind: 'invite' | 'magic_link' = 'invite';
 
   if (!userId) {
-    const { data: created, error: createErr } = await admin.auth.admin.createUser({
+    // New user → fire the "Invite user" template (branded HTML in Supabase).
+    const { data: invited, error: inviteErr } = await admin.auth.admin.inviteUserByEmail(
       email,
-      email_confirm: true,
-    });
-    if (createErr || !created?.user) return json({ error: createErr?.message || 'Could not create user' }, 500);
-    userId = created.user.id;
+      { redirectTo }
+    );
+    if (inviteErr || !invited?.user) {
+      return json({ error: inviteErr?.message || 'Could not invite user' }, 500);
+    }
+    userId = invited.user.id;
+  } else {
+    // Existing user — they've signed in before. Send a magic link, not an invite.
+    emailKind = 'magic_link';
   }
 
-  // Make sure the profile row exists (the auth.users trigger usually handles
-  // this, but if for any reason it didn't, insert one defensively).
+  // Defensive profile upsert. The on_auth_user_created trigger normally
+  // handles this, but doing it here is idempotent and protects against
+  // any rare cases where the trigger didn't run.
   await admin.from('profiles').upsert({ id: userId }, { onConflict: 'id' });
 
   // Link to client (idempotent).
@@ -65,21 +86,19 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     .upsert({ user_id: userId, client_id, role }, { onConflict: 'user_id,client_id' });
   if (linkErr) return json({ error: linkErr.message }, 500);
 
-  // Send a magic link so they can sign in immediately.
-  if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+  // For existing users we still need to send them a sign-in link. New
+  // invites already got their email from inviteUserByEmail above.
+  if (emailKind === 'magic_link' && SUPABASE_URL && SUPABASE_ANON_KEY) {
     const anon = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     });
     await anon.auth.signInWithOtp({
       email,
-      options: {
-        emailRedirectTo: `${SITE_URL}/portal/auth/callback`,
-        shouldCreateUser: false,
-      },
+      options: { emailRedirectTo: redirectTo, shouldCreateUser: false },
     });
   }
 
-  return json({ ok: true });
+  return json({ ok: true, emailKind });
 };
 
 function json(data: unknown, status = 200) {

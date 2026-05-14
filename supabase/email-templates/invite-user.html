@@ -1,0 +1,120 @@
+<!--
+  Designed to Elevate — Supabase "Invite user" template
+  Paste into: Supabase Dashboard → Authentication → Emails → Invite user → Source
+  The {{ .ConfirmationURL }} placeholder is filled in by Supabase at send time.
+
+  Renders as dark-themed in every major client (Gmail web/iOS/Android, Apple Mail,
+  Outlook desktop + web, Yahoo). Light-mode clients see the same dark surface
+  because the inline bgcolor and !important-equivalent inline styles override
+  any auto-invert behavior.
+-->
+<!DOCTYPE html>
+<html lang="en" style="margin:0;padding:0;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="supported-color-schemes" content="dark light">
+  <title>You've been invited to the Designed to Elevate Client Hub</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    @media only screen and (max-width: 480px) {
+      .container { width: 100% !important; }
+      .pad { padding-left: 22px !important; padding-right: 22px !important; }
+      .h1 { font-size: 22px !important; }
+      .btn { display: block !important; width: 100% !important; box-sizing: border-box !important; text-align: center !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#0F0F0F;">
+  <!-- Inbox preview text -->
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;visibility:hidden;color:transparent;font-size:1px;line-height:1px;opacity:0;">
+    Your private Client Hub is ready. Accept your invite to get started.
+  </div>
+
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#0F0F0F" style="background-color:#0F0F0F;margin:0;padding:0;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="560" class="container" bgcolor="#15171C" style="background-color:#15171C;border-radius:14px;max-width:560px;width:100%;border:1px solid #25272D;">
+
+          <!-- Brand -->
+          <tr>
+            <td class="pad" style="padding:40px 40px 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td bgcolor="#FF6A00" style="background-color:#FF6A00;color:#0F0F0F;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-weight:800;font-size:13px;padding:7px 11px;border-radius:6px;letter-spacing:0.5px;">DE</td>
+                  <td style="padding-left:12px;color:#ffffff;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-weight:600;font-size:15px;">Designed to Elevate</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Headline -->
+          <tr>
+            <td class="h1 pad" style="padding:28px 40px 16px;color:#ffffff;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-weight:700;font-size:24px;line-height:1.25;letter-spacing:-0.01em;">
+              You've been invited to the Designed to Elevate Client Hub.
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td class="pad" style="padding:0 40px 28px;color:#c6c8cd;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;">
+              Bill at Designed to Elevate has invited you to your Client Hub — a private dashboard where you can submit website change requests, upload files, track progress, and keep everything in one place.
+            </td>
+          </tr>
+
+          <!-- Button -->
+          <tr>
+            <td class="pad" align="left" style="padding:0 40px 32px;">
+              <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ .ConfirmationURL }}" style="height:48px;v-text-anchor:middle;width:260px;" arcsize="17%" stroke="f" fillcolor="#FF6A00">
+                <w:anchorlock/>
+                <center style="color:#0F0F0F;font-family:Arial,sans-serif;font-size:15px;font-weight:bold;">Accept invite and sign in</center>
+              </v:roundrect>
+              <![endif]-->
+              <!--[if !mso]><!-- -->
+              <a class="btn" href="{{ .ConfirmationURL }}" style="background-color:#FF6A00;color:#0F0F0F;text-decoration:none;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-weight:700;font-size:15px;padding:14px 28px;border-radius:8px;display:inline-block;line-height:1;mso-padding-alt:0;">
+                Accept invite and sign in
+              </a>
+              <!--<![endif]-->
+            </td>
+          </tr>
+
+          <!-- Expiry note -->
+          <tr>
+            <td class="pad" style="padding:0 40px 8px;color:#a4a8b0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.5;">
+              This link expires in 24 hours. If you weren't expecting this email, you can safely ignore it.
+            </td>
+          </tr>
+
+          <!-- URL fallback for non-button clients -->
+          <tr>
+            <td class="pad" style="padding:16px 40px 28px;color:#7a7d83;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:1.5;">
+              Button not working? Copy and paste this URL into your browser:<br>
+              <a href="{{ .ConfirmationURL }}" style="color:#FF8A33;word-break:break-all;text-decoration:underline;">{{ .ConfirmationURL }}</a>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td class="pad" style="border-top:1px solid #25272D;padding:24px 40px 36px;color:#7a7d83;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:1.6;">
+              Designed to Elevate · Zanesville, Ohio<br>
+              <a href="https://designedtoelevate.co" style="color:#7a7d83;text-decoration:underline;">designedtoelevate.co</a>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
