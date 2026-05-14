@@ -340,6 +340,11 @@ Supabase auth templates live in `supabase/email-templates/` (version controlled)
 - Build `/portal/admin/r/[id]` (status dropdown, billing dropdown, internal-notes toggle on comments, ability to upload completion screenshots)
 - Build `/portal/admin/clients` (list, add, edit)
 - Mobile-first: status changes should work in one tap on a phone
+- On `/portal/admin/clients/[slug]`, each linked user shows an invite/sign-in status badge:
+  - **Active** (green) — user has signed in at least once. Below the badge, "Last seen {relative time}" reads from `auth.users.last_sign_in_at`.
+  - **Invited — not yet signed in** (muted grey) — `last_sign_in_at` is null. Pending users get a small **Resend invite** button next to the row.
+  - Resend invite hits `POST /api/portal/admin/client-users/[id]/resend-invite`, which re-fires Supabase's "Invite user" template for the same email. Used when a client never opened the first invite or it landed in spam.
+  - Server-side, the page joins `client_users` → `profiles` → `auth.users` via the service-role client to pull `email`, `invited_at`, `last_sign_in_at`, and `email_confirmed_at`. Status comes from `last_sign_in_at` truthy/null.
 
 ### Step 1.6 — Email notifications
 - Add `RESEND_API_KEY` to env
