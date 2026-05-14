@@ -5,8 +5,9 @@
  * since admin policies grant access, but using service role here keeps the
  * server in control and lets us write activity + send emails atomically).
  *
- * Triggers transactional email when status changes to one of the
- * client-visible states.
+ * Email policy (see CLIENT_HUB_PLAN.md §6): the only status that emails
+ * the client is `waiting_on_client`. `in_progress` and `complete` do not
+ * send — the portal shows that state and the inbox stays signal-only.
  */
 
 export const prerender = false;
@@ -14,11 +15,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { createServiceSupabase } from '../../../../../../lib/supabase';
 import { getPortalSession } from '../../../../../../lib/session';
-import {
-  sendStatusInProgressEmail,
-  sendStatusWaitingOnClientEmail,
-  sendStatusCompleteEmail,
-} from '../../../../../../lib/email';
+import { sendStatusWaitingOnClientEmail } from '../../../../../../lib/email';
 
 const ALLOWED_STATUSES = new Set(['new', 'in_progress', 'waiting_on_client', 'complete']);
 const ALLOWED_BILLING = new Set(['included', 'billable', 'needs_estimate', 'courtesy']);
@@ -71,19 +68,19 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
       metadata: { from: (before as any)[field], to: value },
     });
 
-    if (field === 'status' && value !== (before as any).status) {
-      void notifyStatusChange(id, before.client_id, before.title, value);
+    // Only waiting_on_client triggers an email — see policy comment at top.
+    if (field === 'status' && value === 'waiting_on_client' && value !== (before as any).status) {
+      void notifyWaitingOnClient(id, before.client_id, before.title);
     }
   }
 
   return json({ ok: true });
 };
 
-async function notifyStatusChange(
+async function notifyWaitingOnClient(
   requestId: string,
   clientId: string,
-  title: string,
-  newStatus: string
+  title: string
 ) {
   try {
     const admin = createServiceSupabase();
@@ -104,15 +101,12 @@ async function notifyStatusChange(
         ? owner.full_name.trim().split(/\s+/)[0]
         : 'there';
 
-    const payload = {
+    await sendStatusWaitingOnClientEmail({
       toEmail: client.primary_contact_email,
       firstName,
       title,
       requestId,
-    };
-    if (newStatus === 'in_progress') await sendStatusInProgressEmail(payload);
-    else if (newStatus === 'waiting_on_client') await sendStatusWaitingOnClientEmail(payload);
-    else if (newStatus === 'complete') await sendStatusCompleteEmail(payload);
+    });
   } catch (err) {
     console.error('[admin.requests] notification failed:', err);
   }

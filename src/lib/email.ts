@@ -1,8 +1,15 @@
 /**
  * Resend transactional email helpers.
  *
- * All copy mirrors CLIENT_HUB_PLAN.md §6. Don't invent subject lines or
- * body variations; the plan locked these intentionally.
+ * Email is intentionally minimal. Per CLIENT_HUB_PLAN.md §6, only three
+ * messages ever go out:
+ *   1. We got your request    → client, on submit
+ *   2. [New] {client}: {title} → admin, on submit
+ *   3. Need one more thing    → client, when status → waiting_on_client
+ *
+ * Status changes to in_progress and complete deliberately do NOT email.
+ * The portal is the source of truth for status; the inbox is reserved
+ * for "we need something from you."
  *
  * Every send is wrapped in try/catch and logs on failure — email should
  * never block a request from being created or status from being changed.
@@ -85,7 +92,11 @@ export async function sendRequestReceivedEmail(args: ClientEmail) {
   const url = clientRequestUrl(args.requestId);
   const text = `Hi ${args.firstName},
 
-We received your website change request '${args.title}' and it's in the queue. You'll get another email when work starts. You can view it anytime at ${url}.
+We received your website change request '${args.title}' and it's in the queue.
+
+You can check progress anytime at ${url} — your dashboard shows when work is in progress and when it's complete.
+
+We'll only email you again if we need something from you to finish the job.
 
 — Bill, Designed to Elevate`;
   await send({
@@ -123,26 +134,11 @@ export async function sendAdminNewRequestEmail(args: AdminEmail) {
   });
 }
 
-/* ─── client: status → in_progress ───────────────────────────────────────── */
-export async function sendStatusInProgressEmail(args: ClientEmail) {
-  const url = clientRequestUrl(args.requestId);
-  const text = `Hi ${args.firstName},
-
-Your request '${args.title}' is now in progress. We'll email you again when it's complete.
-
-View it here: ${url}
-
-— Bill, Designed to Elevate`;
-  await send({
-    to: args.toEmail,
-    subject: `Your update is in progress — ${args.title}`,
-    text,
-    html: wrap(text),
-    replyTo: ADMIN_EMAIL,
-  });
-}
-
 /* ─── client: status → waiting_on_client ─────────────────────────────────── */
+/* This is the only client-facing status email by design. in_progress and    */
+/* complete intentionally do NOT send — the portal is the source of truth    */
+/* for status; email is reserved for "we need something from you" so the     */
+/* inbox stays signal-only. See CLIENT_HUB_PLAN.md §6 for the policy.        */
 export async function sendStatusWaitingOnClientEmail(args: ClientEmail) {
   const url = clientRequestUrl(args.requestId);
   const text = `Hi ${args.firstName},
@@ -155,25 +151,6 @@ ${url}
   await send({
     to: args.toEmail,
     subject: `Need one more thing — ${args.title}`,
-    text,
-    html: wrap(text),
-    replyTo: ADMIN_EMAIL,
-  });
-}
-
-/* ─── client: status → complete ──────────────────────────────────────────── */
-export async function sendStatusCompleteEmail(args: ClientEmail) {
-  const url = clientRequestUrl(args.requestId);
-  const text = `Hi ${args.firstName},
-
-Your request '${args.title}' is complete. Take a look and let us know if anything needs adjusted.
-
-${url}
-
-— Bill, Designed to Elevate`;
-  await send({
-    to: args.toEmail,
-    subject: `Your update is complete — ${args.title}`,
     text,
     html: wrap(text),
     replyTo: ADMIN_EMAIL,
