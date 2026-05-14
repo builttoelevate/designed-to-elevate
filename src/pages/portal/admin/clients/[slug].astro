@@ -111,19 +111,38 @@ if (userIds.length > 0) {
       ))}
     </ul>
 
-    <form class="flex flex-col sm:flex-row gap-2" data-invite-user data-client-id={client.id}>
-      <input name="email" type="email" required placeholder="email@business.com" class="ph-input flex-1" />
-      <select name="role" class="ph-input sm:w-40">
-        <option value="owner">Owner</option>
-        <option value="member">Member</option>
-      </select>
-      <button type="submit" class="btn-primary text-sm whitespace-nowrap">
-        <span data-invite-label>Invite + send link</span>
-      </button>
+    <form class="space-y-3" data-invite-user data-client-id={client.id}>
+      <div>
+        <label for="invite-email" class="ph-label">Invite a user</label>
+        <input
+          id="invite-email"
+          name="email"
+          type="email"
+          required
+          autocomplete="off"
+          inputmode="email"
+          autocapitalize="off"
+          spellcheck="false"
+          placeholder="name@theirbusiness.com"
+          class="ph-input"
+        />
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+        <label class="sm:flex-1">
+          <span class="sr-only">Role</span>
+          <select name="role" class="ph-input">
+            <option value="owner">Owner</option>
+            <option value="member">Member</option>
+          </select>
+        </label>
+        <button type="submit" class="btn-primary text-sm whitespace-nowrap sm:w-auto w-full justify-center">
+          <span data-invite-label>Invite + send link</span>
+        </button>
+      </div>
+      <p class="ph-hint">
+        Sends them a magic-link sign-in and links them to this client. If they already have an account, only the link goes out.
+      </p>
     </form>
-    <p class="ph-hint mt-2">
-      Invites the user, links them to this client, and emails them a magic-link sign-in. If they already have an account, only the link goes out.
-    </p>
     <div class="ph-flash hidden mt-3" data-invite-flash></div>
   </section>
 
