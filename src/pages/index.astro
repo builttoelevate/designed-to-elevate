@@ -59,11 +59,23 @@ const projects = [
   },
 ];
 
-const featuredBullets = [
-  'Pricing logic for 378 vehicle types',
-  'Film tier upgrades and add-ons',
-  'Lead capture before the customer leaves',
-  'Booking-focused next steps',
+const signatureFeatures = [
+  {
+    label: 'Fitchin Auto Detail & Tint',
+    headline: 'A custom quote wizard for window tint.',
+    body: 'A guided flow that walks customers through vehicle, film tier, and add-ons — so the shop gets a complete lead instead of a phone tag thread.',
+    image: '/home/features/fitchin-guided-tint.png',
+    alt: 'Fitchin website mockup showing the Guided Tint Selection wizard with film comparison cards',
+    href: '/case-studies/fitchin-auto-detail-tint',
+  },
+  {
+    label: 'Modern Classic Barbershop',
+    headline: 'The next available appointment, on the homepage.',
+    body: "We pull the soonest open slot from the barbershop's booking system and surface it right at the top of the site — so clients can act on it instantly.",
+    image: '/home/features/modern-classic-next-opening.png',
+    alt: 'Modern Classic Barbershop homepage mockup showing the next available appointment widget',
+    href: '/case-studies/modern-classic-barbershop',
+  },
 ];
 
 const aboutAccents = ['Local Ohio', 'Mobile-first', 'Built to convert'];
@@ -361,58 +373,48 @@ const schema = {
       </div>
     </section>
 
-    <!-- ─── 5. FEATURED BUILD ───────────────────────────────── -->
+    <!-- ─── 5. SIGNATURE FEATURES ───────────────────────────── -->
     <section class="relative border-b border-line">
       <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
         <div class="max-w-3xl mb-12">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> FEATURED BUILD</span>
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> SIGNATURE FEATURES</span>
           <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-            A custom quote system built for a real local shop.
+            Custom features built for how each local shop actually sells.
           </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Not bolt-on widgets. Real features designed around the business — and the buyer's next step.
+          </p>
         </div>
 
-        <div class="grid lg:grid-cols-[0.9fr_1fr] gap-10 lg:gap-14 items-center">
-          <div class="relative" aria-hidden="true">
-            <div class="absolute -inset-6 bg-gradient-to-br from-accent/35 via-accent/8 to-transparent rounded-[2rem] blur-3xl opacity-65"></div>
-            <div class="relative aspect-[847/1857] max-w-[20rem] mx-auto rounded-[1.6rem] overflow-hidden border border-accent/40 shadow-[0_30px_80px_-20px_rgba(255,107,26,0.5)] bg-surface-2 rotate-[-2deg]">
-              <img
-                src="/wizard/step-3-pick-film-full.png"
-                alt=""
-                class="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-          </div>
-
-          <div>
-            <p class="text-text-soft text-[1.05rem] leading-relaxed">
-              For Fitchin Auto Detail &amp; Tint, I built a quote system around how the shop actually sells window tint. Instead of sending every customer to a basic contact form, the system guides them through vehicle type, service options, film upgrades, add-ons, and contact details — giving the shop a more complete lead to follow up with.
-            </p>
-
-            <ul class="mt-7 space-y-3">
-              {featuredBullets.map((b) => (
-                <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
-                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  </span>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
-
-            <p class="mt-7 pt-6 border-t border-line text-text-soft text-[0.98rem] italic leading-relaxed">
-              Not every business needs something this complex. But every local business needs a clear path from visitor to lead to customer.
-            </p>
-
-            <div class="mt-7">
-              <a href="/case-studies/fitchin-auto-detail-tint" class="btn-ghost">
-                Read the full case study
-                <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
+        <div class="grid md:grid-cols-2 gap-6 lg:gap-8">
+          {signatureFeatures.map((f) => (
+            <article class="card overflow-hidden flex flex-col">
+              <div class="relative bg-surface-2 border-b border-line">
+                <div class="absolute inset-0 bg-gradient-to-br from-accent/15 via-transparent to-transparent pointer-events-none" aria-hidden="true"></div>
+                <img
+                  src={f.image}
+                  alt={f.alt}
+                  class="relative w-full h-auto"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div class="p-7 sm:p-8 flex-1 flex flex-col">
+                <div class="text-[0.7rem] uppercase tracking-[0.18em] text-accent font-display">{f.label}</div>
+                <h3 class="mt-2 font-display font-semibold text-[1.25rem] sm:text-[1.35rem] leading-snug text-text">{f.headline}</h3>
+                <p class="mt-3 text-[0.98rem] text-text-soft leading-relaxed">{f.body}</p>
+                <a href={f.href} class="mt-6 inline-flex items-center gap-1.5 text-[0.92rem] font-display font-medium text-accent hover:text-accent-hover transition-colors">
+                  Read the case study
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </article>
+          ))}
         </div>
+
+        <p class="mt-12 max-w-2xl text-text-soft text-[0.98rem] italic leading-relaxed">
+          Not every business needs something this custom. But every local business needs a clear path from visitor to lead to customer.
+        </p>
       </div>
     </section>
 
