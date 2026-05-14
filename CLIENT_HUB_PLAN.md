@@ -50,7 +50,7 @@ These are not up for debate during Phase 1. If a session feels like it wants to 
 2. **One website per client (for now).** No `websites` table. If a client gets a second site later, add a second `clients` record.
 3. **One URL field, no page dropdown.** Asking clients to pick from "Homepage / About / Services" assumes every site has the same structure. Just one "Page URL" field.
 4. **Four statuses only.** `new`, `in_progress`, `waiting_on_client`, `complete`. No "Needs Review," "Approved," "Archived."
-5. **Five request categories only.** `text`, `image`, `layout`, `new_feature`, `broken`.
+5. **Six request categories only.** `text`, `image`, `layout`, `new_feature`, `broken`, `other`. The first five are the structured buckets; `other` is the honest escape hatch for things that don't fit. Don't grow this list further without a real reason.
 6. **Client-friendly status copy.** The database stores `in_progress`; the UI shows "Your update is being worked on."
 7. **Billing type is admin-only.** Client never sees whether their request is included, billable, or needs an estimate.
 8. **Magic link auth only.** No passwords. No social login.
@@ -103,7 +103,7 @@ client_id                   uuid references clients(id) not null
 submitted_by                uuid references profiles(id) not null
 title                       text not null
 description                 text not null
-category                    text not null               -- text | image | layout | new_feature | broken
+category                    text not null               -- text | image | layout | new_feature | broken | other
 priority                    text default 'normal'       -- normal | important | urgent
 status                      text default 'new'          -- new | in_progress | waiting_on_client | complete
 page_url                    text
@@ -222,6 +222,7 @@ These strings are decided. Don't invent variations.
   - "Layout or design change" / `layout`
   - "New page or feature" / `new_feature`
   - "Something's broken" / `broken`
+  - "Other" / `other`
 - Priority guidance helper text:
   - "**Normal** — general update"
   - "**Important** — needed soon, but the site still works"

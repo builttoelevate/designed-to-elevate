@@ -4,7 +4,7 @@
  */
 
 export type RequestStatus = 'new' | 'in_progress' | 'waiting_on_client' | 'complete';
-export type RequestCategory = 'text' | 'image' | 'layout' | 'new_feature' | 'broken';
+export type RequestCategory = 'text' | 'image' | 'layout' | 'new_feature' | 'broken' | 'other';
 export type RequestPriority = 'normal' | 'important' | 'urgent';
 export type BillingType = 'included' | 'billable' | 'needs_estimate' | 'courtesy';
 
@@ -36,6 +36,7 @@ export const CATEGORY_OPTIONS: { value: RequestCategory; label: string }[] = [
   { value: 'layout', label: 'Layout or design change' },
   { value: 'new_feature', label: 'New page or feature' },
   { value: 'broken', label: "Something's broken" },
+  { value: 'other', label: 'Other' },
 ];
 
 export const PRIORITY_OPTIONS: { value: RequestPriority; label: string }[] = [

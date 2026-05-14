@@ -17,7 +17,7 @@ import {
   sendAdminNewRequestEmail,
 } from '../../../../lib/email';
 
-const ALLOWED_CATEGORIES = new Set(['text', 'image', 'layout', 'new_feature', 'broken']);
+const ALLOWED_CATEGORIES = new Set(['text', 'image', 'layout', 'new_feature', 'broken', 'other']);
 const ALLOWED_PRIORITIES = new Set(['normal', 'important', 'urgent']);
 
 export const POST: APIRoute = async ({ request, cookies }) => {
