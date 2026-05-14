@@ -243,6 +243,31 @@ Email is only used to **(a)** confirm receipt, **(b)** notify admin of new work,
 
 That means only three messages ever go out, and `status → in_progress` and `status → complete` send **nothing**.
 
+### Email design system
+
+Every outgoing email — Supabase auth (magic link, invite, confirm signup) and app-fired (the three above) — shares one visual identity so the inbox feels like one brand.
+
+| Token | Value | Use |
+|---|---|---|
+| `--bg` | `#0F0F0F` | Outer email background |
+| `--card` | `#1A1A1A` | Inner content card |
+| `--divider` | `#2A2A2A` | Footer top border |
+| `--text` | `#F5F5F5` | Headlines + primary text |
+| `--text-muted` | `#A1A1AA` | Body copy |
+| `--text-faint` | `#71717A` | Footer + meta labels |
+| `--accent` | `#FF6A00` | DTE orange — buttons, "Elevate" in wordmark |
+| `--button-text` | `#000000` | Black on orange for max contrast |
+
+Layout rules:
+- Inline styles only — Outlook strips `<style>` tags in head, so no media queries; size scales via `width:100% max-width:560px` on the card.
+- System font stack: `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`. No Google Fonts — they don't render in some clients.
+- 560px max card, centered, 14px border radius.
+- Outlook-safe buttons via VML conditional + `<table>` fallback (never `<a>` with padding alone).
+- Header: "Designed to" in `--text` + "Elevate" in `--accent`, uppercase, letter-spaced.
+- Footer: `Designed to Elevate · Zanesville, Ohio · designedtoelevate.co` in `--text-faint`, separated from body by a `--divider` top border.
+
+Supabase auth templates live in `supabase/email-templates/` (version controlled). The contents have to be pasted into the Supabase dashboard manually — there's no API for syncing templates — but the canonical copy is the file.
+
 ### Email templates
 
 **To client — request received:**

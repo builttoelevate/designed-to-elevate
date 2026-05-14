@@ -132,12 +132,21 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   });
 
   // Notifications — fire and continue; never block the user on email.
-  void sendNotifications(created.id, clientId, created.title);
+  void sendNotifications(created.id, clientId, created.title, {
+    category,
+    priority,
+    description,
+  });
 
   return json({ ok: true, id: created.id });
 };
 
-async function sendNotifications(requestId: string, clientId: string, title: string) {
+async function sendNotifications(
+  requestId: string,
+  clientId: string,
+  title: string,
+  meta: { category: string; priority: string; description: string }
+) {
   try {
     const admin = createServiceSupabase();
 
@@ -164,6 +173,9 @@ async function sendNotifications(requestId: string, clientId: string, title: str
         clientName: client.business_name,
         title,
         requestId,
+        category: meta.category,
+        priority: meta.priority,
+        description: meta.description,
       }),
     ]);
   } catch (err) {

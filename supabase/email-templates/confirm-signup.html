@@ -1,7 +1,8 @@
 <!--
-  Designed to Elevate — Supabase "Invite user" template
-  Paste into: Authentication → Email Templates → Invite user → Source
-  Subject:    You've been invited to your Client Hub
+  Designed to Elevate — Supabase "Confirm signup" template
+  Safety net for any flow that asks the user to confirm their email.
+  Paste into: Authentication → Email Templates → Confirm signup → Source
+  Subject:    Confirm your Client Hub email
   Placeholders: {{ .ConfirmationURL }}, {{ .Email }}
 -->
 <!DOCTYPE html>
@@ -11,13 +12,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
 <meta name="supported-color-schemes" content="dark light">
-<title>You've been invited to your Client Hub</title>
+<title>Confirm your Client Hub email</title>
 <!--[if mso]>
 <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
 <![endif]-->
 </head>
 <body style="margin:0;padding:0;background-color:#0F0F0F;">
-<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;visibility:hidden;color:transparent;font-size:1px;line-height:1px;opacity:0;">Your private Client Hub from Designed to Elevate is ready. Accept your invite to get started.</div>
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;visibility:hidden;color:transparent;font-size:1px;line-height:1px;opacity:0;">Confirm your email to access your Client Hub.</div>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#0F0F0F" style="background-color:#0F0F0F;margin:0;padding:0;">
   <tr>
     <td align="center" style="padding:40px 16px;">
@@ -29,36 +30,31 @@
         </tr>
         <tr>
           <td style="padding:24px 30px 14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-weight:700;font-size:24px;line-height:1.25;color:#F5F5F5;letter-spacing:-0.01em;">
-            Welcome to your Client Hub
+            Confirm your email
           </td>
         </tr>
         <tr>
           <td style="padding:0 30px 26px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;color:#A1A1AA;">
-            <p style="margin:0;">Bill at Designed to Elevate has invited you to your private Client Hub — a dashboard where you can submit website change requests, upload files, track progress, and keep everything in one place. No more lost text messages, no more buried emails.</p>
+            <p style="margin:0;">Please confirm your email address to access your Client Hub.</p>
           </td>
         </tr>
         <tr>
-          <td align="left" style="padding:0 30px 26px;">
+          <td align="left" style="padding:0 30px 32px;">
             <table role="presentation" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td bgcolor="#FF6A00" style="background-color:#FF6A00;border-radius:8px;">
                   <!--[if mso]>
-                  <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ .ConfirmationURL }}" style="height:46px;v-text-anchor:middle;width:260px;" arcsize="17%" stroke="f" fillcolor="#FF6A00">
+                  <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ .ConfirmationURL }}" style="height:46px;v-text-anchor:middle;width:200px;" arcsize="17%" stroke="f" fillcolor="#FF6A00">
                     <w:anchorlock/>
-                    <center style="color:#000000;font-family:Arial,sans-serif;font-size:15px;font-weight:bold;">Accept invite and sign in</center>
+                    <center style="color:#000000;font-family:Arial,sans-serif;font-size:15px;font-weight:bold;">Confirm email</center>
                   </v:roundrect>
                   <![endif]-->
                   <!--[if !mso]><!-- -->
-                  <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 30px;color:#000000;background-color:#FF6A00;border-radius:8px;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-weight:700;font-size:15px;line-height:1;mso-padding-alt:0;">Accept invite and sign in</a>
+                  <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 30px;color:#000000;background-color:#FF6A00;border-radius:8px;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-weight:700;font-size:15px;line-height:1;mso-padding-alt:0;">Confirm email</a>
                   <!--<![endif]-->
                 </td>
               </tr>
             </table>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:0 30px 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:1.55;color:#A1A1AA;">
-            This invite expires in 7 days. If you weren't expecting this email, you can safely ignore it.
           </td>
         </tr>
         <tr>
