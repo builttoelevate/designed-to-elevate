@@ -50,7 +50,7 @@ export const POST: APIRoute = async ({ params, cookies }) => {
   });
 
   if (inviteErr) {
-    console.error('[resend-invite] failed', {
+    console.error('[resend-invite] inviteUserByEmail failed', {
       membershipId,
       email,
       status: inviteErr.status,
@@ -59,6 +59,10 @@ export const POST: APIRoute = async ({ params, cookies }) => {
     return json({ error: inviteErr.message || 'Could not resend invite' }, 500);
   }
 
+  console.log('[resend-invite] inviteUserByEmail OK — Supabase "Invite user" template fired', {
+    membershipId,
+    email,
+  });
   return json({ ok: true, email });
 };
 

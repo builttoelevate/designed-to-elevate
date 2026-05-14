@@ -67,9 +67,18 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     // Brand-new user. Supabase already sent the "Invite user" template.
     userId = invited.user.id;
     emailKind = 'invite';
+    console.log('[invite] inviteUserByEmail OK — Supabase "Invite user" template fired', {
+      email,
+      userId,
+    });
   } else if (inviteErr && isAlreadyExistsError(inviteErr)) {
     // 2) User already exists in auth. Look them up so we can link them,
     //    then send a magic link below instead of an invite.
+    console.log('[invite] inviteUserByEmail says user exists — falling back to magic link', {
+      email,
+      status: inviteErr?.status,
+      message: inviteErr?.message,
+    });
     const found = await findUserIdByEmail(admin, email);
     if (!found) {
       console.error('[invite] user exists in auth but lookup failed', { email });
@@ -103,13 +112,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const anon = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     });
-    await anon.auth.signInWithOtp({
+    const { error: otpErr } = await anon.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: redirectTo, shouldCreateUser: false },
     });
+    console.log('[invite] signInWithOtp called — Supabase "Magic Link" template fired', {
+      email,
+      otpError: otpErr?.message,
+    });
   }
 
-  return json({ ok: true, emailKind });
+  return json({ ok: true, emailKind, email });
 };
 
 /**

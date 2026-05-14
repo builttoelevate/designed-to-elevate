@@ -263,7 +263,19 @@ function memberStatus(info: AuthInfo | undefined): 'active' | 'pending' | 'unkno
         });
         const json = await res.json().catch(() => ({}));
         if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
-        window.location.reload();
+
+        // Tell the admin which Supabase template Supabase fired, so they
+        // know at a glance whether the recipient got the branded invite
+        // or a sign-in link (existing user). Hold the toast on screen for
+        // a moment before reloading.
+        const msg = json.emailKind === 'invite'
+          ? `Branded invite sent to ${json.email || data.email}.`
+          : `Existing user — sign-in (Magic Link) sent to ${json.email || data.email}.`;
+        invFlash.dataset.tone = json.emailKind === 'invite' ? 'success' : 'info';
+        invFlash.textContent = msg;
+        invFlash.classList.remove('hidden');
+        invLabel.textContent = json.emailKind === 'invite' ? 'Invite sent ✓' : 'Link sent ✓';
+        setTimeout(() => window.location.reload(), 1800);
       } catch (err) {
         invFlash.dataset.tone = 'error';
         invFlash.textContent = err instanceof Error ? err.message : 'Invite failed';
