@@ -160,16 +160,5 @@ const pathname = new URL(Astro.request.url).pathname;
       .ph-flash[data-tone="success"] { background: rgba(74,222,128,0.08);  color:#bbf7d0; border-color: rgba(74,222,128,0.25); }
       .ph-flash[data-tone="error"]   { background: rgba(248,113,113,0.08); color:#fecaca; border-color: rgba(248,113,113,0.3); }
     </style>
-
-    <script>
-      // Sign-out: clear cookies on the server, then bounce to login.
-      document.querySelectorAll<HTMLFormElement>('form[action="/portal/logout"]').forEach((f) => {
-        f.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          await fetch('/portal/logout', { method: 'POST' });
-          window.location.assign('/portal/login');
-        });
-      });
-    </script>
   </body>
 </html>
