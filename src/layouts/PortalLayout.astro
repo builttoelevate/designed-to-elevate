@@ -1,0 +1,175 @@
+---
+/**
+ * Shared layout for every /portal/* route.
+ *
+ * Mobile-first. Lean Tailwind. Reuses the same dark accent palette as the
+ * marketing site so a client crossing over from the homepage feels at home.
+ *
+ * Set `chrome={false}` on the login page if you don't want the header/nav.
+ */
+import '../styles/landing.css';
+import type { PortalSession } from '../lib/session';
+
+interface Props {
+  title?: string;
+  description?: string;
+  session?: PortalSession | null;
+  chrome?: boolean;
+  noindex?: boolean;
+}
+
+const {
+  title = 'Client Hub | Designed to Elevate',
+  description = 'Submit website change requests, track status, and keep everything in one place.',
+  session = null,
+  chrome = true,
+  noindex = true,
+} = Astro.props;
+
+const isAdmin = session?.role === 'admin';
+const pathname = new URL(Astro.request.url).pathname;
+---
+<!doctype html>
+<html lang="en" class="landing">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0E1014" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo-mark.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+    />
+  </head>
+  <body class="bg-bg text-text font-body antialiased min-h-screen">
+    {chrome && (
+      <header class="border-b border-line/60 bg-bg/95 sticky top-0 z-30 backdrop-blur">
+        <div class="mx-auto max-w-5xl px-4 py-3 flex items-center justify-between gap-3">
+          <a href={session ? (isAdmin ? '/portal/admin' : '/portal') : '/portal/login'} class="flex items-center gap-2 font-display font-bold tracking-tight">
+            <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-accent text-bg text-sm font-extrabold">DE</span>
+            <span class="text-base">Client Hub</span>
+          </a>
+          {session && (
+            <nav class="flex items-center gap-1 text-sm">
+              {isAdmin && (
+                <>
+                  <a href="/portal/admin" class:list={["px-3 py-1.5 rounded-md hover:bg-surface-1 transition", pathname === '/portal/admin' && 'bg-surface-1 text-accent']}>
+                    Queue
+                  </a>
+                  <a href="/portal/admin/clients" class:list={["px-3 py-1.5 rounded-md hover:bg-surface-1 transition", pathname.startsWith('/portal/admin/clients') && 'bg-surface-1 text-accent']}>
+                    Clients
+                  </a>
+                </>
+              )}
+              {!isAdmin && (
+                <a href="/portal/new" class="btn-primary text-xs py-1.5 px-3">Submit a Change</a>
+              )}
+              <form method="post" action="/portal/logout" class="contents">
+                <button type="submit" class="px-2 py-1.5 rounded-md text-text-muted hover:text-text transition text-xs">
+                  Sign out
+                </button>
+              </form>
+            </nav>
+          )}
+        </div>
+      </header>
+    )}
+
+    <main class="mx-auto max-w-5xl px-4 py-6 sm:py-10">
+      <slot />
+    </main>
+
+    <style is:global>
+      /* Portal-specific button/badge primitives. Built on the same color
+         variables as the marketing site so brand stays consistent. */
+      .ph-card {
+        background: linear-gradient(180deg, var(--color-surface-1), var(--color-surface-2));
+        border: 1px solid var(--color-line);
+        border-radius: var(--radius-card);
+      }
+      .ph-input {
+        width: 100%;
+        background: var(--color-surface-1);
+        border: 1px solid var(--color-line);
+        border-radius: 0.6rem;
+        padding: 0.75rem 0.9rem;
+        font: inherit;
+        color: var(--color-text);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+      .ph-input:focus {
+        outline: 0;
+        border-color: var(--color-accent);
+        box-shadow: 0 0 0 3px rgba(255, 107, 26, 0.18);
+      }
+      .ph-input::placeholder { color: var(--color-text-muted); opacity: 0.7; }
+      textarea.ph-input { min-height: 7rem; resize: vertical; }
+      select.ph-input {
+        appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a4a8b0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 0.9rem center;
+        padding-right: 2.4rem;
+      }
+      .ph-label {
+        display: block;
+        font-family: var(--font-display);
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: var(--color-text);
+        margin-bottom: 0.4rem;
+      }
+      .ph-hint { font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.35rem; }
+
+      .ph-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+        font-family: var(--font-display);
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        border: 1px solid transparent;
+      }
+      .ph-badge[data-status="new"]               { background: rgba(96,165,250,0.12); color:#93c5fd; border-color: rgba(96,165,250,0.25); }
+      .ph-badge[data-status="in_progress"]       { background: rgba(255,107,26,0.14); color: var(--color-accent); border-color: rgba(255,107,26,0.3); }
+      .ph-badge[data-status="waiting_on_client"] { background: rgba(250,204,21,0.14); color:#fde047; border-color: rgba(250,204,21,0.3); }
+      .ph-badge[data-status="complete"]          { background: rgba(74,222,128,0.12); color:#86efac; border-color: rgba(74,222,128,0.25); }
+
+      .ph-pri[data-priority="normal"]    { color: var(--color-text-muted); }
+      .ph-pri[data-priority="important"] { color:#fbbf24; }
+      .ph-pri[data-priority="urgent"]    { color:#f87171; font-weight: 600; }
+
+      .ph-flash {
+        padding: 0.85rem 1rem;
+        border-radius: 0.6rem;
+        font-size: 0.92rem;
+        border: 1px solid transparent;
+        margin-bottom: 1.25rem;
+      }
+      .ph-flash[data-tone="info"]    { background: rgba(96,165,250,0.08);  color:#bfdbfe; border-color: rgba(96,165,250,0.25); }
+      .ph-flash[data-tone="success"] { background: rgba(74,222,128,0.08);  color:#bbf7d0; border-color: rgba(74,222,128,0.25); }
+      .ph-flash[data-tone="error"]   { background: rgba(248,113,113,0.08); color:#fecaca; border-color: rgba(248,113,113,0.3); }
+    </style>
+
+    <script>
+      // Sign-out: clear cookies on the server, then bounce to login.
+      document.querySelectorAll<HTMLFormElement>('form[action="/portal/logout"]').forEach((f) => {
+        f.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          await fetch('/portal/logout', { method: 'POST' });
+          window.location.assign('/portal/login');
+        });
+      });
+    </script>
+  </body>
+</html>

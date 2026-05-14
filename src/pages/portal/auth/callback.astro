@@ -1,0 +1,66 @@
+---
+export const prerender = false;
+
+/**
+ * Magic-link callback.
+ *
+ * Supabase delivers the session to the browser via a URL hash fragment
+ * (#access_token=...&refresh_token=...). The server can't see hash fragments,
+ * so we render a tiny client-side trampoline that:
+ *   1. parses the hash,
+ *   2. POSTs the tokens to /api/portal/auth/session to set HttpOnly cookies,
+ *   3. redirects to /portal or /portal/admin based on role.
+ */
+import PortalLayout from '../../../layouts/PortalLayout.astro';
+---
+<PortalLayout title="Signing you in…" chrome={false}>
+  <div class="min-h-[60vh] grid place-items-center text-center">
+    <div>
+      <div class="ph-card inline-flex items-center gap-3 px-5 py-4">
+        <span class="h-2 w-2 rounded-full bg-accent animate-pulse"></span>
+        <span data-msg>Signing you in…</span>
+      </div>
+      <p class="text-text-muted text-sm mt-6">
+        If this hangs, <a href="/portal/login" class="underline">request a new link</a>.
+      </p>
+    </div>
+  </div>
+</PortalLayout>
+
+<script>
+  const msg = document.querySelector<HTMLElement>('[data-msg]');
+
+  async function complete() {
+    // Supabase puts tokens in the URL hash after a magic link.
+    const hash = window.location.hash.replace(/^#/, '');
+    const params = new URLSearchParams(hash);
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
+    const errorDesc = params.get('error_description');
+
+    if (errorDesc) {
+      if (msg) msg.textContent = `Sign-in failed: ${errorDesc}`;
+      return;
+    }
+    if (!accessToken || !refreshToken) {
+      if (msg) msg.textContent = 'Missing tokens. Try the link again.';
+      return;
+    }
+
+    const res = await fetch('/api/portal/auth/session', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ access_token: accessToken, refresh_token: refreshToken }),
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      if (msg) msg.textContent = `Sign-in failed: ${json.error || res.status}`;
+      return;
+    }
+
+    // Replace history so a back-tap doesn't take the user back to a token URL.
+    window.location.replace(json.redirect || '/portal');
+  }
+
+  complete();
+</script>

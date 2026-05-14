@@ -1,0 +1,59 @@
+---
+export const prerender = false;
+
+import PortalLayout from '../../../../layouts/PortalLayout.astro';
+import { createServiceSupabase } from '../../../../lib/supabase';
+
+const session = Astro.locals.session!;
+const admin = createServiceSupabase();
+
+const { data: clients } = await admin
+  .from('clients')
+  .select('id, slug, business_name, primary_contact_email, site_url, status, created_at')
+  .order('business_name');
+
+// Pull request counts and member counts in parallel.
+const ids = (clients ?? []).map((c) => c.id);
+const counts: Record<string, { requests: number; members: number }> = {};
+
+if (ids.length > 0) {
+  const [{ data: reqRows }, { data: memRows }] = await Promise.all([
+    admin.from('requests').select('client_id').in('client_id', ids),
+    admin.from('client_users').select('client_id').in('client_id', ids),
+  ]);
+  for (const id of ids) counts[id] = { requests: 0, members: 0 };
+  for (const r of reqRows ?? []) counts[r.client_id].requests++;
+  for (const m of memRows ?? []) counts[m.client_id].members++;
+}
+---
+<PortalLayout title="Clients | Admin" session={session}>
+  <section class="flex items-end justify-between gap-3 mb-6">
+    <div>
+      <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">Clients</h1>
+      <p class="text-text-muted text-sm mt-1">All client businesses with Hub access.</p>
+    </div>
+    <a href="/portal/admin/clients/new" class="btn-primary text-sm">+ Add client</a>
+  </section>
+
+  <ul class="space-y-2">
+    {(clients ?? []).length === 0 && (
+      <li class="ph-card p-8 text-center text-text-muted">
+        No clients yet. <a href="/portal/admin/clients/new" class="underline">Add the first one.</a>
+      </li>
+    )}
+    {(clients ?? []).map((c) => (
+      <li>
+        <a href={`/portal/admin/clients/${c.slug}`} class="ph-card flex items-center justify-between gap-3 p-4 hover:border-accent/40 transition">
+          <div class="min-w-0">
+            <h3 class="font-display font-semibold text-base leading-tight truncate">{c.business_name}</h3>
+            <div class="text-xs text-text-muted truncate">{c.primary_contact_email}</div>
+          </div>
+          <div class="text-xs text-text-muted text-right shrink-0">
+            <div>{counts[c.id]?.requests ?? 0} requests</div>
+            <div>{counts[c.id]?.members ?? 0} user{(counts[c.id]?.members ?? 0) === 1 ? '' : 's'}</div>
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+</PortalLayout>

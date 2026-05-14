@@ -1,0 +1,85 @@
+---
+export const prerender = false;
+
+import PortalLayout from '../../../../layouts/PortalLayout.astro';
+
+const session = Astro.locals.session!;
+---
+<PortalLayout title="Add client | Admin" session={session}>
+  <section class="max-w-xl">
+    <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight mb-2">Add client</h1>
+    <p class="text-text-muted text-sm mb-6">
+      Create the client record. After saving, you'll be able to invite users by entering their email — they'll get a magic link.
+    </p>
+
+    <form class="ph-card p-5 sm:p-7 space-y-4" data-client-form>
+      <div>
+        <label for="business_name" class="ph-label">Business name</label>
+        <input id="business_name" name="business_name" required class="ph-input" />
+      </div>
+      <div>
+        <label for="slug" class="ph-label">URL slug</label>
+        <input id="slug" name="slug" required pattern="[a-z0-9-]+" class="ph-input" placeholder="e.g. fitchin" />
+        <p class="ph-hint">Lowercase letters, numbers, hyphens. Used in URLs.</p>
+      </div>
+      <div>
+        <label for="primary_contact_email" class="ph-label">Primary contact email</label>
+        <input id="primary_contact_email" name="primary_contact_email" type="email" required class="ph-input" />
+      </div>
+      <div>
+        <label for="site_url" class="ph-label">Site URL (optional)</label>
+        <input id="site_url" name="site_url" type="url" class="ph-input" placeholder="https://" />
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button type="submit" class="btn-primary"><span data-btn-label>Save client</span></button>
+        <a href="/portal/admin/clients" class="text-sm text-text-muted hover:text-text">Cancel</a>
+      </div>
+      <div class="ph-flash hidden" data-flash></div>
+    </form>
+  </section>
+</PortalLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-client-form]');
+  const flash = document.querySelector<HTMLElement>('[data-flash]');
+  const label = document.querySelector<HTMLElement>('[data-btn-label]');
+
+  // Auto-suggest slug from business_name.
+  const nameEl = form?.querySelector<HTMLInputElement>('input[name="business_name"]');
+  const slugEl = form?.querySelector<HTMLInputElement>('input[name="slug"]');
+  if (nameEl && slugEl) {
+    nameEl.addEventListener('input', () => {
+      if (slugEl.dataset.touched) return;
+      slugEl.value = nameEl.value
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 40);
+    });
+    slugEl.addEventListener('input', () => { slugEl.dataset.touched = '1'; });
+  }
+
+  if (form && flash && label) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      label.textContent = 'Saving…';
+      try {
+        const res = await fetch('/api/portal/admin/clients', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
+        window.location.assign(`/portal/admin/clients/${json.slug}`);
+      } catch (err) {
+        flash.dataset.tone = 'error';
+        flash.textContent = err instanceof Error ? err.message : 'Could not save';
+        flash.classList.remove('hidden');
+        label.textContent = 'Save client';
+      }
+    });
+  }
+</script>

@@ -1,0 +1,100 @@
+---
+export const prerender = false;
+
+import PortalLayout from '../../../../layouts/PortalLayout.astro';
+import { createServerSupabase } from '../../../../lib/supabase';
+import { CATEGORY_OPTIONS, PRIORITY_OPTIONS } from '../../../../lib/portal';
+
+const session = Astro.locals.session!;
+if (session.role === 'admin') return Astro.redirect(`/portal/admin/r/${Astro.params.id}`);
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect('/portal');
+
+const supabase = createServerSupabase(Astro.cookies);
+const { data: req } = await supabase
+  .from('requests')
+  .select('id, title, description, category, priority, page_url, status, preferred_completion_date')
+  .eq('id', id)
+  .maybeSingle();
+
+if (!req) return Astro.redirect('/portal');
+if (req.status !== 'new') return Astro.redirect(`/portal/r/${id}`);
+---
+<PortalLayout title="Edit request | Client Hub" session={session}>
+  <a href={`/portal/r/${id}`} class="text-sm text-text-muted hover:text-text mb-3 inline-block">← Back</a>
+
+  <section class="max-w-2xl">
+    <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight mb-4">Edit request</h1>
+
+    <form class="ph-card p-5 sm:p-7 space-y-5" data-edit-form data-request-id={req.id}>
+      <div>
+        <label class="ph-label">What needs changed?</label>
+        <input name="title" required maxlength="120" class="ph-input" value={req.title} />
+      </div>
+      <div>
+        <label class="ph-label">What type of change is this?</label>
+        <select name="category" required class="ph-input">
+          {CATEGORY_OPTIONS.map((o) => (
+            <option value={o.value} selected={req.category === o.value}>{o.label}</option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label class="ph-label">Page URL (optional)</label>
+        <input name="page_url" type="url" class="ph-input" value={req.page_url || ''} placeholder="https://" />
+      </div>
+      <div>
+        <label class="ph-label">Describe the change in detail</label>
+        <textarea name="description" required class="ph-input" rows="5">{req.description}</textarea>
+      </div>
+      <div>
+        <label class="ph-label">Priority</label>
+        <select name="priority" class="ph-input">
+          {PRIORITY_OPTIONS.map((o) => (
+            <option value={o.value} selected={req.priority === o.value}>{o.label}</option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label class="ph-label">Preferred completion date (optional)</label>
+        <input name="preferred_completion_date" type="date" class="ph-input" value={req.preferred_completion_date || ''} />
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button type="submit" class="btn-primary"><span data-btn-label>Save changes</span></button>
+        <a href={`/portal/r/${id}`} class="text-sm text-text-muted hover:text-text">Cancel</a>
+      </div>
+      <div class="ph-flash hidden" data-flash></div>
+    </form>
+  </section>
+</PortalLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-edit-form]');
+  const flash = document.querySelector<HTMLElement>('[data-flash]');
+  const label = document.querySelector<HTMLElement>('[data-btn-label]');
+  if (form && flash && label) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = form.dataset.requestId;
+      const data = Object.fromEntries(new FormData(form).entries());
+      label.textContent = 'Saving…';
+      try {
+        const res = await fetch(`/api/portal/requests/${id}`, {
+          method: 'PATCH',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const j = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(j.error || `HTTP ${res.status}`);
+        window.location.assign(`/portal/r/${id}`);
+      } catch (err) {
+        flash.dataset.tone = 'error';
+        flash.textContent = err instanceof Error ? err.message : 'Could not save';
+        flash.classList.remove('hidden');
+        label.textContent = 'Save changes';
+      }
+    });
+  }
+</script>

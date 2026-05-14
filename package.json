@@ -11,8 +11,11 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/vercel": "^8.2.11",
+    "@supabase/supabase-js": "^2.105.4",
     "@vercel/analytics": "^2.0.1",
-    "astro": "^5.1.0"
+    "astro": "^5.1.0",
+    "resend": "^4.8.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.4",

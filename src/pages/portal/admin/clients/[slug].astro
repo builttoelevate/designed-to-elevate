@@ -1,0 +1,216 @@
+---
+export const prerender = false;
+
+import PortalLayout from '../../../../layouts/PortalLayout.astro';
+import { createServiceSupabase } from '../../../../lib/supabase';
+import { STATUS_LABELS, relativeDate, type RequestStatus } from '../../../../lib/portal';
+
+const session = Astro.locals.session!;
+const { slug } = Astro.params;
+if (!slug) return Astro.redirect('/portal/admin/clients');
+
+const admin = createServiceSupabase();
+
+const { data: client } = await admin
+  .from('clients')
+  .select('id, slug, business_name, primary_contact_email, site_url, status, created_at')
+  .eq('slug', slug)
+  .maybeSingle();
+
+if (!client) return Astro.redirect('/portal/admin/clients');
+
+const [{ data: members }, { data: requests }] = await Promise.all([
+  admin
+    .from('client_users')
+    .select('id, role, created_at, profiles:user_id (id, full_name)')
+    .eq('client_id', client.id),
+  admin
+    .from('requests')
+    .select('id, title, status, created_at')
+    .eq('client_id', client.id)
+    .order('created_at', { ascending: false })
+    .limit(20),
+]);
+
+// Pull emails for each member from auth.users (admin API).
+const userIds = (members ?? [])
+  .map((m: any) => m.profiles?.id)
+  .filter((v: any): v is string => typeof v === 'string');
+
+const emailById = new Map<string, string>();
+if (userIds.length > 0) {
+  // listUsers paginates; for the scale of DTE we just take the first 100.
+  const { data: usersPage } = await admin.auth.admin.listUsers({ perPage: 200 });
+  for (const u of usersPage?.users ?? []) {
+    if (u.email && userIds.includes(u.id)) emailById.set(u.id, u.email);
+  }
+}
+---
+<PortalLayout title={`${client.business_name} | Admin`} session={session}>
+  <div class="mb-5">
+    <a href="/portal/admin/clients" class="text-sm text-text-muted hover:text-text inline-flex items-center gap-1">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      All clients
+    </a>
+  </div>
+
+  <section class="ph-card p-5 sm:p-7 mb-6">
+    <h1 class="font-display text-xl sm:text-2xl font-bold tracking-tight mb-3">{client.business_name}</h1>
+
+    <form class="grid sm:grid-cols-2 gap-3" data-client-edit data-client-id={client.id}>
+      <label class="block">
+        <span class="ph-label">Business name</span>
+        <input name="business_name" required class="ph-input" value={client.business_name} />
+      </label>
+      <label class="block">
+        <span class="ph-label">Primary contact email</span>
+        <input name="primary_contact_email" type="email" required class="ph-input" value={client.primary_contact_email} />
+      </label>
+      <label class="block">
+        <span class="ph-label">Site URL</span>
+        <input name="site_url" type="url" class="ph-input" value={client.site_url || ''} />
+      </label>
+      <label class="block">
+        <span class="ph-label">Status</span>
+        <select name="status" class="ph-input">
+          {['active', 'paused', 'archived'].map((s) => (
+            <option value={s} selected={client.status === s}>{s}</option>
+          ))}
+        </select>
+      </label>
+      <div class="sm:col-span-2 flex items-center gap-3">
+        <button type="submit" class="btn-primary text-sm"><span data-edit-label>Save changes</span></button>
+        <span class="text-xs text-text-muted" data-edit-flash></span>
+      </div>
+    </form>
+  </section>
+
+  <section class="ph-card p-5 sm:p-7 mb-6">
+    <div class="flex items-end justify-between mb-3">
+      <h2 class="font-display text-lg font-bold tracking-tight">Users</h2>
+      <span class="text-xs text-text-muted">{(members ?? []).length} linked</span>
+    </div>
+
+    <ul class="divide-y divide-line/60 mb-4">
+      {(members ?? []).length === 0 && (
+        <li class="py-3 text-sm text-text-muted">No users linked yet.</li>
+      )}
+      {(members ?? []).map((m: any) => (
+        <li class="py-3 flex items-center justify-between gap-3">
+          <div>
+            <div class="text-sm font-medium">{m.profiles?.full_name || 'Unnamed user'}</div>
+            <div class="text-xs text-text-muted">{emailById.get(m.profiles?.id) || '—'}</div>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="text-text-muted uppercase tracking-wide">{m.role}</span>
+            <form method="post" data-remove-user data-membership-id={m.id} class="contents">
+              <button type="submit" class="text-text-muted hover:text-red-300 underline">Remove</button>
+            </form>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    <form class="flex flex-col sm:flex-row gap-2" data-invite-user data-client-id={client.id}>
+      <input name="email" type="email" required placeholder="email@business.com" class="ph-input flex-1" />
+      <select name="role" class="ph-input sm:w-40">
+        <option value="owner">Owner</option>
+        <option value="member">Member</option>
+      </select>
+      <button type="submit" class="btn-primary text-sm whitespace-nowrap">
+        <span data-invite-label>Invite + send link</span>
+      </button>
+    </form>
+    <p class="ph-hint mt-2">
+      Invites the user, links them to this client, and emails them a magic-link sign-in. If they already have an account, only the link goes out.
+    </p>
+    <div class="ph-flash hidden mt-3" data-invite-flash></div>
+  </section>
+
+  <section>
+    <h2 class="font-display text-lg font-bold tracking-tight mb-3">Recent requests</h2>
+    <ul class="space-y-2">
+      {(requests ?? []).length === 0 && (
+        <li class="text-sm text-text-muted">No requests yet.</li>
+      )}
+      {(requests ?? []).map((r) => (
+        <li>
+          <a href={`/portal/admin/r/${r.id}`} class="ph-card flex items-center justify-between gap-3 p-3 hover:border-accent/40 transition">
+            <span class="truncate font-medium text-sm">{r.title}</span>
+            <span class="ph-badge shrink-0" data-status={r.status}>{STATUS_LABELS[r.status as RequestStatus]}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</PortalLayout>
+
+<script>
+  // Edit
+  const editForm = document.querySelector<HTMLFormElement>('[data-client-edit]');
+  const editLabel = document.querySelector<HTMLElement>('[data-edit-label]');
+  const editFlash = document.querySelector<HTMLElement>('[data-edit-flash]');
+  if (editForm && editLabel && editFlash) {
+    editForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = editForm.dataset.clientId;
+      const data = Object.fromEntries(new FormData(editForm).entries());
+      editLabel.textContent = 'Saving…';
+      try {
+        const res = await fetch(`/api/portal/admin/clients/${id}`, {
+          method: 'PATCH',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
+        editLabel.textContent = 'Save changes';
+        editFlash.textContent = 'Saved ✓';
+        setTimeout(() => (editFlash.textContent = ''), 1500);
+      } catch (err) {
+        editLabel.textContent = 'Save changes';
+        editFlash.textContent = err instanceof Error ? err.message : 'Save failed';
+      }
+    });
+  }
+
+  // Invite user
+  const invForm = document.querySelector<HTMLFormElement>('[data-invite-user]');
+  const invLabel = document.querySelector<HTMLElement>('[data-invite-label]');
+  const invFlash = document.querySelector<HTMLElement>('[data-invite-flash]');
+  if (invForm && invLabel && invFlash) {
+    invForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(invForm).entries());
+      const clientId = invForm.dataset.clientId;
+      invLabel.textContent = 'Sending…';
+      try {
+        const res = await fetch('/api/portal/admin/client-users', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ ...data, client_id: clientId }),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
+        window.location.reload();
+      } catch (err) {
+        invFlash.dataset.tone = 'error';
+        invFlash.textContent = err instanceof Error ? err.message : 'Invite failed';
+        invFlash.classList.remove('hidden');
+        invLabel.textContent = 'Invite + send link';
+      }
+    });
+  }
+
+  // Remove user
+  document.querySelectorAll<HTMLFormElement>('[data-remove-user]').forEach((f) => {
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!confirm('Remove this user from the client?')) return;
+      const id = f.dataset.membershipId;
+      const res = await fetch(`/api/portal/admin/client-users/${id}`, { method: 'DELETE' });
+      if (res.ok) window.location.reload();
+      else alert('Could not remove');
+    });
+  });
+</script>

@@ -1,0 +1,95 @@
+---
+export const prerender = false;
+
+import PortalLayout from '../../layouts/PortalLayout.astro';
+
+// If already signed in, route to the right dashboard.
+const session = Astro.locals.session;
+if (session) {
+  return Astro.redirect(session.role === 'admin' ? '/portal/admin' : '/portal');
+}
+---
+<PortalLayout title="Sign in | Client Hub" chrome={false}>
+  <div class="min-h-[70vh] grid place-items-center">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-8">
+        <a href="/" class="inline-flex items-center gap-2 font-display font-bold tracking-tight mb-6">
+          <span class="inline-flex h-9 w-9 items-center justify-center rounded-md bg-accent text-bg text-base font-extrabold">DE</span>
+          <span class="text-base">Designed to Elevate</span>
+        </a>
+        <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight mb-2">Welcome to your Client Hub</h1>
+        <p class="text-text-muted text-base">Submit website change requests, track status, and keep everything in one place.</p>
+      </div>
+
+      <form class="ph-card p-6 sm:p-7" data-login-form>
+        <label for="email" class="ph-label">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          autocomplete="email"
+          inputmode="email"
+          autocapitalize="off"
+          spellcheck="false"
+          placeholder="you@yourbusiness.com"
+          class="ph-input"
+        />
+        <button type="submit" class="btn-primary mt-4 w-full justify-center">
+          <span data-btn-label>Send me a login link</span>
+        </button>
+        <div class="ph-flash hidden mt-4" data-flash></div>
+      </form>
+
+      <p class="text-center text-xs text-text-muted mt-6">
+        Trouble signing in? Text Bill at <a href="sms:7406176488" class="underline">(740) 617-6488</a>.
+      </p>
+    </div>
+  </div>
+</PortalLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-login-form]');
+  const flash = document.querySelector<HTMLElement>('[data-flash]');
+  const label = document.querySelector<HTMLElement>('[data-btn-label]');
+
+  if (form && flash && label) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const email = (data.get('email') as string || '').trim();
+      if (!email) return;
+
+      label.textContent = 'Sending…';
+      form.querySelectorAll('input,button').forEach((el) =>
+        ((el as HTMLInputElement).disabled = true)
+      );
+
+      try {
+        const res = await fetch('/api/portal/login', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
+
+        flash.dataset.tone = 'success';
+        flash.textContent = `Check your email — we sent a login link to ${email}. It expires in 1 hour.`;
+        flash.classList.remove('hidden');
+        label.textContent = 'Link sent ✓';
+      } catch (err) {
+        flash.dataset.tone = 'error';
+        flash.textContent =
+          err instanceof Error && err.message
+            ? `Couldn't send the link: ${err.message}`
+            : "Couldn't send the link. Try again, or text Bill at (740) 617-6488.";
+        flash.classList.remove('hidden');
+        label.textContent = 'Send me a login link';
+        form.querySelectorAll('input,button').forEach((el) =>
+          ((el as HTMLInputElement).disabled = false)
+        );
+      }
+    });
+  }
+</script>

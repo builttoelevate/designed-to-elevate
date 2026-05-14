@@ -1,0 +1,142 @@
+---
+export const prerender = false;
+
+import PortalLayout from '../../../layouts/PortalLayout.astro';
+import { createServiceSupabase } from '../../../lib/supabase';
+import {
+  STATUS_LABELS,
+  STATUS_ORDER,
+  PRIORITY_OPTIONS,
+  BILLING_OPTIONS,
+  categoryLabel,
+  priorityLabel,
+  billingLabel,
+  relativeDate,
+  type RequestStatus,
+} from '../../../lib/portal';
+
+const session = Astro.locals.session!;
+const params = Astro.url.searchParams;
+const fStatus   = params.get('status') || '';
+const fPriority = params.get('priority') || '';
+const fBilling  = params.get('billing') || '';
+const fClient   = params.get('client') || '';
+
+const admin = createServiceSupabase();
+
+let query = admin
+  .from('requests')
+  .select('id, title, status, priority, category, billing_type, created_at, client_id, clients:client_id (business_name, slug)')
+  .order('created_at', { ascending: false });
+
+if (fStatus)   query = query.eq('status', fStatus);
+if (fPriority) query = query.eq('priority', fPriority);
+if (fBilling)  query = query.eq('billing_type', fBilling);
+if (fClient)   query = query.eq('client_id', fClient);
+
+const [{ data: requests }, { data: clients }] = await Promise.all([
+  query,
+  admin.from('clients').select('id, business_name').order('business_name'),
+]);
+
+const list = requests ?? [];
+const counts: Record<string, number> = {};
+for (const r of list) counts[r.status] = (counts[r.status] || 0) + 1;
+
+function qs(overrides: Record<string, string>): string {
+  const next = new URLSearchParams(params);
+  for (const [k, v] of Object.entries(overrides)) {
+    if (v) next.set(k, v);
+    else next.delete(k);
+  }
+  const s = next.toString();
+  return s ? `?${s}` : '';
+}
+---
+<PortalLayout title="Admin queue | Client Hub" session={session}>
+  <section class="mb-5 flex items-end justify-between gap-3 flex-wrap">
+    <div>
+      <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">Queue</h1>
+      <p class="text-text-muted text-sm mt-1">All client requests across all businesses.</p>
+    </div>
+    <div class="flex items-center gap-3 text-xs text-text-muted">
+      <span>{list.length} request{list.length === 1 ? '' : 's'}</span>
+    </div>
+  </section>
+
+  <div class="ph-card p-3 sm:p-4 mb-5 grid grid-cols-2 sm:grid-cols-4 gap-2">
+    <select class="ph-input" data-filter="client">
+      <option value="">All clients</option>
+      {(clients ?? []).map((c) => (
+        <option value={c.id} selected={fClient === c.id}>{c.business_name}</option>
+      ))}
+    </select>
+    <select class="ph-input" data-filter="status">
+      <option value="">All statuses</option>
+      {STATUS_ORDER.map((s) => (
+        <option value={s} selected={fStatus === s}>{STATUS_LABELS[s]}</option>
+      ))}
+    </select>
+    <select class="ph-input" data-filter="priority">
+      <option value="">Any priority</option>
+      {PRIORITY_OPTIONS.map((p) => (
+        <option value={p.value} selected={fPriority === p.value}>{p.label}</option>
+      ))}
+    </select>
+    <select class="ph-input" data-filter="billing">
+      <option value="">Any billing</option>
+      {BILLING_OPTIONS.map((b) => (
+        <option value={b.value} selected={fBilling === b.value}>{b.label}</option>
+      ))}
+    </select>
+  </div>
+
+  <div class="flex flex-wrap gap-2 mb-4 text-xs">
+    <a href="/portal/admin" class:list={["px-3 py-1.5 rounded-full border transition", !fStatus ? 'bg-accent text-bg border-accent' : 'border-line hover:text-text']}>
+      All ({list.length})
+    </a>
+    {STATUS_ORDER.map((s) => (
+      <a href={qs({ status: s })} class:list={["px-3 py-1.5 rounded-full border transition", fStatus === s ? 'bg-accent text-bg border-accent' : 'border-line text-text-muted hover:text-text']}>
+        {STATUS_LABELS[s]} ({counts[s] || 0})
+      </a>
+    ))}
+  </div>
+
+  <ul class="space-y-2">
+    {list.length === 0 && (
+      <li class="text-text-muted text-sm">No requests match the filters.</li>
+    )}
+    {list.map((r: any) => (
+      <li>
+        <a href={`/portal/admin/r/${r.id}`} class="ph-card block p-3 sm:p-4 hover:border-accent/40 transition">
+          <div class="flex items-start justify-between gap-3 mb-1.5">
+            <div class="min-w-0">
+              <h3 class="font-display font-semibold text-base leading-tight truncate">{r.title}</h3>
+              <div class="text-xs text-text-muted mt-0.5">{r.clients?.business_name}</div>
+            </div>
+            <span class="ph-badge shrink-0" data-status={r.status}>{STATUS_LABELS[r.status as RequestStatus]}</span>
+          </div>
+          <div class="text-xs text-text-muted flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span>{categoryLabel(r.category)}</span>
+            <span class="ph-pri" data-priority={r.priority}>{priorityLabel(r.priority)}</span>
+            <span class="text-[11px] uppercase tracking-wide">{billingLabel(r.billing_type)}</span>
+            <span>{relativeDate(r.created_at)}</span>
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+</PortalLayout>
+
+<script>
+  document.querySelectorAll<HTMLSelectElement>('[data-filter]').forEach((el) => {
+    el.addEventListener('change', () => {
+      const params = new URLSearchParams(window.location.search);
+      const key = el.dataset.filter!;
+      if (el.value) params.set(key, el.value);
+      else params.delete(key);
+      const s = params.toString();
+      window.location.search = s ? `?${s}` : '';
+    });
+  });
+</script>

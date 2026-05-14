@@ -1,0 +1,201 @@
+---
+export const prerender = false;
+
+import PortalLayout from '../../../layouts/PortalLayout.astro';
+import { createServerSupabase, createServiceSupabase } from '../../../lib/supabase';
+import {
+  STATUS_LABELS,
+  STATUS_DESCRIPTIONS,
+  categoryLabel,
+  priorityLabel,
+  relativeDate,
+  type RequestStatus,
+} from '../../../lib/portal';
+
+const session = Astro.locals.session!;
+if (session.role === 'admin') {
+  return Astro.redirect(`/portal/admin/r/${Astro.params.id}`);
+}
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect('/portal');
+
+const supabase = createServerSupabase(Astro.cookies);
+
+const { data: req, error } = await supabase
+  .from('requests')
+  .select('id, title, description, status, priority, category, page_url, created_at, preferred_completion_date, completed_at')
+  .eq('id', id)
+  .maybeSingle();
+
+if (error || !req) {
+  return Astro.redirect('/portal');
+}
+
+const [{ data: files }, { data: comments }] = await Promise.all([
+  supabase.from('request_files').select('id, file_url, filename, created_at').eq('request_id', id).order('created_at'),
+  supabase
+    .from('comments')
+    .select('id, body, created_at, author_id, profiles:author_id (full_name, role)')
+    .eq('request_id', id)
+    .order('created_at'),
+]);
+
+// Sign storage paths for the lifetime of this page render.
+const admin = createServiceSupabase();
+const signedFiles: { id: string; filename: string; signed: string }[] = [];
+for (const f of files ?? []) {
+  const { data } = await admin.storage.from('request-files').createSignedUrl(f.file_url, 60 * 30);
+  if (data?.signedUrl) {
+    signedFiles.push({ id: f.id, filename: f.filename, signed: data.signedUrl });
+  }
+}
+
+const editable = req.status === 'new';
+const status = req.status as RequestStatus;
+---
+<PortalLayout title={`${req.title} | Client Hub`} session={session}>
+  <div class="mb-5">
+    <a href="/portal" class="text-sm text-text-muted hover:text-text inline-flex items-center gap-1">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to all requests
+    </a>
+  </div>
+
+  <article class="ph-card p-5 sm:p-7">
+    <div class="flex items-start justify-between gap-4 mb-3">
+      <h1 class="font-display text-xl sm:text-2xl font-bold tracking-tight leading-tight">{req.title}</h1>
+      <span class="ph-badge shrink-0" data-status={status}>{STATUS_LABELS[status]}</span>
+    </div>
+    <p class="text-sm text-text-muted mb-5">{STATUS_DESCRIPTIONS[status]}</p>
+
+    <dl class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5 text-xs">
+      <div>
+        <dt class="text-text-muted uppercase tracking-wide">Type</dt>
+        <dd class="mt-0.5 font-medium">{categoryLabel(req.category)}</dd>
+      </div>
+      <div>
+        <dt class="text-text-muted uppercase tracking-wide">Priority</dt>
+        <dd class="mt-0.5 font-medium ph-pri" data-priority={req.priority}>{priorityLabel(req.priority)}</dd>
+      </div>
+      <div>
+        <dt class="text-text-muted uppercase tracking-wide">Submitted</dt>
+        <dd class="mt-0.5 font-medium">{relativeDate(req.created_at)}</dd>
+      </div>
+      {req.preferred_completion_date && (
+        <div>
+          <dt class="text-text-muted uppercase tracking-wide">Preferred</dt>
+          <dd class="mt-0.5 font-medium">{new Date(req.preferred_completion_date).toLocaleDateString()}</dd>
+        </div>
+      )}
+    </dl>
+
+    {req.page_url && (
+      <div class="mb-5">
+        <div class="text-xs text-text-muted uppercase tracking-wide mb-1">Page</div>
+        <a href={req.page_url} target="_blank" rel="noopener" class="text-sm underline break-all">{req.page_url}</a>
+      </div>
+    )}
+
+    <div class="mb-2 text-xs text-text-muted uppercase tracking-wide">Details</div>
+    <p class="whitespace-pre-wrap leading-relaxed text-text/90">{req.description}</p>
+
+    {signedFiles.length > 0 && (
+      <>
+        <div class="mt-6 mb-2 text-xs text-text-muted uppercase tracking-wide">Attachments</div>
+        <ul class="grid sm:grid-cols-2 gap-2">
+          {signedFiles.map((f) => (
+            <li>
+              <a href={f.signed} target="_blank" rel="noopener" class="ph-card flex items-center gap-2 px-3 py-2 hover:border-accent/40 transition">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span class="text-sm truncate">{f.filename}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </>
+    )}
+
+    {editable && (
+      <p class="ph-hint mt-6">
+        You can still edit this request — work hasn't started yet.
+        <a href={`/portal/r/${req.id}/edit`} class="underline ml-1">Edit</a>
+      </p>
+    )}
+  </article>
+
+  <section class="mt-8">
+    <h2 class="font-display text-lg font-bold tracking-tight mb-3">Messages</h2>
+
+    <ul class="space-y-3 mb-4">
+      {(comments ?? []).length === 0 && (
+        <li class="text-sm text-text-muted">No messages yet.</li>
+      )}
+      {(comments ?? []).map((c: any) => {
+        const isAdminAuthor = c.profiles?.role === 'admin';
+        return (
+          <li class="ph-card p-3 sm:p-4">
+            <div class="flex items-center gap-2 mb-1 text-xs text-text-muted">
+              <span class="font-semibold text-text">
+                {isAdminAuthor ? 'Bill — Designed to Elevate' : (c.profiles?.full_name || 'You')}
+              </span>
+              <span>·</span>
+              <span>{relativeDate(c.created_at)}</span>
+            </div>
+            <p class="whitespace-pre-wrap text-sm leading-relaxed">{c.body}</p>
+          </li>
+        );
+      })}
+    </ul>
+
+    <form class="ph-card p-3 sm:p-4" data-comment-form data-request-id={req.id}>
+      <label for="body" class="sr-only">Message</label>
+      <textarea id="body" name="body" required class="ph-input" placeholder="Reply with a note, more details, or a question…" rows="3"></textarea>
+      <div class="flex items-center justify-end gap-2 mt-2">
+        <button type="submit" class="btn-primary text-sm py-2 px-4">
+          <span data-btn-label>Send</span>
+        </button>
+      </div>
+      <div class="ph-flash hidden mt-3" data-flash></div>
+    </form>
+  </section>
+</PortalLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-comment-form]');
+  const flash = document.querySelector<HTMLElement>('[data-flash]');
+  const label = document.querySelector<HTMLElement>('[data-btn-label]');
+
+  if (form && flash && label) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const requestId = form.dataset.requestId;
+      const body = (form.querySelector('textarea[name="body"]') as HTMLTextAreaElement).value.trim();
+      if (!body || !requestId) return;
+
+      label.textContent = 'Sending…';
+      form.querySelectorAll('textarea,button').forEach((el) =>
+        ((el as HTMLTextAreaElement | HTMLButtonElement).disabled = true)
+      );
+
+      try {
+        const res = await fetch(`/api/portal/requests/${requestId}/comments`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ body }),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
+        window.location.reload();
+      } catch (err) {
+        flash.dataset.tone = 'error';
+        flash.textContent = err instanceof Error ? err.message : 'Could not send';
+        flash.classList.remove('hidden');
+        label.textContent = 'Send';
+        form.querySelectorAll('textarea,button').forEach((el) =>
+          ((el as HTMLTextAreaElement | HTMLButtonElement).disabled = false)
+        );
+      }
+    });
+  }
+</script>

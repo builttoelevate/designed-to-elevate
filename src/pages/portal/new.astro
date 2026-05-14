@@ -1,0 +1,137 @@
+---
+export const prerender = false;
+
+import PortalLayout from '../../layouts/PortalLayout.astro';
+import { CATEGORY_OPTIONS, PRIORITY_OPTIONS } from '../../lib/portal';
+
+const session = Astro.locals.session!;
+if (session.role === 'admin') {
+  // Admin submits requests through /portal/admin if/when needed (Phase 2);
+  // for now, redirect them to the queue.
+  return Astro.redirect('/portal/admin');
+}
+if (session.clientIds.length === 0) {
+  return Astro.redirect('/portal');
+}
+---
+<PortalLayout title="Submit a Website Change | Client Hub" session={session}>
+  <section class="max-w-2xl">
+    <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight mb-3">
+      Submit a Website Change
+    </h1>
+    <p class="text-text-muted mb-6 leading-relaxed">
+      Need something updated? Tell us what you need below. Small updates like text,
+      photos, hours, and links are included in your plan. New pages, custom features,
+      or redesigns may need a separate estimate before work begins.
+    </p>
+
+    <form class="ph-card p-5 sm:p-7 space-y-5" data-request-form enctype="multipart/form-data">
+      <div>
+        <label for="title" class="ph-label">What needs changed?</label>
+        <input id="title" name="title" type="text" required maxlength="120" class="ph-input" />
+      </div>
+
+      <div>
+        <label for="category" class="ph-label">What type of change is this?</label>
+        <select id="category" name="category" required class="ph-input">
+          <option value="">Pick one…</option>
+          {CATEGORY_OPTIONS.map((o) => (
+            <option value={o.value}>{o.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label for="page_url" class="ph-label">Page URL (optional)</label>
+        <input id="page_url" name="page_url" type="url" placeholder="https://" class="ph-input" />
+      </div>
+
+      <div>
+        <label for="description" class="ph-label">Describe the change in detail</label>
+        <textarea id="description" name="description" required class="ph-input"></textarea>
+      </div>
+
+      <div>
+        <label for="files" class="ph-label">Upload files</label>
+        <input id="files" name="files" type="file" multiple class="ph-input" accept="image/*,application/pdf" />
+        <p class="ph-hint">Screenshots, logos, photos, PDFs — anything that helps us understand.</p>
+      </div>
+
+      <div>
+        <label class="ph-label">Priority</label>
+        <div class="grid sm:grid-cols-3 gap-2 mb-2">
+          {PRIORITY_OPTIONS.map((o, i) => (
+            <label class="ph-card flex items-center gap-2 px-3 py-2.5 cursor-pointer has-[:checked]:border-accent has-[:checked]:bg-accent/5">
+              <input type="radio" name="priority" value={o.value} checked={i === 0} class="accent-accent" />
+              <span class="font-display text-sm font-semibold">{o.label}</span>
+            </label>
+          ))}
+        </div>
+        <ul class="ph-hint space-y-1 mt-2">
+          <li><strong>Normal</strong> — general update</li>
+          <li><strong>Important</strong> — needed soon, but the site still works</li>
+          <li><strong>Urgent</strong> — site issue, incorrect info, broken page, or time-sensitive</li>
+        </ul>
+      </div>
+
+      <div>
+        <label for="preferred_completion_date" class="ph-label">Preferred completion date (optional)</label>
+        <input id="preferred_completion_date" name="preferred_completion_date" type="date" class="ph-input" />
+      </div>
+
+      <button type="submit" class="btn-primary w-full sm:w-auto justify-center">
+        <span data-btn-label>Submit Request</span>
+      </button>
+
+      <div class="ph-flash hidden" data-flash></div>
+    </form>
+  </section>
+</PortalLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-request-form]');
+  const flash = document.querySelector<HTMLElement>('[data-flash]');
+  const label = document.querySelector<HTMLElement>('[data-btn-label]');
+
+  if (form && flash && label) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+
+      label.textContent = 'Submitting…';
+      form.querySelectorAll('input,select,textarea,button').forEach((el) =>
+        ((el as HTMLInputElement).disabled = true)
+      );
+
+      try {
+        const res = await fetch('/api/portal/requests', { method: 'POST', body: data });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
+
+        flash.dataset.tone = 'success';
+        flash.textContent =
+          "Got it. Your request is in the queue and we'll email you when it's in progress.";
+        flash.classList.remove('hidden');
+        label.textContent = 'Submitted ✓';
+
+        // Bounce to the request detail page after a beat so the success
+        // message has time to register.
+        setTimeout(() => {
+          if (json.id) window.location.assign(`/portal/r/${json.id}`);
+          else window.location.assign('/portal');
+        }, 900);
+      } catch (err) {
+        flash.dataset.tone = 'error';
+        flash.textContent =
+          err instanceof Error && err.message
+            ? `Couldn't submit: ${err.message}`
+            : "Couldn't submit. Try again, or text Bill at (740) 617-6488.";
+        flash.classList.remove('hidden');
+        label.textContent = 'Submit Request';
+        form.querySelectorAll('input,select,textarea,button').forEach((el) =>
+          ((el as HTMLInputElement).disabled = false)
+        );
+      }
+    });
+  }
+</script>

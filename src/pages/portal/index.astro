@@ -1,0 +1,94 @@
+---
+export const prerender = false;
+
+import PortalLayout from '../../layouts/PortalLayout.astro';
+import { createServerSupabase } from '../../lib/supabase';
+import { firstName } from '../../lib/session';
+import {
+  STATUS_LABELS,
+  STATUS_ORDER,
+  categoryLabel,
+  priorityLabel,
+  relativeDate,
+  type RequestStatus,
+} from '../../lib/portal';
+
+const session = Astro.locals.session!; // middleware guarantees this
+if (session.role === 'admin') {
+  return Astro.redirect('/portal/admin');
+}
+
+const supabase = createServerSupabase(Astro.cookies);
+
+const filter = (Astro.url.searchParams.get('status') || '').toLowerCase() as RequestStatus | '';
+const validFilter = (STATUS_ORDER as string[]).includes(filter) ? filter : '';
+
+let q = supabase
+  .from('requests')
+  .select('id, title, status, priority, category, created_at')
+  .order('created_at', { ascending: false });
+
+if (validFilter) q = q.eq('status', validFilter);
+
+const { data: requests, error } = await q;
+const list = requests ?? [];
+
+// Per the plan, clients only have one client_id. The dashboard scopes by RLS,
+// so we don't need to pass client_id explicitly.
+---
+<PortalLayout title="Your requests | Client Hub" session={session}>
+  <section class="mb-7">
+    <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">
+      Welcome back, {firstName(session)}.
+    </h1>
+  </section>
+
+  {error && (
+    <div class="ph-flash" data-tone="error">{error.message}</div>
+  )}
+
+  <div class="flex flex-wrap items-center gap-2 mb-4">
+    <a href="/portal" class:list={["px-3 py-1.5 rounded-full text-sm border transition", validFilter === '' ? 'bg-accent text-bg border-accent' : 'border-line text-text-muted hover:text-text']}>
+      All
+    </a>
+    {STATUS_ORDER.map((s) => (
+      <a
+        href={`/portal?status=${s}`}
+        class:list={["px-3 py-1.5 rounded-full text-sm border transition", validFilter === s ? 'bg-accent text-bg border-accent' : 'border-line text-text-muted hover:text-text']}
+      >
+        {STATUS_LABELS[s]}
+      </a>
+    ))}
+  </div>
+
+  {list.length === 0 ? (
+    <div class="ph-card p-8 sm:p-12 text-center">
+      <h2 class="font-display text-xl font-bold mb-2">No requests yet</h2>
+      <p class="text-text-muted mb-6">Click below when you need something updated on your site.</p>
+      <a href="/portal/new" class="btn-primary">Submit a Change</a>
+    </div>
+  ) : (
+    <>
+      <div class="flex justify-end mb-3">
+        <a href="/portal/new" class="btn-primary">Submit a Change</a>
+      </div>
+      <ul class="space-y-3">
+        {list.map((r) => (
+          <li>
+            <a href={`/portal/r/${r.id}`} class="ph-card block p-4 sm:p-5 hover:border-accent/40 transition">
+              <div class="flex items-start justify-between gap-3 mb-1.5">
+                <h3 class="font-display font-semibold text-base sm:text-lg leading-tight">{r.title}</h3>
+                <span class="ph-badge shrink-0" data-status={r.status}>{STATUS_LABELS[r.status as RequestStatus]}</span>
+              </div>
+              <div class="text-xs text-text-muted flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span>{categoryLabel(r.category)}</span>
+                <span class="ph-pri" data-priority={r.priority}>{priorityLabel(r.priority)}</span>
+                <span>{relativeDate(r.created_at)}</span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
+</PortalLayout>
