@@ -70,11 +70,9 @@ const pathname = new URL(Astro.request.url).pathname;
               {!isAdmin && (
                 <a href="/portal/new" class="btn-primary text-xs py-1.5 px-3">Submit a Change</a>
               )}
-              <form method="post" action="/portal/logout" class="contents">
-                <button type="submit" class="px-2 py-1.5 rounded-md text-text-muted hover:text-text transition text-xs">
-                  Sign out
-                </button>
-              </form>
+              <a href="/portal/logout" class="px-2 py-1.5 rounded-md text-text-muted hover:text-text transition text-xs">
+                Sign out
+              </a>
             </nav>
           )}
         </div>
