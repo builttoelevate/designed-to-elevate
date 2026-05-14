@@ -25,6 +25,21 @@ export default defineConfig({
     '/work': '/case-studies',
     '/pricing': '/custom-lead-systems',
   },
+  // Astro 5's default `security.checkOrigin` rejects POSTs with a form
+  // content-type (multipart/form-data, x-www-form-urlencoded, text/plain)
+  // when the Origin header doesn't exactly match the host. Vercel's edge
+  // sometimes strips/normalizes Origin on same-site fetches, which makes
+  // the check fire on legitimate requests (the portal's file-upload flow,
+  // the sign-out form, etc.).
+  //
+  // CSRF protection for the portal already comes from cookie attributes:
+  // sb-access-token / sb-refresh-token are HttpOnly + Secure + SameSite=Lax,
+  // so the browser will not attach them to a cross-site POST. Every portal
+  // endpoint then validates the session before touching data, so a CSRF
+  // attempt without the cookie hits 401 anyway.
+  security: {
+    checkOrigin: false,
+  },
   vite: {
     plugins: [tailwindcss()],
   },

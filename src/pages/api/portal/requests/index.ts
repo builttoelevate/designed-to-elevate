@@ -22,8 +22,14 @@ const ALLOWED_PRIORITIES = new Set(['normal', 'important', 'urgent']);
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   const session = await getPortalSession(cookies);
-  if (!session) return json({ error: 'Not signed in' }, 401);
-  if (session.clientIds.length === 0) return json({ error: 'No client linked to this account' }, 403);
+  if (!session) {
+    console.warn('[requests] no session on POST /api/portal/requests');
+    return json({ error: 'Not signed in' }, 401);
+  }
+  if (session.clientIds.length === 0) {
+    console.warn('[requests] user has no client_users links', { userId: session.userId });
+    return json({ error: 'No client linked to this account' }, 403);
+  }
 
   // Clients submit against their (currently single) linked client. If multi-
   // client support comes later, pass a client_id field and validate.
@@ -45,22 +51,47 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   const supabase = createServerSupabase(cookies);
 
+  // Confirm the server-side Supabase client is actually carrying the user's
+  // session before we attempt the insert. If auth.uid() is null here, the
+  // cookie didn't propagate — log it so we can see in Vercel function logs.
+  const { data: whoami, error: whoErr } = await supabase.auth.getUser();
+  if (whoErr || !whoami?.user) {
+    console.error('[requests] supabase.auth.getUser failed', {
+      sessionUserId: session.userId,
+      err: whoErr?.message,
+    });
+    return json({ error: 'Session expired — please sign out and back in' }, 401);
+  }
+  if (whoami.user.id !== session.userId) {
+    console.error('[requests] auth.uid() mismatch with session', {
+      authUid: whoami.user.id,
+      sessionUserId: session.userId,
+    });
+  }
+
+  const insertPayload = {
+    client_id: clientId,
+    submitted_by: session.userId,
+    title,
+    description,
+    category,
+    priority,
+    page_url: pageUrl,
+    preferred_completion_date: completionDate,
+  };
+
   const { data: created, error: insertErr } = await supabase
     .from('requests')
-    .insert({
-      client_id: clientId,
-      submitted_by: session.userId,
-      title,
-      description,
-      category,
-      priority,
-      page_url: pageUrl,
-      preferred_completion_date: completionDate,
-    })
+    .insert(insertPayload)
     .select('id, title')
     .single();
 
   if (insertErr || !created) {
+    console.error('[requests] insert failed', {
+      authUid: whoami.user.id,
+      payload: insertPayload,
+      err: insertErr,
+    });
     return json({ error: insertErr?.message || 'Could not create request' }, 500);
   }
 
