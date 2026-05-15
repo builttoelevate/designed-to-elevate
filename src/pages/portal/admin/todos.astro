@@ -420,6 +420,12 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
       width: 0%;
       transition: width 120ms linear;
     }
+    /* Body textarea cap — a huge paste should scroll internally, not push
+       the rest of the page off-screen. JS autogrow honors the same limit. */
+    textarea[data-autogrow] {
+      max-height: max(50vh, 400px);
+      overflow-y: auto;
+    }
     [data-row-toggle] { cursor: pointer; }
     [data-row-toggle] input,
     [data-row-toggle] button { cursor: default; }
@@ -440,9 +446,13 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
     setTimeout(() => flash.classList.add('hidden'), 4000);
   }
 
+  // Cap the auto-grow at max(50vh, 400px) so a giant paste doesn't push the
+  // form off-screen. CSS sets max-height + overflow-y for the same purpose;
+  // mirroring the cap here keeps the JS-set height in sync.
   function autogrow(el: HTMLTextAreaElement) {
     el.style.height = 'auto';
-    el.style.height = el.scrollHeight + 'px';
+    const cap = Math.max(window.innerHeight * 0.5, 400);
+    el.style.height = Math.min(el.scrollHeight, cap) + 'px';
   }
   document.querySelectorAll<HTMLTextAreaElement>('[data-autogrow]').forEach((t) => {
     autogrow(t);
