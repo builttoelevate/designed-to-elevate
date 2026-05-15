@@ -69,3 +69,19 @@ Google Ads conversion tracking goes inside the success branch when wired up.
 - **Phone number `740-617-6488` and email `bilsonxnc@gmail.com`** appear in many places (header, footer, forms, legal). If they change, grep-replace.
 - **Voice rules from `SITE_CONTEXT.md` are binding for any user-facing copy:** no "solutions," no "guaranteed results," no fake testimonials/client counts, no dollar amounts about Fitchin. Signature lines like "Built From the Bay, Not a Boardroom" and "It's not a hustle problem. It's a system problem." should be used verbatim.
 - **`/grow` is the ads landing page** — keep it conversion-tight. Do not add navigation links that lead away from the audit form.
+
+## How to give the user instructions
+
+Whenever you tell the user to do something outside the code (run commands, click through a UI, apply a migration, deploy, test in a browser, open a PR, etc.), put **the entire walk-through inside one fenced code block** so it can be copied as a single unit. Outside that block goes prose only — context, caveats, follow-up questions.
+
+Rules for what goes inside the block:
+
+- **Number every step.** `1.`, `2.`, `3.` — even if it's just two steps.
+- **Be specific and descriptive, not terse.** Don't write `apply the migration`. Write `apply the migration: run \`supabase db reset\` locally, or in production paste the contents of supabase/migrations/0005_owner_todos.sql into the Supabase Dashboard → SQL editor and click Run`.
+- **Spell out every command on its own indented line under the step it belongs to.** No bare commands floating between numbered steps.
+- **Say what to expect after each step.** `→ you should see "Migration applied"`, `→ the row moves to "Recently completed"`, `→ build finishes with "Complete!"`. If the user doesn't see that, they know something's off.
+- **Include exact URLs, file paths, button labels, and field names.** `http://localhost:4321/portal/admin/todos`, click the **Todos** link, type in the **"Add a todo…"** input.
+- **Call out anything destructive or one-way before the step, not after.** `WARNING: \`supabase db reset\` wipes local data` goes on the line above the command, not below it.
+- **End with a verification step.** A final numbered step that confirms the whole thing worked end-to-end (load a page, check a row, look at the deployed URL).
+
+Prose explanations, "why this matters," and follow-up questions go **outside** the code block, before or after it. The block itself should be pure do-this-then-that with no decoration.

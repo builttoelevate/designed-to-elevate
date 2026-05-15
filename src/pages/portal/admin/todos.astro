@@ -1,0 +1,207 @@
+---
+export const prerender = false;
+
+import PortalLayout from '../../../layouts/PortalLayout.astro';
+import { createServiceSupabase } from '../../../lib/supabase';
+import { relativeDate } from '../../../lib/portal';
+
+const session = Astro.locals.session!;
+
+const admin = createServiceSupabase();
+
+const [{ data: openRows }, { data: doneRows }] = await Promise.all([
+  admin
+    .from('owner_todos')
+    .select('id, title, completed, created_at, completed_at')
+    .eq('owner_id', session.userId)
+    .eq('completed', false)
+    .order('created_at', { ascending: false }),
+  admin
+    .from('owner_todos')
+    .select('id, title, completed, created_at, completed_at')
+    .eq('owner_id', session.userId)
+    .eq('completed', true)
+    .order('completed_at', { ascending: false })
+    .limit(20),
+]);
+
+const open = openRows ?? [];
+const done = doneRows ?? [];
+---
+<PortalLayout title="My Todos | Client Hub" session={session}>
+  <section class="mb-5 flex items-end justify-between gap-3 flex-wrap">
+    <div>
+      <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">My Todos</h1>
+      <p class="text-text-muted text-sm mt-1">Personal jobs you need to remember. Only you see this.</p>
+    </div>
+    <div class="text-xs text-text-muted">
+      {open.length} open · {done.length} recently done
+    </div>
+  </section>
+
+  <form id="new-todo-form" class="ph-card p-3 sm:p-4 mb-5 flex gap-2">
+    <input
+      type="text"
+      name="title"
+      class="ph-input flex-1"
+      placeholder="Add a job…"
+      maxlength="280"
+      required
+      autocomplete="off"
+    />
+    <button type="submit" class="btn-primary text-sm py-2 px-4 whitespace-nowrap">Add</button>
+  </form>
+
+  <div id="todo-flash" class="ph-flash hidden" data-tone="error" role="status"></div>
+
+  <ul id="open-list" class="space-y-2">
+    {open.length === 0 && (
+      <li class="text-text-muted text-sm" data-empty>Nothing on the list. Add something above.</li>
+    )}
+    {open.map((t: any) => (
+      <li class="ph-card p-3 sm:p-4 flex items-start gap-3 group" data-todo-id={t.id}>
+        <input
+          type="checkbox"
+          class="mt-1 h-4 w-4 cursor-pointer accent-accent flex-shrink-0"
+          data-toggle
+          aria-label="Mark complete"
+        />
+        <div class="flex-1 min-w-0">
+          <div class="text-sm leading-snug break-words" data-title>{t.title}</div>
+          <div class="text-[11px] text-text-muted mt-1">Added {relativeDate(t.created_at)}</div>
+        </div>
+        <button
+          type="button"
+          class="text-xs text-text-muted hover:text-red-400 transition opacity-0 group-hover:opacity-100 flex-shrink-0"
+          data-delete
+          aria-label="Delete"
+        >
+          Delete
+        </button>
+      </li>
+    ))}
+  </ul>
+
+  {done.length > 0 && (
+    <details class="mt-8">
+      <summary class="cursor-pointer text-xs font-display uppercase tracking-wider text-text-muted hover:text-text transition">
+        Recently completed ({done.length})
+      </summary>
+      <ul class="space-y-2 mt-3" id="done-list">
+        {done.map((t: any) => (
+          <li class="ph-card p-3 sm:p-4 flex items-start gap-3 group opacity-70" data-todo-id={t.id}>
+            <input
+              type="checkbox"
+              class="mt-1 h-4 w-4 cursor-pointer accent-accent flex-shrink-0"
+              data-toggle
+              checked
+              aria-label="Mark incomplete"
+            />
+            <div class="flex-1 min-w-0">
+              <div class="text-sm leading-snug break-words line-through" data-title>{t.title}</div>
+              <div class="text-[11px] text-text-muted mt-1">Done {relativeDate(t.completed_at)}</div>
+            </div>
+            <button
+              type="button"
+              class="text-xs text-text-muted hover:text-red-400 transition opacity-0 group-hover:opacity-100 flex-shrink-0"
+              data-delete
+              aria-label="Delete"
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    </details>
+  )}
+</PortalLayout>
+
+<script>
+  const flash = document.getElementById('todo-flash') as HTMLElement | null;
+  const form = document.getElementById('new-todo-form') as HTMLFormElement | null;
+
+  function showError(msg: string) {
+    if (!flash) return;
+    flash.textContent = msg;
+    flash.classList.remove('hidden');
+    setTimeout(() => flash.classList.add('hidden'), 4000);
+  }
+
+  // Create
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = form.querySelector<HTMLInputElement>('input[name="title"]');
+    const title = input?.value.trim() ?? '';
+    if (!title) return;
+
+    const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
+    try {
+      const res = await fetch('/api/portal/admin/todos', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ title }),
+      });
+      if (!res.ok) {
+        const { error } = await res.json().catch(() => ({ error: 'Could not add' }));
+        throw new Error(error || `HTTP ${res.status}`);
+      }
+      // Simplest correct refresh — server re-renders the lists in order.
+      window.location.reload();
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Could not add');
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
+
+  // Toggle complete + delete (event delegation so it works for open + done lists)
+  document.addEventListener('change', async (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.matches('[data-toggle]')) return;
+    const li = target.closest<HTMLElement>('[data-todo-id]');
+    const id = li?.dataset.todoId;
+    if (!id) return;
+
+    const checkbox = target as HTMLInputElement;
+    const completed = checkbox.checked;
+    checkbox.disabled = true;
+
+    try {
+      const res = await fetch(`/api/portal/admin/todos/${id}`, {
+        method: 'PATCH',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ completed }),
+      });
+      if (!res.ok) {
+        const { error } = await res.json().catch(() => ({ error: 'Could not update' }));
+        throw new Error(error || `HTTP ${res.status}`);
+      }
+      window.location.reload();
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Could not update');
+      checkbox.checked = !completed;
+      checkbox.disabled = false;
+    }
+  });
+
+  document.addEventListener('click', async (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.matches('[data-delete]')) return;
+    const li = target.closest<HTMLElement>('[data-todo-id]');
+    const id = li?.dataset.todoId;
+    if (!id) return;
+    if (!confirm('Delete this todo?')) return;
+
+    try {
+      const res = await fetch(`/api/portal/admin/todos/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const { error } = await res.json().catch(() => ({ error: 'Could not delete' }));
+        throw new Error(error || `HTTP ${res.status}`);
+      }
+      li?.remove();
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Could not delete');
+    }
+  });
+</script>
