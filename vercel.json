@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/contractor-websites",
+      "destination": "/web-design",
+      "permanent": true
+    }
+  ]
+}
