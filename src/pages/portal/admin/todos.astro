@@ -9,16 +9,19 @@ const session = Astro.locals.session!;
 
 const admin = createServiceSupabase();
 
+// Sort: due_at ASC NULLS LAST, then created_at DESC — todos with a due date
+// always appear above todos without one; soonest first; ties broken by newest.
 const [{ data: openRows }, { data: doneRows }] = await Promise.all([
   admin
     .from('owner_todos')
-    .select('id, title, completed, created_at, completed_at')
+    .select('id, title, body, due_at, completed, created_at, completed_at, updated_at')
     .eq('owner_id', session.userId)
     .eq('completed', false)
+    .order('due_at', { ascending: true, nullsFirst: false })
     .order('created_at', { ascending: false }),
   admin
     .from('owner_todos')
-    .select('id, title, completed, created_at, completed_at')
+    .select('id, title, body, due_at, completed, created_at, completed_at, updated_at')
     .eq('owner_id', session.userId)
     .eq('completed', true)
     .order('completed_at', { ascending: false })
@@ -27,6 +30,66 @@ const [{ data: openRows }, { data: doneRows }] = await Promise.all([
 
 const open = openRows ?? [];
 const done = doneRows ?? [];
+
+// One query for all attachments belonging to the rows we're rendering, then
+// group by todo_id. Small data volume — fine to do client-side grouping.
+const todoIds = [...open, ...done].map((t: any) => t.id as string);
+
+type Attachment = {
+  id: string;
+  todo_id: string;
+  file_name: string;
+  mime_type: string;
+  size_bytes: number;
+  created_at: string;
+};
+
+const attachmentsByTodo = new Map<string, Attachment[]>();
+if (todoIds.length > 0) {
+  const { data: attachments } = await admin
+    .from('owner_todo_attachments')
+    .select('id, todo_id, file_name, mime_type, size_bytes, created_at')
+    .in('todo_id', todoIds)
+    .eq('owner_id', session.userId)
+    .order('created_at', { ascending: true });
+
+  for (const a of (attachments ?? []) as Attachment[]) {
+    const arr = attachmentsByTodo.get(a.todo_id) ?? [];
+    arr.push(a);
+    attachmentsByTodo.set(a.todo_id, arr);
+  }
+}
+
+function formatBytes(n: number): string {
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+  if (n < 1024 * 1024 * 1024) return `${(n / 1024 / 1024).toFixed(1)} MB`;
+  return `${(n / 1024 / 1024 / 1024).toFixed(2)} GB`;
+}
+
+// due_at is a YYYY-MM-DD string from a `date` column. Parse as local Y/M/D
+// so we don't get a timezone shift from `new Date("2026-05-15")` (which
+// interprets the bare date as UTC midnight).
+function shortDate(yyyyMmDd: string): string {
+  const [y, m, d] = yyyyMmDd.split('-').map(Number);
+  if (!y || !m || !d) return yyyyMmDd;
+  const dt = new Date(y, m - 1, d);
+  const sameYear = y === new Date().getFullYear();
+  return dt.toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    ...(sameYear ? {} : { year: 'numeric' }),
+  });
+}
+
+// SSR overdue uses UTC. Client-side JS re-evaluates against local "today"
+// on load so a row at the timezone seam doesn't render the wrong color.
+function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
+  if (completed || !due_at) return false;
+  const now = new Date();
+  const todayUtc = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`;
+  return due_at < todayUtc;
+}
 ---
 <PortalLayout title="My Todos | Client Hub" session={session}>
   <section class="mb-5 flex items-end justify-between gap-3 flex-wrap">
@@ -39,17 +102,50 @@ const done = doneRows ?? [];
     </div>
   </section>
 
-  <form id="new-todo-form" class="ph-card p-3 sm:p-4 mb-5 flex gap-2">
+  <!--
+    NEW-TODO FORM
+    Submits the title/body/due_at first, then runs the direct-upload flow
+    (sign → PUT → confirm) for any selected files using the new todo's id.
+  -->
+  <form id="new-todo-form" class="ph-card p-3 sm:p-4 mb-5 space-y-3">
     <input
       type="text"
       name="title"
-      class="ph-input flex-1"
-      placeholder="Add a job…"
-      maxlength="280"
+      class="ph-input"
+      placeholder="Add a todo…"
+      maxlength="200"
       required
       autocomplete="off"
     />
-    <button type="submit" class="btn-primary text-sm py-2 px-4 whitespace-nowrap">Add</button>
+    <textarea
+      name="body"
+      class="ph-input"
+      placeholder="Notes, links, paste anything (optional)"
+      maxlength="50000"
+      rows="3"
+      style="min-height: 4.5rem;"
+      data-autogrow
+    ></textarea>
+    <div class="flex flex-wrap items-center gap-3">
+      <label class="flex items-center gap-2 text-sm">
+        <span class="text-text-muted">Due</span>
+        <input type="date" name="due_at" class="ph-input !py-1.5 !px-2 text-sm w-auto" />
+      </label>
+      <div class="flex-1 min-w-[160px]">
+        <label
+          class="ph-drop-zone block text-xs cursor-pointer"
+          data-drop-zone
+          data-target="new"
+        >
+          <span data-drop-label>Drop files or click to attach</span>
+          <input type="file" name="files" multiple class="hidden" data-file-input />
+        </label>
+        <ul class="mt-2 space-y-1 text-xs" data-pending-files></ul>
+      </div>
+      <button type="submit" class="btn-primary text-sm py-2 px-4 whitespace-nowrap">
+        <span data-add-label>Add</span>
+      </button>
+    </div>
   </form>
 
   <div id="todo-flash" class="ph-flash hidden" data-tone="error" role="status"></div>
@@ -58,28 +154,130 @@ const done = doneRows ?? [];
     {open.length === 0 && (
       <li class="text-text-muted text-sm" data-empty>Nothing on the list. Add something above.</li>
     )}
-    {open.map((t: any) => (
-      <li class="ph-card p-3 sm:p-4 flex items-start gap-3 group" data-todo-id={t.id}>
-        <input
-          type="checkbox"
-          class="mt-1 h-4 w-4 cursor-pointer accent-accent flex-shrink-0"
-          data-toggle
-          aria-label="Mark complete"
-        />
-        <div class="flex-1 min-w-0">
-          <div class="text-sm leading-snug break-words" data-title>{t.title}</div>
-          <div class="text-[11px] text-text-muted mt-1">Added {relativeDate(t.created_at)}</div>
-        </div>
-        <button
-          type="button"
-          class="text-xs text-text-muted hover:text-red-400 transition opacity-0 group-hover:opacity-100 flex-shrink-0"
-          data-delete
-          aria-label="Delete"
+    {open.map((t: any) => {
+      const atts = attachmentsByTodo.get(t.id) ?? [];
+      const overdueSsr = isOverdueUtc(t.due_at, t.completed);
+      return (
+        <li
+          class="ph-card group"
+          data-todo-id={t.id}
+          data-completed="false"
         >
-          Delete
-        </button>
-      </li>
-    ))}
+          <div class="p-3 sm:p-4 flex items-start gap-3" data-row-toggle>
+            <input
+              type="checkbox"
+              class="mt-1 h-4 w-4 cursor-pointer accent-accent flex-shrink-0"
+              data-toggle
+              aria-label="Mark complete"
+            />
+            <div class="flex-1 min-w-0">
+              <div class="text-sm leading-snug break-words" data-title-text>{t.title}</div>
+              <div class="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-text-muted">
+                <span>Added {relativeDate(t.created_at)}</span>
+                {t.due_at && (
+                  <span
+                    class="ph-due-pill"
+                    data-due-pill
+                    data-due-at={t.due_at}
+                    data-overdue={String(overdueSsr)}
+                  >
+                    Due {shortDate(t.due_at)}
+                  </span>
+                )}
+                {atts.length > 0 && (
+                  <span class="ph-attach-badge" title={`${atts.length} attachment${atts.length === 1 ? '' : 's'}`}>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                    {atts.length}
+                  </span>
+                )}
+              </div>
+            </div>
+            <button
+              type="button"
+              class="text-xs text-text-muted hover:text-red-400 transition opacity-0 group-hover:opacity-100 flex-shrink-0 self-start"
+              data-delete
+              aria-label="Delete"
+            >
+              Delete
+            </button>
+          </div>
+
+          <div class="border-t border-line/60 p-3 sm:p-4 space-y-3" data-expanded hidden>
+            <input
+              type="text"
+              class="ph-input text-sm"
+              maxlength="200"
+              value={t.title}
+              data-edit
+              data-field="title"
+            />
+            <textarea
+              class="ph-input text-sm"
+              maxlength="50000"
+              placeholder="Notes, links, paste anything"
+              rows="3"
+              style="min-height: 5rem;"
+              data-edit
+              data-field="body"
+              data-autogrow
+            >{t.body ?? ''}</textarea>
+            <label class="flex items-center gap-2 text-sm">
+              <span class="text-text-muted">Due</span>
+              <input
+                type="date"
+                class="ph-input !py-1.5 !px-2 text-sm w-auto"
+                value={t.due_at ?? ''}
+                data-edit
+                data-field="due_at"
+              />
+              {t.due_at && (
+                <button
+                  type="button"
+                  class="text-xs text-text-muted hover:text-text underline-offset-2 hover:underline"
+                  data-clear-due
+                >Clear</button>
+              )}
+            </label>
+
+            <ul class="space-y-1.5" data-attachment-list>
+              {atts.map((a) => (
+                <li class="flex items-center gap-2 text-xs ph-attach-row" data-attachment-id={a.id}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-text-muted flex-shrink-0"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                  <button
+                    type="button"
+                    class="flex-1 min-w-0 text-left truncate hover:text-accent transition"
+                    data-attachment-download
+                  >{a.file_name}</button>
+                  <span class="text-text-muted shrink-0">{formatBytes(a.size_bytes)}</span>
+                  <button
+                    type="button"
+                    class="text-text-muted hover:text-red-400 transition shrink-0"
+                    data-attachment-delete
+                    aria-label="Delete attachment"
+                  >×</button>
+                </li>
+              ))}
+            </ul>
+
+            <ul class="space-y-1.5" data-upload-progress></ul>
+
+            <label class="ph-drop-zone block text-xs cursor-pointer" data-drop-zone data-target="row">
+              <span data-drop-label>Drop files or click to attach</span>
+              <input type="file" multiple class="hidden" data-file-input />
+            </label>
+
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-[10px] text-text-muted" data-save-status>Saved</span>
+              <button
+                type="button"
+                class="text-xs text-text-muted hover:text-red-400 transition"
+                data-delete
+              >Delete todo</button>
+            </div>
+          </div>
+        </li>
+      );
+    })}
   </ul>
 
   {done.length > 0 && (
@@ -88,38 +286,153 @@ const done = doneRows ?? [];
         Recently completed ({done.length})
       </summary>
       <ul class="space-y-2 mt-3" id="done-list">
-        {done.map((t: any) => (
-          <li class="ph-card p-3 sm:p-4 flex items-start gap-3 group opacity-70" data-todo-id={t.id}>
-            <input
-              type="checkbox"
-              class="mt-1 h-4 w-4 cursor-pointer accent-accent flex-shrink-0"
-              data-toggle
-              checked
-              aria-label="Mark incomplete"
-            />
-            <div class="flex-1 min-w-0">
-              <div class="text-sm leading-snug break-words line-through" data-title>{t.title}</div>
-              <div class="text-[11px] text-text-muted mt-1">Done {relativeDate(t.completed_at)}</div>
-            </div>
-            <button
-              type="button"
-              class="text-xs text-text-muted hover:text-red-400 transition opacity-0 group-hover:opacity-100 flex-shrink-0"
-              data-delete
-              aria-label="Delete"
+        {done.map((t: any) => {
+          const atts = attachmentsByTodo.get(t.id) ?? [];
+          return (
+            <li
+              class="ph-card group opacity-70"
+              data-todo-id={t.id}
+              data-completed="true"
             >
-              Delete
-            </button>
-          </li>
-        ))}
+              <div class="p-3 sm:p-4 flex items-start gap-3" data-row-toggle>
+                <input
+                  type="checkbox"
+                  class="mt-1 h-4 w-4 cursor-pointer accent-accent flex-shrink-0"
+                  data-toggle
+                  checked
+                  aria-label="Mark incomplete"
+                />
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm leading-snug break-words line-through" data-title-text>{t.title}</div>
+                  <div class="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-text-muted">
+                    <span>Done {relativeDate(t.completed_at)}</span>
+                    {atts.length > 0 && (
+                      <span class="ph-attach-badge">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                        {atts.length}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="text-xs text-text-muted hover:text-red-400 transition opacity-0 group-hover:opacity-100 flex-shrink-0 self-start"
+                  data-delete
+                  aria-label="Delete"
+                >
+                  Delete
+                </button>
+              </div>
+
+              {(t.body || atts.length > 0) && (
+                <div class="border-t border-line/60 p-3 sm:p-4 space-y-2" data-expanded hidden>
+                  {t.body && (
+                    <p class="whitespace-pre-wrap text-xs leading-relaxed text-text/80">{t.body}</p>
+                  )}
+                  {atts.length > 0 && (
+                    <ul class="space-y-1.5" data-attachment-list>
+                      {atts.map((a) => (
+                        <li class="flex items-center gap-2 text-xs ph-attach-row" data-attachment-id={a.id}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-text-muted flex-shrink-0"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                          <button
+                            type="button"
+                            class="flex-1 min-w-0 text-left truncate hover:text-accent transition"
+                            data-attachment-download
+                          >{a.file_name}</button>
+                          <span class="text-text-muted shrink-0">{formatBytes(a.size_bytes)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </details>
   )}
+
+  <style is:global>
+    .ph-due-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      background: rgba(148, 163, 184, 0.12);
+      color: rgb(203, 213, 225);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+    .ph-due-pill[data-overdue="true"] {
+      background: rgba(248, 113, 113, 0.14);
+      color: rgb(254, 202, 202);
+      border-color: rgba(248, 113, 113, 0.3);
+    }
+    .ph-attach-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      background: rgba(148, 163, 184, 0.1);
+      color: rgb(203, 213, 225);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    .ph-drop-zone {
+      border: 1px dashed var(--color-line);
+      border-radius: 0.6rem;
+      padding: 0.6rem 0.8rem;
+      color: var(--color-text-muted);
+      background: rgba(255, 255, 255, 0.015);
+      text-align: center;
+      transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+    .ph-drop-zone:hover {
+      border-color: var(--color-accent);
+      color: var(--color-text);
+    }
+    .ph-drop-zone.is-dragover {
+      border-color: var(--color-accent);
+      background: rgba(255, 107, 26, 0.06);
+      color: var(--color-accent);
+    }
+    .ph-attach-row {
+      padding: 0.35rem 0.5rem;
+      border-radius: 0.45rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .ph-progress-track {
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      overflow: hidden;
+      margin-top: 0.3rem;
+    }
+    .ph-progress-fill {
+      height: 100%;
+      background: var(--color-accent);
+      width: 0%;
+      transition: width 120ms linear;
+    }
+    [data-row-toggle] { cursor: pointer; }
+    [data-row-toggle] input,
+    [data-row-toggle] button { cursor: default; }
+    [data-row-toggle] input[type="checkbox"],
+    [data-row-toggle] button { cursor: pointer; }
+  </style>
 </PortalLayout>
 
 <script>
   const flash = document.getElementById('todo-flash') as HTMLElement | null;
-  const form = document.getElementById('new-todo-form') as HTMLFormElement | null;
+  const newForm = document.getElementById('new-todo-form') as HTMLFormElement | null;
 
+  // ---------------- helpers ----------------
   function showError(msg: string) {
     if (!flash) return;
     flash.textContent = msg;
@@ -127,35 +440,353 @@ const done = doneRows ?? [];
     setTimeout(() => flash.classList.add('hidden'), 4000);
   }
 
-  // Create
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const input = form.querySelector<HTMLInputElement>('input[name="title"]');
-    const title = input?.value.trim() ?? '';
-    if (!title) return;
+  function autogrow(el: HTMLTextAreaElement) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+  document.querySelectorAll<HTMLTextAreaElement>('[data-autogrow]').forEach((t) => {
+    autogrow(t);
+    t.addEventListener('input', () => autogrow(t));
+  });
 
-    const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+  function escapeHtml(s: string): string {
+    return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
+  }
+  function formatBytesJs(n: number): string {
+    if (n < 1024) return `${n} B`;
+    if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+    if (n < 1024 * 1024 * 1024) return `${(n / 1024 / 1024).toFixed(1)} MB`;
+    return `${(n / 1024 / 1024 / 1024).toFixed(2)} GB`;
+  }
+
+  // Re-evaluate due pill against the user's *local* today.
+  function todayLocalIso(): string {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+  document.querySelectorAll<HTMLElement>('[data-due-pill]').forEach((el) => {
+    const due = el.dataset.dueAt;
+    if (!due) return;
+    const overdue = due < todayLocalIso();
+    el.dataset.overdue = String(overdue);
+  });
+
+  // ---------------- in-flight upload guard ----------------
+  let uploadsInFlight = 0;
+  function beginUpload() { uploadsInFlight++; }
+  function endUpload() { uploadsInFlight = Math.max(0, uploadsInFlight - 1); }
+  window.addEventListener('beforeunload', (e) => {
+    if (uploadsInFlight > 0) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+
+  // ---------------- progress chip ----------------
+  type ProgressChip = {
+    el: HTMLLIElement;
+    setProgress: (pct: number) => void;
+    setLabel: (text: string) => void;
+    setError: (msg: string) => void;
+    remove: () => void;
+  };
+
+  function createProgressChip(file: File): ProgressChip {
+    const li = document.createElement('li');
+    li.className = 'ph-attach-row';
+    li.innerHTML = `
+      <div class="flex items-center gap-2">
+        <span class="flex-1 min-w-0 truncate text-xs" data-name>${escapeHtml(file.name)}</span>
+        <span class="text-text-muted shrink-0 text-xs">${formatBytesJs(file.size)}</span>
+        <span class="text-text-muted shrink-0 text-xs" data-pct>0%</span>
+      </div>
+      <div class="ph-progress-track"><div class="ph-progress-fill" data-fill></div></div>
+    `;
+    const fill = li.querySelector<HTMLElement>('[data-fill]')!;
+    const pctEl = li.querySelector<HTMLElement>('[data-pct]')!;
+    const nameEl = li.querySelector<HTMLElement>('[data-name]')!;
+    return {
+      el: li,
+      setProgress(pct: number) {
+        const clamped = Math.max(0, Math.min(100, pct));
+        fill.style.width = clamped + '%';
+        pctEl.textContent = Math.round(clamped) + '%';
+      },
+      setLabel(text: string) { pctEl.textContent = text; },
+      setError(msg: string) {
+        fill.style.background = 'rgba(248, 113, 113, 0.6)';
+        pctEl.textContent = 'Failed';
+        nameEl.title = msg;
+      },
+      remove() { li.remove(); },
+    };
+  }
+
+  // ---------------- direct-upload flow ----------------
+  const MAX_BYTES = 100 * 1024 * 1024;
+
+  async function directUpload(todoId: string, file: File, chip: ProgressChip): Promise<void> {
+    beginUpload();
+    try {
+      // 1. Sign
+      const signRes = await fetch(`/api/portal/admin/todos/${todoId}/attachments/sign`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          file_name: file.name,
+          mime_type: file.type,
+          size_bytes: file.size,
+        }),
+      });
+      if (!signRes.ok) {
+        const j = await signRes.json().catch(() => ({}));
+        throw new Error(j.error || `Sign failed (HTTP ${signRes.status})`);
+      }
+      const sign = (await signRes.json()) as {
+        attachment_id: string;
+        storage_path: string;
+        signed_url: string;
+        token: string;
+      };
+
+      // 2. PUT via XHR so we can show progress (fetch has no upload.onprogress).
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', sign.signed_url);
+        if (file.type) xhr.setRequestHeader('Content-Type', file.type);
+        xhr.upload.addEventListener('progress', (e) => {
+          if (!e.lengthComputable) return;
+          chip.setProgress((e.loaded / e.total) * 100);
+        });
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            chip.setProgress(100);
+            resolve();
+          } else {
+            reject(new Error(`Upload failed (HTTP ${xhr.status})`));
+          }
+        };
+        xhr.onerror = () => reject(new Error('Network error during upload'));
+        xhr.onabort = () => reject(new Error('Upload aborted'));
+        xhr.send(file);
+      });
+
+      chip.setLabel('Finishing…');
+
+      // 3. Confirm
+      const confirmRes = await fetch(`/api/portal/admin/todos/${todoId}/attachments/confirm`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          attachment_id: sign.attachment_id,
+          storage_path: sign.storage_path,
+          file_name: file.name,
+          mime_type: file.type,
+          size_bytes: file.size,
+        }),
+      });
+      if (!confirmRes.ok) {
+        const j = await confirmRes.json().catch(() => ({}));
+        throw new Error(j.error || `Confirm failed (HTTP ${confirmRes.status})`);
+      }
+      chip.setLabel('Done');
+    } finally {
+      endUpload();
+    }
+  }
+
+  // ---------------- new-todo form ----------------
+  const pendingFiles: File[] = [];
+  const pendingList = newForm?.querySelector<HTMLUListElement>('[data-pending-files]') ?? null;
+
+  function renderPendingFiles() {
+    if (!pendingList) return;
+    pendingList.innerHTML = '';
+    pendingFiles.forEach((f, i) => {
+      const li = document.createElement('li');
+      li.className = 'flex items-center gap-2 ph-attach-row';
+      li.innerHTML = `
+        <span class="flex-1 min-w-0 truncate">${escapeHtml(f.name)}</span>
+        <span class="text-text-muted shrink-0">${formatBytesJs(f.size)}</span>
+        <button type="button" class="text-text-muted hover:text-red-400 transition shrink-0" data-remove-pending>×</button>
+      `;
+      const btn = li.querySelector('[data-remove-pending]');
+      btn?.addEventListener('click', () => {
+        pendingFiles.splice(i, 1);
+        renderPendingFiles();
+      });
+      pendingList.appendChild(li);
+    });
+  }
+
+  function acceptFiles(files: FileList | File[], onFiles: (files: File[]) => void) {
+    const valid: File[] = [];
+    for (const f of Array.from(files)) {
+      if (f.size === 0) continue;
+      if (f.size > MAX_BYTES) {
+        showError(`"${f.name}" exceeds 100 MB limit`);
+        continue;
+      }
+      valid.push(f);
+    }
+    if (valid.length > 0) onFiles(valid);
+  }
+
+  // Drop zone wiring (works for new-todo form AND existing row drop zones).
+  document.addEventListener('dragover', (e) => {
+    const zone = (e.target as HTMLElement)?.closest<HTMLElement>('[data-drop-zone]');
+    if (!zone) return;
+    e.preventDefault();
+    zone.classList.add('is-dragover');
+  });
+  document.addEventListener('dragleave', (e) => {
+    const zone = (e.target as HTMLElement)?.closest<HTMLElement>('[data-drop-zone]');
+    if (!zone) return;
+    zone.classList.remove('is-dragover');
+  });
+  document.addEventListener('drop', (e) => {
+    const zone = (e.target as HTMLElement)?.closest<HTMLElement>('[data-drop-zone]');
+    if (!zone) return;
+    e.preventDefault();
+    zone.classList.remove('is-dragover');
+    const dt = e.dataTransfer;
+    if (!dt?.files || dt.files.length === 0) return;
+    const target = zone.dataset.target;
+    if (target === 'new') {
+      acceptFiles(dt.files, (fs) => {
+        pendingFiles.push(...fs);
+        renderPendingFiles();
+      });
+    } else if (target === 'row') {
+      const li = zone.closest<HTMLElement>('[data-todo-id]');
+      const todoId = li?.dataset.todoId;
+      if (!todoId || !li) return;
+      acceptFiles(dt.files, (fs) => uploadToRow(li, todoId, fs));
+    }
+  });
+
+  document.addEventListener('change', (e) => {
+    const input = e.target as HTMLElement;
+    if (!input.matches('[data-file-input]')) return;
+    const fileInput = input as HTMLInputElement;
+    const zone = fileInput.closest<HTMLElement>('[data-drop-zone]');
+    if (!zone || !fileInput.files) return;
+    const target = zone.dataset.target;
+    if (target === 'new') {
+      acceptFiles(fileInput.files, (fs) => {
+        pendingFiles.push(...fs);
+        renderPendingFiles();
+      });
+    } else if (target === 'row') {
+      const li = zone.closest<HTMLElement>('[data-todo-id]');
+      const todoId = li?.dataset.todoId;
+      if (todoId && li) acceptFiles(fileInput.files, (fs) => uploadToRow(li, todoId, fs));
+    }
+    fileInput.value = '';
+  });
+
+  async function uploadToRow(li: HTMLElement, todoId: string, files: File[]) {
+    const progressList = li.querySelector<HTMLUListElement>('[data-upload-progress]');
+    const statusEl = li.querySelector<HTMLElement>('[data-save-status]');
+    if (!progressList) return;
+    const chips = files.map((f) => {
+      const c = createProgressChip(f);
+      progressList.appendChild(c.el);
+      return { file: f, chip: c };
+    });
+    if (statusEl) statusEl.textContent = `Uploading ${files.length} file${files.length === 1 ? '' : 's'}…`;
+    let anyFailed = false;
+    // Sequential — simpler error handling and avoids burning bandwidth on huge parallel PUTs.
+    for (const { file, chip } of chips) {
+      try {
+        await directUpload(todoId, file, chip);
+      } catch (err) {
+        anyFailed = true;
+        chip.setError(err instanceof Error ? err.message : 'Upload failed');
+        showError(err instanceof Error ? err.message : 'Upload failed');
+      }
+    }
+    if (statusEl) statusEl.textContent = anyFailed ? 'Save failed' : 'Saved';
+    if (!anyFailed) {
+      // Re-render the row to pull in the new attachments + count badge.
+      window.location.reload();
+    }
+  }
+
+  newForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const titleInput = newForm.querySelector<HTMLInputElement>('input[name="title"]');
+    const bodyInput = newForm.querySelector<HTMLTextAreaElement>('textarea[name="body"]');
+    const dueInput = newForm.querySelector<HTMLInputElement>('input[name="due_at"]');
+    const submitBtn = newForm.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const label = newForm.querySelector<HTMLElement>('[data-add-label]');
+
+    const title = titleInput?.value.trim() ?? '';
+    if (!title) return;
+    const body = bodyInput?.value ?? '';
+    const dueAt = (dueInput?.value ?? '') || null;
+
     if (submitBtn) submitBtn.disabled = true;
+    if (label) label.textContent = 'Adding…';
 
     try {
       const res = await fetch('/api/portal/admin/todos', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ title }),
+        body: JSON.stringify({ title, body: body || null, due_at: dueAt }),
       });
       if (!res.ok) {
-        const { error } = await res.json().catch(() => ({ error: 'Could not add' }));
-        throw new Error(error || `HTTP ${res.status}`);
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || `HTTP ${res.status}`);
       }
-      // Simplest correct refresh — server re-renders the lists in order.
+      const { todo } = (await res.json()) as { todo: { id: string } };
+
+      if (pendingFiles.length > 0) {
+        if (label) label.textContent = `Uploading ${pendingFiles.length} file${pendingFiles.length === 1 ? '' : 's'}…`;
+        if (pendingList) pendingList.innerHTML = '';
+        const chips = pendingFiles.map((f) => {
+          const c = createProgressChip(f);
+          pendingList?.appendChild(c.el);
+          return { file: f, chip: c };
+        });
+        for (const { file, chip } of chips) {
+          try {
+            await directUpload(todo.id, file, chip);
+          } catch (err) {
+            chip.setError(err instanceof Error ? err.message : 'Upload failed');
+            showError(err instanceof Error ? err.message : 'Upload failed');
+          }
+        }
+      }
       window.location.reload();
     } catch (err) {
       showError(err instanceof Error ? err.message : 'Could not add');
       if (submitBtn) submitBtn.disabled = false;
+      if (label) label.textContent = 'Add';
     }
   });
 
-  // Toggle complete + delete (event delegation so it works for open + done lists)
+  // ---------------- row interactions ----------------
+
+  // Toggle expand on row click (ignoring checkbox / delete / inside expanded panel).
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-toggle]') || target.closest('[data-delete]')) return;
+    const row = target.closest<HTMLElement>('[data-row-toggle]');
+    if (!row) return;
+    const li = row.closest<HTMLElement>('[data-todo-id]');
+    if (!li) return;
+    const expanded = li.querySelector<HTMLElement>('[data-expanded]');
+    if (!expanded) return;
+    if (expanded.hidden) {
+      expanded.hidden = false;
+      expanded.querySelectorAll<HTMLTextAreaElement>('[data-autogrow]').forEach(autogrow);
+    } else {
+      expanded.hidden = true;
+    }
+  });
+
+  // Checkbox: toggle complete
   document.addEventListener('change', async (e) => {
     const target = e.target as HTMLElement;
     if (!target.matches('[data-toggle]')) return;
@@ -174,8 +805,8 @@ const done = doneRows ?? [];
         body: JSON.stringify({ completed }),
       });
       if (!res.ok) {
-        const { error } = await res.json().catch(() => ({ error: 'Could not update' }));
-        throw new Error(error || `HTTP ${res.status}`);
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || `HTTP ${res.status}`);
       }
       window.location.reload();
     } catch (err) {
@@ -185,21 +816,149 @@ const done = doneRows ?? [];
     }
   });
 
+  // Delete todo (collapsed delete button OR expanded "Delete todo")
   document.addEventListener('click', async (e) => {
     const target = e.target as HTMLElement;
     if (!target.matches('[data-delete]')) return;
     const li = target.closest<HTMLElement>('[data-todo-id]');
     const id = li?.dataset.todoId;
     if (!id) return;
-    if (!confirm('Delete this todo?')) return;
+    if (!confirm('Delete this todo? Attachments will be removed too.')) return;
 
     try {
       const res = await fetch(`/api/portal/admin/todos/${id}`, { method: 'DELETE' });
       if (!res.ok) {
-        const { error } = await res.json().catch(() => ({ error: 'Could not delete' }));
-        throw new Error(error || `HTTP ${res.status}`);
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || `HTTP ${res.status}`);
       }
       li?.remove();
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Could not delete');
+    }
+  });
+
+  // Inline edit: auto-save on blur. Title also saves on Enter (and blurs).
+  type FieldName = 'title' | 'body' | 'due_at';
+
+  function patchField(li: HTMLElement, field: FieldName, value: string | null): Promise<void> {
+    const id = li.dataset.todoId;
+    if (!id) return Promise.resolve();
+    const statusEl = li.querySelector<HTMLElement>('[data-save-status]');
+    if (statusEl) statusEl.textContent = 'Saving…';
+    const payload: Record<string, string | null> = {
+      [field]: value && value.length > 0 ? value : null,
+    };
+    return fetch(`/api/portal/admin/todos/${id}`, {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const j = await res.json().catch(() => ({}));
+          throw new Error(j.error || `HTTP ${res.status}`);
+        }
+        if (statusEl) statusEl.textContent = 'Saved';
+        if (field === 'title' && value) {
+          const titleText = li.querySelector<HTMLElement>('[data-title-text]');
+          if (titleText) titleText.textContent = value;
+        }
+      })
+      .catch((err) => {
+        if (statusEl) statusEl.textContent = 'Save failed';
+        showError(err instanceof Error ? err.message : 'Save failed');
+      });
+  }
+
+  document.addEventListener(
+    'blur',
+    (e) => {
+      const target = e.target as HTMLElement;
+      if (!target.matches('[data-edit]')) return;
+      const field = (target as HTMLElement).dataset.field as FieldName | undefined;
+      if (!field) return;
+      const li = target.closest<HTMLElement>('[data-todo-id]');
+      if (!li) return;
+      const input = target as HTMLInputElement | HTMLTextAreaElement;
+      const value = input.value;
+      const initial = input.dataset.initial ?? '';
+      if (value === initial) return;
+      if (field === 'title' && value.trim().length === 0) {
+        input.value = initial;
+        return;
+      }
+      input.dataset.initial = value;
+      patchField(li, field, value);
+    },
+    true,
+  );
+
+  document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[data-edit]').forEach((el) => {
+    el.dataset.initial = el.value;
+  });
+
+  document.addEventListener('keydown', (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.matches('[data-edit][data-field="title"]')) return;
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    (target as HTMLInputElement).blur();
+  });
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.matches('[data-clear-due]')) return;
+    const li = target.closest<HTMLElement>('[data-todo-id]');
+    const dueInput = li?.querySelector<HTMLInputElement>('[data-edit][data-field="due_at"]');
+    if (!li || !dueInput) return;
+    dueInput.value = '';
+    dueInput.dataset.initial = '';
+    patchField(li, 'due_at', null);
+  });
+
+  // Attachment download: ask server for a fresh signed URL each time.
+  document.addEventListener('click', async (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.matches('[data-attachment-download]')) return;
+    const attLi = target.closest<HTMLElement>('[data-attachment-id]');
+    const todoLi = target.closest<HTMLElement>('[data-todo-id]');
+    const attachmentId = attLi?.dataset.attachmentId;
+    const todoId = todoLi?.dataset.todoId;
+    if (!attachmentId || !todoId) return;
+    try {
+      const res = await fetch(`/api/portal/admin/todos/${todoId}/attachments/${attachmentId}`);
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || `HTTP ${res.status}`);
+      }
+      const { signedUrl } = (await res.json()) as { signedUrl: string };
+      window.open(signedUrl, '_blank', 'noopener');
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Could not open file');
+    }
+  });
+
+  document.addEventListener('click', async (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.matches('[data-attachment-delete]')) return;
+    const attLi = target.closest<HTMLElement>('[data-attachment-id]');
+    const todoLi = target.closest<HTMLElement>('[data-todo-id]');
+    const attachmentId = attLi?.dataset.attachmentId;
+    const todoId = todoLi?.dataset.todoId;
+    if (!attachmentId || !todoId) return;
+    if (!confirm('Delete this attachment?')) return;
+    try {
+      const res = await fetch(`/api/portal/admin/todos/${todoId}/attachments/${attachmentId}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || `HTTP ${res.status}`);
+      }
+      attLi?.remove();
+      const list = todoLi?.querySelector<HTMLUListElement>('[data-attachment-list]');
+      if (list && list.children.length === 0) {
+        const badge = todoLi?.querySelector<HTMLElement>('.ph-attach-badge');
+        badge?.remove();
+      }
     } catch (err) {
       showError(err instanceof Error ? err.message : 'Could not delete');
     }
