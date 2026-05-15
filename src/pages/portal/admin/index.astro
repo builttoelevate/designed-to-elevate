@@ -29,7 +29,6 @@ let query = admin
   .select('id, title, status, priority, category, billing_type, created_at, client_id, clients:client_id (business_name, slug)')
   .order('created_at', { ascending: false });
 
-if (fStatus)   query = query.eq('status', fStatus);
 if (fPriority) query = query.eq('priority', fPriority);
 if (fBilling)  query = query.eq('billing_type', fBilling);
 if (fClient)   query = query.eq('client_id', fClient);
@@ -39,9 +38,11 @@ const [{ data: requests }, { data: clients }] = await Promise.all([
   admin.from('clients').select('id, business_name').order('business_name'),
 ]);
 
-const list = requests ?? [];
+const all = requests ?? [];
 const counts: Record<string, number> = {};
-for (const r of list) counts[r.status] = (counts[r.status] || 0) + 1;
+for (const r of all) counts[r.status] = (counts[r.status] || 0) + 1;
+
+const list = fStatus ? all.filter((r) => r.status === fStatus) : all;
 
 function qs(overrides: Record<string, string>): string {
   const next = new URLSearchParams(params);
@@ -93,7 +94,7 @@ function qs(overrides: Record<string, string>): string {
 
   <div class="flex flex-wrap gap-2 mb-4 text-xs">
     <a href="/portal/admin" class:list={["px-3 py-1.5 rounded-full border transition", !fStatus ? 'bg-accent text-bg border-accent' : 'border-line hover:text-text']}>
-      All ({list.length})
+      All ({all.length})
     </a>
     {STATUS_ORDER.map((s) => (
       <a href={qs({ status: s })} class:list={["px-3 py-1.5 rounded-full border transition", fStatus === s ? 'bg-accent text-bg border-accent' : 'border-line text-text-muted hover:text-text']}>
