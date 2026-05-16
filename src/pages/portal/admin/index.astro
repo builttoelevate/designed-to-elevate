@@ -42,7 +42,11 @@ const all = requests ?? [];
 const counts: Record<string, number> = {};
 for (const r of all) counts[r.status] = (counts[r.status] || 0) + 1;
 
-const list = fStatus ? all.filter((r) => r.status === fStatus) : all;
+const openCount = all.length - (counts.complete || 0);
+const list = fStatus
+  ? all.filter((r) => r.status === fStatus)
+  : all.filter((r) => r.status !== 'complete');
+const hasOtherFilters = Boolean(fPriority || fBilling || fClient);
 
 function qs(overrides: Record<string, string>): string {
   const next = new URLSearchParams(params);
@@ -58,7 +62,7 @@ function qs(overrides: Record<string, string>): string {
   <section class="mb-5 flex items-end justify-between gap-3 flex-wrap">
     <div>
       <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">Queue</h1>
-      <p class="text-text-muted text-sm mt-1">All client requests across all businesses.</p>
+      <p class="text-text-muted text-sm mt-1">Open client requests across all businesses. Completed jobs live under the "Complete" tab.</p>
     </div>
     <div class="flex items-center gap-3 text-xs text-text-muted">
       <span>{list.length} request{list.length === 1 ? '' : 's'}</span>
@@ -94,7 +98,7 @@ function qs(overrides: Record<string, string>): string {
 
   <div class="flex flex-wrap gap-2 mb-4 text-xs">
     <a href="/portal/admin" class:list={["px-3 py-1.5 rounded-full border transition", !fStatus ? 'bg-accent text-bg border-accent' : 'border-line hover:text-text']}>
-      All ({all.length})
+      All ({openCount})
     </a>
     {STATUS_ORDER.map((s) => (
       <a href={qs({ status: s })} class:list={["px-3 py-1.5 rounded-full border transition", fStatus === s ? 'bg-accent text-bg border-accent' : 'border-line text-text-muted hover:text-text']}>
@@ -105,7 +109,11 @@ function qs(overrides: Record<string, string>): string {
 
   <ul class="space-y-2">
     {list.length === 0 && (
-      <li class="text-text-muted text-sm">No requests match the filters.</li>
+      <li class="text-text-muted text-sm">
+        {!fStatus && !hasOtherFilters
+          ? 'No new jobs. You’re all caught up.'
+          : 'No requests match the filters.'}
+      </li>
     )}
     {list.map((r: any) => (
       <li>
