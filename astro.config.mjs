@@ -1,34 +1,44 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import vercel from '@astrojs/vercel';
+import cloudflare from '@astrojs/cloudflare';
 
-// Production deployment on Vercel at designedtoelevate.co
+// Production deployment on Cloudflare Pages at designedtoelevate.co
 //
 // Output mode: hybrid (static by default).
 // Marketing pages prerender to static HTML at build time.
 // Portal pages opt into SSR via `export const prerender = false;`
 // so Supabase auth + per-user data work at request time.
+//
+// We moved off Vercel in May 2026 because Vercel's ~4.5 MB serverless
+// request-body cap blocked client photo uploads (HTTP 413). Cloudflare
+// Pages allows up to 100 MB per request, which fits modern phone photos
+// comfortably.
 export default defineConfig({
   site: 'https://designedtoelevate.co',
   trailingSlash: 'ignore',
   output: 'static',
-  adapter: vercel(),
+  adapter: cloudflare(),
   build: {
     assets: 'assets',
   },
   compressHTML: true,
   // Legacy URL redirects after the redesign:
-  //   /work    → /case-studies (the prior work page is replaced by case studies)
-  //   /pricing → /custom-lead-systems (founding-5 pricing is gone with the new positioning)
+  //   /work                 → /case-studies (the prior work page is replaced)
+  //   /pricing              → /custom-lead-systems (founding-5 pricing is gone)
+  //   /contractor-websites  → /web-design (legacy URL kept indexed)
   // /grow stays in place as the wizard ad landing page.
   redirects: {
     '/work': '/case-studies',
     '/pricing': '/custom-lead-systems',
+    '/contractor-websites': {
+      status: 301,
+      destination: '/web-design',
+    },
   },
   // Astro 5's default `security.checkOrigin` rejects POSTs with a form
   // content-type (multipart/form-data, x-www-form-urlencoded, text/plain)
-  // when the Origin header doesn't exactly match the host. Vercel's edge
-  // sometimes strips/normalizes Origin on same-site fetches, which makes
+  // when the Origin header doesn't exactly match the host. Cloudflare's
+  // edge can normalize Origin headers on internal requests, which makes
   // the check fire on legitimate requests (the portal's file-upload flow,
   // the sign-out form, etc.).
   //
