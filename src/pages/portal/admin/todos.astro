@@ -9,19 +9,21 @@ const session = Astro.locals.session!;
 
 const admin = createServiceSupabase();
 
-// Sort: due_at ASC NULLS LAST, then created_at DESC — todos with a due date
-// always appear above todos without one; soonest first; ties broken by newest.
+// Sort: priority DESC (high → low), then due_at ASC NULLS LAST,
+// then created_at DESC. Urgent items float to the top of the list; inside
+// each urgency tier, soonest due date wins; ties broken by newest.
 const [{ data: openRows }, { data: doneRows }] = await Promise.all([
   admin
     .from('owner_todos')
-    .select('id, title, body, due_at, completed, created_at, completed_at, updated_at')
+    .select('id, title, body, due_at, priority, completed, created_at, completed_at, updated_at')
     .eq('owner_id', session.userId)
     .eq('completed', false)
+    .order('priority', { ascending: false })
     .order('due_at', { ascending: true, nullsFirst: false })
     .order('created_at', { ascending: false }),
   admin
     .from('owner_todos')
-    .select('id, title, body, due_at, completed, created_at, completed_at, updated_at')
+    .select('id, title, body, due_at, priority, completed, created_at, completed_at, updated_at')
     .eq('owner_id', session.userId)
     .eq('completed', true)
     .order('completed_at', { ascending: false })
@@ -82,6 +84,14 @@ function shortDate(yyyyMmDd: string): string {
   });
 }
 
+// priority: 0=low, 1=normal, 2=high. Returned as a label + tone for the pill.
+// "normal" renders no pill — we only call attention to non-default urgency.
+function priorityLabel(p: number | null | undefined): string {
+  if (p === 2) return 'High';
+  if (p === 0) return 'Low';
+  return 'Normal';
+}
+
 // SSR overdue uses UTC. Client-side JS re-evaluates against local "today"
 // on load so a row at the timezone seam doesn't render the wrong color.
 function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
@@ -131,6 +141,14 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
         <span class="text-text-muted">Due</span>
         <input type="date" name="due_at" class="ph-input !py-1.5 !px-2 text-sm w-auto" />
       </label>
+      <label class="flex items-center gap-2 text-sm">
+        <span class="text-text-muted">Urgency</span>
+        <select name="priority" class="ph-input !py-1.5 !px-2 text-sm w-auto">
+          <option value="1" selected>Normal</option>
+          <option value="2">High</option>
+          <option value="0">Low</option>
+        </select>
+      </label>
       <div class="flex-1 min-w-[160px]">
         <label
           class="ph-drop-zone block text-xs cursor-pointer"
@@ -172,7 +190,12 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
             />
             <div class="flex-1 min-w-0">
               <div class="text-sm leading-snug break-words" data-title-text>{t.title}</div>
-              <div class="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-text-muted">
+              <div class="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-text-muted" data-meta-row>
+                {t.priority !== 1 && (
+                  <span class="ph-priority-pill" data-priority-pill data-priority={String(t.priority ?? 1)}>
+                    {priorityLabel(t.priority)}
+                  </span>
+                )}
                 <span>Added {relativeDate(t.created_at)}</span>
                 {t.due_at && (
                   <span
@@ -221,23 +244,37 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
               data-field="body"
               data-autogrow
             >{t.body ?? ''}</textarea>
-            <label class="flex items-center gap-2 text-sm">
-              <span class="text-text-muted">Due</span>
-              <input
-                type="date"
-                class="ph-input !py-1.5 !px-2 text-sm w-auto"
-                value={t.due_at ?? ''}
-                data-edit
-                data-field="due_at"
-              />
-              {t.due_at && (
-                <button
-                  type="button"
-                  class="text-xs text-text-muted hover:text-text underline-offset-2 hover:underline"
-                  data-clear-due
-                >Clear</button>
-              )}
-            </label>
+            <div class="flex flex-wrap items-center gap-3">
+              <label class="flex items-center gap-2 text-sm">
+                <span class="text-text-muted">Due</span>
+                <input
+                  type="date"
+                  class="ph-input !py-1.5 !px-2 text-sm w-auto"
+                  value={t.due_at ?? ''}
+                  data-edit
+                  data-field="due_at"
+                />
+                {t.due_at && (
+                  <button
+                    type="button"
+                    class="text-xs text-text-muted hover:text-text underline-offset-2 hover:underline"
+                    data-clear-due
+                  >Clear</button>
+                )}
+              </label>
+              <label class="flex items-center gap-2 text-sm">
+                <span class="text-text-muted">Urgency</span>
+                <select
+                  class="ph-input !py-1.5 !px-2 text-sm w-auto"
+                  data-edit
+                  data-field="priority"
+                >
+                  <option value="1" selected={(t.priority ?? 1) === 1}>Normal</option>
+                  <option value="2" selected={t.priority === 2}>High</option>
+                  <option value="0" selected={t.priority === 0}>Low</option>
+                </select>
+              </label>
+            </div>
 
             <ul class="space-y-1.5" data-attachment-list>
               {atts.map((a) => (
@@ -370,6 +407,26 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
       background: rgba(248, 113, 113, 0.14);
       color: rgb(254, 202, 202);
       border-color: rgba(248, 113, 113, 0.3);
+    }
+    .ph-priority-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .ph-priority-pill[data-priority="2"] {
+      background: rgba(255, 107, 26, 0.15);
+      color: rgb(255, 178, 122);
+      border: 1px solid rgba(255, 107, 26, 0.35);
+    }
+    .ph-priority-pill[data-priority="0"] {
+      background: rgba(148, 163, 184, 0.08);
+      color: rgb(148, 163, 184);
+      border: 1px solid rgba(148, 163, 184, 0.18);
     }
     .ph-attach-badge {
       display: inline-flex;
@@ -728,6 +785,7 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
     const titleInput = newForm.querySelector<HTMLInputElement>('input[name="title"]');
     const bodyInput = newForm.querySelector<HTMLTextAreaElement>('textarea[name="body"]');
     const dueInput = newForm.querySelector<HTMLInputElement>('input[name="due_at"]');
+    const priorityInput = newForm.querySelector<HTMLSelectElement>('select[name="priority"]');
     const submitBtn = newForm.querySelector<HTMLButtonElement>('button[type="submit"]');
     const label = newForm.querySelector<HTMLElement>('[data-add-label]');
 
@@ -735,6 +793,8 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
     if (!title) return;
     const body = bodyInput?.value ?? '';
     const dueAt = (dueInput?.value ?? '') || null;
+    const priorityRaw = priorityInput?.value ?? '1';
+    const priority = [0, 1, 2].includes(Number(priorityRaw)) ? Number(priorityRaw) : 1;
 
     if (submitBtn) submitBtn.disabled = true;
     if (label) label.textContent = 'Adding…';
@@ -743,7 +803,7 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
       const res = await fetch('/api/portal/admin/todos', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ title, body: body || null, due_at: dueAt }),
+        body: JSON.stringify({ title, body: body || null, due_at: dueAt, priority }),
       });
       if (!res.ok) {
         const j = await res.json().catch(() => ({}));
@@ -848,16 +908,20 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
   });
 
   // Inline edit: auto-save on blur. Title also saves on Enter (and blurs).
-  type FieldName = 'title' | 'body' | 'due_at';
+  type FieldName = 'title' | 'body' | 'due_at' | 'priority';
 
   function patchField(li: HTMLElement, field: FieldName, value: string | null): Promise<void> {
     const id = li.dataset.todoId;
     if (!id) return Promise.resolve();
     const statusEl = li.querySelector<HTMLElement>('[data-save-status]');
     if (statusEl) statusEl.textContent = 'Saving…';
-    const payload: Record<string, string | null> = {
-      [field]: value && value.length > 0 ? value : null,
-    };
+
+    // priority is the only numeric field — the API rejects null and demands 0/1/2.
+    const payload: Record<string, string | number | null> =
+      field === 'priority'
+        ? { priority: Number(value ?? '1') }
+        : { [field]: value && value.length > 0 ? value : null };
+
     return fetch(`/api/portal/admin/todos/${id}`, {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
@@ -873,11 +937,38 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
           const titleText = li.querySelector<HTMLElement>('[data-title-text]');
           if (titleText) titleText.textContent = value;
         }
+        if (field === 'priority') {
+          updatePriorityPill(li, Number(value ?? '1'));
+        }
       })
       .catch((err) => {
         if (statusEl) statusEl.textContent = 'Save failed';
         showError(err instanceof Error ? err.message : 'Save failed');
       });
+  }
+
+  // Sync the collapsed-row pill to the selected priority. Adds a pill when
+  // changing to High/Low; removes it when going back to Normal.
+  function updatePriorityPill(li: HTMLElement, priority: number) {
+    const meta = li.querySelector<HTMLElement>('[data-meta-row]');
+    const existing = li.querySelector<HTMLElement>('[data-priority-pill]');
+    if (priority === 1) {
+      existing?.remove();
+      return;
+    }
+    const label = priority === 2 ? 'High' : 'Low';
+    if (existing) {
+      existing.dataset.priority = String(priority);
+      existing.textContent = label;
+      return;
+    }
+    if (!meta) return;
+    const pill = document.createElement('span');
+    pill.className = 'ph-priority-pill';
+    pill.dataset.priorityPill = '';
+    pill.dataset.priority = String(priority);
+    pill.textContent = label;
+    meta.prepend(pill);
   }
 
   document.addEventListener(
@@ -913,6 +1004,20 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
     if (e.key !== 'Enter') return;
     e.preventDefault();
     (target as HTMLInputElement).blur();
+  });
+
+  // Priority <select>: save on change so the user doesn't have to click
+  // elsewhere to trigger blur.
+  document.addEventListener('change', (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.matches('[data-edit][data-field="priority"]')) return;
+    const li = target.closest<HTMLElement>('[data-todo-id]');
+    if (!li) return;
+    const sel = target as HTMLSelectElement;
+    const value = sel.value;
+    if (value === sel.dataset.initial) return;
+    sel.dataset.initial = value;
+    patchField(li, 'priority', value);
   });
 
   document.addEventListener('click', (e) => {
