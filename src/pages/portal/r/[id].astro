@@ -7,6 +7,7 @@ import {
   STATUS_LABELS,
   STATUS_DESCRIPTIONS,
   categoryLabel,
+  externalUrl,
   priorityLabel,
   relativeDate,
   type RequestStatus,
@@ -93,7 +94,7 @@ const status = req.status as RequestStatus;
     {req.page_url && (
       <div class="mb-5">
         <div class="text-xs text-text-muted uppercase tracking-wide mb-1">Page</div>
-        <a href={req.page_url} target="_blank" rel="noopener" class="text-sm underline break-all">{req.page_url}</a>
+        <a href={externalUrl(req.page_url)} target="_blank" rel="noopener" class="text-sm underline break-all">{req.page_url}</a>
       </div>
     )}
 

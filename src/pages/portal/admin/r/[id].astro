@@ -8,6 +8,7 @@ import {
   STATUS_ORDER,
   BILLING_OPTIONS,
   categoryLabel,
+  externalUrl,
   priorityLabel,
   relativeDate,
   type RequestStatus,
@@ -104,7 +105,7 @@ for (const f of files ?? []) {
     {req.page_url && (
       <div class="mb-5">
         <div class="text-xs text-text-muted uppercase tracking-wide mb-1">Page</div>
-        <a href={req.page_url} target="_blank" rel="noopener" class="text-sm underline break-all">{req.page_url}</a>
+        <a href={externalUrl(req.page_url)} target="_blank" rel="noopener" class="text-sm underline break-all">{req.page_url}</a>
       </div>
     )}
 
