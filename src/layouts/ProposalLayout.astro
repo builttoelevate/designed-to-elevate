@@ -1,6 +1,5 @@
 ---
 import '../styles/proposal.css';
-import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   client: string;
@@ -52,11 +51,8 @@ const shareImage = `${SITE_URL}/og-image.png`;
 </head>
 <body data-slug={slug}>
   <slot />
-  <Analytics />
 
   <script>
-    import { track } from '@vercel/analytics';
-
     // Sticky mobile pay bar — appears once the user scrolls past the
     // hero CTA, hides when the closing CTA enters view so we don't show
     // the pay button twice on screen at once.
@@ -89,27 +85,6 @@ const shareImage = `${SITE_URL}/og-image.png`;
         { threshold: 0.1 },
       ).observe(closingSentinel);
     }
-
-    // Vercel Analytics custom events. Any element with [data-event]
-    // fires a track() call on click. Per-event extra properties come
-    // from data-* attributes on the element itself; slug is read once
-    // from <body data-slug>.
-    const slug = document.body.dataset.slug ?? '';
-
-    document.addEventListener('click', (e) => {
-      const target = (e.target as HTMLElement | null)?.closest('[data-event]');
-      if (!target) return;
-      const event = target.getAttribute('data-event');
-      if (!event) return;
-
-      const props: Record<string, string | number> = { slug };
-      const business = target.getAttribute('data-business');
-      const amount = target.getAttribute('data-amount');
-      if (business) props.business = business;
-      if (amount) props.amount = Number(amount);
-
-      track(event, props);
-    });
   </script>
 </body>
 </html>
