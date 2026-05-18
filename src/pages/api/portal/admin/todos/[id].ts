@@ -1,5 +1,5 @@
 /**
- * PATCH  /api/portal/admin/todos/:id   { completed?, title?, body?, due_at? }
+ * PATCH  /api/portal/admin/todos/:id   { completed?, title?, body?, due_at?, priority? }
  * DELETE /api/portal/admin/todos/:id
  *
  * Admin-only. Operates only on rows owned by the calling admin —
@@ -35,6 +35,7 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
       title?: string;
       body?: string | null;
       due_at?: string | null;
+      priority?: number | null;
     };
     try {
       body = await request.json();
@@ -85,6 +86,19 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
       }
     }
 
+    // priority: 0=low, 1=normal, 2=high. null is not accepted on PATCH —
+    // there's no "unset" state; the column is NOT NULL with default 1.
+    if (body.priority !== undefined) {
+      if (
+        body.priority === null ||
+        !Number.isInteger(body.priority) ||
+        ![0, 1, 2].includes(body.priority)
+      ) {
+        return json({ error: 'priority must be 0, 1, or 2' }, 400);
+      }
+      patch.priority = body.priority;
+    }
+
     if (Object.keys(patch).length === 0) {
       return json({ error: 'No fields to update' }, 400);
     }
@@ -96,7 +110,7 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
         .update(patch)
         .eq('id', id)
         .eq('owner_id', session.userId)
-        .select('id, title, body, due_at, completed, created_at, completed_at, updated_at')
+        .select('id, title, body, due_at, priority, completed, created_at, completed_at, updated_at')
         .maybeSingle();
 
       if (error) {

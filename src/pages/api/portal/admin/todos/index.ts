@@ -1,5 +1,5 @@
 /**
- * POST /api/portal/admin/todos   { title, body?, due_at? }
+ * POST /api/portal/admin/todos   { title, body?, due_at?, priority? }
  *
  * Admin-only. Creates a personal todo owned by the calling admin
  * (owner_id is set from the session — clients can't spoof it).
@@ -18,7 +18,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const session = await getPortalSession(cookies);
   if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
-  let body: { title?: string; body?: string | null; due_at?: string | null };
+  let body: {
+    title?: string;
+    body?: string | null;
+    due_at?: string | null;
+    priority?: number | null;
+  };
   try {
     body = await request.json();
   } catch {
@@ -46,11 +51,20 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     dueAt = body.due_at;
   }
 
+  // priority: 0=low, 1=normal (default), 2=high
+  let priority = 1;
+  if (body.priority !== undefined && body.priority !== null) {
+    if (!Number.isInteger(body.priority) || ![0, 1, 2].includes(body.priority)) {
+      return json({ error: 'priority must be 0, 1, or 2' }, 400);
+    }
+    priority = body.priority;
+  }
+
   const admin = createServiceSupabase();
   const { data, error } = await admin
     .from('owner_todos')
-    .insert({ owner_id: session.userId, title, body: todoBody, due_at: dueAt })
-    .select('id, title, body, due_at, completed, created_at, completed_at, updated_at')
+    .insert({ owner_id: session.userId, title, body: todoBody, due_at: dueAt, priority })
+    .select('id, title, body, due_at, priority, completed, created_at, completed_at, updated_at')
     .single();
 
   if (error) return json({ error: error.message }, 500);
