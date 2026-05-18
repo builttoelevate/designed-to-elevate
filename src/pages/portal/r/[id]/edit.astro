@@ -42,7 +42,15 @@ if (req.status !== 'new') return Astro.redirect(`/portal/r/${id}`);
       </div>
       <div>
         <label class="ph-label">Page URL (optional)</label>
-        <input name="page_url" type="url" class="ph-input" value={req.page_url || ''} placeholder="https://" />
+        <input
+          name="page_url"
+          type="text"
+          inputmode="url"
+          autocomplete="url"
+          class="ph-input"
+          value={req.page_url || ''}
+          placeholder="modernclassicbarbershop.com"
+        />
       </div>
       <div>
         <label class="ph-label">Describe the change in detail</label>

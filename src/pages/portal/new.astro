@@ -43,7 +43,15 @@ if (session.clientIds.length === 0) {
 
       <div>
         <label for="page_url" class="ph-label">Page URL (optional)</label>
-        <input id="page_url" name="page_url" type="url" placeholder="https://" class="ph-input" />
+        <input
+          id="page_url"
+          name="page_url"
+          type="text"
+          inputmode="url"
+          autocomplete="url"
+          placeholder="modernclassicbarbershop.com"
+          class="ph-input"
+        />
       </div>
 
       <div>

@@ -64,6 +64,17 @@ export function billingLabel(value: string): string {
   return BILLING_OPTIONS.find((o) => o.value === value)?.label ?? value;
 }
 
+// Page URLs are optional + freeform — clients can type "site.com" without a
+// scheme. Prepend https:// for `<a href>` so the link goes to the right
+// place; the displayed text stays as whatever the client originally typed.
+export function externalUrl(value: string | null | undefined): string {
+  if (!value) return '';
+  const trimmed = value.trim();
+  if (!trimmed) return '';
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 export function relativeDate(value: string | Date | null): string {
   if (!value) return '';
   const d = typeof value === 'string' ? new Date(value) : value;
