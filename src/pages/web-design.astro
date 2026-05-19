@@ -2,6 +2,21 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Small business website design',
+  serviceType: 'Website design and development',
+  description:
+    'Mobile-first website design for Ohio service businesses, with conversion copy, local SEO foundations, and quote forms that capture leads.',
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
+  url: `${SITE}/web-design`,
+};
 
 const industries = [
   { label: 'Barbershop Websites', body: 'Booking + brand sites that sit on top of Square or Booksy. Auto-review SMS, waitlist, and customer login.', href: '/barbershop-websites' },
@@ -25,6 +40,12 @@ const included = [
   description="Small business website design for Ohio service businesses. Mobile-first builds with conversion copy, fast load times, local SEO foundations, and quote forms that actually capture leads."
   pathname="web-design"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Web Design', url: `${SITE}/web-design` },
+  ]} />
+
   <SiteHeader />
 
   <main>

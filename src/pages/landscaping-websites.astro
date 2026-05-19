@@ -2,6 +2,22 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Landscaping website design',
+  serviceType: 'Website design for landscaping companies',
+  description:
+    'Landscaping website design with visual portfolios, service-area structure, recurring vs. one-time customer splits, and local SEO for landscaping searches.',
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
+  audience: { '@type': 'BusinessAudience', name: 'Landscaping companies' },
+  url: `${SITE}/landscaping-websites`,
+};
 
 const needs = [
   { title: 'A real visual portfolio', body: "Landscaping is bought with the eyes. The site has to lead with high-quality before/after photos of real work — not stock images of generic green lawns." },
@@ -19,6 +35,12 @@ const needs = [
   description="Landscaping website design built around how homeowners actually buy. Visual portfolio, service-area structure, recurring vs. one-time split, and local SEO that gets you ranking for landscaping searches in your market."
   pathname="landscaping-websites"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Landscaping Websites', url: `${SITE}/landscaping-websites` },
+  ]} />
+
   <SiteHeader />
 
   <main>

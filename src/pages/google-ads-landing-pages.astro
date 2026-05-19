@@ -2,6 +2,7 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
 
 const SITE = 'https://designedtoelevate.co';
 
@@ -46,14 +47,8 @@ const schema = {
   name: 'Google Ads Landing Pages',
   description:
     'Custom Google Ads landing page design for local Ohio service businesses. Conversion-focused, mobile-first, with tracking and lead capture built in.',
-  provider: {
-    '@type': 'LocalBusiness',
-    name: 'Designed to Elevate',
-    url: SITE,
-    telephone: '+1-740-617-6488',
-    email: 'bilsonxnc@gmail.com',
-  },
-  areaServed: ['Coshocton, OH', 'Zanesville, OH', 'Newark, OH', 'Cambridge, OH', 'Mount Vernon, OH', 'Carrollton, OH'],
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
   url: `${SITE}/google-ads-landing-pages`,
 };
 ---
@@ -63,6 +58,10 @@ const schema = {
   pathname="google-ads-landing-pages"
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Google Ads Landing Pages', url: `${SITE}/google-ads-landing-pages` },
+  ]} />
 
   <SiteHeader />
 

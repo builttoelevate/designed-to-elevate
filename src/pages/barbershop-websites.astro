@@ -2,6 +2,22 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Barbershop website design',
+  serviceType: 'Website design for barbershops',
+  description:
+    'Custom barbershop website design with Square + Shopify integration, mobile-first booking flow, auto-review SMS, and a waitlist that auto-invites clients when slots open.',
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
+  audience: { '@type': 'BusinessAudience', name: 'Barbershops' },
+  url: `${SITE}/barbershop-websites`,
+};
 
 const needs = [
   { title: 'Frictionless booking', body: "Clients should book in two taps from a phone. Pick a barber, pick a time, done — no account creation, no platform-template look, no app download." },
@@ -24,6 +40,12 @@ const techStack = [
   description="Custom barbershop website design built around booking, brand, and product. Square + Shopify integration, mobile-first booking flow, auto-review SMS, and a waitlist that auto-invites clients when slots open."
   pathname="barbershop-websites"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Barbershop Websites', url: `${SITE}/barbershop-websites` },
+  ]} />
+
   <SiteHeader />
 
   <main>
