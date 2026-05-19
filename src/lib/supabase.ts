@@ -2,9 +2,11 @@
  * Supabase clients.
  *
  * Two flavors:
- *   • createServerSupabase(cookies) — request-scoped, reads the user's session
- *     from cookies. Use inside .astro frontmatter and API routes when you want
- *     RLS to enforce per-user access.
+ *   • createServerSupabase({ cookies, request }) — request-scoped, reads the
+ *     user's session from cookies via @supabase/ssr. The SSR client auto-
+ *     refreshes expired access tokens using the refresh token and writes the
+ *     new pair back through the adapter, so call sites never deal with JWT
+ *     expiry directly.
  *   • createServiceSupabase()       — bypasses RLS via the service role key.
  *     Use sparingly, only inside server code, only when admin operations need
  *     to write across tenants (e.g. inserting activity log rows, sending an
@@ -15,6 +17,7 @@
  * browser. The service role key MUST stay server-side.
  */
 
+import { createServerClient, parseCookieHeader } from '@supabase/ssr';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { AstroCookies } from 'astro';
 
@@ -31,50 +34,48 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   );
 }
 
-const ACCESS_COOKIE = 'sb-access-token';
-const REFRESH_COOKIE = 'sb-refresh-token';
-
-const cookieOptions = {
+// Cookie attributes the SSR adapter writes through. HttpOnly + Secure +
+// SameSite=Lax blocks the portal cookies from being attached to cross-site
+// POSTs (our CSRF defense), and 7 days matches Supabase's default refresh-
+// token rotation window.
+const COOKIE_DEFAULTS = {
   path: '/',
   httpOnly: true,
   secure: true,
   sameSite: 'lax' as const,
-  // 7 days; matches Supabase default session length.
   maxAge: 60 * 60 * 24 * 7,
 };
 
+export interface SupabaseRequestContext {
+  cookies: AstroCookies;
+  request: Request;
+}
+
 /**
- * Request-scoped Supabase client. Reads the user's access token from the
- * sb-access-token cookie and tells Supabase to use it via the Authorization
- * header on every request, so all queries run against the user's session
- * and are filtered by RLS.
+ * Request-scoped Supabase client backed by @supabase/ssr. Cookies are read
+ * from the incoming Request's `Cookie` header and written through Astro's
+ * cookie API. The SSR client transparently refreshes expired access tokens
+ * and the adapter writes the new pair back, so downstream code never sees
+ * "JWT expired" as long as the refresh token is still valid.
  */
-export function createServerSupabase(cookies: AstroCookies): SupabaseClient {
-  const accessToken = cookies.get(ACCESS_COOKIE)?.value;
-  const refreshToken = cookies.get(REFRESH_COOKIE)?.value;
-
-  const client = createClient(SUPABASE_URL!, SUPABASE_ANON_KEY!, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-      detectSessionInUrl: false,
+export function createServerSupabase(ctx: SupabaseRequestContext): SupabaseClient {
+  return createServerClient(SUPABASE_URL!, SUPABASE_ANON_KEY!, {
+    cookies: {
+      getAll() {
+        const header = ctx.request.headers.get('cookie') ?? '';
+        return parseCookieHeader(header).map(({ name, value }) => ({
+          name,
+          value: value ?? '',
+        }));
+      },
+      setAll(cookiesToSet) {
+        for (const { name, value, options } of cookiesToSet) {
+          ctx.cookies.set(name, value, { ...COOKIE_DEFAULTS, ...(options ?? {}) });
+        }
+      },
     },
-    global: accessToken
-      ? { headers: { Authorization: `Bearer ${accessToken}` } }
-      : {},
-  });
-
-  if (accessToken && refreshToken) {
-    // setSession is async but the in-memory state update is synchronous enough
-    // for the request lifetime; we don't await here because most call sites
-    // just need the Authorization header set above.
-    void client.auth.setSession({
-      access_token: accessToken,
-      refresh_token: refreshToken,
-    });
-  }
-
-  return client;
+    cookieOptions: COOKIE_DEFAULTS,
+  }) as unknown as SupabaseClient;
 }
 
 /**
@@ -94,18 +95,30 @@ export function createServiceSupabase(): SupabaseClient {
   });
 }
 
-export function setAuthCookies(
-  cookies: AstroCookies,
+/**
+ * Persist a fresh access/refresh pair from the magic-link callback. Calling
+ * setSession on the SSR client routes through the cookie adapter, which
+ * writes the SSR-format auth cookies.
+ */
+export async function setAuthCookies(
+  ctx: SupabaseRequestContext,
   accessToken: string,
   refreshToken: string
-) {
-  cookies.set(ACCESS_COOKIE, accessToken, cookieOptions);
-  cookies.set(REFRESH_COOKIE, refreshToken, cookieOptions);
+): Promise<void> {
+  const supabase = createServerSupabase(ctx);
+  await supabase.auth.setSession({
+    access_token: accessToken,
+    refresh_token: refreshToken,
+  });
 }
 
-export function clearAuthCookies(cookies: AstroCookies) {
-  cookies.delete(ACCESS_COOKIE, { path: '/' });
-  cookies.delete(REFRESH_COOKIE, { path: '/' });
+/**
+ * Sign the user out and clear cookies. signOut() triggers the SSR adapter to
+ * write expired cookies, which the browser then drops.
+ */
+export async function clearAuthCookies(ctx: SupabaseRequestContext): Promise<void> {
+  const supabase = createServerSupabase(ctx);
+  await supabase.auth.signOut();
 }
 
 export const SUPABASE_PUBLIC_CONFIG = {

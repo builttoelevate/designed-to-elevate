@@ -11,8 +11,8 @@ import type { APIRoute } from 'astro';
 import { createServiceSupabase } from '../../../../../lib/supabase';
 import { getPortalSession } from '../../../../../lib/session';
 
-export const DELETE: APIRoute = async ({ params, cookies }) => {
-  const session = await getPortalSession(cookies);
+export const DELETE: APIRoute = async ({ params, request, cookies }) => {
+  const session = await getPortalSession({ cookies, request });
   if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
   const id = params.id;

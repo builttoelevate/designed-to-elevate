@@ -45,7 +45,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return json({ error: 'Invalid session' }, 401);
   }
 
-  setAuthCookies(cookies, access_token, refresh_token);
+  await setAuthCookies({ cookies, request }, access_token, refresh_token);
 
   // Look up the role so we can send admins straight to the admin dashboard.
   const admin = createServiceSupabase();

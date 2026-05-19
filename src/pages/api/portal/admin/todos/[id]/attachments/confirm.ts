@@ -48,7 +48,7 @@ function isAllowedMime(m: string): boolean {
 }
 
 export const POST: APIRoute = async ({ params, request, cookies }) => {
-  const session = await getPortalSession(cookies);
+  const session = await getPortalSession({ cookies, request });
   if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
   const todoId = params.id;

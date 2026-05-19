@@ -15,7 +15,7 @@ const ALLOWED_CATEGORIES = new Set(['text', 'image', 'layout', 'new_feature', 'b
 const ALLOWED_PRIORITIES = new Set(['normal', 'important', 'urgent']);
 
 export const PATCH: APIRoute = async ({ params, request, cookies }) => {
-  const session = await getPortalSession(cookies);
+  const session = await getPortalSession({ cookies, request });
   if (!session) return json({ error: 'Not signed in' }, 401);
 
   const id = params.id;
@@ -41,7 +41,7 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
   }
   if (Object.keys(updates).length === 0) return json({ error: 'Nothing to update' }, 400);
 
-  const supabase = createServerSupabase(cookies);
+  const supabase = createServerSupabase({ cookies, request });
   const { error } = await supabase.from('requests').update(updates).eq('id', id);
   if (error) return json({ error: error.message }, 500);
   return json({ ok: true });

@@ -16,8 +16,8 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { clearAuthCookies } from '../../lib/supabase';
 
-const handle: APIRoute = ({ cookies, redirect }) => {
-  clearAuthCookies(cookies);
+const handle: APIRoute = async ({ cookies, request, redirect }) => {
+  await clearAuthCookies({ cookies, request });
   return redirect('/portal/login', 303);
 };
 
