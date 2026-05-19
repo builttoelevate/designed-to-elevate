@@ -136,6 +136,21 @@ if (session.clientIds.length === 0) {
   .ph-pending-row .ph-remove-btn:hover {
     color: var(--color-accent);
   }
+  .ph-retry-btn {
+    color: var(--color-accent);
+    font-weight: 600;
+    padding: 0.1rem 0.5rem;
+    border-radius: 0.3rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
+    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  }
+  .ph-retry-btn:hover {
+    background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  }
+  .ph-retry-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 </style>
 
 <script>
@@ -247,8 +262,12 @@ if (session.clientIds.length === 0) {
       fileInput.value = '';
     });
 
-    // ─── Submit flow ─────────────────────────────────────────────────────
+    // ─── Submit + retry flow ─────────────────────────────────────────────
     let uploadsInFlight = false;
+    let requestId: string | null = null;
+    const failedFiles = new Set<File>();
+    const fileToChip = new Map<File, ChipHandles>();
+
     const beforeUnload = (e: BeforeUnloadEvent) => {
       if (!uploadsInFlight) return;
       e.preventDefault();
@@ -266,6 +285,7 @@ if (session.clientIds.length === 0) {
       pct: HTMLElement;
       fill: HTMLElement;
       name: HTMLElement;
+      retry: HTMLButtonElement;
     }
 
     function createChip(file: File): ChipHandles {
@@ -276,6 +296,7 @@ if (session.clientIds.length === 0) {
           <span class="flex-1 min-w-0 truncate" data-name></span>
           <span class="text-text-muted shrink-0" data-size></span>
           <span class="text-text-muted shrink-0" data-pct>0%</span>
+          <button type="button" data-retry class="ph-retry-btn hidden">Retry</button>
         </div>
         <div class="ph-progress-track"><div class="ph-progress-fill" data-fill></div></div>
       `;
@@ -283,10 +304,25 @@ if (session.clientIds.length === 0) {
       const size = li.querySelector<HTMLElement>('[data-size]')!;
       const pct = li.querySelector<HTMLElement>('[data-pct]')!;
       const fill = li.querySelector<HTMLElement>('[data-fill]')!;
+      const retry = li.querySelector<HTMLButtonElement>('[data-retry]')!;
       name.textContent = file.name;
       size.textContent = formatBytes(file.size);
       chipList!.appendChild(li);
-      return { pct, fill, name };
+
+      const handles: ChipHandles = { pct, fill, name, retry };
+      retry.addEventListener('click', () => {
+        if (uploadsInFlight) return;
+        void retryFile(file);
+      });
+      return handles;
+    }
+
+    function resetChip(chip: ChipHandles) {
+      chip.pct.textContent = '0%';
+      chip.fill.style.width = '0%';
+      delete chip.fill.dataset.state;
+      chip.name.title = '';
+      chip.retry.classList.add('hidden');
     }
 
     function markChipFailed(chip: ChipHandles, message: string) {
@@ -294,13 +330,17 @@ if (session.clientIds.length === 0) {
       chip.fill.style.width = '100%';
       chip.fill.dataset.state = 'failed';
       chip.name.title = message;
+      chip.retry.classList.remove('hidden');
+      // Re-enable explicitly: disableForm(true) earlier disabled every <button>
+      // inside the form, including this retry button we're now revealing.
+      chip.retry.disabled = false;
     }
 
     async function signFile(
-      requestId: string,
+      reqId: string,
       file: File
     ): Promise<{ attachment_id: string; storage_path: string; signed_url: string; token: string }> {
-      const res = await fetch(`/api/portal/requests/${requestId}/files/sign`, {
+      const res = await fetch(`/api/portal/requests/${reqId}/attachments/sign`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -345,12 +385,11 @@ if (session.clientIds.length === 0) {
     }
 
     async function confirmFile(
-      requestId: string,
+      reqId: string,
       file: File,
-      signed: { attachment_id: string; storage_path: string },
-      isLast: boolean
+      signed: { attachment_id: string; storage_path: string }
     ): Promise<void> {
-      const res = await fetch(`/api/portal/requests/${requestId}/files/confirm`, {
+      const res = await fetch(`/api/portal/requests/${reqId}/attachments/confirm`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -359,11 +398,76 @@ if (session.clientIds.length === 0) {
           file_name: file.name,
           mime_type: file.type || 'application/octet-stream',
           size_bytes: file.size,
-          is_last: isLast,
         }),
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body.error || `Confirm HTTP ${res.status}`);
+    }
+
+    /**
+     * Sign → PUT → confirm for one file. Caller is responsible for setting
+     * `uploadsInFlight` and updating the button label.
+     */
+    async function uploadOne(reqId: string, file: File): Promise<void> {
+      const chip = fileToChip.get(file)!;
+      resetChip(chip);
+      const signed = await signFile(reqId, file);
+      await putToStorage(signed.signed_url, file, chip);
+      await confirmFile(reqId, file, signed);
+    }
+
+    /**
+     * Re-run sign → PUT → confirm for one file that failed earlier. The
+     * confirm endpoint is idempotent on (request_id, storage_path) so a
+     * network blip between PUT and confirm during the original attempt
+     * doesn't cause a duplicate row on retry.
+     */
+    async function retryFile(file: File): Promise<void> {
+      if (!requestId) return;
+      const chip = fileToChip.get(file)!;
+      const remainingBefore = failedFiles.size;
+      failedFiles.delete(file);
+      uploadsInFlight = true;
+      updatePartialFailFlash(remainingBefore - 1, pending.length);
+      label!.textContent = 'Retrying…';
+
+      try {
+        await uploadOne(requestId, file);
+        if (failedFiles.size === 0) {
+          // All failures cleared — flip to full success.
+          showFlash(
+            'success',
+            "Got it. Your request is in the queue and we'll email you when it's in progress."
+          );
+          label!.textContent = 'Submitted ✓';
+          setTimeout(() => {
+            window.location.assign(`/portal/r/${requestId}`);
+          }, 900);
+        } else {
+          label!.textContent = 'Submitted ✓';
+        }
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : 'Unknown error during upload';
+        markChipFailed(chip, message);
+        failedFiles.add(file);
+        updatePartialFailFlash(failedFiles.size, pending.length);
+        label!.textContent = 'Submitted ✓';
+      } finally {
+        uploadsInFlight = false;
+      }
+    }
+
+    function updatePartialFailFlash(failedCount: number, totalCount: number) {
+      if (failedCount === 0) return;
+      const word = failedCount === 1 ? 'file' : 'files';
+      showFlash(
+        'warn',
+        `Submitted, but ${failedCount} of ${totalCount} ${word} didn't upload. ` +
+          `Tap Retry on the failed ${word}, or continue to the request and add ${
+            failedCount === 1 ? 'it' : 'them'
+          } there.`
+      );
     }
 
     form.addEventListener('submit', async (e) => {
@@ -381,10 +485,9 @@ if (session.clientIds.length === 0) {
         priority: (fd.get('priority') as string | null) ?? 'normal',
         preferred_completion_date:
           (fd.get('preferred_completion_date') as string | null) || null,
-        expected_file_count: pending.length,
       };
 
-      label!.textContent = pending.length > 0 ? 'Submitting…' : 'Submitting…';
+      label!.textContent = 'Submitting…';
       disableForm(true);
       uploadsInFlight = true;
 
@@ -399,7 +502,7 @@ if (session.clientIds.length === 0) {
         if (!createRes.ok) {
           throw new Error(createBody.error || `Create HTTP ${createRes.status}`);
         }
-        const requestId = createBody.id as string;
+        requestId = createBody.id as string;
 
         // ─── Step 2: per-file sign → PUT → confirm loop ────────────────
         // Hide pending list, show chips. Sequential to keep LTE bandwidth
@@ -407,56 +510,54 @@ if (session.clientIds.length === 0) {
         pendingList!.classList.add('hidden');
         if (pending.length > 0) chipList!.classList.remove('hidden');
 
-        const failed: string[] = [];
+        // Pre-create chips for every file so the user sees the whole batch
+        // up front, then fill them in one by one.
+        for (const file of pending) {
+          fileToChip.set(file, createChip(file));
+        }
+
         for (let i = 0; i < pending.length; i++) {
           const file = pending[i];
-          const isLast = i === pending.length - 1;
-          const chip = createChip(file);
           label!.textContent = `Uploading ${i + 1} of ${pending.length}…`;
-
           try {
-            const signed = await signFile(requestId, file);
-            await putToStorage(signed.signed_url, file, chip);
-            await confirmFile(requestId, file, signed, isLast);
+            await uploadOne(requestId, file);
           } catch (err) {
             const message =
               err instanceof Error ? err.message : 'Unknown error during upload';
-            markChipFailed(chip, message);
-            failed.push(file.name);
+            markChipFailed(fileToChip.get(file)!, message);
+            failedFiles.add(file);
             // Continue with the rest of the batch. The request is already
             // saved — we'd rather land 3 of 4 files than abort everything.
           }
         }
 
         // ─── Step 3: finalize ──────────────────────────────────────────
-        label!.textContent = 'Finalizing…';
         uploadsInFlight = false;
+        label!.textContent = 'Submitted ✓';
 
-        if (failed.length > 0) {
-          const word = failed.length === 1 ? 'file' : 'files';
-          showFlash(
-            'warn',
-            `Submitted, but ${failed.length} of ${pending.length} ${word} didn't upload. ` +
-              `You can add ${failed.length === 1 ? 'it' : 'them'} on the next page.`
-          );
+        if (failedFiles.size > 0) {
+          updatePartialFailFlash(failedFiles.size, pending.length);
+          // Do NOT auto-redirect on partial failure — the user might want to
+          // tap Retry on the failed chip(s) first.
         } else {
           showFlash(
             'success',
             "Got it. Your request is in the queue and we'll email you when it's in progress."
           );
+          setTimeout(() => {
+            window.location.assign(`/portal/r/${requestId}`);
+          }, 900);
         }
-        label!.textContent = 'Submitted ✓';
-
-        setTimeout(() => {
-          window.location.assign(`/portal/r/${requestId}`);
-        }, 900);
       } catch (err) {
         // The create call itself failed (or something at module scope threw).
         // Re-enable the form so the user can fix and resubmit. Chips and
         // pending list both clear back to a clean state.
         uploadsInFlight = false;
+        requestId = null;
         chipList!.innerHTML = '';
         chipList!.classList.add('hidden');
+        fileToChip.clear();
+        failedFiles.clear();
         if (pending.length > 0) pendingList!.classList.remove('hidden');
         const message =
           err instanceof Error && err.message

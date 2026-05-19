@@ -1,20 +1,25 @@
 /**
- * POST /api/portal/requests/:id/files/confirm
- *   body: {
- *     attachment_id, storage_path, file_name, mime_type, size_bytes,
- *     is_last?: boolean
- *   }
+ * POST /api/portal/requests/:id/attachments/confirm
+ *   body: { attachment_id, storage_path, file_name, mime_type, size_bytes }
  *
  * Browser calls this after a successful PUT to the signed upload URL from
- * /files/sign. We:
+ * /attachments/sign. We:
  *   1. Re-verify caller owns the request and it's still in `new` state.
  *   2. Re-validate MIME + size (defense in depth — the browser is untrusted).
  *   3. Confirm the storage_path starts with the expected
  *      <client_id>/<request_id>/<attachment_id>- prefix.
- *   4. HEAD the bucket to confirm the object actually landed.
- *   5. Insert the request_files row.
- *   6. On the final file in the batch (`is_last: true`), fire the deferred
- *      client + admin notification emails.
+ *   4. HEAD-equivalent: list the bucket folder filtered by attachment_id to
+ *      confirm the object actually landed. Phantom rows from a signed-but-
+ *      never-uploaded path would otherwise leak through.
+ *   5. Idempotency: if a request_files row already exists for this
+ *      (request_id, file_url) pair, return success without inserting again.
+ *      Lets the retry button safely re-run this endpoint after a network
+ *      blip between PUT and confirm.
+ *   6. Insert the request_files row.
+ *
+ * Emails are NOT fired here — they fire inline on the initial /requests POST,
+ * so a flaky upload doesn't suppress them and a retry doesn't risk a
+ * duplicate send.
  */
 
 export const prerender = false;
@@ -22,11 +27,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { createServiceSupabase } from '../../../../../../lib/supabase';
 import { getPortalSession } from '../../../../../../lib/session';
-import { sendNewRequestNotifications } from '../../../../../../lib/request-notifications';
-import {
-  MAX_UPLOAD_BYTES,
-  isAllowedMime,
-} from '../../../../../../lib/file-uploads';
+import { MAX_UPLOAD_BYTES, isAllowedMime } from '../../../../../../lib/file-uploads';
 
 const BUCKET = 'request-files';
 
@@ -46,7 +47,6 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
     file_name?: string;
     mime_type?: string;
     size_bytes?: number;
-    is_last?: boolean;
   };
   try {
     body = await request.json();
@@ -54,7 +54,7 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
     return json({ error: 'Invalid body' }, 400);
   }
 
-  const { attachment_id, storage_path, file_name, mime_type, size_bytes, is_last } = body;
+  const { attachment_id, storage_path, file_name, mime_type, size_bytes } = body;
   if (!attachment_id || !storage_path || !file_name) {
     return json({ error: 'attachment_id, storage_path, file_name required' }, 400);
   }
@@ -76,8 +76,8 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
   const clientId = session.clientIds[0];
 
   // The path the browser claims to have written must match the prefix we'd
-  // have signed in /files/sign — otherwise we'd be recording a file we never
-  // authorized this caller to write.
+  // have signed in /attachments/sign — otherwise we'd be recording a file we
+  // never authorized this caller to write.
   const expectedPrefix = `${clientId}/${requestId}/${attachment_id}-`;
   if (!storage_path.startsWith(expectedPrefix)) {
     return json({ error: 'storage_path mismatch' }, 400);
@@ -87,13 +87,28 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
   // attach files to a completed request via a leftover signed URL.
   const { data: existing } = await admin
     .from('requests')
-    .select('id, status, client_id, title, category, priority, description')
+    .select('id, status, client_id')
     .eq('id', requestId)
     .eq('client_id', clientId)
     .maybeSingle();
   if (!existing) return json({ error: 'Not found' }, 404);
   if (existing.status && existing.status !== 'new') {
     return json({ error: 'Request is no longer accepting new uploads' }, 409);
+  }
+
+  // Idempotency: if the browser is retrying this confirm (after a successful
+  // PUT but a failed/timed-out earlier confirm round-trip), return the
+  // existing row instead of inserting again. No unique constraint exists on
+  // request_files(request_id, file_url), so this SELECT-then-skip pattern is
+  // how we keep retries safe without a migration.
+  const { data: alreadyConfirmed } = await admin
+    .from('request_files')
+    .select('id, filename')
+    .eq('request_id', requestId)
+    .eq('file_url', storage_path)
+    .maybeSingle();
+  if (alreadyConfirmed) {
+    return json({ ok: true, file: alreadyConfirmed, deduplicated: true });
   }
 
   // Confirm the blob exists where the browser claims it does. list() with a
@@ -123,19 +138,6 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
     // pointing at it. Best-effort; ignore the cleanup result.
     await admin.storage.from(BUCKET).remove([storage_path]);
     return json({ error: insertErr?.message ?? 'Could not record file' }, 500);
-  }
-
-  // Fire the deferred notification emails on the last file of the batch. The
-  // client browser is the only entity that knows when the batch is done, so
-  // we trust its `is_last` signal. If it's lied about (browser closed early,
-  // network drop, etc.) we don't double-send — at worst we just don't send
-  // and admin sees the request in the queue without an email.
-  if (is_last === true) {
-    void sendNewRequestNotifications(requestId, clientId, existing.title ?? '', {
-      category: existing.category ?? '',
-      priority: existing.priority ?? '',
-      description: existing.description ?? '',
-    });
   }
 
   return json({ ok: true, file: row });

@@ -15,14 +15,45 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { createServiceSupabase } from '../../../../../../../lib/supabase';
 import { getPortalSession } from '../../../../../../../lib/session';
-import {
-  MAX_UPLOAD_BYTES,
-  MAX_UPLOAD_FILENAME,
-  isAllowedMime,
-  safeName,
-} from '../../../../../../../lib/file-uploads';
 
+const MAX_BYTES = 100 * 1024 * 1024; // 100 MB
 const BUCKET = 'owner-todo-attachments';
+const MAX_FILENAME = 200;
+
+// Permissive but not wide-open. Owner-only feature; we mostly want to keep
+// browser-served executables and exotic mismatches out of the bucket.
+const ALLOWED_MIME_PREFIXES = ['image/', 'video/', 'audio/', 'text/'];
+const ALLOWED_MIME_EXACT = new Set([
+  'application/pdf',
+  'application/json',
+  'application/xml',
+  'application/zip',
+  'application/x-zip-compressed',
+  'application/x-tar',
+  'application/gzip',
+  'application/x-gzip',
+  'application/x-7z-compressed',
+  'application/rtf',
+  'application/msword',
+  'application/vnd.ms-excel',
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  // Common fallback for files the browser couldn't classify (often code/text).
+  'application/octet-stream',
+  // Empty string can come through when a browser declines to set Content-Type.
+  '',
+]);
+
+function isAllowedMime(m: string): boolean {
+  if (ALLOWED_MIME_EXACT.has(m)) return true;
+  return ALLOWED_MIME_PREFIXES.some((p) => m.startsWith(p));
+}
+
+function safeName(name: string): string {
+  return name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, MAX_FILENAME) || 'file';
+}
 
 export const POST: APIRoute = async ({ params, request, cookies }) => {
   const session = await getPortalSession({ cookies, request });
@@ -40,8 +71,8 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
 
   const fileName = (body.file_name ?? '').trim();
   if (!fileName) return json({ error: 'file_name required' }, 400);
-  if (fileName.length > MAX_UPLOAD_FILENAME) {
-    return json({ error: `file_name too long (${MAX_UPLOAD_FILENAME} max)` }, 400);
+  if (fileName.length > MAX_FILENAME) {
+    return json({ error: `file_name too long (${MAX_FILENAME} max)` }, 400);
   }
 
   const mimeType = (body.mime_type ?? '').trim();
@@ -53,7 +84,7 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
   if (typeof sizeBytes !== 'number' || !Number.isFinite(sizeBytes) || sizeBytes <= 0) {
     return json({ error: 'size_bytes must be a positive number' }, 400);
   }
-  if (sizeBytes > MAX_UPLOAD_BYTES) {
+  if (sizeBytes > MAX_BYTES) {
     return json({ error: `File exceeds 100 MB limit (${sizeBytes} bytes)` }, 413);
   }
 
