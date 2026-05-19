@@ -1,10 +1,17 @@
 /**
- * POST /api/portal/requests   (multipart/form-data)
+ * POST /api/portal/requests   (application/json)
  *
- * Client-side request submission. Inserts the requests row using the user's
- * session (RLS enforces tenant scoping), uploads any attached files into
- * storage under <client_id>/<request_id>/, writes request_files rows via the
- * service role, logs activity, and triggers notification emails.
+ * Creates the requests row + the request_created activity entry. Files are
+ * uploaded direct from the browser to Supabase Storage via signed URLs in
+ * /requests/:id/files/sign + /confirm — not multipart through here.
+ *
+ * Email timing:
+ *   - expected_file_count = 0 (or omitted) → send both notification emails
+ *     inline before returning. Preserves today's behavior for text-only
+ *     requests.
+ *   - expected_file_count > 0             → defer the emails to the final
+ *     /files/confirm call (`is_last: true`). The client doesn't get a
+ *     "got it" email before a 12 MB upload silently fails.
  */
 
 export const prerender = false;
@@ -12,36 +19,53 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { createServerSupabase, createServiceSupabase } from '../../../../lib/supabase';
 import { getPortalSession } from '../../../../lib/session';
-import {
-  sendRequestReceivedEmail,
-  sendAdminNewRequestEmail,
-} from '../../../../lib/email';
+import { sendNewRequestNotifications } from '../../../../lib/request-notifications';
 
-const ALLOWED_CATEGORIES = new Set(['text', 'image', 'layout', 'new_feature', 'broken', 'other']);
+const ALLOWED_CATEGORIES = new Set([
+  'text',
+  'image',
+  'layout',
+  'new_feature',
+  'broken',
+  'other',
+]);
 const ALLOWED_PRIORITIES = new Set(['normal', 'important', 'urgent']);
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   const session = await getPortalSession({ cookies, request });
   if (!session) {
-    console.warn('[requests] no session on POST /api/portal/requests');
     return json({ error: 'Not signed in' }, 401);
   }
   if (session.clientIds.length === 0) {
-    console.warn('[requests] user has no client_users links', { userId: session.userId });
     return json({ error: 'No client linked to this account' }, 403);
   }
-
-  // Clients submit against their (currently single) linked client. If multi-
-  // client support comes later, pass a client_id field and validate.
   const clientId = session.clientIds[0];
 
-  const form = await request.formData();
-  const title = (form.get('title') as string || '').trim();
-  const description = (form.get('description') as string || '').trim();
-  const category = (form.get('category') as string || '').trim();
-  const priority = ((form.get('priority') as string) || 'normal').trim();
-  const pageUrl = ((form.get('page_url') as string) || '').trim() || null;
-  const completionDate = ((form.get('preferred_completion_date') as string) || '').trim() || null;
+  let body: {
+    title?: string;
+    description?: string;
+    category?: string;
+    priority?: string;
+    page_url?: string | null;
+    preferred_completion_date?: string | null;
+    expected_file_count?: number;
+  };
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: 'Invalid body' }, 400);
+  }
+
+  const title = (body.title ?? '').trim();
+  const description = (body.description ?? '').trim();
+  const category = (body.category ?? '').trim();
+  const priority = (body.priority ?? 'normal').trim();
+  const pageUrl = (body.page_url ?? '')?.toString().trim() || null;
+  const completionDate = (body.preferred_completion_date ?? '')?.toString().trim() || null;
+  const expectedFileCount =
+    typeof body.expected_file_count === 'number' && body.expected_file_count >= 0
+      ? Math.floor(body.expected_file_count)
+      : 0;
 
   if (!title || !description || !category) {
     return json({ error: 'Title, category, and description are required' }, 400);
@@ -53,7 +77,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   // Confirm the server-side Supabase client is actually carrying the user's
   // session before we attempt the insert. If auth.uid() is null here, the
-  // cookie didn't propagate — log it so we can see in Vercel function logs.
+  // cookie didn't propagate — log it so we can see in function logs.
   const { data: whoami, error: whoErr } = await supabase.auth.getUser();
   if (whoErr || !whoami?.user) {
     console.error('[requests] supabase.auth.getUser failed', {
@@ -61,12 +85,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       err: whoErr?.message,
     });
     return json({ error: 'Session expired — please sign out and back in' }, 401);
-  }
-  if (whoami.user.id !== session.userId) {
-    console.error('[requests] auth.uid() mismatch with session', {
-      authUid: whoami.user.id,
-      sessionUserId: session.userId,
-    });
   }
 
   const insertPayload = {
@@ -95,35 +113,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return json({ error: insertErr?.message || 'Could not create request' }, 500);
   }
 
-  // Upload any attached files via service role. We've already verified the
-  // caller's identity above; using service role here means we can write into
-  // storage and request_files in the same path even when the user's RLS join
-  // is slightly delayed.
   const admin = createServiceSupabase();
-
-  const files = form.getAll('files').filter((v): v is File => v instanceof File && v.size > 0);
-  for (const file of files) {
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const objectPath = `${clientId}/${created.id}/${Date.now()}-${safeName}`;
-    const buffer = await file.arrayBuffer();
-
-    const { error: upErr } = await admin.storage
-      .from('request-files')
-      .upload(objectPath, buffer, {
-        contentType: file.type || 'application/octet-stream',
-        upsert: false,
-      });
-    if (upErr) continue; // skip the bad one rather than failing the whole submit
-
-    await admin.from('request_files').insert({
-      request_id: created.id,
-      file_url: objectPath, // store the object path; sign at read time
-      filename: file.name,
-      uploaded_by: session.userId,
-    });
-  }
-
-  // Activity log.
   await admin.from('request_activity').insert({
     request_id: created.id,
     actor_id: session.userId,
@@ -131,63 +121,18 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     metadata: { title: created.title },
   });
 
-  // Notifications — fire and continue; never block the user on email.
-  void sendNotifications(created.id, clientId, created.title, {
-    category,
-    priority,
-    description,
-  });
+  // No-file submission: fire emails inline so behavior matches the old path.
+  // Anything with attachments waits for /files/confirm `is_last: true`.
+  if (expectedFileCount === 0) {
+    void sendNewRequestNotifications(created.id, clientId, created.title, {
+      category,
+      priority,
+      description,
+    });
+  }
 
   return json({ ok: true, id: created.id });
 };
-
-async function sendNotifications(
-  requestId: string,
-  clientId: string,
-  title: string,
-  meta: { category: string; priority: string; description: string }
-) {
-  try {
-    const admin = createServiceSupabase();
-
-    const [{ data: client }, { data: members }] = await Promise.all([
-      admin.from('clients').select('business_name, primary_contact_email').eq('id', clientId).maybeSingle(),
-      admin
-        .from('client_users')
-        .select('profiles:user_id (id, full_name)')
-        .eq('client_id', clientId),
-    ]);
-
-    if (!client) return;
-
-    const owner = (members ?? []).map((m: any) => m.profiles).find(Boolean);
-
-    await Promise.all([
-      sendRequestReceivedEmail({
-        toEmail: client.primary_contact_email,
-        firstName: ownerFirstName(owner),
-        title,
-        requestId,
-      }),
-      sendAdminNewRequestEmail({
-        clientName: client.business_name,
-        title,
-        requestId,
-        category: meta.category,
-        priority: meta.priority,
-        description: meta.description,
-      }),
-    ]);
-  } catch (err) {
-    console.error('[requests] notification failed:', err);
-  }
-}
-
-function ownerFirstName(owner: any): string {
-  const name = owner?.full_name;
-  if (typeof name === 'string' && name.trim()) return name.trim().split(/\s+/)[0];
-  return 'there';
-}
 
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
