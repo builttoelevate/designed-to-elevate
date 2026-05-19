@@ -55,12 +55,31 @@ export function isAllowedMime(m: string): boolean {
 }
 
 /**
- * Strip anything that isn't a safe URL/filesystem character. Cap length so a
- * pathological 4 KB filename can't blow out a storage path. Falls back to
- * `'file'` when the entire input gets stripped (e.g. only emoji).
+ * Strict filename sanitizer used in portal-request storage paths. Rules:
+ *   - lowercase the whole string
+ *   - replace anything outside [a-z0-9.-] with a single hyphen
+ *   - collapse consecutive hyphens to one
+ *   - trim leading/trailing hyphens and dots
+ *   - truncate to MAX_SAFE_FILENAME (80) chars, since the storage path also
+ *     carries a timestamp + random id prefix
+ *   - fall back to `'file'` if the whole input gets stripped (emoji-only, etc.)
+ *
+ * The final storage path is built by the sign endpoint as
+ * `<client_id>/<request_id>/<timestamp>-<randomId>-<safeRequestFilename>`,
+ * which means the safe name is appended AFTER a known good prefix; the
+ * timestamp + randomId guarantee uniqueness even when two files share a
+ * sanitized name.
  */
-export function safeName(name: string): string {
-  return name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, MAX_UPLOAD_FILENAME) || 'file';
+export const MAX_SAFE_FILENAME = 80;
+
+export function safeRequestFilename(name: string): string {
+  const cleaned = name
+    .toLowerCase()
+    .replace(/[^a-z0-9.-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^[-.]+|[-.]+$/g, '')
+    .slice(0, MAX_SAFE_FILENAME);
+  return cleaned || 'file';
 }
 
 /**

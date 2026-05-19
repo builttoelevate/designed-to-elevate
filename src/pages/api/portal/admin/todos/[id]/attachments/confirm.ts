@@ -16,9 +16,36 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { createServiceSupabase } from '../../../../../../../lib/supabase';
 import { getPortalSession } from '../../../../../../../lib/session';
-import { MAX_UPLOAD_BYTES, isAllowedMime } from '../../../../../../../lib/file-uploads';
 
 const BUCKET = 'owner-todo-attachments';
+const MAX_BYTES = 100 * 1024 * 1024;
+
+const ALLOWED_MIME_PREFIXES = ['image/', 'video/', 'audio/', 'text/'];
+const ALLOWED_MIME_EXACT = new Set([
+  'application/pdf',
+  'application/json',
+  'application/xml',
+  'application/zip',
+  'application/x-zip-compressed',
+  'application/x-tar',
+  'application/gzip',
+  'application/x-gzip',
+  'application/x-7z-compressed',
+  'application/rtf',
+  'application/msword',
+  'application/vnd.ms-excel',
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/octet-stream',
+  '',
+]);
+
+function isAllowedMime(m: string): boolean {
+  if (ALLOWED_MIME_EXACT.has(m)) return true;
+  return ALLOWED_MIME_PREFIXES.some((p) => m.startsWith(p));
+}
 
 export const POST: APIRoute = async ({ params, request, cookies }) => {
   const session = await getPortalSession({ cookies, request });
@@ -44,7 +71,7 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
   if (!attachment_id || !storage_path || !file_name) {
     return json({ error: 'Missing fields' }, 400);
   }
-  if (typeof size_bytes !== 'number' || size_bytes <= 0 || size_bytes > MAX_UPLOAD_BYTES) {
+  if (typeof size_bytes !== 'number' || size_bytes <= 0 || size_bytes > MAX_BYTES) {
     return json({ error: 'Invalid size_bytes' }, 400);
   }
   const mt = mime_type ?? '';

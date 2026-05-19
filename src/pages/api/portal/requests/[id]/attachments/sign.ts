@@ -1,15 +1,21 @@
 /**
- * POST /api/portal/requests/:id/files/sign
+ * POST /api/portal/requests/:id/attachments/sign
  *   body: { file_name, mime_type, size_bytes }
  *
  * Mints a signed Supabase Storage upload URL for one file attached to a
  * client change-request. Browser then PUTs the bytes directly to Supabase,
  * watches xhr.upload.onprogress for per-file progress, and calls the
- * sibling /files/confirm endpoint to record the metadata row.
+ * sibling /attachments/confirm endpoint to record the metadata row.
  *
  * The storage path's first segment is the caller's client_id so the
- * `request_files_insert` bucket policy authorizes the PUT under the user's
- * session.
+ * `request_files_insert` bucket policy (defined in migration 0003) authorizes
+ * the PUT under the user's session. Path format:
+ *
+ *   <client_id>/<request_id>/<timestamp>-<randomId>-<safeRequestFilename>
+ *
+ * The timestamp + randomId prefix guarantees uniqueness even if two files
+ * share a sanitized name, and lets the confirm endpoint verify the caller
+ * isn't writing to someone else's directory.
  */
 
 export const prerender = false;
@@ -21,7 +27,7 @@ import {
   MAX_UPLOAD_BYTES,
   MAX_UPLOAD_FILENAME,
   isAllowedMime,
-  safeName,
+  safeRequestFilename,
 } from '../../../../../../lib/file-uploads';
 
 const BUCKET = 'request-files';
@@ -79,8 +85,13 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
     return json({ error: 'Request is no longer accepting new uploads' }, 409);
   }
 
-  const attachmentId = crypto.randomUUID();
-  const storagePath = `${clientId}/${requestId}/${attachmentId}-${safeName(fileName)}`;
+  // Path: <client_id>/<request_id>/<timestamp>-<randomId>-<safeRequestFilename>
+  // The 8-char prefix of a v4 UUID gives ~32 bits of entropy — collision-safe
+  // within a single request/timestamp combo.
+  const timestamp = Date.now();
+  const randomId = crypto.randomUUID().slice(0, 8);
+  const attachmentId = `${timestamp}-${randomId}`;
+  const storagePath = `${clientId}/${requestId}/${attachmentId}-${safeRequestFilename(fileName)}`;
 
   const { data, error } = await admin.storage
     .from(BUCKET)

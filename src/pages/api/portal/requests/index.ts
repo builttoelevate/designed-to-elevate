@@ -3,15 +3,14 @@
  *
  * Creates the requests row + the request_created activity entry. Files are
  * uploaded direct from the browser to Supabase Storage via signed URLs in
- * /requests/:id/files/sign + /confirm — not multipart through here.
+ * /requests/:id/attachments/sign + /confirm — not multipart through here.
  *
- * Email timing:
- *   - expected_file_count = 0 (or omitted) → send both notification emails
- *     inline before returning. Preserves today's behavior for text-only
- *     requests.
- *   - expected_file_count > 0             → defer the emails to the final
- *     /files/confirm call (`is_last: true`). The client doesn't get a
- *     "got it" email before a 12 MB upload silently fails.
+ * Email timing: notification emails fire inline on every create. The "got it"
+ * message just says the request is in the queue, which is true the moment
+ * the row exists — independent of whether file 4 of 4 finished uploading.
+ * Deferring emails to the last confirm tied them to the riskiest step in the
+ * flow and made retry-after-partial-failure complicated; firing on create
+ * sidesteps both problems.
  */
 
 export const prerender = false;
@@ -48,7 +47,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     priority?: string;
     page_url?: string | null;
     preferred_completion_date?: string | null;
-    expected_file_count?: number;
   };
   try {
     body = await request.json();
@@ -62,10 +60,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const priority = (body.priority ?? 'normal').trim();
   const pageUrl = (body.page_url ?? '')?.toString().trim() || null;
   const completionDate = (body.preferred_completion_date ?? '')?.toString().trim() || null;
-  const expectedFileCount =
-    typeof body.expected_file_count === 'number' && body.expected_file_count >= 0
-      ? Math.floor(body.expected_file_count)
-      : 0;
 
   if (!title || !description || !category) {
     return json({ error: 'Title, category, and description are required' }, 400);
@@ -121,15 +115,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     metadata: { title: created.title },
   });
 
-  // No-file submission: fire emails inline so behavior matches the old path.
-  // Anything with attachments waits for /files/confirm `is_last: true`.
-  if (expectedFileCount === 0) {
-    void sendNewRequestNotifications(created.id, clientId, created.title, {
-      category,
-      priority,
-      description,
-    });
-  }
+  // Fire emails for every request, regardless of file count. See file header
+  // for the rationale.
+  void sendNewRequestNotifications(created.id, clientId, created.title, {
+    category,
+    priority,
+    description,
+  });
 
   return json({ ok: true, id: created.id });
 };
