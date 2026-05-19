@@ -1,6 +1,7 @@
 ---
 import LandingLayout from '../layouts/LandingLayout.astro';
 import LandingHeader from './landing/LandingHeader.astro';
+import BreadcrumbSchema from './BreadcrumbSchema.astro';
 
 interface Props {
   title: string;
@@ -11,8 +12,28 @@ interface Props {
 }
 
 const { title, description, pathname, effective = 'April 2026', intro } = Astro.props;
+
+const SITE = 'https://designedtoelevate.co';
+
+// Minimal WebPage schema so each legal page is a defined entity, pointing
+// back to the sitewide Organization as publisher.
+const pageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url: `${SITE}/${pathname}`,
+  isPartOf: { '@id': `${SITE}/#website` },
+  publisher: { '@id': `${SITE}/#organization` },
+};
 ---
 <LandingLayout title={`${title} — Designed to Elevate`} description={description} pathname={pathname}>
+  <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: title, url: `${SITE}/${pathname}` },
+  ]} />
+
   <LandingHeader />
   <main>
     <!-- Legal head -->

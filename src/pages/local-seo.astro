@@ -2,6 +2,21 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Local SEO and Google Business Profile optimization',
+  serviceType: 'Local search optimization',
+  description:
+    'Local SEO, service-area pages, schema markup, and Google Business Profile optimization for Ohio service businesses.',
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
+  url: `${SITE}/local-seo`,
+};
 
 const included = [
   { title: 'Google Business Profile setup & optimization', body: 'Categories, services, photos, hours, products, posts. The free profile most local businesses still leave half-finished.' },
@@ -24,6 +39,12 @@ const realityChecks = [
   description="Local SEO, service-area pages, schema, and Google Business Profile optimization for service businesses in Coshocton, Zanesville, Newark, and across Eastern Ohio."
   pathname="local-seo"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Local SEO', url: `${SITE}/local-seo` },
+  ]} />
+
   <SiteHeader />
 
   <main>

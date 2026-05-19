@@ -2,6 +2,7 @@
 import LandingLayout from '../../layouts/LandingLayout.astro';
 import SiteHeader from '../../components/site/SiteHeader.astro';
 import SiteFooter from '../../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../../components/BreadcrumbSchema.astro';
 
 const SITE = 'https://designedtoelevate.co';
 
@@ -27,7 +28,8 @@ const schema = {
   name: 'Modern Classic Barbershop & Shave Parlor — Brand Hub & Booking Integration',
   description:
     'A premium custom-designed website running on top of Square booking and Shopify product, built by Designed to Elevate for Modern Classic Barbershop in Zanesville, Ohio.',
-  creator: { '@type': 'Person', name: 'Bill Chicha' },
+  creator: { '@id': `${SITE}/about/#bill-chicha` },
+  publisher: { '@id': `${SITE}/#organization` },
   about: {
     '@type': 'LocalBusiness',
     name: 'Modern Classic Barbershop & Shave Parlor',
@@ -48,6 +50,11 @@ const schema = {
   pathname="case-studies/modern-classic-barbershop"
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Case Studies', url: `${SITE}/case-studies` },
+    { name: 'Modern Classic Barbershop', url: `${SITE}/case-studies/modern-classic-barbershop` },
+  ]} />
 
   <SiteHeader />
 

@@ -2,6 +2,21 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Small business website redesign',
+  serviceType: 'Website redesign and rebuild',
+  description:
+    'Mobile-first website rebuilds with real on-page SEO and lead capture for Ohio service businesses ready to replace a site that isn\'t earning its keep.',
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
+  url: `${SITE}/website-redesign`,
+};
 
 const signs = [
   { title: 'It loads slow on a phone', body: "Most local-service traffic is mobile. If your homepage takes more than 2 seconds to paint, half the people who clicked are already gone." },
@@ -31,9 +46,15 @@ const process = [
 ---
 <LandingLayout
   title="Small Business Website Redesign in Ohio | Designed to Elevate"
-  description="Small business website redesigns built around conversion, not just visual refresh. Mobile-first rebuilds with real on-page SEO and lead capture, for Ohio service businesses ready to replace a website that isn't earning its keep."
+  description="Mobile-first website rebuilds with real on-page SEO and lead capture for Ohio service businesses ready to replace a site that isn't earning its keep."
   pathname="website-redesign"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Website Redesign', url: `${SITE}/website-redesign` },
+  ]} />
+
   <SiteHeader />
 
   <main>

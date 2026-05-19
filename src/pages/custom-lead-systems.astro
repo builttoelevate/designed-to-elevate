@@ -2,6 +2,21 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Custom lead systems and quote wizards',
+  serviceType: 'Custom web application development',
+  description:
+    'Custom quote wizards, booking flows, follow-up automations, and admin dashboards built around how each service business actually prices and books work.',
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
+  url: `${SITE}/custom-lead-systems`,
+};
 
 const builds = [
   { title: 'Quote & Estimate Wizards', body: 'Multi-step pricing flows tailored to your services. Customers get a real number; you get a structured lead.' },
@@ -38,6 +53,12 @@ const outcomes = [
   description="Lead generation websites with custom quote wizards, booking flows, follow-up automations, and admin dashboards — built around how your service business actually prices and books work."
   pathname="custom-lead-systems"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Custom Lead Systems', url: `${SITE}/custom-lead-systems` },
+  ]} />
+
   <SiteHeader />
 
   <main>

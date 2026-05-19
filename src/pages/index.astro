@@ -109,41 +109,59 @@ const pricing = [
   },
 ];
 
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  name: 'Designed to Elevate',
-  description:
-    'Local web design, landing pages, and lead systems for Ohio service businesses that want more calls, quote requests, and booked jobs.',
-  url: SITE,
-  telephone: '+1-740-617-6488',
-  email: 'bilsonxnc@gmail.com',
-  address: {
-    '@type': 'PostalAddress',
-    addressRegion: 'OH',
-    addressCountry: 'US',
+// Homepage emits LocalBusiness (more specific than the sitewide Organization
+// in LandingLayout) plus an ItemList that exposes the three signature case
+// studies so Google can pull them into rich results for brand queries.
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    '@id': `${SITE}/#localbusiness`,
+    name: 'Designed to Elevate',
+    description:
+      'Local web design, landing pages, and lead systems for Ohio service businesses that want more calls, quote requests, and booked jobs.',
+    url: SITE,
+    telephone: '+1-740-617-6488',
+    email: 'bilsonxnc@gmail.com',
+    image: `${SITE}/og-image.png`,
+    priceRange: '$$',
+    address: {
+      '@type': 'PostalAddress',
+      addressRegion: 'OH',
+      addressCountry: 'US',
+    },
+    areaServed: [
+      { '@type': 'City', name: 'Coshocton' },
+      { '@type': 'City', name: 'Zanesville' },
+      { '@type': 'City', name: 'Newark' },
+      { '@type': 'City', name: 'Cambridge' },
+      { '@type': 'City', name: 'Mount Vernon' },
+      { '@type': 'City', name: 'Carrollton' },
+    ],
+    serviceType: [
+      'Search-Optimized Websites',
+      'Google Ads Landing Pages',
+      'Google Business Profile Optimization',
+      'Custom Quote & Booking Systems',
+    ],
+    founder: { '@type': 'Person', name: 'Bill Chicha' },
   },
-  areaServed: [
-    { '@type': 'City', name: 'Coshocton' },
-    { '@type': 'City', name: 'Zanesville' },
-    { '@type': 'City', name: 'Newark' },
-    { '@type': 'City', name: 'Cambridge' },
-    { '@type': 'City', name: 'Mount Vernon' },
-    { '@type': 'City', name: 'Carrollton' },
-  ],
-  serviceType: [
-    'Search-Optimized Websites',
-    'Google Ads Landing Pages',
-    'Google Business Profile Optimization',
-    'Custom Quote & Booking Systems',
-  ],
-  founder: { '@type': 'Person', name: 'Bill Chicha' },
-  sameAs: [],
-};
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Recent local work',
+    itemListElement: projects.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `${SITE}${p.href}`,
+      name: p.name,
+    })),
+  },
+];
 ---
 <LandingLayout
   title="Small Business Web Designer in Ohio | Designed to Elevate"
-  description="Designed to Elevate is a small business web designer based in Ohio, building search-optimized websites, landing pages, and lead systems for local service businesses that want more calls, quote requests, and booked jobs. Recent work includes Fitchin Auto Detail & Tint and Modern Classic Barbershop."
+  description="Small business web designer in Ohio. Search-optimized websites, Google Ads landing pages, and custom lead systems for local service businesses that want more calls, quotes, and booked jobs."
   pathname=""
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />

@@ -2,6 +2,22 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Window tint shop website design',
+  serviceType: 'Website design for window tint shops',
+  description:
+    'Window tint shop website design with vehicle-specific quote flows, per-section pricing, tier comparison, split darkness logic, and SEO for window tint searches.',
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
+  audience: { '@type': 'BusinessAudience', name: 'Window tint shops' },
+  url: `${SITE}/window-tint-websites`,
+};
 
 const needs = [
   { title: 'Per-vehicle quoting', body: "A 2024 F-150 with a rear bench is a different glass count than a coupe. The site has to know the vehicle before it tries to quote it." },
@@ -17,6 +33,12 @@ const needs = [
   description="Window tint shop website design built around vehicle-specific quote flows. Per-section pricing, tier comparison, split darkness logic, and SEO targeting window tint searches in your market."
   pathname="window-tint-websites"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Window Tint Websites', url: `${SITE}/window-tint-websites` },
+  ]} />
+
   <SiteHeader />
 
   <main>

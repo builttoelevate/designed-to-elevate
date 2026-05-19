@@ -46,6 +46,7 @@ import UpgradeFounder from '../components/landing/upgrade/UpgradeFounder.astro';
 import UpgradeAuditForm from '../components/landing/upgrade/UpgradeAuditForm.astro';
 import UpgradeFinalCTA from '../components/landing/upgrade/UpgradeFinalCTA.astro';
 import UpgradeStickyCTA from '../components/landing/upgrade/UpgradeStickyCTA.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
 
 const SITE = 'https://designedtoelevate.co';
 
@@ -102,6 +103,10 @@ const schema = {
   pathname="upgrade"
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Square Website Upgrade', url: `${SITE}/upgrade` },
+  ]} />
 
   <UpgradeHeader />
   <main class="pb-24 md:pb-0">

@@ -2,6 +2,7 @@
 import LandingLayout from '../../layouts/LandingLayout.astro';
 import SiteHeader from '../../components/site/SiteHeader.astro';
 import SiteFooter from '../../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../../components/BreadcrumbSchema.astro';
 
 const SITE = 'https://designedtoelevate.co';
 
@@ -32,7 +33,8 @@ const schema = {
   name: 'Fitchin Automotive Detailing & Window Tinting — Web Design & Quote System',
   description:
     "Custom website plus a 378-vehicle quote wizard for Fitchin Auto Detail & Tint in Coshocton, Ohio. Built by Designed to Elevate.",
-  creator: { '@type': 'Person', name: 'Bill Chicha' },
+  creator: { '@id': `${SITE}/about/#bill-chicha` },
+  publisher: { '@id': `${SITE}/#organization` },
   about: {
     '@type': 'LocalBusiness',
     name: 'Fitchin Automotive Detailing & Window Tinting',
@@ -53,6 +55,11 @@ const schema = {
   pathname="case-studies/fitchin-auto-detail-tint"
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Case Studies', url: `${SITE}/case-studies` },
+    { name: 'Fitchin Auto Detail & Tint', url: `${SITE}/case-studies/fitchin-auto-detail-tint` },
+  ]} />
 
   <SiteHeader />
 
