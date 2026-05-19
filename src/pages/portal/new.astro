@@ -25,7 +25,7 @@ if (session.clientIds.length === 0) {
       or redesigns may need a separate estimate before work begins.
     </p>
 
-    <form class="ph-card p-5 sm:p-7 space-y-5" data-request-form enctype="multipart/form-data">
+    <form class="ph-card p-5 sm:p-7 space-y-5" data-request-form>
       <div>
         <label for="title" class="ph-label">What needs changed?</label>
         <input id="title" name="title" type="text" required maxlength="120" class="ph-input" />
@@ -63,6 +63,12 @@ if (session.clientIds.length === 0) {
         <label for="files" class="ph-label">Upload files</label>
         <input id="files" name="files" type="file" multiple class="ph-input" accept="image/*,application/pdf" />
         <p class="ph-hint">Screenshots, logos, photos, PDFs — anything that helps us understand.</p>
+
+        <!-- Pending list (pre-submit): files the user has picked, with × to remove. -->
+        <ul class="mt-3 space-y-2 hidden" data-pending-list></ul>
+
+        <!-- Progress chips (during submit): one per file, with % bar. -->
+        <ul class="mt-3 space-y-2 hidden" data-upload-chips></ul>
       </div>
 
       <div>
@@ -96,49 +102,369 @@ if (session.clientIds.length === 0) {
   </section>
 </PortalLayout>
 
+<style>
+  /* Lifted verbatim from src/pages/portal/admin/todos.astro so the upload
+     progress chips render the same in both portals. */
+  .ph-attach-row {
+    padding: 0.35rem 0.5rem;
+    border-radius: 0.45rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  .ph-progress-track {
+    height: 3px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    overflow: hidden;
+    margin-top: 0.3rem;
+  }
+  .ph-progress-fill {
+    height: 100%;
+    background: var(--color-accent);
+    width: 0%;
+    transition: width 120ms linear;
+  }
+  .ph-progress-fill[data-state="failed"] {
+    background: rgba(248, 113, 113, 0.6);
+  }
+  .ph-pending-row .ph-remove-btn {
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0 0.25rem;
+  }
+  .ph-pending-row .ph-remove-btn:hover {
+    color: var(--color-accent);
+  }
+</style>
+
 <script>
+  // Max upload + MIME allowlist mirror the server-side validation in
+  // src/lib/file-uploads.ts. Keep in sync.
+  const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
+  const ALLOWED_MIME_PREFIXES = ['image/', 'video/', 'audio/', 'text/'];
+  const ALLOWED_MIME_EXACT = new Set([
+    'application/pdf',
+    'application/json',
+    'application/xml',
+    'application/zip',
+    'application/x-zip-compressed',
+    'application/x-tar',
+    'application/gzip',
+    'application/x-gzip',
+    'application/x-7z-compressed',
+    'application/rtf',
+    'application/msword',
+    'application/vnd.ms-excel',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/octet-stream',
+    '',
+  ]);
+  function isAllowedMime(m: string): boolean {
+    if (ALLOWED_MIME_EXACT.has(m)) return true;
+    return ALLOWED_MIME_PREFIXES.some((p) => m.startsWith(p));
+  }
+  function formatBytes(n: number): string {
+    if (n < 1024) return `${n} B`;
+    if (n < 1024 * 1024) return `${Math.round(n / 1024)} KB`;
+    return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
   const form = document.querySelector<HTMLFormElement>('[data-request-form]');
   const flash = document.querySelector<HTMLElement>('[data-flash]');
   const label = document.querySelector<HTMLElement>('[data-btn-label]');
+  const fileInput = document.querySelector<HTMLInputElement>('#files');
+  const pendingList = document.querySelector<HTMLUListElement>('[data-pending-list]');
+  const chipList = document.querySelector<HTMLUListElement>('[data-upload-chips]');
 
-  if (form && flash && label) {
+  if (!form || !flash || !label || !fileInput || !pendingList || !chipList) {
+    // Page is broken at the markup level; let the JS noop rather than throw.
+  } else {
+    // ─── Pending file list ───────────────────────────────────────────────
+    // Users can add more files (the input is `multiple`) and remove specific
+    // ones before submit. We keep an authoritative array here because the
+    // <input type="file"> .files list is read-only — once we strip a file
+    // from the display, we can't remove it from the input directly.
+    let pending: File[] = [];
+
+    function showFlash(tone: 'success' | 'error' | 'warn', message: string) {
+      flash!.dataset.tone = tone;
+      flash!.textContent = message;
+      flash!.classList.remove('hidden');
+    }
+
+    function renderPending() {
+      pendingList!.innerHTML = '';
+      if (pending.length === 0) {
+        pendingList!.classList.add('hidden');
+        return;
+      }
+      pendingList!.classList.remove('hidden');
+      pending.forEach((file, idx) => {
+        const li = document.createElement('li');
+        li.className = 'ph-attach-row ph-pending-row flex items-center gap-2 text-xs';
+        const name = document.createElement('span');
+        name.className = 'flex-1 min-w-0 truncate';
+        name.textContent = file.name;
+        const size = document.createElement('span');
+        size.className = 'text-text-muted shrink-0';
+        size.textContent = formatBytes(file.size);
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'ph-remove-btn shrink-0';
+        remove.setAttribute('aria-label', `Remove ${file.name}`);
+        remove.textContent = '×';
+        remove.addEventListener('click', () => {
+          pending.splice(idx, 1);
+          renderPending();
+        });
+        li.append(name, size, remove);
+        pendingList!.appendChild(li);
+      });
+    }
+
+    fileInput.addEventListener('change', () => {
+      const picked = Array.from(fileInput.files ?? []);
+      // Append, don't replace — user might pick a screenshot, then add a
+      // logo. The native picker doesn't merge for us.
+      for (const f of picked) {
+        if (f.size <= 0) continue;
+        if (f.size > MAX_UPLOAD_BYTES) {
+          showFlash('error', `"${f.name}" exceeds 100 MB limit and was skipped.`);
+          continue;
+        }
+        if (!isAllowedMime(f.type)) {
+          showFlash('error', `"${f.name}" has an unsupported file type (${f.type || 'unknown'}) and was skipped.`);
+          continue;
+        }
+        pending.push(f);
+      }
+      renderPending();
+      // Reset the input so re-picking the same file re-fires the change event.
+      fileInput.value = '';
+    });
+
+    // ─── Submit flow ─────────────────────────────────────────────────────
+    let uploadsInFlight = false;
+    const beforeUnload = (e: BeforeUnloadEvent) => {
+      if (!uploadsInFlight) return;
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', beforeUnload);
+
+    function disableForm(disabled: boolean) {
+      form!.querySelectorAll<HTMLInputElement>('input,select,textarea,button').forEach((el) => {
+        el.disabled = disabled;
+      });
+    }
+
+    interface ChipHandles {
+      pct: HTMLElement;
+      fill: HTMLElement;
+      name: HTMLElement;
+    }
+
+    function createChip(file: File): ChipHandles {
+      const li = document.createElement('li');
+      li.className = 'ph-attach-row';
+      li.innerHTML = `
+        <div class="flex items-center gap-2 text-xs">
+          <span class="flex-1 min-w-0 truncate" data-name></span>
+          <span class="text-text-muted shrink-0" data-size></span>
+          <span class="text-text-muted shrink-0" data-pct>0%</span>
+        </div>
+        <div class="ph-progress-track"><div class="ph-progress-fill" data-fill></div></div>
+      `;
+      const name = li.querySelector<HTMLElement>('[data-name]')!;
+      const size = li.querySelector<HTMLElement>('[data-size]')!;
+      const pct = li.querySelector<HTMLElement>('[data-pct]')!;
+      const fill = li.querySelector<HTMLElement>('[data-fill]')!;
+      name.textContent = file.name;
+      size.textContent = formatBytes(file.size);
+      chipList!.appendChild(li);
+      return { pct, fill, name };
+    }
+
+    function markChipFailed(chip: ChipHandles, message: string) {
+      chip.pct.textContent = 'Failed';
+      chip.fill.style.width = '100%';
+      chip.fill.dataset.state = 'failed';
+      chip.name.title = message;
+    }
+
+    async function signFile(
+      requestId: string,
+      file: File
+    ): Promise<{ attachment_id: string; storage_path: string; signed_url: string; token: string }> {
+      const res = await fetch(`/api/portal/requests/${requestId}/files/sign`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          file_name: file.name,
+          mime_type: file.type || 'application/octet-stream',
+          size_bytes: file.size,
+        }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || `Sign HTTP ${res.status}`);
+      return body;
+    }
+
+    function putToStorage(
+      signedUrl: string,
+      file: File,
+      chip: ChipHandles
+    ): Promise<void> {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', signedUrl, true);
+        xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+        xhr.upload.addEventListener('progress', (e) => {
+          if (!e.lengthComputable) return;
+          const pct = Math.round((e.loaded / e.total) * 100);
+          chip.pct.textContent = `${pct}%`;
+          chip.fill.style.width = `${pct}%`;
+        });
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            chip.pct.textContent = '100%';
+            chip.fill.style.width = '100%';
+            resolve();
+          } else {
+            reject(new Error(`Upload HTTP ${xhr.status}`));
+          }
+        });
+        xhr.addEventListener('error', () => reject(new Error('Network error during upload')));
+        xhr.addEventListener('abort', () => reject(new Error('Upload aborted')));
+        xhr.send(file);
+      });
+    }
+
+    async function confirmFile(
+      requestId: string,
+      file: File,
+      signed: { attachment_id: string; storage_path: string },
+      isLast: boolean
+    ): Promise<void> {
+      const res = await fetch(`/api/portal/requests/${requestId}/files/confirm`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          attachment_id: signed.attachment_id,
+          storage_path: signed.storage_path,
+          file_name: file.name,
+          mime_type: file.type || 'application/octet-stream',
+          size_bytes: file.size,
+          is_last: isLast,
+        }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || `Confirm HTTP ${res.status}`);
+    }
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const data = new FormData(form);
+      flash!.classList.add('hidden');
 
-      label.textContent = 'Submitting…';
-      form.querySelectorAll('input,select,textarea,button').forEach((el) =>
-        ((el as HTMLInputElement).disabled = true)
-      );
+      // Snapshot the text fields before disabling inputs (disabled fields are
+      // omitted from FormData per spec, and we want stable values).
+      const fd = new FormData(form!);
+      const payload = {
+        title: (fd.get('title') as string | null)?.trim() ?? '',
+        category: (fd.get('category') as string | null)?.trim() ?? '',
+        page_url: (fd.get('page_url') as string | null)?.trim() || null,
+        description: (fd.get('description') as string | null)?.trim() ?? '',
+        priority: (fd.get('priority') as string | null) ?? 'normal',
+        preferred_completion_date:
+          (fd.get('preferred_completion_date') as string | null) || null,
+        expected_file_count: pending.length,
+      };
+
+      label!.textContent = pending.length > 0 ? 'Submitting…' : 'Submitting…';
+      disableForm(true);
+      uploadsInFlight = true;
 
       try {
-        const res = await fetch('/api/portal/requests', { method: 'POST', body: data });
-        const json = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
+        // ─── Step 1: create the request row ────────────────────────────
+        const createRes = await fetch('/api/portal/requests', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const createBody = await createRes.json().catch(() => ({}));
+        if (!createRes.ok) {
+          throw new Error(createBody.error || `Create HTTP ${createRes.status}`);
+        }
+        const requestId = createBody.id as string;
 
-        flash.dataset.tone = 'success';
-        flash.textContent =
-          "Got it. Your request is in the queue and we'll email you when it's in progress.";
-        flash.classList.remove('hidden');
-        label.textContent = 'Submitted ✓';
+        // ─── Step 2: per-file sign → PUT → confirm loop ────────────────
+        // Hide pending list, show chips. Sequential to keep LTE bandwidth
+        // honest and to simplify per-file error mapping.
+        pendingList!.classList.add('hidden');
+        if (pending.length > 0) chipList!.classList.remove('hidden');
 
-        // Bounce to the request detail page after a beat so the success
-        // message has time to register.
+        const failed: string[] = [];
+        for (let i = 0; i < pending.length; i++) {
+          const file = pending[i];
+          const isLast = i === pending.length - 1;
+          const chip = createChip(file);
+          label!.textContent = `Uploading ${i + 1} of ${pending.length}…`;
+
+          try {
+            const signed = await signFile(requestId, file);
+            await putToStorage(signed.signed_url, file, chip);
+            await confirmFile(requestId, file, signed, isLast);
+          } catch (err) {
+            const message =
+              err instanceof Error ? err.message : 'Unknown error during upload';
+            markChipFailed(chip, message);
+            failed.push(file.name);
+            // Continue with the rest of the batch. The request is already
+            // saved — we'd rather land 3 of 4 files than abort everything.
+          }
+        }
+
+        // ─── Step 3: finalize ──────────────────────────────────────────
+        label!.textContent = 'Finalizing…';
+        uploadsInFlight = false;
+
+        if (failed.length > 0) {
+          const word = failed.length === 1 ? 'file' : 'files';
+          showFlash(
+            'warn',
+            `Submitted, but ${failed.length} of ${pending.length} ${word} didn't upload. ` +
+              `You can add ${failed.length === 1 ? 'it' : 'them'} on the next page.`
+          );
+        } else {
+          showFlash(
+            'success',
+            "Got it. Your request is in the queue and we'll email you when it's in progress."
+          );
+        }
+        label!.textContent = 'Submitted ✓';
+
         setTimeout(() => {
-          if (json.id) window.location.assign(`/portal/r/${json.id}`);
-          else window.location.assign('/portal');
+          window.location.assign(`/portal/r/${requestId}`);
         }, 900);
       } catch (err) {
-        flash.dataset.tone = 'error';
-        flash.textContent =
+        // The create call itself failed (or something at module scope threw).
+        // Re-enable the form so the user can fix and resubmit. Chips and
+        // pending list both clear back to a clean state.
+        uploadsInFlight = false;
+        chipList!.innerHTML = '';
+        chipList!.classList.add('hidden');
+        if (pending.length > 0) pendingList!.classList.remove('hidden');
+        const message =
           err instanceof Error && err.message
             ? `Couldn't submit: ${err.message}`
             : "Couldn't submit. Try again, or text Bill at (740) 617-6488.";
-        flash.classList.remove('hidden');
-        label.textContent = 'Submit Request';
-        form.querySelectorAll('input,select,textarea,button').forEach((el) =>
-          ((el as HTMLInputElement).disabled = false)
-        );
+        showFlash('error', message);
+        label!.textContent = 'Submit Request';
+        disableForm(false);
       }
     });
   }

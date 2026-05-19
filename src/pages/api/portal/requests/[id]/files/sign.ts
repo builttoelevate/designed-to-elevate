@@ -1,35 +1,40 @@
 /**
- * POST /api/portal/admin/todos/:id/attachments/sign
+ * POST /api/portal/requests/:id/files/sign
  *   body: { file_name, mime_type, size_bytes }
  *
- * Generates a short-lived signed upload URL pointing at Supabase Storage so
- * the browser can PUT the file bytes directly. Files never pass through our
- * serverless function (Vercel caps multipart bodies at 4.5 MB).
+ * Mints a signed Supabase Storage upload URL for one file attached to a
+ * client change-request. Browser then PUTs the bytes directly to Supabase,
+ * watches xhr.upload.onprogress for per-file progress, and calls the
+ * sibling /files/confirm endpoint to record the metadata row.
  *
- * The follow-up call is /attachments/confirm, which records the row only
- * after the object actually exists in the bucket.
+ * The storage path's first segment is the caller's client_id so the
+ * `request_files_insert` bucket policy authorizes the PUT under the user's
+ * session.
  */
 
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
-import { createServiceSupabase } from '../../../../../../../lib/supabase';
-import { getPortalSession } from '../../../../../../../lib/session';
+import { createServiceSupabase } from '../../../../../../lib/supabase';
+import { getPortalSession } from '../../../../../../lib/session';
 import {
   MAX_UPLOAD_BYTES,
   MAX_UPLOAD_FILENAME,
   isAllowedMime,
   safeName,
-} from '../../../../../../../lib/file-uploads';
+} from '../../../../../../lib/file-uploads';
 
-const BUCKET = 'owner-todo-attachments';
+const BUCKET = 'request-files';
 
 export const POST: APIRoute = async ({ params, request, cookies }) => {
   const session = await getPortalSession({ cookies, request });
-  if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
+  if (!session) return json({ error: 'Not signed in' }, 401);
+  if (session.clientIds.length === 0) {
+    return json({ error: 'No client linked to this account' }, 403);
+  }
 
-  const todoId = params.id;
-  if (!todoId) return json({ error: 'Missing id' }, 400);
+  const requestId = params.id;
+  if (!requestId) return json({ error: 'Missing id' }, 400);
 
   let body: { file_name?: string; mime_type?: string; size_bytes?: number };
   try {
@@ -59,18 +64,23 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
 
   const admin = createServiceSupabase();
 
-  // Confirm the todo belongs to the calling admin so we never sign a URL
-  // pointing into someone else's folder.
-  const { data: todo } = await admin
-    .from('owner_todos')
-    .select('id')
-    .eq('id', todoId)
-    .eq('owner_id', session.userId)
+  // Confirm the request belongs to the caller's client AND is still in the
+  // `new` state. Late uploads after admin triage would surprise the owner;
+  // route those through the detail page instead (out of scope here).
+  const clientId = session.clientIds[0];
+  const { data: existing } = await admin
+    .from('requests')
+    .select('id, status')
+    .eq('id', requestId)
+    .eq('client_id', clientId)
     .maybeSingle();
-  if (!todo) return json({ error: 'Not found' }, 404);
+  if (!existing) return json({ error: 'Not found' }, 404);
+  if (existing.status && existing.status !== 'new') {
+    return json({ error: 'Request is no longer accepting new uploads' }, 409);
+  }
 
   const attachmentId = crypto.randomUUID();
-  const storagePath = `${session.userId}/${todoId}/${attachmentId}-${safeName(fileName)}`;
+  const storagePath = `${clientId}/${requestId}/${attachmentId}-${safeName(fileName)}`;
 
   const { data, error } = await admin.storage
     .from(BUCKET)
