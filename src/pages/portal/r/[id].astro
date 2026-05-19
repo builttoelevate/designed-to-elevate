@@ -21,7 +21,7 @@ if (session.role === 'admin') {
 const { id } = Astro.params;
 if (!id) return Astro.redirect('/portal');
 
-const supabase = createServerSupabase(Astro.cookies);
+const supabase = createServerSupabase({ cookies: Astro.cookies, request: Astro.request });
 
 const { data: req, error } = await supabase
   .from('requests')

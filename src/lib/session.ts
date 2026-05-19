@@ -8,8 +8,11 @@
  * one).
  */
 
-import type { AstroCookies } from 'astro';
-import { createServerSupabase, createServiceSupabase } from './supabase';
+import {
+  createServerSupabase,
+  createServiceSupabase,
+  type SupabaseRequestContext,
+} from './supabase';
 
 export type PortalRole = 'admin' | 'client';
 
@@ -22,9 +25,9 @@ export interface PortalSession {
 }
 
 export async function getPortalSession(
-  cookies: AstroCookies
+  ctx: SupabaseRequestContext
 ): Promise<PortalSession | null> {
-  const supabase = createServerSupabase(cookies);
+  const supabase = createServerSupabase(ctx);
 
   const { data: userData, error: userErr } = await supabase.auth.getUser();
   if (userErr || !userData?.user) return null;

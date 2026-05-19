@@ -36,13 +36,15 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return next();
   }
 
+  const sessionCtx = { cookies: context.cookies, request: context.request };
+
   // Public portal routes — pass through, but make session available if present.
   if (PUBLIC_PORTAL_PATHS.has(pathname)) {
-    context.locals.session = await getPortalSession(context.cookies);
+    context.locals.session = await getPortalSession(sessionCtx);
     return noStore(await next());
   }
 
-  const session = await getPortalSession(context.cookies);
+  const session = await getPortalSession(sessionCtx);
   context.locals.session = session;
 
   if (!session) {

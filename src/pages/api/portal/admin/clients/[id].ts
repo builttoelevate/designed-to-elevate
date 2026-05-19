@@ -13,7 +13,7 @@ import { getPortalSession } from '../../../../../lib/session';
 const ALLOWED_STATUS = new Set(['active', 'paused', 'archived']);
 
 export const PATCH: APIRoute = async ({ params, request, cookies }) => {
-  const session = await getPortalSession(cookies);
+  const session = await getPortalSession({ cookies, request });
   if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
   const id = params.id;

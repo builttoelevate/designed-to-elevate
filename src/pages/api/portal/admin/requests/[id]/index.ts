@@ -21,7 +21,7 @@ const ALLOWED_STATUSES = new Set(['new', 'in_progress', 'waiting_on_client', 'co
 const ALLOWED_BILLING = new Set(['included', 'billable', 'needs_estimate', 'courtesy']);
 
 export const PATCH: APIRoute = async ({ params, request, cookies }) => {
-  const session = await getPortalSession(cookies);
+  const session = await getPortalSession({ cookies, request });
   if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
   const id = params.id;

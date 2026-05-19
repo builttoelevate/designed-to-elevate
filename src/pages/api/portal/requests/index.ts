@@ -21,7 +21,7 @@ const ALLOWED_CATEGORIES = new Set(['text', 'image', 'layout', 'new_feature', 'b
 const ALLOWED_PRIORITIES = new Set(['normal', 'important', 'urgent']);
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const session = await getPortalSession(cookies);
+  const session = await getPortalSession({ cookies, request });
   if (!session) {
     console.warn('[requests] no session on POST /api/portal/requests');
     return json({ error: 'Not signed in' }, 401);
@@ -49,7 +49,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (!ALLOWED_CATEGORIES.has(category)) return json({ error: 'Invalid category' }, 400);
   if (!ALLOWED_PRIORITIES.has(priority)) return json({ error: 'Invalid priority' }, 400);
 
-  const supabase = createServerSupabase(cookies);
+  const supabase = createServerSupabase({ cookies, request });
 
   // Confirm the server-side Supabase client is actually carrying the user's
   // session before we attempt the insert. If auth.uid() is null here, the
