@@ -77,7 +77,9 @@ Every PR description must include a **plain-English summary block at the very to
 Rules for the summary block:
 
 - **Plain English.** No jargon, no file paths, no function names, no acronyms unless universally known. Write it like you're texting the user.
-- **Short.** 3–6 bullets max. One short line per bullet.
+- **One sentence per bullet.** No multi-sentence bullets, no semicolons stacking two ideas, no "and also" tacked on. If a change needs two sentences to explain, it's two bullets.
+- **Really simple terms.** Aim for words a non-technical shop owner would use. "Files now show a preview" — not "Attachment metadata now exposes a thumbnail URL."
+- **Short.** 3–6 bullets max.
 - **What changed and what it means for them**, not how it was implemented. "Files now have an Open button" — not "Refactored signed-URL minting to expose two URLs per file."
 - **Skip the boring stuff.** Don't mention build passing, no schema changes, dependency bumps, internal refactors that don't affect what the user sees or does. Only call them out if they actually matter to the user.
 - **End with one line about what to test or where to look** so the user knows the verification path.
@@ -90,9 +92,9 @@ Example structure:
 ```
 What changed (plain English):
 
-• Files in the request page now have Open and Download buttons instead of just a clickable filename.
-• Image attachments show a real thumbnail so you can see what's in them without tapping.
-• Each file says who uploaded it — "Client" vs "Bill — Designed to Elevate".
+• Files in the request page now have Open and Download buttons.
+• Image attachments show a real preview so you can see what they are without tapping.
+• Each file says who uploaded it — client or you.
 
 Where to check: open any client request in the admin portal.
 ```
