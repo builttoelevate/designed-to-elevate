@@ -93,3 +93,22 @@ export function formatBytes(n: number): string {
   if (n < 1024 * 1024) return `${Math.round(n / 1024)} KB`;
   return `${(n / (1024 * 1024)).toFixed(1)} MB`;
 }
+
+/**
+ * Filename extensions that current browsers render natively in an <img> tag.
+ * Used by the request attachment list to decide whether to render a real
+ * thumbnail from the signed URL or fall back to the generic file icon.
+ *
+ * HEIC is deliberately excluded — Chromium and Firefox can't render it, so an
+ * <img src=…heic> shows a broken-image glyph. iOS usually transcodes HEIC to
+ * JPEG at file-pick time anyway, so we rarely see .heic in the bucket.
+ */
+const IMAGE_EXTENSIONS: ReadonlySet<string> = new Set([
+  'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp',
+]);
+
+export function isImageFilename(name: string): boolean {
+  const dot = name.lastIndexOf('.');
+  if (dot < 0 || dot === name.length - 1) return false;
+  return IMAGE_EXTENSIONS.has(name.slice(dot + 1).toLowerCase());
+}
