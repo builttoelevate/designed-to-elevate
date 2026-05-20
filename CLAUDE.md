@@ -70,6 +70,40 @@ Google Ads conversion tracking goes inside the success branch when wired up.
 - **Voice rules from `SITE_CONTEXT.md` are binding for any user-facing copy:** no "solutions," no "guaranteed results," no fake testimonials/client counts, no dollar amounts about Fitchin. Signature lines like "Built From the Bay, Not a Boardroom" and "It's not a hustle problem. It's a system problem." should be used verbatim.
 - **`/grow` is the ads landing page** — keep it conversion-tight. Do not add navigation links that lead away from the audit form.
 
+## When opening a pull request
+
+Every PR description must include a **plain-English summary block at the very top of the body, inside a fenced code block** so the user can copy it as a single unit. This is the user's running log of what's been shipped — they don't want to dig through diffs or technical PR bodies to remember what changed.
+
+Rules for the summary block:
+
+- **Plain English.** No jargon, no file paths, no function names, no acronyms unless universally known. Write it like you're texting the user.
+- **One sentence per bullet.** No multi-sentence bullets, no semicolons stacking two ideas, no "and also" tacked on. If a change needs two sentences to explain, it's two bullets.
+- **Really simple terms.** Aim for words a non-technical shop owner would use. "Files now show a preview" — not "Attachment metadata now exposes a thumbnail URL."
+- **Short.** 3–6 bullets max.
+- **What changed and what it means for them**, not how it was implemented. "Files now have an Open button" — not "Refactored signed-URL minting to expose two URLs per file."
+- **Skip the boring stuff.** Don't mention build passing, no schema changes, dependency bumps, internal refactors that don't affect what the user sees or does. Only call them out if they actually matter to the user.
+- **End with one line about what to test or where to look** so the user knows the verification path.
+
+The detailed technical PR body (Summary / Implementation notes / Test plan / Rollback) still goes below the code block — that section is for code review and the user's future self. The code block on top is the only thing the user is expected to read in normal use.
+
+Example structure:
+
+````markdown
+```
+What changed (plain English):
+
+• Files in the request page now have Open and Download buttons.
+• Image attachments show a real preview so you can see what they are without tapping.
+• Each file says who uploaded it — client or you.
+
+Where to check: open any client request in the admin portal.
+```
+
+## Summary
+
+<detailed technical summary follows here…>
+````
+
 ## How to give the user instructions
 
 Whenever you tell the user to do something outside the code (run commands, click through a UI, apply a migration, deploy, test in a browser, open a PR, etc.), put **the entire walk-through inside one fenced code block** so it can be copied as a single unit. Outside that block goes prose only — context, caveats, follow-up questions.
