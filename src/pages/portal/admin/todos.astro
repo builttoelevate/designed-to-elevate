@@ -278,7 +278,7 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
 
             <ul class="space-y-1.5" data-attachment-list>
               {atts.map((a) => (
-                <li class="flex items-center gap-2 text-xs ph-attach-row" data-attachment-id={a.id}>
+                <li class="flex items-center gap-2 text-xs ph-attach-row" data-attachment-id={a.id} data-file-name={a.file_name}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-text-muted flex-shrink-0"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
                   <button
                     type="button"
@@ -295,6 +295,18 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
                 </li>
               ))}
             </ul>
+
+            {atts.length >= 2 && (
+              <div class="flex justify-end" data-download-all-wrap>
+                <button
+                  type="button"
+                  class="text-[11px] text-text-muted hover:text-accent transition underline-offset-2 hover:underline disabled:opacity-60 disabled:hover:no-underline disabled:cursor-not-allowed"
+                  data-attachment-download-all
+                >
+                  Download all ({atts.length})
+                </button>
+              </div>
+            )}
 
             <ul class="space-y-1.5" data-upload-progress></ul>
 
@@ -369,7 +381,7 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
                   {atts.length > 0 && (
                     <ul class="space-y-1.5" data-attachment-list>
                       {atts.map((a) => (
-                        <li class="flex items-center gap-2 text-xs ph-attach-row" data-attachment-id={a.id}>
+                        <li class="flex items-center gap-2 text-xs ph-attach-row" data-attachment-id={a.id} data-file-name={a.file_name}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-text-muted flex-shrink-0"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
                           <button
                             type="button"
@@ -380,6 +392,17 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
                         </li>
                       ))}
                     </ul>
+                  )}
+                  {atts.length >= 2 && (
+                    <div class="flex justify-end" data-download-all-wrap>
+                      <button
+                        type="button"
+                        class="text-[11px] text-text-muted hover:text-accent transition underline-offset-2 hover:underline disabled:opacity-60 disabled:hover:no-underline disabled:cursor-not-allowed"
+                        data-attachment-download-all
+                      >
+                        Download all ({atts.length})
+                      </button>
+                    </div>
                   )}
                 </div>
               )}
@@ -1053,6 +1076,72 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
     }
   });
 
+  // Download-all: fetch each attachment's bytes via its signed URL, then
+  // trigger a native browser save via a Blob URL + <a download>. Chrome
+  // shows a one-time "allow multiple downloads" prompt on first use.
+  document.addEventListener('click', async (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.matches('[data-attachment-download-all]')) return;
+    const button = target as HTMLButtonElement;
+    const todoLi = button.closest<HTMLElement>('[data-todo-id]');
+    const list = todoLi?.querySelector<HTMLElement>('[data-attachment-list]');
+    const todoId = todoLi?.dataset.todoId;
+    if (!list || !todoId) return;
+
+    const items = Array.from(list.querySelectorAll<HTMLElement>('[data-attachment-id]'));
+    if (items.length === 0) return;
+
+    const originalLabel = button.textContent ?? `Download all (${items.length})`;
+    button.disabled = true;
+
+    let succeeded = 0;
+    try {
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const attachmentId = item.dataset.attachmentId;
+        const fileName =
+          item.dataset.fileName ||
+          item.querySelector<HTMLElement>('[data-attachment-download]')?.textContent?.trim() ||
+          `attachment-${i + 1}`;
+        if (!attachmentId) continue;
+
+        button.textContent = `Downloading ${i + 1}/${items.length}…`;
+
+        const signRes = await fetch(`/api/portal/admin/todos/${todoId}/attachments/${attachmentId}`);
+        if (!signRes.ok) {
+          const j = await signRes.json().catch(() => ({}));
+          throw new Error(j.error || `HTTP ${signRes.status} signing ${fileName}`);
+        }
+        const { signedUrl } = (await signRes.json()) as { signedUrl: string };
+
+        const fileRes = await fetch(signedUrl);
+        if (!fileRes.ok) throw new Error(`Could not fetch ${fileName}`);
+        const blob = await fileRes.blob();
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        succeeded++;
+      }
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Could not download all');
+    } finally {
+      button.disabled = false;
+      button.textContent = succeeded === items.length
+        ? originalLabel
+        : `Download all (${items.length - succeeded} failed)`;
+      if (succeeded !== items.length) {
+        // Restore the regular label after a beat so the failure hint isn't sticky.
+        setTimeout(() => { button.textContent = originalLabel; }, 4000);
+      }
+    }
+  });
+
   document.addEventListener('click', async (e) => {
     const target = e.target as HTMLElement;
     if (!target.matches('[data-attachment-delete]')) return;
@@ -1073,6 +1162,15 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
       if (list && list.children.length === 0) {
         const badge = todoLi?.querySelector<HTMLElement>('.ph-attach-badge');
         badge?.remove();
+      }
+      // Keep "Download all" count in sync; remove it once we drop below 2.
+      const remaining = list?.children.length ?? 0;
+      const downloadAllWrap = todoLi?.querySelector<HTMLElement>('[data-download-all-wrap]');
+      const downloadAllBtn = downloadAllWrap?.querySelector<HTMLButtonElement>('[data-attachment-download-all]');
+      if (remaining < 2) {
+        downloadAllWrap?.remove();
+      } else if (downloadAllBtn) {
+        downloadAllBtn.textContent = `Download all (${remaining})`;
       }
     } catch (err) {
       showError(err instanceof Error ? err.message : 'Could not delete');
