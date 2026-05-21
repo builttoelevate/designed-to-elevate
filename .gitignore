@@ -45,3 +45,7 @@ supabase/.temp/
 
 # Other-client proposal, doesn't belong in this repo
 /Proposal/
+
+# Raw image source drops — optimized copies live in public/
+/new screenshots/
+/explainer pics/
