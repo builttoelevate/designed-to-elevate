@@ -13,7 +13,7 @@ import { getPortalSession } from '../../../../../lib/session';
 const SLUG_RX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const session = await getPortalSession(cookies);
+  const session = await getPortalSession({ cookies, request });
   if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
   let body: Record<string, string>;

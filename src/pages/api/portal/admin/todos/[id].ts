@@ -24,7 +24,7 @@ const BUCKET = 'owner-todo-attachments';
 
 export const PATCH: APIRoute = async ({ params, request, cookies }) => {
   try {
-    const session = await getPortalSession(cookies).catch(() => null);
+    const session = await getPortalSession({ cookies, request }).catch(() => null);
     if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
     const id = params.id;
@@ -129,9 +129,9 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
   }
 };
 
-export const DELETE: APIRoute = async ({ params, cookies }) => {
+export const DELETE: APIRoute = async ({ params, request, cookies }) => {
   try {
-    const session = await getPortalSession(cookies).catch(() => null);
+    const session = await getPortalSession({ cookies, request }).catch(() => null);
     if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
     const id = params.id;

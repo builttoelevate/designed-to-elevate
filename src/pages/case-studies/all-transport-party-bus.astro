@@ -2,6 +2,7 @@
 import LandingLayout from '../../layouts/LandingLayout.astro';
 import SiteHeader from '../../components/site/SiteHeader.astro';
 import SiteFooter from '../../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../../components/BreadcrumbSchema.astro';
 
 const SITE = 'https://designedtoelevate.co';
 
@@ -36,7 +37,8 @@ const schema = {
   name: 'All Transport Party Bus Rentals — Local-Search Lead Site',
   description:
     'Mobile-first website with service-by-occasion sections, fleet gallery, and an integrated quote/availability flow built by Designed to Elevate for All Transport Party Bus Rentals in Carrollton, Ohio.',
-  creator: { '@type': 'Person', name: 'Bill Chicha' },
+  creator: { '@id': `${SITE}/about/#bill-chicha` },
+  publisher: { '@id': `${SITE}/#organization` },
   about: {
     '@type': 'LocalBusiness',
     name: 'All Transport Party Bus Rentals',
@@ -58,6 +60,11 @@ const schema = {
   pathname="case-studies/all-transport-party-bus"
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Case Studies', url: `${SITE}/case-studies` },
+    { name: 'All Transport Party Bus Rentals', url: `${SITE}/case-studies/all-transport-party-bus` },
+  ]} />
 
   <SiteHeader />
 

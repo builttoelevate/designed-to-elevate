@@ -40,7 +40,7 @@ const EMAIL_RX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ALLOWED_ROLES = new Set(['owner', 'member']);
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const session = await getPortalSession(cookies);
+  const session = await getPortalSession({ cookies, request });
   if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
   let body: { email?: string; client_id?: string; role?: string };

@@ -19,8 +19,8 @@ import { getPortalSession } from '../../../../../../lib/session';
 
 const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://designedtoelevate.co';
 
-export const POST: APIRoute = async ({ params, cookies }) => {
-  const session = await getPortalSession(cookies);
+export const POST: APIRoute = async ({ params, request, cookies }) => {
+  const session = await getPortalSession({ cookies, request });
   if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
   const membershipId = params.id;

@@ -18,7 +18,7 @@ if (session.role === 'admin') {
   return Astro.redirect('/portal/admin');
 }
 
-const supabase = createServerSupabase(Astro.cookies);
+const supabase = createServerSupabase({ cookies: Astro.cookies, request: Astro.request });
 
 const filter = (Astro.url.searchParams.get('status') || '').toLowerCase() as RequestStatus | '';
 const validFilter = (STATUS_ORDER as string[]).includes(filter) ? filter : '';

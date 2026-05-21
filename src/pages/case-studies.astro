@@ -2,6 +2,7 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
 
 const SITE = 'https://designedtoelevate.co';
 
@@ -56,21 +57,41 @@ const studies = [
   },
 ];
 
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'Case Studies — Designed to Elevate',
-  description:
-    'Three live builds for local Ohio service businesses by Designed to Elevate: Fitchin Auto Detail & Tint, Modern Classic Barbershop, and All Transport Party Bus Rentals.',
-  url: `${SITE}/case-studies`,
-};
+// CollectionPage + an ItemList of the three case studies so Google can
+// surface the individual builds in rich results for brand queries.
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Case Studies — Designed to Elevate',
+    description:
+      'Three live builds for local Ohio service businesses by Designed to Elevate: Fitchin Auto Detail & Tint, Modern Classic Barbershop, and All Transport Party Bus Rentals.',
+    url: `${SITE}/case-studies`,
+    publisher: { '@id': `${SITE}/#organization` },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Designed to Elevate case studies',
+    itemListElement: studies.map((s, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `${SITE}${s.detail}`,
+      name: s.name,
+    })),
+  },
+];
 ---
 <LandingLayout
   title="Case Studies — What I've Built | Designed to Elevate"
-  description="Three live local Ohio builds by Designed to Elevate: Fitchin Auto Detail & Tint's 378-vehicle quote system, Modern Classic Barbershop's custom Square integration, and All Transport's local-search-driven event-rental site."
+  description="Three live local Ohio builds: Fitchin Auto Detail's 378-vehicle quote system, Modern Classic Barbershop's Square integration, and All Transport's local-search event-rental site."
   pathname="case-studies"
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Case Studies', url: `${SITE}/case-studies` },
+  ]} />
 
   <SiteHeader />
 

@@ -15,8 +15,8 @@ import { getPortalSession } from '../../../../../../../lib/session';
 const BUCKET = 'owner-todo-attachments';
 const SIGNED_URL_TTL_SECONDS = 60;
 
-export const GET: APIRoute = async ({ params, cookies }) => {
-  const session = await getPortalSession(cookies);
+export const GET: APIRoute = async ({ params, request, cookies }) => {
+  const session = await getPortalSession({ cookies, request });
   if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
   const { id: todoId, attachmentId } = params;
@@ -43,8 +43,8 @@ export const GET: APIRoute = async ({ params, cookies }) => {
   return json({ signedUrl: data.signedUrl, expiresIn: SIGNED_URL_TTL_SECONDS });
 };
 
-export const DELETE: APIRoute = async ({ params, cookies }) => {
-  const session = await getPortalSession(cookies);
+export const DELETE: APIRoute = async ({ params, request, cookies }) => {
+  const session = await getPortalSession({ cookies, request });
   if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
   const { id: todoId, attachmentId } = params;

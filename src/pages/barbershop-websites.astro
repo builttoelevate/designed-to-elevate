@@ -1,234 +1,158 @@
-﻿---
+---
 import LandingLayout from '../layouts/LandingLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
 
-const heroScreens = [
-  {
-    src: '/showcase/modern-classic-mobile.png',
-    alt: 'Modern Classic barbershop mobile booking site',
-    label: 'Modern Classic mobile site',
-  },
-  {
-    src: '/showcase/fitchin-mobile.png',
-    alt: 'Fast mobile booking interface',
-    label: 'Fast booking UI',
-  },
-  {
-    src: '/showcase-phones.png',
-    alt: 'Mobile-first website proof',
-    label: 'Mobile-first proof',
-  },
-];
+const SITE = 'https://designedtoelevate.co';
 
-const proofScreens = [
-  {
-    src: '/showcase/modern-classic-mobile.png',
-    title: 'Modern Classic booking homepage',
-    description: 'A strong mobile-first storefront that brings brand and booking together.',
-  },
-  {
-    src: '/showcase/fitchin-mobile.png',
-    title: 'Fast service selection',
-    description: 'A focused booking flow designed to keep customers moving, not stalled.',
-  },
-  {
-    src: '/showcase-phones.png',
-    title: 'Mobile-first visual proof',
-    description: 'Site layouts built for thumbs, screens, and immediate action.',
-  },
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Barbershop website design',
+  serviceType: 'Website design for barbershops',
+  description:
+    'Custom barbershop website design with Square + Shopify integration, mobile-first booking flow, auto-review SMS, and a waitlist that auto-invites clients when slots open.',
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
+  audience: { '@type': 'BusinessAudience', name: 'Barbershops' },
+  url: `${SITE}/barbershop-websites`,
+};
+
+const needs = [
+  { title: 'Frictionless booking', body: "Clients should book in two taps from a phone. Pick a barber, pick a time, done — no account creation, no platform-template look, no app download." },
+  { title: 'A brand that matches the chair', body: "If your shop is premium, the site has to look the part. Stock photos and generic templates undercut whatever the in-shop experience is selling." },
+  { title: 'Mobile-first everything', body: "Almost every booking starts on a phone. Tap targets, image sizing, menu behavior — all designed for thumbs first, desktop second." },
+  { title: 'Product sales without leaving the brand', body: 'Pomade, beard oil, branded grooming lines — Shopify can handle inventory and checkout while the customer never leaves your site.' },
+  { title: 'Reviews and waitlist baked in', body: 'Auto-text review requests after appointments. Waitlist that auto-invites when a slot opens. Customer login that remembers preferred barber.' },
+  { title: 'Local SEO so new clients find you', body: 'Service-area structure, schema, and Google Business Profile alignment — so the shop shows up on the first map result, not the second page.' },
 ];
 
 const techStack = [
-  {
-    label: 'Astro on Vercel',
-    value: 'Fast mobile load times, clean HTML, and reliable hosting for every barbershop build.',
-  },
-  {
-    label: 'Square API / Booksy',
-    value: 'The booking engine lives behind the scenes while the customer sees only your brand.',
-  },
-  {
-    label: 'Resend-compatible email',
-    value: 'Automated review requests, waitlist invites, and owner notifications that arrive fast.',
-  },
-  {
-    label: 'Custom owner tools',
-    value: 'Review management, waitlist control, and barber portal access built for a busy shop.',
-  },
-];
-
-const faqItems = [
-  {
-    question: 'How much does a barbershop build cost?',
-    answer: 'Most builds start near $3,000 and usually land in the $3,000–$5,000 range depending on booking complexity, product integration, and automation. TODO confirm exact pricing before launch.',
-  },
-  {
-    question: 'How long does it take?',
-    answer: 'A custom build typically takes 8–10 weeks from kickoff to launch. Smaller shops can move faster; larger integrations can take a few more weeks. TODO confirm timeline with the next project.',
-  },
-  {
-    question: 'What does the build include?',
-    answer: 'A custom homepage, mobile booking flow, customer login, review automation, waitlist controls, and an owner dashboard. I also connect your existing Square, Booksy, or Shopify account behind the scenes.',
-  },
-  {
-    question: 'What support comes after launch?',
-    answer: 'The launch includes handoff, training, and one month of support. Ongoing maintenance and updates are available as a separate service. TODO confirm support terms.',
-  },
+  { label: 'Booking + payments', value: 'Square API (or Booksy / Squire) behind a custom front end' },
+  { label: 'Product catalog', value: 'Shopify integration — keeps the shop\'s brand on top' },
+  { label: 'Custom layer', value: 'Waitlist · Auto-review SMS · Customer login' },
+  { label: 'Front end', value: 'Astro on Vercel — sub-second load on mobile' },
 ];
 ---
 <LandingLayout
-  title="Barbershop Website Design Built for Booking and Brand | Designed to Elevate"
-  description="Custom barbershop websites built around booking, reviews, and brand. Built on top of Square and Booksy with Modern Classic Barbershop as the proof case study."
+  title="Barbershop Website Design for Booking-Focused Shops | Designed to Elevate"
+  description="Custom barbershop website design built around booking, brand, and product. Square + Shopify integration, mobile-first booking flow, auto-review SMS, and a waitlist that auto-invites clients when slots open."
   pathname="barbershop-websites"
-  noindex={true}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Barbershop Websites', url: `${SITE}/barbershop-websites` },
+  ]} />
+
+  <SiteHeader />
+
   <main>
+    <!-- HERO -->
     <section id="top" class="relative overflow-hidden border-b border-line">
       <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
       <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
 
-      <div class="relative z-10 mx-auto max-w-6xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
+      <div class="relative z-10 mx-auto max-w-5xl px-5 sm:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
         <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Barbershop Websites</span>
         <h1 class="mt-5 text-[2.4rem] sm:text-[3.2rem] lg:text-[3.6rem] leading-[1.04] font-bold tracking-tight">
-          Barbershop websites built around <span class="text-accent">booking, reviews, and brand.</span>
+          Barbershop websites built around <span class="text-accent">booking and brand.</span>
         </h1>
         <p class="mt-6 text-text-soft text-[1.1rem] leading-relaxed max-w-3xl">
-          Make Square or Booksy invisible to customers. Keep the platform working behind the scenes while the customer sees a premium brand experience that pushes bookings.
+          Custom barbershop website design that runs on Square or Booksy under the hood, but doesn't look like a Square or Booksy template up front. Built so booking takes two taps and the brand still feels premium.
         </p>
 
         <div class="mt-8 flex flex-wrap gap-3">
-          <a href="/contact" class="btn-primary" data-hero-cta>
-            Book a discovery call
+          <a href="/contact" class="btn-primary">
+            Get a Free Quote
             <span aria-hidden="true">↗</span>
           </a>
           <a href="/case-studies/modern-classic-barbershop" class="btn-ghost">
-            See Modern Classic
+            See it live at Modern Classic
             <span aria-hidden="true">→</span>
           </a>
         </div>
+      </div>
+    </section>
 
-        <div class="mt-12 grid gap-4 sm:grid-cols-3">
-          {heroScreens.map((screen) => (
-            <div class="card overflow-hidden">
-              <img src={screen.src} alt={screen.alt} class="w-full h-[420px] object-cover object-top" loading="lazy" decoding="async" />
-              <div class="p-4">
-                <p class="font-semibold text-text">{screen.label}</p>
-              </div>
+    <!-- WHAT BARBERSHOPS NEED -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What Shops Need</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
+            What barbershops need from a website.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Most shops on Square or Booksy accept whatever default booking page the platform gives them. That works — until you're trying to compete with the shop down the street that put real money into their brand.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {needs.map((n) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{n.title}</h3>
+              <p class="text-[0.92rem] text-text-soft leading-relaxed">{n.body}</p>
             </div>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="relative border-b border-line">
-      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
-        <div class="max-w-3xl">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Why most barbershop sites fail</span>
-          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-            Most barbershop websites still feel like a booking platform, not the shop.
-          </h2>
-          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-            That means customers scroll past the brand, the prices, and the vibe — then land on a Square page that looks like every other shop. If the first thing a customer sees is a templated booking form, you are selling the platform, not the chair.
-          </p>
-        </div>
-
-        <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <div class="card p-7">
-            <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">Template booking pages kill trust</h3>
-            <p class="mt-3 text-[0.95rem] text-text-soft leading-relaxed">
-              Square, Booksy, and Shop Pay all have their own look. That’s fine for platforms. It’s not fine when you want the customer to believe in your shop.
-            </p>
-          </div>
-          <div class="card p-7">
-            <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">The booking flow is too scattered</h3>
-            <p class="mt-3 text-[0.95rem] text-text-soft leading-relaxed">
-              If the customer leaves the site to book, every step is an extra chance to lose them. A custom front end keeps the whole flow inside your brand.
-            </p>
-          </div>
-          <div class="card p-7">
-            <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">No review or waitlist follow-up</h3>
-            <p class="mt-3 text-[0.95rem] text-text-soft leading-relaxed">
-              A site without review automation and waitlist management is a missed chance to fill openings and keep customers coming back.
-            </p>
-          </div>
-          <div class="card p-7">
-            <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">Owners are stuck in different apps</h3>
-            <p class="mt-3 text-[0.95rem] text-text-soft leading-relaxed">
-              One app for booking, another for products, another for reviews. The owner needs one dashboard that actually shows what matters.
-            </p>
-          </div>
-          <div class="card p-7">
-            <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">Phone bookings still get lost</h3>
-            <p class="mt-3 text-[0.95rem] text-text-soft leading-relaxed">
-              If your site doesn’t make it obvious how to book online, the customer defaults to calling — and your best clients are the ones who wanted a faster option.
-            </p>
-          </div>
-          <div class="card p-7">
-            <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">A generic site doesn't sell product</h3>
-            <p class="mt-3 text-[0.95rem] text-text-soft leading-relaxed">
-              Product retail should feel like part of the shop. A generic storefront makes your merch look like an afterthought.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="relative border-b border-line bg-surface-1/30">
-      <div class="grid-bg absolute inset-0 z-0 opacity-35" aria-hidden="true"></div>
+    <!-- MODERN CLASSIC FEATURE -->
+    <section class="relative border-b border-line bg-surface-1/40">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
       <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
-        <div class="max-w-3xl mb-10">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Modern Classic case study</span>
+        <div class="max-w-3xl mb-12">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Featured Build</span>
           <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-            A premium barbershop site built on top of Square booking and Shopify product.
+            Modern Classic Barbershop &amp; Shave Parlor
           </h2>
+          <div class="mt-3 text-text-muted text-[0.95rem]">Zanesville, Ohio</div>
         </div>
 
-        <div class="grid lg:grid-cols-[0.95fr_1.05fr] gap-10 lg:gap-14 items-center">
-          <div class="relative">
-            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-50"></div>
-            <div class="relative card overflow-hidden">
-              <img src="/showcase/modern-classic-mobile.png" alt="Modern Classic Barbershop mobile site" class="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+        <div class="grid lg:grid-cols-[0.9fr_1fr] gap-10 lg:gap-14 items-center">
+          <div class="relative" aria-hidden="true">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
+            <div class="relative card overflow-hidden max-w-[22rem] mx-auto">
+              <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
+                <img
+                  src="/showcase/modern-classic-mobile.png"
+                  alt="Modern Classic Barbershop mobile site"
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
             </div>
           </div>
 
           <div>
             <p class="text-text-soft text-[1.05rem] leading-relaxed">
-              Modern Classic was already a well-known Zanesville shop. Online, their brand was split between Square booking, Shopify product, and a stale website. The new site brings the whole experience together under one polished mobile-first front end.
+              Modern Classic was already running a high-end operation — clean cuts, traditional shave service, in-shop product retail. But online, the brand was fragmented across a generic Square booking page, a Shopify store, and a stale website. The build unified all three behind one custom front end.
             </p>
 
             <ul class="mt-7 space-y-3">
               {[
-                'Custom front end that keeps Square booking inside the brand',
-                'Shopify product integration without sending customers off to a generic store',
-                'Auto-review SMS after appointments and a customer login for repeat bookings',
-                'Custom waitlist that auto-invites customers when slots open',
-                'Owner dashboard for reviews, bookings, and waitlist management',
-              ].map((item) => (
+                'Square API powers booking + payments behind the scenes',
+                'Shopify integration for the MDRN Classic Grooming Essentials product line',
+                'Auto-review SMS triggered after appointments',
+                'Custom waitlist that auto-invites clients when slots open',
+                'Customer login — remembers preferred barber, lets parents add kids',
+                'Owner dashboard for review requests and waitlist management',
+              ].map((b) => (
                 <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
                   <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                   </span>
-                  <span>{item}</span>
+                  <span>{b}</span>
                 </li>
               ))}
             </ul>
 
-            <div class="mt-8 grid gap-4 sm:grid-cols-2">
-              <article class="card overflow-hidden">
-                <img src="/home/features/modern-classic-next-opening.png" alt="Modern Classic next available appointment widget" class="w-full h-auto" loading="lazy" decoding="async" />
-                <div class="p-5">
-                  <p class="font-semibold text-text">Next-available appointment widget</p>
-                </div>
-              </article>
-              <article class="card overflow-hidden">
-                <img src="/case-studies/modern-classic-barbershop/custom-built-waitlist-explainer.png" alt="Custom waitlist explainer diagram" class="w-full h-auto" loading="lazy" decoding="async" />
-                <div class="p-5">
-                  <p class="font-semibold text-text">Custom waitlist explainer</p>
-                </div>
-              </article>
-            </div>
-
             <p class="mt-7 pt-6 border-t border-line text-text-soft text-[0.98rem] italic leading-relaxed">
-              The customer never sees Square or Shopify first. They see a barbershop website that feels intentional, premium, and easy to book.
+              Same pattern translates to any shop running on Square, Booksy, or Squire — the platform stays invisible, the brand stays on top.
             </p>
 
             <div class="mt-7 flex flex-wrap gap-3">
@@ -246,114 +170,49 @@ const faqItems = [
       </div>
     </section>
 
+    <!-- INTEGRATION CAPABILITY -->
     <section class="relative border-b border-line">
-      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
-        <div class="max-w-3xl">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Proof</span>
-          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-            Real mobile screens from the Modern Classic build.
-          </h2>
-          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-            These are live screens from a working barbershop site — not a stock mockup. Booking, reviews, owner tools, and barber access all appear in one mobile-first experience.
-          </p>
-        </div>
-
-        <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {proofScreens.map((item) => (
-            <article class="card overflow-hidden">
-              <img src={item.src} alt={item.title} class="w-full h-[340px] object-cover object-top" loading="lazy" decoding="async" />
-              <div class="p-5">
-                <h3 class="font-display font-semibold text-[1rem] text-text">{item.title}</h3>
-                <p class="mt-3 text-[0.95rem] text-text-soft leading-relaxed">{item.description}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="relative border-b border-line bg-surface-1/40">
       <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-28">
-        <div class="max-w-3xl">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Tech stack</span>
-          <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
-            Built with fast code and real booking integrations.
-          </h2>
-        </div>
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Integrations</span>
+        <h2 class="mt-5 text-[2rem] sm:text-[2.4rem] leading-[1.1] font-bold">
+          Square. Booksy. Shopify. Whatever you already run.
+        </h2>
+        <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          You don't have to migrate off the booking platform you already use. The site sits on top — your team's calendar, payments, and product inventory keep working exactly as they do today. The customer just stops seeing the platform's default skin.
+        </p>
 
         <div class="mt-10 grid sm:grid-cols-2 gap-5">
-          {techStack.map((item) => (
+          {techStack.map((t) => (
             <div class="card p-6">
-              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">{item.label}</div>
-              <div class="text-[1.02rem] text-text font-medium">{item.value}</div>
+              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">{t.label}</div>
+              <div class="text-[1.02rem] text-text font-medium">{t.value}</div>
             </div>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="relative border-b border-line">
-      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
-        <div class="max-w-3xl mb-10">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Real feedback</span>
-          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-            What actual customers say on Google.
-          </h2>
-        </div>
-
-        <div class="grid gap-6 sm:grid-cols-2">
-          <div class="card overflow-hidden">
-            <img src="/barbershop-reviews/michael-review-cropped.png" alt="★★★★★ Michael review from Modern Classic Barbershop" class="w-full" loading="lazy" decoding="async" />
-          </div>
-          <div class="card overflow-hidden">
-            <img src="/barbershop-reviews/eric-review-cropped.png" alt="★★★★★ Eric review from Fitchin Auto Detail & Tint" class="w-full" loading="lazy" decoding="async" />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="relative border-b border-line bg-surface-1/40">
-      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
-        <div class="max-w-3xl">
-          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> FAQ</span>
-          <h2 class="mt-5 text-[2rem] sm:text-[2.6rem] leading-[1.05] font-bold">
-            The details most shop owners ask first.
-          </h2>
-        </div>
-
-        <div class="mt-12 grid gap-6 lg:grid-cols-2">
-          {faqItems.map((item) => (
-            <div class="card p-7">
-              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{item.question}</h3>
-              <p class="mt-4 text-[0.95rem] text-text-soft leading-relaxed">{item.answer}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section id="apply" class="relative overflow-hidden">
+    <!-- FINAL CTA -->
+    <section class="relative overflow-hidden">
       <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
       <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
 
       <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
         <h2 class="text-[2.2rem] sm:text-[3rem] leading-[1.05] font-bold tracking-tight">
-          Don't send your ad traffic to a generic booking page.
+          Want a barbershop site like this?
         </h2>
         <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
-          Send visitors to a barbershop site that looks like your brand, makes booking obvious, and keeps Square / Booksy working behind the scenes.
+          Send me whatever booking platform you're on and your current site (or lack of one). I'll scope a rebuild that fits.
         </p>
-        <div class="mt-10 flex flex-wrap justify-center gap-3">
+        <div class="mt-10">
           <a href="/contact" class="btn-primary">
-            Book a discovery call
+            Get a Free Quote
             <span aria-hidden="true">↗</span>
-          </a>
-          <a href="tel:7406176488" class="btn-ghost">
-            Call/text Bill
-            <span aria-hidden="true">→</span>
           </a>
         </div>
       </div>
     </section>
   </main>
+
+  <SiteFooter />
 </LandingLayout>

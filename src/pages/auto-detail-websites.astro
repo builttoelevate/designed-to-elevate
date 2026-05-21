@@ -2,6 +2,22 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Auto detailing website design',
+  serviceType: 'Website design for auto detailing shops',
+  description:
+    'Auto detailing website design built around vehicle-by-vehicle pricing logic, mobile-first quote flows, lead capture before the final step, and local SEO for service-area searches.',
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
+  audience: { '@type': 'BusinessAudience', name: 'Auto detailing and ceramic coating shops' },
+  url: `${SITE}/auto-detail-websites`,
+};
 
 const needs = [
   { title: 'Pricing that knows the vehicle', body: "A base detail on a Civic is not the same job as a full ceramic on a four-door truck. The site should price like the shop prices — by vehicle, not by guess." },
@@ -23,6 +39,12 @@ const wizardSteps = [
   description="Auto detailing website design built around real vehicle-by-vehicle pricing logic. Mobile-first quote flow, lead capture before the final step, and local SEO that ranks for service-area searches."
   pathname="auto-detail-websites"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Auto Detail Websites', url: `${SITE}/auto-detail-websites` },
+  ]} />
+
   <SiteHeader />
 
   <main>

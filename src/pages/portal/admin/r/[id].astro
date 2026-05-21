@@ -3,6 +3,7 @@ export const prerender = false;
 
 import PortalLayout from '../../../../layouts/PortalLayout.astro';
 import { createServiceSupabase } from '../../../../lib/supabase';
+import { isImageFilename } from '../../../../lib/file-uploads';
 import {
   STATUS_LABELS,
   STATUS_ORDER,
@@ -13,6 +14,20 @@ import {
   relativeDate,
   type RequestStatus,
 } from '../../../../lib/portal';
+
+type UploaderTag = 'admin' | 'client' | 'unknown';
+
+interface SignedFile {
+  id: string;
+  filename: string;
+  view: string;
+  download: string;
+  isImage: boolean;
+  thumb: string | null;
+  uploader: UploaderTag;
+  uploaderName: string | null;
+  isSelf: boolean;
+}
 
 const session = Astro.locals.session!;
 const { id } = Astro.params;
@@ -29,7 +44,14 @@ const { data: req } = await admin
 if (!req) return Astro.redirect('/portal/admin');
 
 const [{ data: files }, { data: comments }, { data: activity }] = await Promise.all([
-  admin.from('request_files').select('id, file_url, filename, created_at').eq('request_id', id).order('created_at'),
+  // profiles join lets us label each attachment with who uploaded it (admin
+  // vs client) the same way the comments section already distinguishes
+  // authors. uploaded_by carries through for the "is this me?" check.
+  admin
+    .from('request_files')
+    .select('id, file_url, filename, uploaded_by, created_at, profiles:uploaded_by (full_name, role)')
+    .eq('request_id', id)
+    .order('created_at'),
   admin
     .from('comments')
     .select('id, body, visibility, created_at, author_id, profiles:author_id (full_name, role)')
@@ -38,10 +60,54 @@ const [{ data: files }, { data: comments }, { data: activity }] = await Promise.
   admin.from('request_activity').select('id, action, metadata, created_at, profiles:actor_id (full_name)').eq('request_id', id).order('created_at', { ascending: false }).limit(20),
 ]);
 
-const signedFiles: { id: string; filename: string; signed: string }[] = [];
+// Mint a viewing URL (opens inline in a new tab) and a forced-download URL
+// (Content-Disposition: attachment with the original filename) per file. 2h
+// TTL so a tap after a quick context-switch still works; the URLs are
+// HttpOnly-cookie-protected at the bucket level via storage RLS anyway.
+//
+// The view URL doubles as the thumbnail src when the file is an image — no
+// extra signed URL, no transform service. The browser fetches the full
+// original to render a 56×56 thumbnail; acceptable at current volume.
+const SIGNED_TTL_SECONDS = 60 * 60 * 2;
+const signedFiles: SignedFile[] = [];
 for (const f of files ?? []) {
-  const { data } = await admin.storage.from('request-files').createSignedUrl(f.file_url, 60 * 30);
-  if (data?.signedUrl) signedFiles.push({ id: f.id, filename: f.filename, signed: data.signedUrl });
+  const [{ data: viewData }, { data: dlData }] = await Promise.all([
+    admin.storage.from('request-files').createSignedUrl(f.file_url, SIGNED_TTL_SECONDS),
+    admin.storage.from('request-files').createSignedUrl(f.file_url, SIGNED_TTL_SECONDS, {
+      download: f.filename,
+    }),
+  ]);
+  if (!viewData?.signedUrl || !dlData?.signedUrl) continue;
+
+  const profile = (f as any).profiles as { full_name: string | null; role: string | null } | null;
+  const uploader: UploaderTag = !f.uploaded_by
+    ? 'unknown'
+    : profile?.role === 'admin'
+    ? 'admin'
+    : 'client';
+  const isImage = isImageFilename(f.filename);
+
+  signedFiles.push({
+    id: f.id,
+    filename: f.filename,
+    view: viewData.signedUrl,
+    download: dlData.signedUrl,
+    isImage,
+    thumb: isImage ? viewData.signedUrl : null,
+    uploader,
+    uploaderName: profile?.full_name ?? null,
+    isSelf: !!f.uploaded_by && f.uploaded_by === session.userId,
+  });
+}
+
+// Admin-perspective uploader label. Matches the comments section's
+// "Bill — Designed to Elevate" exactly so the two read as one voice.
+function uploaderLabel(f: SignedFile): string {
+  if (f.uploader === 'admin') return 'Bill — Designed to Elevate';
+  if (f.uploader === 'client') {
+    return f.uploaderName ? `Client · ${f.uploaderName}` : 'Client';
+  }
+  return 'Unknown uploader';
 }
 ---
 <PortalLayout title={`${req.title} | Admin`} session={session}>
@@ -115,12 +181,60 @@ for (const f of files ?? []) {
     {signedFiles.length > 0 && (
       <>
         <div class="mt-6 mb-2 text-xs text-text-muted uppercase tracking-wide">Attachments</div>
-        <ul class="grid sm:grid-cols-2 gap-2">
+        <ul class="space-y-2">
           {signedFiles.map((f) => (
-            <li>
-              <a href={f.signed} target="_blank" rel="noopener" class="ph-card flex items-center gap-2 px-3 py-2 hover:border-accent/40 transition">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                <span class="text-sm truncate">{f.filename}</span>
+            <li class:list={[
+              'ph-card flex items-center gap-3 px-3 py-2',
+              // Faint accent tint on admin-uploaded rows so the eye can scan
+              // client-vs-admin without reading the label every time.
+              f.uploader === 'admin' && 'bg-accent/[0.04]',
+            ]}>
+              {f.isImage && f.thumb ? (
+                <a
+                  href={f.view}
+                  target="_blank"
+                  rel="noopener"
+                  class="shrink-0 block w-14 h-14 rounded overflow-hidden border border-line bg-surface-2"
+                  aria-label={`Open ${f.filename} in a new tab`}
+                >
+                  <img
+                    src={f.thumb}
+                    alt=""
+                    width="56"
+                    height="56"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-full object-cover"
+                  />
+                </a>
+              ) : (
+                <div class="shrink-0 w-14 h-14 rounded border border-line bg-surface-2 flex items-center justify-center text-text-muted" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+              )}
+
+              <div class="flex-1 min-w-0">
+                <div class="text-sm truncate" title={f.filename}>{f.filename}</div>
+                <div class="text-xs text-text-muted mt-0.5">{uploaderLabel(f)}</div>
+              </div>
+
+              <a
+                href={f.view}
+                target="_blank"
+                rel="noopener"
+                class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded border border-line text-text-soft hover:text-accent hover:border-accent/40 transition"
+                aria-label={`Open ${f.filename} in a new tab`}
+              >
+                Open
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+              <a
+                href={f.download}
+                class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded bg-accent/15 text-accent hover:bg-accent/25 transition"
+                aria-label={`Download ${f.filename}`}
+              >
+                Download
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               </a>
             </li>
           ))}

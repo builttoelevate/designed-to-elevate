@@ -15,7 +15,7 @@ const MAX_TITLE = 200;
 const MAX_BODY = 50_000;
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const session = await getPortalSession(cookies);
+  const session = await getPortalSession({ cookies, request });
   if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
   let body: {

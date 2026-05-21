@@ -13,7 +13,7 @@ import { createServerSupabase, createServiceSupabase } from '../../../../../lib/
 import { getPortalSession } from '../../../../../lib/session';
 
 export const POST: APIRoute = async ({ params, request, cookies }) => {
-  const session = await getPortalSession(cookies);
+  const session = await getPortalSession({ cookies, request });
   if (!session) return json({ error: 'Not signed in' }, 401);
 
   const id = params.id;
@@ -34,7 +34,7 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
     return json({ error: 'Only admins can post internal notes' }, 403);
   }
 
-  const supabase = createServerSupabase(cookies);
+  const supabase = createServerSupabase({ cookies, request });
   const { error: insertErr } = await supabase.from('comments').insert({
     request_id: id,
     author_id: session.userId,

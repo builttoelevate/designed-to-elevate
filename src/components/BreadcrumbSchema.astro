@@ -1,0 +1,38 @@
+---
+/**
+ * BreadcrumbList JSON-LD. Pass an ordered list of { name, url } from root to
+ * current page. Emits the schema Google needs to render breadcrumb trails in
+ * SERPs. Visible breadcrumbs in the page UI are a separate concern; this
+ * component only emits the structured data.
+ *
+ * Usage:
+ *   <BreadcrumbSchema items={[
+ *     { name: 'Home', url: 'https://designedtoelevate.co/' },
+ *     { name: 'Case Studies', url: 'https://designedtoelevate.co/case-studies' },
+ *     { name: 'Fitchin', url: 'https://designedtoelevate.co/case-studies/fitchin-auto-detail-tint' },
+ *   ]} />
+ */
+
+interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((item, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    name: item.name,
+    item: item.url,
+  })),
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

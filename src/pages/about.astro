@@ -2,6 +2,7 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
 
 const SITE = 'https://designedtoelevate.co';
 
@@ -33,37 +34,39 @@ const fitFor = [
   'Any local Ohio service business that lives or dies on quote requests',
 ];
 
+// AboutPage + Person. The Organization itself is emitted sitewide in
+// LandingLayout — this page references it by @id from the AboutPage.
 const schema = [
   {
     '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    url: `${SITE}/about`,
+    mainEntity: { '@id': `${SITE}/#organization` },
+  },
+  {
+    '@context': 'https://schema.org',
     '@type': 'Person',
+    '@id': `${SITE}/about/#bill-chicha`,
     name: 'Bill Chicha',
     jobTitle: 'Web Designer & Developer',
-    worksFor: { '@type': 'Organization', name: 'Designed to Elevate' },
+    worksFor: { '@id': `${SITE}/#organization` },
     address: { '@type': 'PostalAddress', addressRegion: 'OH', addressCountry: 'US' },
     email: 'bilsonxnc@gmail.com',
     telephone: '+1-740-617-6488',
     url: `${SITE}/about`,
   },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'Designed to Elevate',
-    url: SITE,
-    founder: { '@type': 'Person', name: 'Bill Chicha' },
-    email: 'bilsonxnc@gmail.com',
-    telephone: '+1-740-617-6488',
-    areaServed: ['Coshocton, OH', 'Zanesville, OH', 'Newark, OH', 'Cambridge, OH', 'Mount Vernon, OH', 'Carrollton, OH'],
-    logo: `${SITE}/logo-wordmark-orange.png`,
-  },
 ];
 ---
 <LandingLayout
   title="About Bill Chicha — Ohio Web Designer | Designed to Elevate"
-  description="Designed to Elevate is built and run by Bill Chicha — local Ohio web designer focused on search-optimized websites and lead systems for service businesses in Coshocton, Zanesville, Newark, and surrounding Ohio."
+  description="Designed to Elevate is built and run by Bill Chicha — an Ohio web designer focused on search-optimized sites and lead systems for local service businesses."
   pathname="about"
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'About', url: `${SITE}/about` },
+  ]} />
 
   <SiteHeader />
 

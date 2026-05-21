@@ -2,6 +2,22 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
+
+const SITE = 'https://designedtoelevate.co';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'HVAC website design',
+  serviceType: 'Website design for HVAC contractors',
+  description:
+    'HVAC website design built to capture emergency service calls and replacement estimates. Emergency framing up front, service-area structure, financing visibility, and local SEO for HVAC searches.',
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
+  audience: { '@type': 'BusinessAudience', name: 'HVAC and home service contractors' },
+  url: `${SITE}/hvac-websites`,
+};
 
 const needs = [
   { title: 'Emergency framing up front', body: "Half of HVAC traffic is 'my AC died.' The header should make 'Call now for emergency service' impossible to miss — not bury it under a hero slider." },
@@ -19,6 +35,12 @@ const needs = [
   description="HVAC website design built to capture emergency service calls and replacement estimates. Emergency framing up front, service-area structure, financing visibility, and local SEO that ranks for HVAC searches in your market."
   pathname="hvac-websites"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'HVAC Websites', url: `${SITE}/hvac-websites` },
+  ]} />
+
   <SiteHeader />
 
   <main>
