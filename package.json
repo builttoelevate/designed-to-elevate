@@ -8,7 +8,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "screenshot-modern-classic": "node scripts/screenshot-modern-classic.js"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.13",
@@ -19,6 +20,8 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.4",
+    "playwright": "^1.44.0",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.2.4"
   }
 }

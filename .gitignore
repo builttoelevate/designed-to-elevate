@@ -28,3 +28,20 @@ pnpm-debug.log*
 
 # Claude Code local
 .claude/
+
+# Supabase CLI temp (contains project ref + pooler URL)
+supabase/.temp/
+
+# Installers and binaries we don't want in repo
+*.exe
+/files.zip
+
+# Random local screenshots dropped in repo root
+/Screenshot*.png
+
+# Marketing collateral already printed — keep in Drive, not git
+/designed-to-elevate-brochure.pdf
+/designed-to-elevate-business-cards.pdf
+
+# Other-client proposal, doesn't belong in this repo
+/Proposal/
