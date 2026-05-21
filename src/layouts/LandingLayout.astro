@@ -2,362 +2,87 @@
 import '../styles/landing.css';
 
 interface Props {
-  title?: string;
-  description?: string;
-  pathname?: string;
+  title: string;
+  description: string;
+  pathname: string;
   noindex?: boolean;
 }
 
-const {
-  title = 'Founding 5 Pricing — Lead Systems for Local Service Businesses | Designed to Elevate',
-  description = "We're opening 5 founding client spots at locked-in launch pricing. Get more calls, quote requests, and booked jobs from your website. Free Lead Leak Audit included.",
-  pathname = 'grow',
-  noindex = false,
-} = Astro.props;
-
+const { title, description, pathname, noindex = false } = Astro.props;
 const SITE_URL = 'https://designedtoelevate.co';
-const canonical = `${SITE_URL}/${pathname}`.replace(/\/+$/, '/');
+const canonicalUrl = `${SITE_URL}/${pathname}`;
+const shareImage = `${SITE_URL}/og-image.png`;
 ---
 <!doctype html>
 <html lang="en" class="landing">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0E1014" />
-  <title>{title}</title>
-  <meta name="description" content={description} />
-  {noindex && <meta name="robots" content="noindex" />}
-  <link rel="canonical" href={canonical} />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0E1014" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="format-detection" content="telephone=no" />
 
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="apple-touch-icon" href="/logo-mark.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo-mark.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+    />
 
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content={title} />
-  <meta property="og:description" content={description} />
-  <meta property="og:image" content={`${SITE_URL}/og-image.png`} />
-  <meta property="og:url" content={canonical} />
-  <meta property="og:site_name" content="Designed to Elevate" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={title} />
-  <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={shareImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Designed to Elevate" />
+    <meta property="og:site_name" content="Designed to Elevate" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={shareImage} />
+    <meta name="twitter:image:alt" content="Designed to Elevate" />
+  </head>
+  <body>
+    <slot />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
-  />
-</head>
-<body class="bg-bg text-text font-body antialiased">
-  <a class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-accent focus:text-bg" href="#apply">Skip to application form</a>
-  <slot />
+    <script>
+      const stickyCTA = document.querySelector('[data-sticky-cta]');
+      const heroCTA = document.querySelector('[data-hero-cta]');
+      const applySection = document.querySelector('#apply');
 
-  <!-- Global Call/Text popup. Any element with [data-call-text]
-       opens this dialog so visitors can pick between calling and
-       texting Bill instead of being dropped straight into the
-       phone app. The dialog uses the native <dialog> element for
-       built-in modality, focus trap, and ESC-to-close. -->
-  <dialog
-    id="call-text-popup"
-    class="ct-popup"
-    aria-labelledby="ct-popup-title"
-  >
-    <button type="button" class="ct-popup-close" data-popup-close aria-label="Close">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
+      if (stickyCTA && heroCTA && applySection && 'IntersectionObserver' in window) {
+        let heroVisible = true;
+        let applyVisible = false;
 
-    <div class="ct-popup-eyebrow">
-      <span class="ct-popup-dot" aria-hidden="true"></span>
-      Reach Bill
-    </div>
-    <h2 id="ct-popup-title" class="ct-popup-number">(740) 617-6488</h2>
+        const updateSticky = () => {
+          const shouldShow = !heroVisible && !applyVisible;
+          stickyCTA.classList.toggle('translate-y-full', !shouldShow);
+          stickyCTA.classList.toggle('opacity-0', !shouldShow);
+          stickyCTA.classList.toggle('pointer-events-none', !shouldShow);
+        };
 
-    <div class="ct-popup-actions">
-      <a href="tel:7406176488" class="btn-primary ct-popup-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
-        Call
-      </a>
-      <a href="sms:7406176488" class="btn-ghost ct-popup-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Text
-      </a>
-    </div>
-
-    <p class="ct-popup-fine">Bill picks up. No call center, no funnel.</p>
-  </dialog>
-
-  <style is:global>
-    /* ── Call/Text popup ────────────────────────────────────────
-       Uses native <dialog> element so the browser handles the
-       backdrop, focus trap, and ESC-to-close for free. */
-    .ct-popup {
-      position: fixed;
-      max-width: 22rem;
-      width: calc(100% - 2rem);
-      padding: 2rem 1.75rem 1.75rem;
-      border: 1px solid var(--color-line);
-      border-radius: var(--radius-card);
-      background: linear-gradient(180deg, var(--color-surface-1), var(--color-surface-2));
-      color: var(--color-text);
-      box-shadow:
-        0 0 0 1px rgba(255, 122, 26, 0.08),
-        0 30px 80px -20px rgba(0, 0, 0, 0.7),
-        0 12px 32px -10px rgba(255, 107, 26, 0.25);
-      text-align: center;
-    }
-    .ct-popup::backdrop {
-      background: rgba(8, 9, 12, 0.78);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-    }
-    .ct-popup[open] {
-      animation: ct-popup-in 0.18s ease-out;
-    }
-    @keyframes ct-popup-in {
-      from { opacity: 0; transform: translateY(8px) scale(0.98); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .ct-popup-close {
-      position: absolute;
-      top: 0.6rem;
-      right: 0.6rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2rem;
-      height: 2rem;
-      background: transparent;
-      border: 0;
-      padding: 0;
-      color: var(--color-text-muted);
-      cursor: pointer;
-      border-radius: 0.4rem;
-      transition: color 0.15s ease, background 0.15s ease;
-    }
-    .ct-popup-close:hover { color: var(--color-text); background: rgba(255, 255, 255, 0.05); }
-    .ct-popup-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-family: var(--font-display);
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--color-accent);
-    }
-    .ct-popup-dot {
-      width: 0.4rem;
-      height: 0.4rem;
-      border-radius: 50%;
-      background: var(--color-accent);
-      box-shadow: 0 0 0 0.18rem rgba(255, 107, 26, 0.18);
-    }
-    .ct-popup-number {
-      margin: 0.7rem 0 0;
-      font-family: var(--font-display);
-      font-size: 1.6rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--color-text);
-    }
-    .ct-popup-actions {
-      margin-top: 1.5rem;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.7rem;
-    }
-    .ct-popup-btn {
-      width: 100%;
-      gap: 0.45rem;
-    }
-    .ct-popup-fine {
-      margin: 1.1rem 0 0;
-      font-size: 0.78rem;
-      color: var(--color-text-muted);
-      line-height: 1.5;
-    }
-    /* Reset for [data-call-text] buttons used inline so they
-       inherit whatever utility/Tailwind classes wrap them. */
-    button[data-call-text] {
-      background: none;
-      border: 0;
-      padding: 0;
-      margin: 0;
-      font: inherit;
-      color: inherit;
-      cursor: pointer;
-      text-align: inherit;
-    }
-  </style>
-
-  <script>
-    // Call/Text popup — opens the global <dialog> when any element
-    // with [data-call-text] is clicked.
-    const ctPopup = document.getElementById('call-text-popup') as HTMLDialogElement | null;
-    if (ctPopup) {
-      document.querySelectorAll<HTMLElement>('[data-call-text]').forEach((trigger) => {
-        trigger.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (typeof ctPopup.showModal === 'function') {
-            ctPopup.showModal();
-          } else {
-            // Fallback for ancient browsers: jump straight to tel:
-            window.location.href = 'tel:7406176488';
-          }
-        });
-      });
-      // Click outside the dialog content (on the backdrop) closes it.
-      ctPopup.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
-        if (target === ctPopup || target.closest('[data-popup-close]')) {
-          ctPopup.close();
-        }
-      });
-    }
-
-    // Smooth-scroll for any in-page anchor link
-    document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
-      a.addEventListener('click', (e) => {
-        const id = a.getAttribute('href');
-        if (!id || id === '#') return;
-        const el = document.querySelector(id);
-        if (el) {
-          e.preventDefault();
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          history.replaceState(null, '', id);
-        }
-      });
-    });
-
-    // Sticky mobile CTA — show only when the hero CTA has scrolled out
-    // of view AND the apply form section is not yet visible. Keeps one
-    // major orange filled CTA on screen at a time.
-    const heroCta = document.querySelector<HTMLElement>('[data-hero-cta]');
-    const stickyCta = document.querySelector<HTMLElement>('[data-sticky-cta]');
-    const applyFormSection = document.querySelector<HTMLElement>('#apply');
-
-    if (heroCta && stickyCta) {
-      let heroVisible = true;
-      let formVisible = false;
-
-      const update = () => {
-        const show = !heroVisible && !formVisible;
-        stickyCta.classList.toggle('translate-y-full', !show);
-        stickyCta.classList.toggle('opacity-0', !show);
-        stickyCta.classList.toggle('pointer-events-none', !show);
-      };
-
-      new IntersectionObserver(
-        (entries) => {
-          heroVisible = entries[0].isIntersecting;
-          update();
-        },
-        { threshold: 0 }
-      ).observe(heroCta);
-
-      if (applyFormSection) {
         new IntersectionObserver(
-          (entries) => {
-            formVisible = entries[0].isIntersecting;
-            update();
+          ([entry]) => {
+            heroVisible = entry.isIntersecting;
+            updateSticky();
           },
-          { threshold: 0.15 }
-        ).observe(applyFormSection);
+          { threshold: 0.1 },
+        ).observe(heroCTA);
+
+        new IntersectionObserver(
+          ([entry]) => {
+            applyVisible = entry.isIntersecting;
+            updateSticky();
+          },
+          { threshold: 0.2 },
+        ).observe(applySection);
       }
-    }
-
-    // Audit form → Web3Forms.
-    // FormData preserves multi-value `help[]` checkboxes natively;
-    // Web3Forms parses them as an array and aggregates them in the email.
-    // Add Google Ads conversion tracking inside the success branch when ready.
-    const form = document.querySelector<HTMLFormElement>('[data-audit-form]');
-    const status = document.querySelector<HTMLElement>('[data-audit-status]');
-    if (form && status) {
-      const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-      const originalBtnHTML = submitBtn?.innerHTML ?? '';
-
-      const showStatus = (msg: string, isError: boolean) => {
-        status.textContent = msg;
-        status.classList.remove('hidden');
-        status.classList.add('flex');
-        status.style.color = isError ? '#F87171' : '';
-      };
-
-      const setDisabled = (disabled: boolean) => {
-        form.querySelectorAll('input, textarea, select, button').forEach((el) => {
-          (el as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLButtonElement).disabled = disabled;
-        });
-      };
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        // Snapshot the form data BEFORE disabling controls — `disabled`
-        // inputs are excluded from FormData per spec, which would strip
-        // access_key and every other field from the payload.
-        const formData = new FormData(form);
-
-        setDisabled(true);
-        if (submitBtn) submitBtn.innerHTML = 'Sending…';
-        showStatus('Sending your application…', false);
-
-        try {
-          // multipart/form-data — bit-for-bit what a native HTML form POST
-          // would send. Multi-value help[] checkboxes preserved as repeats.
-          const response = await fetch('https://api.web3forms.com/submit', {
-            method: 'POST',
-            headers: { Accept: 'application/json' },
-            body: formData,
-          });
-          const result = await response
-            .json()
-            .catch(() => ({} as { success?: boolean; message?: string }));
-
-          // Log full response for debugging in DevTools (remove later).
-          console.log('[audit-form] web3forms response:', response.status, result);
-
-          if (response.ok && result.success) {
-            // Dispatch a page-level event so per-page scripts (e.g. /upgrade
-            // analytics) can react without re-implementing the fetch.
-            document.dispatchEvent(new CustomEvent('audit-form:success', {
-              detail: { source: (formData.get('source') as string) || form.getAttribute('action') || '' },
-            }));
-
-            // Opt-in redirect: forms with [data-redirect="/path"] navigate
-            // to a thank-you page after a successful submit. Forms without
-            // the attribute keep the existing inline-confirmation flow.
-            const redirectTo = form.getAttribute('data-redirect');
-            if (redirectTo) {
-              if (submitBtn) submitBtn.innerHTML = 'Sent ✓';
-              window.location.assign(redirectTo);
-              return;
-            }
-
-            if (submitBtn) submitBtn.innerHTML = 'Sent ✓';
-            showStatus(
-              "Thanks! Bill will reach out within 24 hours. If you'd like to talk now, call or text (740) 617-6488.",
-              false
-            );
-          } else {
-            throw new Error(result.message || `HTTP ${response.status}`);
-          }
-        } catch (err) {
-          setDisabled(false);
-          if (submitBtn) submitBtn.innerHTML = originalBtnHTML;
-          const detail = err instanceof Error ? err.message : 'Unknown error';
-          document.dispatchEvent(new CustomEvent('audit-form:error', {
-            detail: { message: detail },
-          }));
-          showStatus(
-            `Couldn't send your application (${detail}). Please call or text Bill at (740) 617-6488 and we'll handle it directly.`,
-            true
-          );
-        }
-      });
-    }
-  </script>
-</body>
+    </script>
+  </body>
 </html>
