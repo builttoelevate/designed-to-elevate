@@ -219,18 +219,24 @@ const faqSchema = {
 
   <main>
     <!-- HERO -->
-    <section
-      id="top"
-      class="relative overflow-hidden border-b border-line bg-cover bg-right md:bg-center md:bg-fixed"
-      style="background-image: url('/barbershop-websites/hero-bg-barbershop-chair.png');"
-    >
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <!-- Mobile-safe parallax: an actual position:fixed element instead of
+           background-attachment:fixed (which iOS Safari and most mobile browsers
+           silently drop). IntersectionObserver fades it out once the hero leaves
+           the viewport so it doesn't bleed through later sections. -->
+      <div
+        data-hero-fixed-bg
+        class="fixed inset-0 z-0 bg-cover bg-right md:bg-center pointer-events-none opacity-0 transition-opacity duration-200 [transform:translateZ(0)]"
+        style="background-image: url('/barbershop-websites/hero-bg-barbershop-chair.png');"
+        aria-hidden="true"
+      ></div>
       <!-- Subtle left-darkening so the headline stays legible — the source photo is already
            near-black on the left, so we only need a light touch here. -->
-      <div class="absolute inset-0 z-0 bg-gradient-to-r from-bg/70 via-bg/35 to-bg/10" aria-hidden="true"></div>
+      <div class="absolute inset-0 z-[1] bg-gradient-to-r from-bg/70 via-bg/35 to-bg/10" aria-hidden="true"></div>
       <!-- Bottom-only vignette to blend the hero into the next dark section. -->
-      <div class="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-transparent to-bg/65" aria-hidden="true"></div>
-      <div class="grid-bg absolute inset-0 z-0 opacity-15" aria-hidden="true"></div>
-      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+      <div class="absolute inset-0 z-[1] bg-gradient-to-b from-transparent via-transparent to-bg/65" aria-hidden="true"></div>
+      <div class="grid-bg absolute inset-0 z-[1] opacity-15" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-[1]" aria-hidden="true"></div>
 
       <div class="relative z-10 mx-auto max-w-6xl px-5 sm:px-8 pt-10 sm:pt-16 pb-14 sm:pb-20">
         <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
@@ -650,4 +656,21 @@ const faqSchema = {
       </a>
     </div>
   </div>
+
+  <script>
+    // Fade the fixed hero background in only while the hero is in view, so it
+    // doesn't show through later sections that have transparent backgrounds.
+    (() => {
+      const bg = document.querySelector<HTMLElement>('[data-hero-fixed-bg]');
+      const hero = document.getElementById('top');
+      if (!bg || !hero || !('IntersectionObserver' in window)) {
+        if (bg) bg.style.opacity = '1';
+        return;
+      }
+      new IntersectionObserver(
+        ([entry]) => { bg.style.opacity = entry.isIntersecting ? '1' : '0'; },
+        { threshold: 0 }
+      ).observe(hero);
+    })();
+  </script>
 </LandingLayout>
