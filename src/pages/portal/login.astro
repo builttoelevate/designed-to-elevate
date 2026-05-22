@@ -21,7 +21,11 @@ if (session) {
         <p class="text-text-muted text-base">Submit website change requests, track status, and keep everything in one place.</p>
       </div>
 
-      <form class="ph-card p-6 sm:p-7" data-login-form>
+      <!--
+        STEP 1 — Email entry. JS swaps this for [data-step="code"] after
+        the server confirms the code was sent.
+      -->
+      <form class="ph-card p-6 sm:p-7" data-step="email">
         <label for="email" class="ph-label">Email</label>
         <input
           id="email"
@@ -36,9 +40,59 @@ if (session) {
           class="ph-input"
         />
         <button type="submit" class="btn-primary mt-4 w-full justify-center">
-          <span data-btn-label>Send me a login link</span>
+          <span data-btn-label="email">Send code</span>
         </button>
-        <div class="ph-flash hidden mt-4" data-flash></div>
+        <div class="ph-flash hidden mt-4" data-flash="email"></div>
+      </form>
+
+      <!--
+        STEP 2 — 6-digit code verification. Hidden by default; revealed by
+        JS once Step 1 succeeds. inputmode + autocomplete + pattern tell
+        iOS/Android to surface the code from the email/SMS pane right
+        above the keyboard so the user can tap-to-fill.
+      -->
+      <form class="ph-card p-6 sm:p-7 hidden" data-step="code">
+        <div class="text-sm text-text-muted mb-1">Code sent to</div>
+        <div class="flex items-center justify-between gap-3 mb-5">
+          <div class="font-medium truncate" data-email-display></div>
+          <button type="button" class="text-xs text-text-muted hover:text-accent underline-offset-2 hover:underline shrink-0" data-back-to-email>
+            Wrong email?
+          </button>
+        </div>
+
+        <label for="code" class="ph-label">6-digit code</label>
+        <input
+          id="code"
+          name="code"
+          type="text"
+          required
+          autocomplete="one-time-code"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="6"
+          minlength="6"
+          autocapitalize="off"
+          spellcheck="false"
+          placeholder="000000"
+          class="ph-input text-center tracking-[0.4em] font-mono text-xl"
+          data-code-input
+        />
+        <button type="submit" class="btn-primary mt-4 w-full justify-center">
+          <span data-btn-label="code">Verify and continue</span>
+        </button>
+
+        <div class="ph-flash hidden mt-4" data-flash="code"></div>
+
+        <div class="mt-5 text-center text-sm text-text-muted">
+          Didn't get it?
+          <button
+            type="button"
+            class="ml-1 text-accent hover:underline disabled:text-text-muted disabled:no-underline disabled:cursor-not-allowed"
+            data-resend
+          >
+            <span data-resend-label>Resend code</span>
+          </button>
+        </div>
       </form>
 
       <p class="text-center text-xs text-text-muted mt-6">
@@ -49,47 +103,225 @@ if (session) {
 </PortalLayout>
 
 <script>
-  const form = document.querySelector<HTMLFormElement>('[data-login-form]');
-  const flash = document.querySelector<HTMLElement>('[data-flash]');
-  const label = document.querySelector<HTMLElement>('[data-btn-label]');
+  // ─────────────────────────────────────────────────────────────────────────
+  // Two-step OTP sign-in.
+  //
+  //   STEP 1: POST /api/portal/auth/send-code { email }
+  //     → on 200, swap into Step 2 and start the resend cooldown.
+  //   STEP 2: POST /api/portal/auth/verify-code { email, code }
+  //     → on 200, follow the server-supplied redirect (role-aware).
+  //
+  // The 6-digit field uses autocomplete="one-time-code" + inputmode="numeric"
+  // so iOS/Android suggest the code from the email above the keyboard.
+  // Pasting or auto-fill that lands a 6-digit value also triggers verify.
+  // ─────────────────────────────────────────────────────────────────────────
 
-  if (form && flash && label) {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const data = new FormData(form);
-      const email = (data.get('email') as string || '').trim();
-      if (!email) return;
+  const RESEND_COOLDOWN_SECONDS = 60;
 
-      label.textContent = 'Sending…';
-      form.querySelectorAll('input,button').forEach((el) =>
-        ((el as HTMLInputElement).disabled = true)
-      );
+  type StepName = 'email' | 'code';
 
-      try {
-        const res = await fetch('/api/portal/login', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ email }),
-        });
-        const json = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
+  const stepForm = (name: StepName) =>
+    document.querySelector<HTMLFormElement>(`[data-step="${name}"]`);
+  const flashFor = (name: StepName) =>
+    document.querySelector<HTMLElement>(`[data-flash="${name}"]`);
+  const labelFor = (name: StepName) =>
+    document.querySelector<HTMLElement>(`[data-btn-label="${name}"]`);
 
-        flash.dataset.tone = 'success';
-        flash.textContent = `Check your email — we sent a login link to ${email}. It expires in 1 hour.`;
-        flash.classList.remove('hidden');
-        label.textContent = 'Link sent ✓';
-      } catch (err) {
-        flash.dataset.tone = 'error';
-        flash.textContent =
-          err instanceof Error && err.message
-            ? `Couldn't send the link: ${err.message}`
-            : "Couldn't send the link. Try again, or text Bill at (740) 617-6488.";
-        flash.classList.remove('hidden');
-        label.textContent = 'Send me a login link';
-        form.querySelectorAll('input,button').forEach((el) =>
-          ((el as HTMLInputElement).disabled = false)
-        );
-      }
+  const emailForm = stepForm('email');
+  const codeForm = stepForm('code');
+  const codeInput = document.querySelector<HTMLInputElement>('[data-code-input]');
+  const emailDisplay = document.querySelector<HTMLElement>('[data-email-display]');
+  const backToEmail = document.querySelector<HTMLButtonElement>('[data-back-to-email]');
+  const resendButton = document.querySelector<HTMLButtonElement>('[data-resend]');
+  const resendLabel = document.querySelector<HTMLElement>('[data-resend-label]');
+
+  let currentEmail = '';
+  let cooldownTimer: number | null = null;
+
+  function setFlash(step: StepName, message: string, tone: 'success' | 'error') {
+    const el = flashFor(step);
+    if (!el) return;
+    el.dataset.tone = tone;
+    el.textContent = message;
+    el.classList.remove('hidden');
+  }
+
+  function clearFlash(step: StepName) {
+    const el = flashFor(step);
+    if (!el) return;
+    el.classList.add('hidden');
+    el.textContent = '';
+  }
+
+  function setFormDisabled(form: HTMLFormElement | null, disabled: boolean) {
+    if (!form) return;
+    form.querySelectorAll<HTMLInputElement | HTMLButtonElement>('input, button').forEach((el) => {
+      // Don't toggle the "back to email" or resend buttons via the bulk disable —
+      // they're managed by their own state.
+      if (el.dataset.backToEmail !== undefined || el.dataset.resend !== undefined) return;
+      el.disabled = disabled;
     });
   }
+
+  function showStep(name: StepName) {
+    if (emailForm && codeForm) {
+      emailForm.classList.toggle('hidden', name !== 'email');
+      codeForm.classList.toggle('hidden', name !== 'code');
+    }
+  }
+
+  function startResendCooldown() {
+    if (!resendButton || !resendLabel) return;
+    let remaining = RESEND_COOLDOWN_SECONDS;
+    resendButton.disabled = true;
+    resendLabel.textContent = `Resend code in ${remaining}s`;
+    if (cooldownTimer) window.clearInterval(cooldownTimer);
+    cooldownTimer = window.setInterval(() => {
+      remaining -= 1;
+      if (remaining <= 0) {
+        window.clearInterval(cooldownTimer!);
+        cooldownTimer = null;
+        resendButton.disabled = false;
+        resendLabel.textContent = 'Resend code';
+        return;
+      }
+      resendLabel.textContent = `Resend code in ${remaining}s`;
+    }, 1000);
+  }
+
+  async function sendCode(email: string): Promise<boolean> {
+    const res = await fetch('/api/portal/auth/send-code', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const json = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+    if (!res.ok) {
+      const fallback =
+        res.status === 429
+          ? 'Too many requests. Wait a minute, then try again.'
+          : "Couldn't send the code. Try again, or text Bill at (740) 617-6488.";
+      throw new Error(json.error || fallback);
+    }
+    return true;
+  }
+
+  async function verifyCode(email: string, code: string): Promise<string> {
+    const res = await fetch('/api/portal/auth/verify-code', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email, code }),
+    });
+    const json = (await res.json().catch(() => ({}))) as {
+      ok?: boolean;
+      redirect?: string;
+      error?: string;
+    };
+    if (!res.ok) {
+      throw new Error(json.error || "That code didn't work. Try again.");
+    }
+    return json.redirect || '/portal';
+  }
+
+  // ── STEP 1: Email submit ────────────────────────────────────────────────
+  emailForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearFlash('email');
+    const data = new FormData(emailForm);
+    const email = ((data.get('email') as string) || '').trim().toLowerCase();
+    if (!email) return;
+
+    const lbl = labelFor('email');
+    if (lbl) lbl.textContent = 'Sending…';
+    setFormDisabled(emailForm, true);
+
+    try {
+      await sendCode(email);
+      currentEmail = email;
+      if (emailDisplay) emailDisplay.textContent = email;
+      showStep('code');
+      startResendCooldown();
+      // Focus the code field so the OS can offer "From Messages" / email
+      // autofill right above the keyboard.
+      window.setTimeout(() => codeInput?.focus(), 50);
+    } catch (err) {
+      setFlash('email', err instanceof Error ? err.message : "Couldn't send the code.", 'error');
+      if (lbl) lbl.textContent = 'Send code';
+      setFormDisabled(emailForm, false);
+    }
+  });
+
+  // ── STEP 2: Code submit ─────────────────────────────────────────────────
+  async function attemptVerify() {
+    if (!codeInput || !codeForm) return;
+    const code = codeInput.value.replace(/\D/g, '');
+    if (code.length !== 6) return;
+
+    clearFlash('code');
+    const lbl = labelFor('code');
+    if (lbl) lbl.textContent = 'Verifying…';
+    setFormDisabled(codeForm, true);
+
+    try {
+      const redirect = await verifyCode(currentEmail, code);
+      // Replace history so back-button doesn't bounce them to the login page
+      // immediately after sign-in.
+      window.location.replace(redirect);
+    } catch (err) {
+      setFlash('code', err instanceof Error ? err.message : "That code didn't work.", 'error');
+      if (lbl) lbl.textContent = 'Verify and continue';
+      setFormDisabled(codeForm, false);
+      codeInput.focus();
+      codeInput.select();
+    }
+  }
+
+  codeForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    attemptVerify();
+  });
+
+  // Auto-submit when the input fills to 6 digits (paste or autofill from
+  // the OS one-time-code pane).
+  codeInput?.addEventListener('input', () => {
+    if (!codeInput) return;
+    const cleaned = codeInput.value.replace(/\D/g, '').slice(0, 6);
+    if (cleaned !== codeInput.value) codeInput.value = cleaned;
+    if (cleaned.length === 6) attemptVerify();
+  });
+
+  // ── "Wrong email?" link ────────────────────────────────────────────────
+  backToEmail?.addEventListener('click', () => {
+    clearFlash('email');
+    clearFlash('code');
+    if (codeInput) codeInput.value = '';
+    if (cooldownTimer) {
+      window.clearInterval(cooldownTimer);
+      cooldownTimer = null;
+    }
+    if (resendButton && resendLabel) {
+      resendButton.disabled = false;
+      resendLabel.textContent = 'Resend code';
+    }
+    setFormDisabled(emailForm, false);
+    const lbl = labelFor('email');
+    if (lbl) lbl.textContent = 'Send code';
+    showStep('email');
+    const emailField = emailForm?.querySelector<HTMLInputElement>('input[name="email"]');
+    window.setTimeout(() => emailField?.focus(), 50);
+  });
+
+  // ── Resend ─────────────────────────────────────────────────────────────
+  resendButton?.addEventListener('click', async () => {
+    if (resendButton.disabled || !currentEmail) return;
+    clearFlash('code');
+    try {
+      await sendCode(currentEmail);
+      setFlash('code', `New code sent to ${currentEmail}.`, 'success');
+      startResendCooldown();
+      codeInput?.focus();
+    } catch (err) {
+      setFlash('code', err instanceof Error ? err.message : "Couldn't send a new code.", 'error');
+    }
+  });
 </script>
