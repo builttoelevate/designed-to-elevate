@@ -35,18 +35,18 @@ const serviceSchema = {
 
 const heroScreens = [
   {
-    src: '/showcase/modern-classic-mobile.png',
-    alt: 'Modern Classic Barbershop mobile homepage',
-    label: 'Modern Classic, live on mobile',
+    src: '/showcase/modern-classic/homepage.jpg',
+    alt: 'Modern Classic Barbershop mobile homepage with live next-opening widget',
+    label: 'Homepage, live on mobile',
   },
   {
-    src: '/showcase/modern-classic/service-select.png',
-    alt: 'Branded service selection step on a phone',
+    src: '/showcase/modern-classic/booking-date-time.png',
+    alt: 'Branded booking flow showing date and time selection on a phone',
     label: 'Square booking, hidden behind the brand',
   },
   {
-    src: '/showcase/modern-classic/confirm.png',
-    alt: 'Mobile booking confirmation screen',
+    src: '/showcase/modern-classic/booking-confirm.jpg',
+    alt: 'Mobile booking confirmation screen with service, barber, time, and price',
     label: 'Built for thumbs first',
   },
 ];
@@ -90,21 +90,40 @@ const featureBullets = [
 
 const proofItems = [
   {
-    src: '/showcase/modern-classic/homepage.png',
-    title: 'Premium booking homepage',
+    src: '/showcase/modern-classic/calendar-availability.jpg',
+    title: 'Real-time availability from Square',
     description:
-      "Shows the shop's brand first, then guides customers toward booking without sending them to a generic platform page.",
+      "The booking calendar pulls every barber's actual open slots in real time. Customers see exactly what's available — no calls, no callbacks.",
   },
   {
-    src: '/showcase/modern-classic/service-select.png',
-    title: 'Fast service selection',
-    description: 'A focused booking flow designed to keep customers moving, not stalled.',
+    src: '/showcase/modern-classic/barber-profile-michael.jpg',
+    title: 'Each barber gets their own brand',
+    description:
+      "Photo, bio, specialties, next-available time, and an Instagram link — so loyal clients can book the person they trust, not just any open chair.",
   },
   {
-    src: '/showcase/modern-classic/confirm.png',
-    title: 'Built for phone-first customers',
+    src: '/showcase/modern-classic/product-retail.jpg',
+    title: 'Product retail without leaving the brand',
     description:
-      'Clear buttons, fast choices, and layouts made for people booking from the parking lot, the couch, or between errands.',
+      'The in-house grooming line lives on the same site, with the same look. No detour to a generic Shopify store.',
+  },
+  {
+    src: '/showcase/modern-classic/my-bookings.jpg',
+    title: 'Customers see their full history',
+    description:
+      'Upcoming and past appointments in one signed-in view. One-tap to rebook, reschedule, or cancel — and a quick text line straight to their barber.',
+  },
+  {
+    src: '/showcase/modern-classic/group-booking-customer.jpg',
+    title: 'Group + back-to-back booking',
+    description:
+      'Book the family, the wedding party, or a back-to-back kids cut all in one transaction. Each appointment can still be managed separately.',
+  },
+  {
+    src: '/showcase/modern-classic/reviews-section.jpg',
+    title: 'Real reviews, baked into the homepage',
+    description:
+      'Google reviews stream straight into the homepage — proof points right where new customers decide whether to book.',
   },
 ];
 
@@ -338,8 +357,8 @@ const faqSchema = {
             <div class="relative card overflow-hidden max-w-[22rem] mx-auto">
               <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
                 <img
-                  src="/showcase/modern-classic-mobile.png"
-                  alt="Modern Classic Barbershop mobile site"
+                  src="/showcase/modern-classic/homepage.jpg"
+                  alt="Modern Classic Barbershop mobile homepage"
                   class="absolute inset-0 w-full h-full object-cover object-top"
                   loading="lazy"
                   decoding="async"
@@ -383,52 +402,70 @@ const faqSchema = {
       </div>
     </section>
 
-    <!-- SIGNATURE FEATURES (explainer images reused from home + case study) -->
+    <!-- SIGNATURE FEATURES (branded explainer graphics) -->
     <section class="relative border-b border-line bg-surface-1/30">
       <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
         <div class="max-w-3xl">
           <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Signature Features</span>
           <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
-            Two features that turn the website into a booking machine.
+            Three features that turn a barbershop website into a booking machine.
           </h2>
           <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
             Built first for Modern Classic, now available on every barbershop build — same Franklin pricing, same launch timeline.
           </p>
         </div>
 
-        <div class="mt-14 grid lg:grid-cols-2 gap-10 lg:gap-14">
+        <div class="mt-14 grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
           <figure class="flex flex-col gap-5">
-            <div class="card overflow-hidden bg-surface-2">
+            <div class="card overflow-hidden bg-surface-2 flex items-center justify-center">
               <img
-                src="/home/features/modern-classic-next-opening.png"
-                alt="Modern Classic Barbershop homepage mockup showing the next available appointment widget pulled live from the booking system"
+                src="/case-studies/modern-classic-barbershop/automatic-reviews-explainer.png"
+                alt="Automatic Review Generator diagram showing review-request emails sent 2–5 days after each visit, with stats panel tracking the daily cron run and an example email preview."
                 class="block w-full h-auto"
                 loading="lazy"
                 decoding="async"
               />
             </div>
             <figcaption>
-              <h3 class="font-display font-semibold text-[1.15rem] text-text">The next available appointment, right on the homepage.</h3>
+              <h3 class="font-display font-semibold text-[1.15rem] text-text">Automatic review generator</h3>
               <p class="mt-2 text-[0.95rem] text-text-soft leading-relaxed">
-                We pull the soonest open slot from your booking system and surface it right at the top of the site — so customers can act on it instantly instead of digging through a calendar.
+                Auto-sends review emails 2–5 days after every visit — without anyone in the shop touching a phone. More reviews, more trust, less manual work.
               </p>
             </figcaption>
           </figure>
 
           <figure class="flex flex-col gap-5">
-            <div class="card overflow-hidden bg-surface-2">
+            <div class="card overflow-hidden bg-surface-2 flex items-center justify-center">
               <img
-                src="/case-studies/modern-classic-barbershop/custom-built-waitlist-explainer.png"
-                alt="Four-step diagram of the Modern Classic Barbershop custom waitlist: customer joins when no time works, form captures preferred service and barber, automated email fires when a matching opening appears, and the owner dashboard shows active waitlist entries."
+                src="/case-studies/modern-classic-barbershop/group-booking-explainer.png"
+                alt="Group Booking diagram showing 2–3 people booked together in one transaction with separate services and back-to-back scheduling on one barber."
                 class="block w-full h-auto"
                 loading="lazy"
                 decoding="async"
               />
             </div>
             <figcaption>
-              <h3 class="font-display font-semibold text-[1.15rem] text-text">A custom waitlist that turns missed bookings into future appointments.</h3>
+              <h3 class="font-display font-semibold text-[1.15rem] text-text">Group booking — 2–3 people, one transaction</h3>
               <p class="mt-2 text-[0.95rem] text-text-soft leading-relaxed">
-                When a customer can't find a time that works, the booking attempt usually disappears. The custom waitlist captures it instead — and auto-invites the customer the moment a matching opening appears.
+                Families, friends, and small crews can book together in one flow. Pick services per person, choose separate barbers or back-to-back on the same chair.
+              </p>
+            </figcaption>
+          </figure>
+
+          <figure class="flex flex-col gap-5">
+            <div class="card overflow-hidden bg-surface-2 flex items-center justify-center">
+              <img
+                src="/case-studies/modern-classic-barbershop/multi-visit-booking-explainer.png"
+                alt="Multiple Bookings in One Session diagram letting a client reserve up to four future visits at once with date and time per visit, plus a full booking plan review."
+                class="block w-full h-auto"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <figcaption>
+              <h3 class="font-display font-semibold text-[1.15rem] text-text">Multiple bookings in one session</h3>
+              <p class="mt-2 text-[0.95rem] text-text-soft leading-relaxed">
+                Loyal clients can reserve up to four future visits in a single session — keeping their chair locked in and saving the shop the back-and-forth.
               </p>
             </figcaption>
           </figure>
