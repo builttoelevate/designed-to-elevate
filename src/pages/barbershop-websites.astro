@@ -219,8 +219,17 @@ const faqSchema = {
 
   <main>
     <!-- HERO -->
-    <section id="top" class="relative overflow-hidden border-b border-line">
-      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+    <section
+      id="top"
+      class="relative overflow-hidden border-b border-line bg-fixed bg-cover bg-center"
+      style="background-image: url('/barbershop-websites/hero-bg-barbershop-chair.png');"
+    >
+      <!-- Dark left-to-right gradient: keeps the headline area legible while letting the
+           barbershop chair on the right peek through behind the phone explainer. -->
+      <div class="absolute inset-0 z-0 bg-gradient-to-r from-bg/95 via-bg/80 to-bg/50" aria-hidden="true"></div>
+      <!-- Top + bottom vignette so the section blends into the surrounding dark page. -->
+      <div class="absolute inset-0 z-0 bg-gradient-to-b from-bg/40 via-transparent to-bg/70" aria-hidden="true"></div>
+      <div class="grid-bg absolute inset-0 z-0 opacity-20" aria-hidden="true"></div>
       <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
 
       <div class="relative z-10 mx-auto max-w-6xl px-5 sm:px-8 pt-10 sm:pt-16 pb-14 sm:pb-20">
