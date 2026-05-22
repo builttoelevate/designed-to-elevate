@@ -33,24 +33,6 @@ const serviceSchema = {
   },
 };
 
-const heroScreens = [
-  {
-    src: '/showcase/modern-classic/homepage.jpg',
-    alt: 'Modern Classic Barbershop mobile homepage with live next-opening widget',
-    label: 'Homepage, live on mobile',
-  },
-  {
-    src: '/showcase/modern-classic/booking-date-time.png',
-    alt: 'Branded booking flow showing date and time selection on a phone',
-    label: 'Square booking, hidden behind the brand',
-  },
-  {
-    src: '/showcase/modern-classic/booking-confirm.jpg',
-    alt: 'Mobile booking confirmation screen with service, barber, time, and price',
-    label: 'Built for thumbs first',
-  },
-];
-
 const painCards = [
   {
     title: "Your booking page looks like everyone else's",
@@ -270,22 +252,13 @@ const faqSchema = {
 
           <div class="relative" aria-hidden="false">
             <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
-            <div class="relative grid grid-cols-3 gap-3 sm:gap-4">
-              {heroScreens.map((s, i) => (
-                <div class={`card overflow-hidden ${i === 1 ? '-translate-y-6' : ''}`}>
-                  <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
-                    <img
-                      src={s.src}
-                      alt={s.alt}
-                      class="absolute inset-0 w-full h-full object-cover object-top"
-                      loading={i === 0 ? 'eager' : 'lazy'}
-                      decoding="async"
-                    />
-                  </div>
-                  <div class="px-2 py-1.5 text-[0.7rem] text-text-muted text-center leading-tight">{s.label}</div>
-                </div>
-              ))}
-            </div>
+            <img
+              src="/case-studies/modern-classic-barbershop/mobile-booking-experience-explainer.png"
+              alt="From First Impression to Booked Appointment: three Modern Classic Barbershop phone screens showing the homepage, the booking flow, and the booking confirmation, surrounded by feature callouts for branded booking flow, real-time availability, premium experience, and mobile-first design."
+              class="relative block w-full h-auto rounded-2xl"
+              loading="eager"
+              decoding="async"
+            />
           </div>
         </div>
       </div>

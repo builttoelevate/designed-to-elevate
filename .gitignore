@@ -49,3 +49,5 @@ supabase/.temp/
 # Raw image source drops — optimized copies live in public/
 /new screenshots/
 /explainer pics/
+/section change/
+/hero background/
