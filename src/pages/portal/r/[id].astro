@@ -186,12 +186,25 @@ const status = req.status as RequestStatus;
 
     {signedFiles.length > 0 && (
       <>
-        <div class="mt-6 mb-2 text-xs text-text-muted uppercase tracking-wide">Attachments</div>
+        <div class="mt-6 mb-2 flex items-center justify-between gap-3">
+          <span class="text-xs text-text-muted uppercase tracking-wide">Attachments</span>
+          {signedFiles.length > 1 && (
+            <a
+              href={`/api/portal/requests/${req.id}/files/download-all`}
+              class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded border border-line text-text-soft hover:text-accent hover:border-accent/40 transition"
+              aria-label="Download all attachments as a zip"
+            >
+              Download all
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </a>
+          )}
+        </div>
         <ul class="space-y-2">
           {signedFiles.map((f) => {
             const label = uploaderLabel(f);
             return (
-              <li class="ph-card flex items-center gap-3 px-3 py-2">
+              <li class="ph-card flex flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2">
+                <div class="flex items-center gap-3 min-w-0 flex-1 basis-full sm:basis-0">
                 {f.isImage && f.thumb ? (
                   <a
                     href={f.view}
@@ -218,9 +231,11 @@ const status = req.status as RequestStatus;
 
                 <div class="flex-1 min-w-0">
                   <div class="text-sm truncate" title={f.filename}>{f.filename}</div>
-                  {label && <div class="text-xs text-text-muted mt-0.5">{label}</div>}
+                  {label && <div class="text-xs text-text-muted mt-0.5 truncate">{label}</div>}
+                </div>
                 </div>
 
+                <div class="flex flex-wrap items-center gap-2 shrink-0">
                 <a
                   href={f.view}
                   target="_blank"
@@ -252,6 +267,7 @@ const status = req.status as RequestStatus;
                     Remove
                   </button>
                 )}
+                </div>
               </li>
             );
           })}
