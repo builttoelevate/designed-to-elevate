@@ -4,6 +4,8 @@ preparedFor: Franklin Printing Company
 location: Zanesville, OH
 date: May 2026
 heroImage: /proposals/franklin-printing/hero.png
+heroImageWidth: 1672
+heroImageHeight: 941
 heroAlt: Franklin Printing custom website mockup. Homepage, mailing services page, and quote estimator wizard.
 previewUrl: https://franklin-print-site.vercel.app
 stripeUrl: https://buy.stripe.com/dRm4gz0mc7xzbYY4uY9AA01

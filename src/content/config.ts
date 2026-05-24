@@ -10,6 +10,8 @@ const proposals = defineCollection({
     location: z.string(),
     date: z.string(),
     heroImage: z.string(),
+    heroImageWidth: z.number().default(1672),
+    heroImageHeight: z.number().default(941),
     heroAlt: z.string().optional(),
     previewUrl: z.string().url(),
     stripeUrl: z.string().url(),

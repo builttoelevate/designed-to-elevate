@@ -9,10 +9,12 @@ interface Props {
   subhead: string;
   stats: Stat[];
   heroImage: string;
+  heroImageWidth: number;
+  heroImageHeight: number;
   heroAlt?: string;
   previewUrl: string;
 }
-const { client, preparedFor, location, date, headline, subhead, stats, heroImage, heroAlt, previewUrl } = Astro.props;
+const { client, preparedFor, location, date, headline, subhead, stats, heroImage, heroImageWidth, heroImageHeight, heroAlt, previewUrl } = Astro.props;
 const eyebrowName = preparedFor ?? client;
 const previewLabel = previewUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
 ---
@@ -42,7 +44,7 @@ const previewLabel = previewUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
     <p class="lede">{subhead}</p>
 
     <div class="hero-image">
-      <img src={heroImage} alt={heroAlt ?? `${client} mockup preview`} loading="eager" />
+      <img src={heroImage} alt={heroAlt ?? `${client} mockup preview`} width={heroImageWidth} height={heroImageHeight} loading="eager" />
     </div>
 
     <div class="hero-cta-row">
