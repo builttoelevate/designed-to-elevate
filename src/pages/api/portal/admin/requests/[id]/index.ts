@@ -5,9 +5,10 @@
  * since admin policies grant access, but using service role here keeps the
  * server in control and lets us write activity + send emails atomically).
  *
- * Email policy (see CLIENT_HUB_PLAN.md §6): the only status that emails
- * the client is `waiting_on_client`. `in_progress` and `complete` do not
- * send — the portal shows that state and the inbox stays signal-only.
+ * Email policy: `waiting_on_client` emails the client ("we need something
+ * from you") and `complete` emails the client ("your job is done").
+ * `in_progress` stays silent — the portal shows that state and the inbox
+ * stays signal-only.
  */
 
 export const prerender = false;
@@ -15,7 +16,10 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { createServiceSupabase } from '../../../../../../lib/supabase';
 import { getPortalSession } from '../../../../../../lib/session';
-import { sendStatusWaitingOnClientEmail } from '../../../../../../lib/email';
+import {
+  sendStatusWaitingOnClientEmail,
+  sendJobCompleteEmail,
+} from '../../../../../../lib/email';
 
 const ALLOWED_STATUSES = new Set(['new', 'in_progress', 'waiting_on_client', 'complete']);
 const ALLOWED_BILLING = new Set(['included', 'billable', 'needs_estimate', 'courtesy']);
@@ -68,19 +72,25 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
       metadata: { from: (before as any)[field], to: value },
     });
 
-    // Only waiting_on_client triggers an email — see policy comment at top.
-    if (field === 'status' && value === 'waiting_on_client' && value !== (before as any).status) {
-      void notifyWaitingOnClient(id, before.client_id, before.title);
+    // Status emails — see policy comment at top. Only fire on an actual
+    // transition into the state, not on a no-op re-save.
+    if (field === 'status' && value !== (before as any).status) {
+      if (value === 'waiting_on_client') {
+        void notifyClient(id, before.client_id, before.title, 'waiting_on_client');
+      } else if (value === 'complete') {
+        void notifyClient(id, before.client_id, before.title, 'complete');
+      }
     }
   }
 
   return json({ ok: true });
 };
 
-async function notifyWaitingOnClient(
+async function notifyClient(
   requestId: string,
   clientId: string,
-  title: string
+  title: string,
+  kind: 'waiting_on_client' | 'complete'
 ) {
   try {
     const admin = createServiceSupabase();
@@ -101,12 +111,18 @@ async function notifyWaitingOnClient(
         ? owner.full_name.trim().split(/\s+/)[0]
         : 'there';
 
-    await sendStatusWaitingOnClientEmail({
+    const payload = {
       toEmail: client.primary_contact_email,
       firstName,
       title,
       requestId,
-    });
+    };
+
+    if (kind === 'complete') {
+      await sendJobCompleteEmail(payload);
+    } else {
+      await sendStatusWaitingOnClientEmail(payload);
+    }
   } catch (err) {
     console.error('[admin.requests] notification failed:', err);
   }

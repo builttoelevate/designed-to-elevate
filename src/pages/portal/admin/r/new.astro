@@ -1,0 +1,138 @@
+---
+export const prerender = false;
+
+import PortalLayout from '../../../../layouts/PortalLayout.astro';
+import { createServiceSupabase } from '../../../../lib/supabase';
+import { CATEGORY_OPTIONS, PRIORITY_OPTIONS } from '../../../../lib/portal';
+
+const session = Astro.locals.session!;
+if (session.role !== 'admin') return Astro.redirect('/portal');
+
+const admin = createServiceSupabase();
+const { data: clients } = await admin
+  .from('clients')
+  .select('id, business_name')
+  .order('business_name');
+
+// Pre-select the client when arriving from a specific client's page.
+const preselectClient = Astro.url.searchParams.get('client') || '';
+---
+<PortalLayout title="Log a job | Admin" session={session}>
+  <div class="mb-5">
+    <a href="/portal/admin" class="text-sm text-text-muted hover:text-text inline-flex items-center gap-1">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Queue
+    </a>
+  </div>
+
+  <section class="max-w-2xl">
+    <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight mb-2">Log a job</h1>
+    <p class="text-text-muted mb-6 leading-relaxed">
+      Create a job for a client who reached out directly. It shows up in the queue like any
+      other request — work it through the normal status flow and upload completion screenshots
+      on the next screen. Add instructions if you need the client to do something and confirm they've seen it.
+    </p>
+
+    <form class="ph-card p-5 sm:p-7 space-y-5" data-log-job>
+      <div>
+        <label for="client_id" class="ph-label">Client</label>
+        <select id="client_id" name="client_id" required class="ph-input">
+          <option value="">Pick a client…</option>
+          {(clients ?? []).map((c) => (
+            <option value={c.id} selected={c.id === preselectClient}>{c.business_name}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label for="title" class="ph-label">Job title</label>
+        <input id="title" name="title" type="text" required maxlength="120" class="ph-input" placeholder="e.g. Fixed broken booking link" />
+      </div>
+
+      <div>
+        <label for="category" class="ph-label">Type</label>
+        <select id="category" name="category" required class="ph-input">
+          <option value="">Pick one…</option>
+          {CATEGORY_OPTIONS.map((o) => (
+            <option value={o.value}>{o.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label for="priority" class="ph-label">Priority</label>
+        <select id="priority" name="priority" class="ph-input">
+          {PRIORITY_OPTIONS.map((o, i) => (
+            <option value={o.value} selected={i === 0}>{o.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label for="description" class="ph-label">What the job is</label>
+        <textarea id="description" name="description" required class="ph-input" placeholder="Describe the work — this is the job record."></textarea>
+      </div>
+
+      <div>
+        <label for="instructions" class="ph-label">Instructions for the client (optional)</label>
+        <textarea id="instructions" name="instructions" class="ph-input" placeholder="Anything the client needs to do or know. If filled in, they'll see it with a 'Got it' button and you'll see when they've acknowledged it."></textarea>
+        <p class="ph-hint">Leave blank if no action is needed from the client.</p>
+      </div>
+
+      <button type="submit" class="btn-primary w-full sm:w-auto justify-center">
+        <span data-btn-label>Create job</span>
+      </button>
+
+      <div class="ph-flash hidden" data-flash></div>
+    </form>
+
+    <p class="ph-hint mt-4">After you create the job, you'll land on its page where you can upload completion screenshots and set the status.</p>
+  </section>
+</PortalLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-log-job]');
+  const flash = document.querySelector<HTMLElement>('[data-flash]');
+  const label = document.querySelector<HTMLElement>('[data-btn-label]');
+
+  if (form && flash && label) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const payload = {
+        client_id: (fd.get('client_id') as string | null)?.trim() ?? '',
+        title: (fd.get('title') as string | null)?.trim() ?? '',
+        category: (fd.get('category') as string | null)?.trim() ?? '',
+        priority: (fd.get('priority') as string | null) ?? 'normal',
+        description: (fd.get('description') as string | null)?.trim() ?? '',
+        instructions: (fd.get('instructions') as string | null)?.trim() || null,
+      };
+
+      label.textContent = 'Creating…';
+      form.querySelectorAll('input,select,textarea,button').forEach((el) => {
+        (el as HTMLInputElement).disabled = true;
+      });
+
+      try {
+        const res = await fetch('/api/portal/admin/requests', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
+        label.textContent = 'Created ✓';
+        window.location.assign(`/portal/admin/r/${json.id}`);
+      } catch (err) {
+        flash.dataset.tone = 'error';
+        flash.textContent =
+          err instanceof Error && err.message ? `Couldn't create: ${err.message}` : "Couldn't create the job. Try again.";
+        flash.classList.remove('hidden');
+        label.textContent = 'Create job';
+        form.querySelectorAll('input,select,textarea,button').forEach((el) => {
+          (el as HTMLInputElement).disabled = false;
+        });
+      }
+    });
+  }
+</script>

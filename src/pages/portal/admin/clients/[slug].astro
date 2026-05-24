@@ -199,7 +199,12 @@ function memberStatus(info: AuthInfo | undefined): 'active' | 'pending' | 'unkno
   </section>
 
   <section>
-    <h2 class="font-display text-lg font-bold tracking-tight mb-3">Recent requests</h2>
+    <div class="flex items-center justify-between gap-3 mb-3">
+      <h2 class="font-display text-lg font-bold tracking-tight">Recent requests</h2>
+      <a href={`/portal/admin/r/new?client=${client.id}`} class="btn-primary !py-1.5 !px-3 !text-[0.78rem] whitespace-nowrap">
+        + Log a job
+      </a>
+    </div>
     <ul class="space-y-2">
       {(requests ?? []).length === 0 && (
         <li class="text-sm text-text-muted">No requests yet.</li>

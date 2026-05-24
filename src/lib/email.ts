@@ -316,3 +316,37 @@ Open the request and reply with what we need to keep things moving.`);
     replyTo: ADMIN_EMAIL,
   });
 }
+
+/* ── 4. client: status → complete ──────────────────────────────────────── */
+export async function sendJobCompleteEmail(args: ClientEmail) {
+  const url = clientRequestUrl(args.requestId);
+  const text = `Hi ${args.firstName},
+
+Good news — '${args.title}' is done.
+
+Open the request to see what was done and any screenshots attached:
+${url}
+
+— Bill, Designed to Elevate`;
+
+  const bodyHtml = paragraphs(`Hi ${args.firstName}, good news — '${args.title}' is done.
+
+Open the request to see what was done and any screenshots attached.`);
+
+  const html = renderShell({
+    preheader: `'${args.title}' is complete.`,
+    title: `Done — ${args.title}`,
+    headline: 'Your job is done',
+    bodyHtml,
+    buttonText: 'View request',
+    buttonUrl: url,
+  });
+
+  await send({
+    to: args.toEmail,
+    subject: `Done — ${args.title}`,
+    text,
+    html,
+    replyTo: ADMIN_EMAIL,
+  });
+}
