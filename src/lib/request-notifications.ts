@@ -10,6 +10,7 @@
  */
 
 import { createServiceSupabase } from './supabase';
+import { isClientNotificationEnabled } from './notifications';
 import {
   sendRequestReceivedEmail,
   sendAdminNewRequestEmail,
@@ -50,13 +51,9 @@ export async function sendNewRequestNotifications(
 
     const owner = (members ?? []).map((m: any) => m.profiles).find(Boolean);
 
-    await Promise.all([
-      sendRequestReceivedEmail({
-        toEmail: client.primary_contact_email,
-        firstName: ownerFirstName(owner),
-        title,
-        requestId,
-      }),
+    // The admin "new request" email always fires; the client confirmation is
+    // gated by this client's notification prefs.
+    const sends: Promise<unknown>[] = [
       sendAdminNewRequestEmail({
         clientName: client.business_name,
         title,
@@ -65,7 +62,20 @@ export async function sendNewRequestNotifications(
         priority: meta.priority,
         description: meta.description,
       }),
-    ]);
+    ];
+
+    if (await isClientNotificationEnabled(admin, clientId, 'request_received')) {
+      sends.push(
+        sendRequestReceivedEmail({
+          toEmail: client.primary_contact_email,
+          firstName: ownerFirstName(owner),
+          title,
+          requestId,
+        })
+      );
+    }
+
+    await Promise.all(sends);
   } catch (err) {
     console.error('[request-notifications] failed:', err);
   }
