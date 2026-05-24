@@ -64,8 +64,11 @@ function qs(overrides: Record<string, string>): string {
       <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">Queue</h1>
       <p class="text-text-muted text-sm mt-1">Open client requests across all businesses. Completed jobs live under the "Complete" tab.</p>
     </div>
-    <div class="flex items-center gap-3 text-xs text-text-muted">
-      <span>{list.length} request{list.length === 1 ? '' : 's'}</span>
+    <div class="flex items-center gap-3">
+      <span class="text-xs text-text-muted">{list.length} request{list.length === 1 ? '' : 's'}</span>
+      <a href="/portal/admin/r/new" class="btn-primary !py-2 !px-3.5 !text-[0.8rem] whitespace-nowrap">
+        + Log a job
+      </a>
     </div>
   </section>
 

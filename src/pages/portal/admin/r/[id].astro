@@ -37,7 +37,7 @@ const admin = createServiceSupabase();
 
 const { data: req } = await admin
   .from('requests')
-  .select('id, title, description, status, priority, category, billing_type, page_url, created_at, completed_at, preferred_completion_date, client_id, clients:client_id (business_name, slug, primary_contact_email), submitter:submitted_by (full_name)')
+  .select('id, title, description, status, priority, category, billing_type, page_url, created_at, completed_at, preferred_completion_date, instructions, instructions_ack_at, client_id, clients:client_id (business_name, slug, primary_contact_email), submitter:submitted_by (full_name)')
   .eq('id', id)
   .maybeSingle();
 
@@ -177,6 +177,23 @@ function uploaderLabel(f: SignedFile): string {
 
     <div class="mb-2 text-xs text-text-muted uppercase tracking-wide">Details</div>
     <p class="whitespace-pre-wrap leading-relaxed text-text/90">{req.description}</p>
+
+    {req.instructions && (
+      <div class="mt-6 rounded-lg border border-accent/30 bg-accent/[0.05] p-4">
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="text-xs text-accent uppercase tracking-wide font-semibold">Instructions for client</div>
+          {req.instructions_ack_at ? (
+            <span class="inline-flex items-center gap-1 text-xs text-green-400">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Acknowledged {relativeDate(req.instructions_ack_at)}
+            </span>
+          ) : (
+            <span class="text-xs text-text-muted">Not yet acknowledged</span>
+          )}
+        </div>
+        <p class="whitespace-pre-wrap leading-relaxed text-sm text-text/90">{req.instructions}</p>
+      </div>
+    )}
 
     {signedFiles.length > 0 && (
       <>
