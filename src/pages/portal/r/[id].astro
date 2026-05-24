@@ -239,6 +239,19 @@ const status = req.status as RequestStatus;
                   Download
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 </a>
+                {f.uploader !== 'admin' && (
+                  <button
+                    type="button"
+                    class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded border border-line text-text-muted hover:text-red-400 hover:border-red-400/40 transition"
+                    data-remove-file
+                    data-request-id={req.id}
+                    data-file-id={f.id}
+                    data-filename={f.filename}
+                    aria-label={`Remove ${f.filename}`}
+                  >
+                    Remove
+                  </button>
+                )}
               </li>
             );
           })}
@@ -292,6 +305,34 @@ const status = req.status as RequestStatus;
 </PortalLayout>
 
 <script>
+  // Remove an attachment the client uploaded. Admin completion screenshots
+  // don't render a Remove button (and the API rejects it anyway).
+  document.querySelectorAll<HTMLButtonElement>('[data-remove-file]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const requestId = btn.dataset.requestId!;
+      const fileId = btn.dataset.fileId!;
+      const filename = btn.dataset.filename || 'this file';
+      if (!confirm(`Remove ${filename}? This can't be undone.`)) return;
+      const original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Removing…';
+      try {
+        const res = await fetch(`/api/portal/requests/${requestId}/files/${fileId}`, {
+          method: 'DELETE',
+        });
+        if (!res.ok) {
+          const j = await res.json().catch(() => ({}));
+          throw new Error(j.error || `HTTP ${res.status}`);
+        }
+        btn.closest('li')?.remove();
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = original;
+        alert(`Couldn't remove: ${err instanceof Error ? err.message : 'unknown'}`);
+      }
+    });
+  });
+
   // Instructions acknowledgment — stamps instructions_ack_at and swaps the
   // button for a confirmation line in place.
   const ackBtn = document.querySelector<HTMLButtonElement>('[data-ack-btn]');

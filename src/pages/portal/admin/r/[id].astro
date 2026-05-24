@@ -253,6 +253,17 @@ function uploaderLabel(f: SignedFile): string {
                 Download
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               </a>
+              <button
+                type="button"
+                class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded border border-line text-text-muted hover:text-red-400 hover:border-red-400/40 transition"
+                data-remove-file
+                data-request-id={req.id}
+                data-file-id={f.id}
+                data-filename={f.filename}
+                aria-label={`Remove ${f.filename}`}
+              >
+                Remove
+              </button>
             </li>
           ))}
         </ul>
@@ -260,9 +271,18 @@ function uploaderLabel(f: SignedFile): string {
     )}
 
     <div class="mt-6">
-      <label class="ph-label">Upload completion screenshot</label>
-      <input type="file" multiple data-admin-upload data-request-id={req.id} data-client-id={req.client_id} accept="image/*,application/pdf" class="ph-input" />
-      <p class="ph-hint">Files attach to this request and become visible to the client.</p>
+      <label class="ph-label" for="admin-file-input">Upload completion screenshot</label>
+      <input id="admin-file-input" type="file" multiple data-admin-file-input accept="image/*,application/pdf" class="ph-input" />
+      <p class="ph-hint">Pick your files, review them below, then attach. Nothing reaches the client until you tap "Attach to job."</p>
+
+      <ul class="mt-3 space-y-2 hidden" data-admin-staged></ul>
+
+      <div class="mt-3 hidden" data-admin-submit-wrap>
+        <button type="button" class="btn-primary text-sm py-2 px-4" data-admin-submit data-request-id={req.id}>
+          <span data-admin-submit-label>Attach to job</span>
+        </button>
+        <div class="ph-flash hidden mt-3" data-admin-upload-flash></div>
+      </div>
     </div>
   </article>
 
@@ -388,14 +408,92 @@ function uploaderLabel(f: SignedFile): string {
     });
   }
 
-  // Admin file upload
-  const fileInput = document.querySelector<HTMLInputElement>('[data-admin-upload]');
-  if (fileInput) {
-    fileInput.addEventListener('change', async () => {
-      if (!fileInput.files || fileInput.files.length === 0) return;
-      const requestId = fileInput.dataset.requestId!;
+  // Admin completion upload — stage, review, then submit. Nothing uploads on
+  // selection, so a wrong pick can be removed before it ever reaches the
+  // client.
+  const adminFileInput = document.querySelector<HTMLInputElement>('[data-admin-file-input]');
+  const adminStaged = document.querySelector<HTMLUListElement>('[data-admin-staged]');
+  const adminSubmitWrap = document.querySelector<HTMLElement>('[data-admin-submit-wrap]');
+  const adminSubmit = document.querySelector<HTMLButtonElement>('[data-admin-submit]');
+  const adminSubmitLabel = document.querySelector<HTMLElement>('[data-admin-submit-label]');
+  const adminUploadFlash = document.querySelector<HTMLElement>('[data-admin-upload-flash]');
+
+  if (adminFileInput && adminStaged && adminSubmitWrap && adminSubmit && adminSubmitLabel) {
+    // Authoritative list — <input>.files is read-only, so a single staged
+    // file can't be removed from it directly; we track our own array.
+    let staged: File[] = [];
+
+    const fmtBytes = (n: number): string => {
+      if (n < 1024) return `${n} B`;
+      if (n < 1024 * 1024) return `${Math.round(n / 1024)} KB`;
+      return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+    };
+
+    const renderStaged = () => {
+      adminStaged.innerHTML = '';
+      const has = staged.length > 0;
+      adminStaged.classList.toggle('hidden', !has);
+      adminSubmitWrap.classList.toggle('hidden', !has);
+      if (!has) return;
+      adminSubmitLabel.textContent = `Attach ${staged.length} file${staged.length === 1 ? '' : 's'} to job`;
+
+      staged.forEach((file, idx) => {
+        const li = document.createElement('li');
+        li.className = 'ph-card flex items-center gap-3 px-3 py-2';
+
+        if (file.type.startsWith('image/')) {
+          const img = document.createElement('img');
+          img.src = URL.createObjectURL(file);
+          img.width = 56;
+          img.height = 56;
+          img.className = 'shrink-0 w-14 h-14 rounded object-cover border border-line bg-surface-2';
+          img.onload = () => URL.revokeObjectURL(img.src);
+          li.appendChild(img);
+        }
+
+        const meta = document.createElement('div');
+        meta.className = 'flex-1 min-w-0';
+        const nameEl = document.createElement('div');
+        nameEl.className = 'text-sm truncate';
+        nameEl.textContent = file.name;
+        const sizeEl = document.createElement('div');
+        sizeEl.className = 'text-xs text-text-muted mt-0.5';
+        sizeEl.textContent = fmtBytes(file.size);
+        meta.append(nameEl, sizeEl);
+        li.appendChild(meta);
+
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'shrink-0 text-xs font-semibold text-text-muted hover:text-red-400 transition px-2 py-1';
+        remove.textContent = 'Remove';
+        remove.addEventListener('click', () => {
+          staged.splice(idx, 1);
+          renderStaged();
+        });
+        li.appendChild(remove);
+
+        adminStaged.appendChild(li);
+      });
+    };
+
+    adminFileInput.addEventListener('change', () => {
+      if (adminFileInput.files) {
+        for (const f of Array.from(adminFileInput.files)) {
+          if (f.size > 0) staged.push(f);
+        }
+      }
+      adminFileInput.value = ''; // let the same file be re-picked after a remove
+      renderStaged();
+    });
+
+    adminSubmit.addEventListener('click', async () => {
+      if (staged.length === 0) return;
+      const requestId = adminSubmit.dataset.requestId!;
       const fd = new FormData();
-      for (const f of Array.from(fileInput.files)) fd.append('files', f);
+      for (const f of staged) fd.append('files', f);
+
+      adminSubmit.disabled = true;
+      adminSubmitLabel.textContent = 'Attaching…';
       try {
         const res = await fetch(`/api/portal/admin/requests/${requestId}/files`, {
           method: 'POST',
@@ -407,8 +505,41 @@ function uploaderLabel(f: SignedFile): string {
         }
         window.location.reload();
       } catch (err) {
-        alert(`Upload failed: ${err instanceof Error ? err.message : 'unknown'}`);
+        adminSubmit.disabled = false;
+        renderStaged();
+        if (adminUploadFlash) {
+          adminUploadFlash.dataset.tone = 'error';
+          adminUploadFlash.textContent = `Couldn't attach: ${err instanceof Error ? err.message : 'unknown'}`;
+          adminUploadFlash.classList.remove('hidden');
+        }
       }
     });
   }
+
+  // Remove a committed attachment (admin can remove any).
+  document.querySelectorAll<HTMLButtonElement>('[data-remove-file]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const requestId = btn.dataset.requestId!;
+      const fileId = btn.dataset.fileId!;
+      const filename = btn.dataset.filename || 'this file';
+      if (!confirm(`Remove ${filename}? This can't be undone.`)) return;
+      const original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Removing…';
+      try {
+        const res = await fetch(`/api/portal/requests/${requestId}/files/${fileId}`, {
+          method: 'DELETE',
+        });
+        if (!res.ok) {
+          const j = await res.json().catch(() => ({}));
+          throw new Error(j.error || `HTTP ${res.status}`);
+        }
+        btn.closest('li')?.remove();
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = original;
+        alert(`Couldn't remove: ${err instanceof Error ? err.message : 'unknown'}`);
+      }
+    });
+  });
 </script>
