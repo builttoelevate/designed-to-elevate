@@ -9,4 +9,4 @@ Disallow: /p/
 # /p/* is the private proposal namespace — fully blocked from crawl.
 # Each proposal also carries noindex, nofollow as belt-and-suspenders.
 
-Sitemap: https://designedtoelevate.co/sitemap.xml
+Sitemap: https://designedtoelevate.co/sitemap-index.xml
