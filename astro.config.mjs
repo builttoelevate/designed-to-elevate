@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import cloudflare from '@astrojs/cloudflare';
+import sitemap from '@astrojs/sitemap';
 
 // Production deployment on Cloudflare Pages at designedtoelevate.co
 //
@@ -22,6 +23,21 @@ export default defineConfig({
     assets: 'assets',
   },
   compressHTML: true,
+  // Auto-generates /sitemap-index.xml (+ /sitemap-0.xml) at build from the
+  // prerendered marketing pages. Replaces the old hand-maintained
+  // public/sitemap.xml so new/removed pages stay in sync automatically.
+  // Excludes the noindex / private routes (the ad landing page, brochure,
+  // private proposals at /p/*, and the whole authed /portal) so the sitemap
+  // only advertises pages we actually want indexed.
+  integrations: [
+    sitemap({
+      filter: (page) =>
+        !page.includes('/grow') &&
+        !page.includes('/brochure') &&
+        !page.includes('/p/') &&
+        !page.includes('/portal'),
+    }),
+  ],
   // Legacy URL redirects after the redesign:
   //   /work                 → /case-studies (the prior work page is replaced)
   //   /pricing              → /custom-lead-systems (founding-5 pricing is gone)
