@@ -350,3 +350,42 @@ Open the request to see what was done and any screenshots attached.`);
     replyTo: ADMIN_EMAIL,
   });
 }
+
+/* ── 5. client: new message on a request ───────────────────────────────── */
+export async function sendNewMessageEmail(args: ClientEmail & { preview?: string }) {
+  const url = clientRequestUrl(args.requestId);
+  const preview = (args.preview || '').trim();
+  const quote = preview ? `\n\n“${preview}”` : '';
+
+  const text = `Hi ${args.firstName},
+
+You have a new message on '${args.title}'.${quote}
+
+Open the request to read it and reply:
+${url}
+
+— Bill, Designed to Elevate`;
+
+  const bodyHtml = paragraphs(
+    `Hi ${args.firstName}, you have a new message on '${args.title}'.${quote}
+
+Open the request to read it and reply.`
+  );
+
+  const html = renderShell({
+    preheader: `New message on '${args.title}'.`,
+    title: `New message — ${args.title}`,
+    headline: 'You have a new message',
+    bodyHtml,
+    buttonText: 'Read & reply',
+    buttonUrl: url,
+  });
+
+  await send({
+    to: args.toEmail,
+    subject: `New message — ${args.title}`,
+    text,
+    html,
+    replyTo: ADMIN_EMAIL,
+  });
+}

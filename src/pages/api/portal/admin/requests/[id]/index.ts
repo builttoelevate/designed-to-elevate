@@ -20,6 +20,7 @@ import {
   sendStatusWaitingOnClientEmail,
   sendJobCompleteEmail,
 } from '../../../../../../lib/email';
+import { isClientNotificationEnabled } from '../../../../../../lib/notifications';
 
 const ALLOWED_STATUSES = new Set(['new', 'in_progress', 'waiting_on_client', 'complete']);
 const ALLOWED_BILLING = new Set(['included', 'billable', 'needs_estimate', 'courtesy']);
@@ -94,6 +95,10 @@ async function notifyClient(
 ) {
   try {
     const admin = createServiceSupabase();
+
+    const key = kind === 'complete' ? 'job_complete' : 'status_waiting_on_client';
+    if (!(await isClientNotificationEnabled(admin, clientId, key))) return;
+
     const { data: client } = await admin
       .from('clients')
       .select('business_name, primary_contact_email')
