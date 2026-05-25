@@ -197,61 +197,60 @@ const faqSchema = {
     { name: 'Barbershop Websites', url: `${SITE}/barbershop-websites` },
   ]} />
 
-  <!-- MINIMAL LANDING HEADER — no nav, no menu, no dropdowns. -->
-  <header class="relative z-30 w-full border-b border-line/60">
-    <div class="mx-auto max-w-7xl px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-3 sm:gap-4">
-      <a href="#top" class="flex items-center" aria-label="Designed to Elevate">
-        <img
-          src="/logo-wordmark-orange.png"
-          alt="Designed to Elevate"
-          width="320"
-          height="96"
-          class="h-8 sm:h-10 w-auto"
-        />
-      </a>
-      <div class="flex items-center gap-2 sm:gap-3">
-        <a
-          href={PHONE_TEL}
-          class="inline-flex items-center gap-1.5 sm:gap-2 font-display font-medium text-[0.78rem] sm:text-[0.85rem] text-text-soft hover:text-accent transition-colors px-2 py-2 rounded-md"
-          aria-label={`Call or text Bill at ${PHONE_DISPLAY}`}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/>
-          </svg>
-          <span class="hidden xs:inline sm:inline">{PHONE_DISPLAY}</span>
-          <span class="xs:hidden sm:hidden">Call</span>
-        </a>
-        <a href={QUOTE_HREF} class="btn-primary !py-2.5 !px-3.5 sm:!px-4 !text-[0.78rem] sm:!text-[0.85rem] whitespace-nowrap">
-          Get a Free Quote
-          <span aria-hidden="true">↗</span>
-        </a>
-      </div>
-    </div>
-  </header>
-
   <main>
-    <!-- HERO -->
-    <section id="top" class="relative overflow-hidden border-b border-line">
-      <!-- Mobile-safe parallax: an actual position:fixed element instead of
-           background-attachment:fixed (which iOS Safari and most mobile browsers
-           silently drop). IntersectionObserver fades it out once the hero leaves
-           the viewport so it doesn't bleed through later sections. -->
+    <!-- HERO — the minimal landing header sits over the same background photo
+         so the dark overlay covers it too. The photo is contained to this block
+         (no position:fixed, no fade JS), so it can't bleed into or flash out of
+         later sections while scrolling on mobile. -->
+    <div id="top" class="relative overflow-hidden border-b border-line">
+      <!-- Background photo, contained to this hero block. -->
       <div
-        data-hero-fixed-bg
-        class="fixed inset-0 z-0 bg-cover bg-right md:bg-center pointer-events-none opacity-0 transition-opacity duration-200 [transform:translateZ(0)]"
+        class="absolute inset-0 z-0 bg-cover bg-right md:bg-center [transform:translateZ(0)]"
         style="background-image: url('/barbershop-websites/hero-bg-barbershop-interior.png');"
         aria-hidden="true"
       ></div>
-      <!-- Subtle left-darkening so the headline stays legible — the source photo is already
-           near-black on the left, so we only need a light touch here. -->
+      <!-- Subtle left-darkening so the headline stays legible. -->
       <div class="absolute inset-0 z-[1] bg-gradient-to-r from-bg/70 via-bg/35 to-bg/10" aria-hidden="true"></div>
-      <!-- Bottom-only vignette to blend the hero into the next dark section. -->
+      <!-- Bottom vignette to blend the hero into the next dark section. -->
       <div class="absolute inset-0 z-[1] bg-gradient-to-b from-transparent via-transparent to-bg/65" aria-hidden="true"></div>
       <div class="grid-bg absolute inset-0 z-[1] opacity-15" aria-hidden="true"></div>
-      <!-- Dark black wash over the photo (replaces the previous orange accent glow). -->
+      <!-- Dark black wash over the photo. -->
       <div class="absolute inset-0 z-[1] bg-black/55" aria-hidden="true"></div>
 
-      <div class="relative z-10 mx-auto max-w-6xl px-5 sm:px-8 pt-10 sm:pt-16 pb-14 sm:pb-20">
+      <!-- MINIMAL LANDING HEADER — no nav, transparent over the hero photo. -->
+      <header class="relative z-30 w-full">
+        <div class="mx-auto max-w-7xl px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-3 sm:gap-4">
+          <a href="#top" class="flex items-center" aria-label="Designed to Elevate">
+            <img
+              src="/logo-wordmark-orange.png"
+              alt="Designed to Elevate"
+              width="320"
+              height="96"
+              class="h-8 sm:h-10 w-auto"
+            />
+          </a>
+          <div class="flex items-center gap-2 sm:gap-3">
+            <a
+              href={PHONE_TEL}
+              class="inline-flex items-center gap-1.5 sm:gap-2 font-display font-medium text-[0.78rem] sm:text-[0.85rem] text-text-soft hover:text-accent transition-colors px-2 py-2 rounded-md"
+              aria-label={`Call or text Bill at ${PHONE_DISPLAY}`}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/>
+              </svg>
+              <span class="hidden xs:inline sm:inline">{PHONE_DISPLAY}</span>
+              <span class="xs:hidden sm:hidden">Call</span>
+            </a>
+            <a href={QUOTE_HREF} class="btn-primary !py-2.5 !px-3.5 sm:!px-4 !text-[0.78rem] sm:!text-[0.85rem] whitespace-nowrap">
+              Get a Free Quote
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <!-- HERO CONTENT -->
+      <div class="relative z-10 mx-auto max-w-6xl px-5 sm:px-8 pt-6 sm:pt-10 pb-14 sm:pb-20">
         <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
           <div>
             <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Barbershop Websites</span>
@@ -292,7 +291,7 @@ const faqSchema = {
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
     <!-- PAIN -->
     <section class="relative border-b border-line">
@@ -681,20 +680,4 @@ const faqSchema = {
     </div>
   </div>
 
-  <script>
-    // Fade the fixed hero background in only while the hero is in view, so it
-    // doesn't show through later sections that have transparent backgrounds.
-    (() => {
-      const bg = document.querySelector<HTMLElement>('[data-hero-fixed-bg]');
-      const hero = document.getElementById('top');
-      if (!bg || !hero || !('IntersectionObserver' in window)) {
-        if (bg) bg.style.opacity = '1';
-        return;
-      }
-      new IntersectionObserver(
-        ([entry]) => { bg.style.opacity = entry.isIntersecting ? '1' : '0'; },
-        { threshold: 0 }
-      ).observe(hero);
-    })();
-  </script>
 </LandingLayout>
