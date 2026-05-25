@@ -198,25 +198,29 @@ const faqSchema = {
   ]} />
 
   <main>
-    <!-- HERO — the minimal landing header sits over the same background photo
-         so the dark overlay covers it too. The photo is contained to this block
-         (no position:fixed, no fade JS), so it can't bleed into or flash out of
-         later sections while scrolling on mobile. -->
-    <div id="top" class="relative overflow-hidden border-b border-line">
-      <!-- Background photo, contained to this hero block. -->
-      <div
-        data-hero-parallax
-        class="absolute inset-0 z-0 bg-cover bg-right md:bg-center will-change-transform [transform:translateZ(0)]"
-        style="background-image: url('/barbershop-websites/hero-bg-barbershop-interior.png');"
-        aria-hidden="true"
-      ></div>
-      <!-- Subtle left-darkening so the headline stays legible. -->
-      <div class="absolute inset-0 z-[1] bg-gradient-to-r from-bg/70 via-bg/35 to-bg/10" aria-hidden="true"></div>
-      <!-- Bottom vignette to blend the hero into the next dark section. -->
-      <div class="absolute inset-0 z-[1] bg-gradient-to-b from-transparent via-transparent to-bg/65" aria-hidden="true"></div>
-      <div class="grid-bg absolute inset-0 z-[1] opacity-15" aria-hidden="true"></div>
-      <!-- Dark black wash over the photo. -->
-      <div class="absolute inset-0 z-[1] bg-black/55" aria-hidden="true"></div>
+    <!-- FIXED HERO BACKGROUND — pinned to the viewport with position:fixed so it
+         stays still while content scrolls over it. Replaces the old JS scroll-
+         parallax, which repainted a frame behind the native scroll and bounced
+         on mobile. Sits at z-0; the hero is transparent to reveal it, and all
+         content below is wrapped in an opaque bg-bg layer that scrolls over it. -->
+    <div class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+      <img
+        src="/barbershop-websites/hero-bg-barbershop-interior.jpg"
+        alt=""
+        class="absolute inset-0 h-full w-full object-cover object-right md:object-center"
+        width="1672"
+        height="941"
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+      />
+      <div class="absolute inset-0 bg-black/55"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-bg/70 via-bg/35 to-bg/10"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bg"></div>
+    </div>
+
+    <!-- HERO — the minimal landing header sits over the same fixed background. -->
+    <div id="top" class="relative z-10 overflow-hidden border-b border-line">
 
       <!-- MINIMAL LANDING HEADER — no nav, transparent over the hero photo. -->
       <header class="relative z-30 w-full">
@@ -293,6 +297,10 @@ const faqSchema = {
         </div>
       </div>
     </div>
+
+    <!-- CONTENT OVER THE FIXED BACKGROUND — opaque bg-bg so the hero photo only
+         shows behind the hero, then this layer scrolls up over it. -->
+    <div class="relative z-10 bg-bg">
 
     <!-- PAIN -->
     <section class="relative border-b border-line">
@@ -649,10 +657,11 @@ const faqSchema = {
         </p>
       </div>
     </section>
+    </div>
   </main>
 
   <!-- MINIMAL FOOTER — no nav, no service links. Copyright + phone + email only. -->
-  <footer class="relative z-10 border-t border-line">
+  <footer class="relative z-10 border-t border-line bg-bg">
     <div class="mx-auto max-w-7xl px-5 sm:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.85rem] text-text-muted">
       <div>© 2026 Designed to Elevate. All rights reserved.</div>
       <div class="flex flex-wrap gap-4 justify-center">
@@ -680,29 +689,5 @@ const faqSchema = {
       </a>
     </div>
   </div>
-
-  <script>
-    // Pin the hero photo to the viewport while the hero is on screen (the old
-    // "fixed background" feel) WITHOUT position:fixed — the photo stays inside
-    // the overflow-hidden hero block, so it can never bleed into later sections.
-    (() => {
-      const bg = document.querySelector<HTMLElement>('[data-hero-parallax]');
-      const hero = document.getElementById('top');
-      if (!bg || !hero) return;
-      let ticking = false;
-      const update = () => {
-        const max = hero.offsetHeight;
-        const y = Math.min(Math.max(window.scrollY, 0), max);
-        bg.style.transform = `translate3d(0, ${y}px, 0)`;
-        ticking = false;
-      };
-      const onScroll = () => {
-        if (!ticking) { ticking = true; requestAnimationFrame(update); }
-      };
-      update();
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', update, { passive: true });
-    })();
-  </script>
 
 </LandingLayout>
