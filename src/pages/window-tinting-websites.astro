@@ -1,0 +1,675 @@
+---
+// /window-tinting-websites — dedicated Google Ads landing page for WINDOW TINT
+// SHOP OWNERS (not their end customers). No nav, single conversion path.
+// Minimal header + footer baked in here so we don't reuse SiteHeader/SiteFooter
+// (which would leak paid traffic off to other pages). Mirrors the
+// auto-detailing-websites + barbershop-websites LPs. noindex so it doesn't
+// compete with the indexed /window-tint-websites SEO page. LandingLayout
+// provides the global <head> (meta, OG/Twitter, canonical), the sticky-mobile-
+// CTA observer JS, and the call/text dialog.
+import LandingLayout from '../layouts/LandingLayout.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
+
+const SITE = 'https://designedtoelevate.co';
+const PHONE_DISPLAY = '(740) 617-6488';
+const PHONE_TEL = 'tel:7406176488';
+const EMAIL = 'bilsonxnc@gmail.com';
+const QUOTE_HREF = '/contact?service=window-tint&from=window-tinting-websites';
+
+// Service schema for a web design studio that builds tint-shop websites.
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Window Tint Shop Website Design',
+  serviceType: 'Website and quote-system design for window tint shops',
+  description:
+    'Window tint shop website builder for auto, residential, and commercial tint. Instant auto-tint quote flows, in-home residential estimates, commercial site assessments, lead capture, and a text-to-book handoff.',
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
+  audience: { '@type': 'BusinessAudience', name: 'Window tint shops (auto, residential, commercial)' },
+  url: `${SITE}/window-tinting-websites`,
+};
+
+const painCards = [
+  {
+    title: "One generic form can't sell three different customers",
+    body: 'Your auto, residential, and commercial buyers don’t shop the same way. A single "contact us" box treats them like they do — and loses all three.',
+  },
+  {
+    title: 'Auto-tint buyers want a price now, not a callback',
+    body: "Tint is a fast, transactional buy. If your site can't price a two-front carbon job on a Civic in two minutes, they're already tapping the next shop's Google listing.",
+  },
+  {
+    title: 'Home and commercial leads need a different close',
+    body: 'A homeowner with a sun-bleached floor and a property manager with a glare problem don’t want an instant price. They want an estimate booked. A flat form books neither.',
+  },
+  {
+    title: 'Every lead that doesn’t call is gone',
+    body: 'No name, no vehicle, no scope, no follow-up. A form that only fires when someone finishes is a form that loses everyone who doesn’t.',
+  },
+];
+
+const whatYouGet = [
+  'Three quote paths, one site — auto instant-quote, residential in-home estimate, commercial site assessment',
+  'Vehicle-accurate auto pricing across 17 body-class buckets',
+  'Film tier comparison that sells the upgrade — Carbon, Nano Ceramic, Ceramic IR',
+  'Per-zone darkness selection with a "recommend for me" branch for the undecided',
+  'Lead capture before the final step — partial quotes still land in your dashboard',
+  'The finished quote texted straight to your phone to book',
+  'A dashboard showing every quote, vehicle, film, and add-on the customer picked',
+  'Local SEO structure so you rank for "window tint [town]," not just your shop name',
+];
+
+const segments = [
+  {
+    tag: 'Transactional',
+    title: 'Auto tint: price it in two minutes',
+    body: 'Instant-quote flow. The customer picks their vehicle, film tier, coverage, and darkness — and sees a real price before they ever call. Built to catch the buyer who’s deciding right now.',
+    cta: 'Get My Quote → 2 Min',
+  },
+  {
+    tag: 'Consultative',
+    title: 'Residential tint: book the estimate',
+    body: 'Scenario-led pages name the problem — the bleached line on the hardwood, the bedroom that hits 85° by noon — then route the homeowner to a booked in-home estimate instead of a price they won’t trust sight-unseen.',
+    cta: 'Schedule In-Home Estimate',
+  },
+  {
+    tag: 'Problem-first',
+    title: 'Commercial tint: solve, don’t sell tiers',
+    body: 'Property managers shop by what they’re fixing — heat, security, privacy, glare. The site organizes by problem, handles after-hours scheduling and certificate-of-insurance requests, and routes to a site assessment.',
+    cta: 'Schedule Site Assessment',
+  },
+];
+
+const caseFacts = [
+  'Live in production on my own shop',
+  '17 vehicle body-class buckets for accurate pricing',
+  'Carbon, Nano Ceramic & Ceramic IR compared inline',
+  'Per-zone darkness with a recommend-for-me branch',
+  'Partial-lead capture — no quote lost',
+];
+
+const caseBullets = [
+  'Instant auto-tint pricing across 17 body-class buckets — coupe to crew-cab truck',
+  'Film tiers shown inline so customers see the value gap (Carbon → Nano Ceramic → Ceramic IR)',
+  'Per-zone darkness/VLT selection, plus a "recommend for me" branch for the undecided',
+  'Sun strips, full windshield, roof, and old-tint removal priced automatically',
+  'Lead capture before the final step — partial quotes still land in the dashboard',
+  'The finished quote deep-links into a text to book — no phone tag',
+];
+
+const proofItems = [
+  {
+    src: '/wizard/step-2-tint.png',
+    title: 'Tint exactly what they want',
+    description:
+      'Full vehicle, two fronts, windshield, or a sun strip — the customer picks the coverage, and the price follows. No "call for details."',
+  },
+  {
+    src: '/wizard/step-5-summary.png',
+    title: 'An estimate they can adjust',
+    description:
+      'Customers see an itemized quote they can toggle line by line, with a live subtotal, tax, and total — before anything is booked.',
+  },
+  {
+    src: '/wizard/step-6-final-quote.png',
+    title: 'Priced and ready to book',
+    description:
+      'A real quote with a number, then one tap to text it to the shop or book online. The lead is already captured either way.',
+  },
+];
+
+const signatureFeatures = [
+  {
+    title: 'Vehicle-accurate pricing, automatically',
+    body: 'Behind the scenes, the engine maps every vehicle to one of 17 body-class buckets — coupe, compact SUV, 3-row, crew-cab truck, minivan. A Wrangler and a sedan get priced right, without you touching a thing.',
+  },
+  {
+    title: 'Film tiers that upsell themselves',
+    body: 'Carbon, Nano Ceramic, and Ceramic IR shown side by side, with the upgrade delta right there — "only +$X from Carbon." Customers talk themselves into the better film. Your average ticket climbs without a sales pitch.',
+  },
+  {
+    title: 'The ad knows where to land',
+    body: 'Running a Google Ad for ceramic tint? The link drops the customer straight into the right flow with a service parameter — no menu, no friction. Every campaign points at the exact quote it promised.',
+  },
+];
+
+const howItWorks = [
+  {
+    label: 'Fast on a phone, ad-ready',
+    value:
+      'Built on Astro and deployed on Vercel — sub-second mobile loads, which keeps Google Ads Quality Score high and stops paid clicks from bouncing.',
+  },
+  {
+    label: 'Your booking and payments stay yours',
+    value:
+      'Your scheduler and POS keep running. The quote hands off to a text or your booking link, with an optional Stripe deposit and an add-to-calendar confirmation to hold the slot.',
+  },
+  {
+    label: 'Every quote in one dashboard',
+    value:
+      'Finished or abandoned, each quote lands with the vehicle, film, coverage, darkness, and add-ons the customer picked — so follow-up isn’t a phone-tag exercise.',
+  },
+  {
+    label: 'Tracking baked in',
+    value:
+      'Funnel analytics on every step, tagged by service, show where each segment drops off and which ads bring booked work — so you scale what converts and kill what doesn’t.',
+  },
+];
+
+const whoFor = [
+  'You run auto tint, residential, commercial — or any two of the three',
+  'Your pricing changes by vehicle, film tier, coverage, and darkness',
+  'You’re running — or about to run — Google Ads or Google Business Profile clicks',
+  'You’re tired of one generic form trying to sell three different buyers',
+  'You want the lead captured even when the customer doesn’t call',
+];
+
+const faqs = [
+  {
+    q: 'How much does a window tint shop website cost?',
+    a: "It's a custom build — a quote system shaped around the segments you run and how you price them. There's no flat sticker, because a single auto-tint flow and a full auto-plus-residential-plus-commercial build aren't the same project. Book a call, I'll look at what you've got, and I'll scope it straight.",
+  },
+  {
+    q: 'Can one site really handle auto, residential, and commercial tint?',
+    a: "Yes — that's the whole point. Each segment gets its own flow and call-to-action on the same site. Auto tint gets instant pricing; residential and commercial route to booked estimates. One site, three buyers, three ways to close.",
+  },
+  {
+    q: 'How long does it take?',
+    a: 'About 3–5 weeks from kickoff to launch, depending on how many of the three segments you run and how deep the pricing logic goes.',
+  },
+  {
+    q: 'Do I have to change how I take bookings or payments?',
+    a: 'No. Whatever you use to schedule and take payment keeps running. The finished quote hands off to a pre-filled text or your online booking link, with an optional Stripe deposit if you want to hold the slot.',
+  },
+  {
+    q: 'Can you match my exact film tiers and pricing?',
+    a: 'Yes. The engine is built around your real pricing — by vehicle, film tier, coverage, darkness, and add-on. When your prices change, you update them yourself and the site reflects it on the next load — no redeploy, no waiting on me.',
+  },
+  {
+    q: 'Will it rank on Google too?',
+    a: "It's built for paid traffic first, but on clean, fast, semantic code with local SEO structure — so it earns its way up for searches like \"window tint [your town]\" over time. I won't promise a ranking; I'll build it so it has every reason to climb.",
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<LandingLayout
+  title="Window Tint Shop Websites That Turn Clicks Into Booked Jobs"
+  description="Window tint shop websites with quote systems — instant auto-tint pricing, in-home residential estimates, and commercial site assessments. Book a free call."
+  pathname="window-tinting-websites"
+  noindex={true}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Window Tint Shop Websites', url: `${SITE}/window-tinting-websites` },
+  ]} />
+
+  <main>
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <!-- MINIMAL LANDING HEADER — no nav, transparent over the hero. -->
+      <header class="relative z-30 w-full">
+        <div class="mx-auto max-w-7xl px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-3 sm:gap-4">
+          <a href="#top" class="flex items-center" aria-label="Designed to Elevate">
+            <img
+              src="/logo-wordmark-orange.png"
+              alt="Designed to Elevate — Ohio web design studio for service businesses"
+              width="320"
+              height="96"
+              class="h-8 sm:h-10 w-auto"
+            />
+          </a>
+          <div class="flex items-center gap-2 sm:gap-3">
+            <a
+              href={PHONE_TEL}
+              class="inline-flex items-center gap-1.5 sm:gap-2 font-display font-medium text-[0.78rem] sm:text-[0.85rem] text-text-soft hover:text-accent transition-colors px-2 py-2 rounded-md"
+              aria-label={`Call or text Bill at ${PHONE_DISPLAY}`}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/>
+              </svg>
+              <span class="hidden xs:inline sm:inline">{PHONE_DISPLAY}</span>
+              <span class="xs:hidden sm:hidden">Call</span>
+            </a>
+            <a href={QUOTE_HREF} class="btn-primary !py-2.5 !px-3.5 sm:!px-4 !text-[0.78rem] sm:!text-[0.85rem] whitespace-nowrap">
+              Get a Free Quote
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <!-- HERO CONTENT -->
+      <div class="relative z-10 mx-auto max-w-6xl px-5 sm:px-8 pt-6 sm:pt-10 pb-14 sm:pb-20">
+        <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
+          <div>
+            <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Window Tint Shop Websites</span>
+            <h1 class="mt-5 text-[2.2rem] sm:text-[2.9rem] lg:text-[3.3rem] leading-[1.04] font-bold tracking-tight">
+              Window tint shop websites that sell auto, home, and commercial — <span class="text-accent">the way each one actually buys.</span>
+            </h1>
+            <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.1rem] leading-relaxed max-w-2xl">
+              Auto tint, residential, commercial — three different customers, three different ways to close them. We build the quote flow, the pricing logic, and the call-to-action each segment needs. The same tint wizard I built for my own shop, Fitchin.
+            </p>
+
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href={QUOTE_HREF} data-hero-cta class="btn-primary">
+                Book a Tint Website Call
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a href="#segments" class="btn-ghost">
+                How we build by segment
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+
+            <div class="mt-6 text-[0.9rem] text-text-muted">
+              Custom quote system &nbsp;·&nbsp; built around your pricing &nbsp;·&nbsp; 3–5 week build
+            </div>
+          </div>
+
+          <div class="relative">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
+            <div class="relative card overflow-hidden max-w-[20rem] mx-auto">
+              <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
+                <img
+                  src="/showcase/fitchin-mobile.png"
+                  alt="Fitchin window tint shop website on a phone, leading with heat, glare, and fade protection and a 'See your price in 2 min' quote button."
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  width="1320"
+                  height="2678"
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAIN -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Problem</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.5rem] leading-[1.07] font-bold">
+            Most tint shops run one website for three completely different buyers.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            It’s not a hustle problem. It’s a system problem. A single contact form can’t price an auto job, book a home estimate, and scope a commercial install — so it does none of them well.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 gap-5">
+          {painCards.map((c) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{c.title}</h3>
+              <p class="text-[0.95rem] text-text-soft leading-relaxed">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT THIS ACTUALLY IS -->
+    <section class="relative border-b border-line bg-surface-1/30">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What You Get</span>
+        <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+          What this actually is.
+        </h2>
+        <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          Not just a prettier homepage. A window tint shop website builder’s worth of pricing logic, built around how your shop actually books work:
+        </p>
+
+        <ul class="mt-9 grid sm:grid-cols-2 gap-4">
+          {whatYouGet.map((b) => (
+            <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- THREE-PATTERN ARCHITECTURE (centerpiece differentiator) -->
+    <section id="segments" class="relative border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Built by Segment</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.5rem] leading-[1.05] font-bold">
+            We build sites that match how each tint customer actually buys.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Auto, residential, and commercial are three different sales. Each one gets the flow, the pricing logic, and the call-to-action that closes it — on the same site.
+          </p>
+        </div>
+
+        <div class="mt-12 grid md:grid-cols-3 gap-6">
+          {segments.map((s) => (
+            <article class="card card-hover p-7 flex flex-col gap-4">
+              <span class="inline-flex w-fit items-center rounded-full border border-line px-2.5 py-1 font-display text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
+                {s.tag}
+              </span>
+              <h3 class="font-display font-semibold text-[1.2rem] leading-snug text-text">{s.title}</h3>
+              <p class="text-[0.95rem] text-text-soft leading-relaxed flex-1">{s.body}</p>
+              <div class="pt-3 border-t border-line">
+                <div class="font-display text-[0.68rem] uppercase tracking-[0.16em] text-text-muted mb-2">The CTA we build for it</div>
+                <span class="inline-flex items-center gap-1.5 rounded-md bg-accent/12 px-3 py-1.5 font-display font-semibold text-[0.85rem] text-accent">
+                  {s.cta}
+                </span>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <figure class="mt-14">
+          <div class="relative">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/20 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-50" aria-hidden="true"></div>
+            <div class="relative card overflow-hidden">
+              <img
+                src="/home/features/fitchin-guided-tint.png"
+                alt="Guided Tint Selection screen from the live Fitchin auto-tint flow, comparing Carbon, Nano Ceramic, and Ceramic IR film tiers side by side with prices and an upgrade callout."
+                class="block w-full h-auto"
+                width="1448"
+                height="1086"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </div>
+          <figcaption class="mt-4 text-[0.92rem] text-text-muted text-center max-w-2xl mx-auto">
+            The auto-tint instant-quote flow, live on my own shop: film tiers compared side by side, priced by vehicle.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- FEATURED BUILD (Fitchin) -->
+    <section class="relative border-b border-line bg-surface-1/30">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl mb-12">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Featured Build</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.5rem] leading-[1.05] font-bold">
+            Fitchin Automotive Detailing &amp; Window Tinting
+          </h2>
+          <div class="mt-3 text-text-muted text-[0.95rem]">Coshocton, Ohio</div>
+        </div>
+
+        <div class="grid lg:grid-cols-[0.9fr_1fr] gap-10 lg:gap-14 items-center">
+          <div class="relative">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-50" aria-hidden="true"></div>
+            <article class="relative card p-7 sm:p-8">
+              <span class="inline-flex items-center gap-2 rounded-full bg-accent px-2.5 py-1 font-display text-[0.62rem] font-bold uppercase tracking-[0.16em] text-bg">
+                <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
+                  <span class="absolute inline-flex h-1.5 w-1.5 rounded-full bg-bg/60 animate-ping"></span>
+                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-bg"></span>
+                </span>
+                Live in Production
+              </span>
+              <ul class="mt-6 space-y-4">
+                {caseFacts.map((f) => (
+                  <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
+                    <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+
+          <div>
+            <p class="text-text-soft text-[1.05rem] leading-relaxed">
+              Fitchin is my own shop — where this whole system started. I built it from nothing, ran the bay, wrote the quotes, and watched leads slip away because the old site couldn’t price tint. So I rebuilt it. Now the site runs a guided tint wizard that handles every vehicle, every film tier, and every add-on end to end — and captures the lead even when the customer doesn’t finish.
+            </p>
+
+            <ul class="mt-7 space-y-3">
+              {caseBullets.map((b) => (
+                <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+
+            <p class="mt-7 pt-6 border-t border-line text-text-soft text-[0.98rem] italic leading-relaxed">
+              The same engine runs auto, residential, and commercial — priced and routed the way each one actually closes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIGNATURE FEATURES -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Signature Features</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+            Three things a real tint wizard does that a contact form can’t.
+          </h2>
+        </div>
+
+        <div class="mt-14 grid md:grid-cols-3 gap-8 lg:gap-10">
+          <div class="flex flex-col gap-4">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2M5 11l1.6-4.8A2 2 0 0 1 8.5 5h7a2 2 0 0 1 1.9 1.2L19 11"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-[1.15rem] text-text">{signatureFeatures[0].title}</h3>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">{signatureFeatures[0].body}</p>
+          </div>
+
+          <div class="flex flex-col gap-4">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-[1.15rem] text-text">{signatureFeatures[1].title}</h3>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">{signatureFeatures[1].body}</p>
+          </div>
+
+          <div class="flex flex-col gap-4">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-[1.15rem] text-text">{signatureFeatures[2].title}</h3>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">{signatureFeatures[2].body}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROOF -->
+    <section class="relative border-b border-line bg-surface-1/30">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Real Screens</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+            Real screens from a live tint quote system — not a mockup.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            From the live Fitchin install. The same flow runs auto, residential, and commercial.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {proofItems.map((p) => (
+            <figure class="card overflow-hidden flex flex-col">
+              <div class="relative aspect-[10/13] bg-surface-2 overflow-hidden border-b border-line">
+                <img
+                  src={p.src}
+                  alt={p.title}
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  width="1320"
+                  height="2868"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <figcaption class="p-5 flex flex-col gap-2">
+                <h3 class="font-display font-semibold text-[1rem] text-text">{p.title}</h3>
+                <p class="text-[0.92rem] text-text-soft leading-relaxed">{p.description}</p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> How It Works</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+            Built to feel simple for customers — and powerful behind the scenes.
+          </h2>
+        </div>
+
+        <div class="mt-10 grid sm:grid-cols-2 gap-5">
+          {howItWorks.map((t) => (
+            <div class="card p-6">
+              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">{t.label}</div>
+              <div class="text-[1rem] text-text leading-relaxed">{t.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- WHO THIS IS FOR -->
+    <section class="relative border-b border-line bg-surface-1/30">
+      <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Fit Check</span>
+        <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+          This is built for tint shops ready to stop quoting over the phone.
+        </h2>
+        <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+          This is a good fit if:
+        </p>
+
+        <ul class="mt-7 space-y-3">
+          {whoFor.map((b) => (
+            <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p class="mt-8 text-text-muted text-[0.95rem] italic">
+          This isn’t for shops that want the cheapest one-page template or a contact form bolted onto a stock theme.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-3xl px-5 sm:px-8 py-20 sm:py-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> FAQ</span>
+        <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+          Honest answers, no fine print.
+        </h2>
+
+        <div class="mt-10 space-y-3">
+          {faqs.map((f, i) => (
+            <details class="card p-6 group" open={i === 0}>
+              <summary class="cursor-pointer list-none font-display font-semibold text-[1rem] sm:text-[1.05rem] text-text flex items-start justify-between gap-4">
+                <span>{f.q}</span>
+                <span class="text-accent text-[1.2rem] leading-none mt-0.5 group-open:rotate-45 transition-transform" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-4 text-[0.97rem] text-text-soft leading-relaxed">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section id="apply" class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.1rem] sm:text-[2.9rem] leading-[1.05] font-bold tracking-tight">
+          Three tint customers. <span class="text-accent">One site that knows the difference.</span>
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Give your shop a website that prices auto tint on the spot, books home and commercial estimates, and captures every lead in between.
+        </p>
+
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a href={QUOTE_HREF} class="btn-primary">
+            Book a Tint Website Call
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href={PHONE_TEL} class="btn-ghost">
+            Call/Text Bill
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <p class="mt-6 text-[0.95rem] text-text-soft">
+          Or call/text directly:
+          <a href={PHONE_TEL} class="text-accent font-medium underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors whitespace-nowrap">{PHONE_DISPLAY}</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- MINIMAL FOOTER — no service nav. Copyright + contact + required legal only. -->
+  <footer class="relative z-10 border-t border-line">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.85rem] text-text-muted">
+      <div>© 2026 Designed to Elevate. All rights reserved.</div>
+      <div class="flex flex-wrap gap-4 justify-center items-center">
+        <a href={PHONE_TEL} class="hover:text-accent transition-colors">{PHONE_DISPLAY}</a>
+        <a href={`mailto:${EMAIL}`} class="hover:text-accent transition-colors">{EMAIL}</a>
+        <a href="/privacy" class="hover:text-accent transition-colors">Privacy</a>
+        <a href="/terms" class="hover:text-accent transition-colors">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- STICKY MOBILE CTA — controlled by LandingLayout's IntersectionObserver
+       which watches [data-hero-cta] and #apply. -->
+  <div
+    data-sticky-cta
+    class="md:hidden fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/85 px-3 py-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] translate-y-full opacity-0 pointer-events-none transition-[transform,opacity] duration-300 ease-out"
+    aria-label="Window tint website conversion actions"
+  >
+    <div class="flex gap-2">
+      <a href={PHONE_TEL} class="btn-ghost flex-1 !px-2 !text-[0.85rem]" aria-label={`Call or text Bill at ${PHONE_DISPLAY}`}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+        Call/Text
+      </a>
+      <a href={QUOTE_HREF} class="btn-primary flex-1 !px-2 !text-[0.85rem]">
+        Book a Call
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </div>
+
+</LandingLayout>
