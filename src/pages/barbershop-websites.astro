@@ -205,7 +205,8 @@ const faqSchema = {
     <div id="top" class="relative overflow-hidden border-b border-line">
       <!-- Background photo, contained to this hero block. -->
       <div
-        class="absolute inset-0 z-0 bg-cover bg-right md:bg-center [transform:translateZ(0)]"
+        data-hero-parallax
+        class="absolute inset-0 z-0 bg-cover bg-right md:bg-center will-change-transform [transform:translateZ(0)]"
         style="background-image: url('/barbershop-websites/hero-bg-barbershop-interior.png');"
         aria-hidden="true"
       ></div>
@@ -679,5 +680,29 @@ const faqSchema = {
       </a>
     </div>
   </div>
+
+  <script>
+    // Pin the hero photo to the viewport while the hero is on screen (the old
+    // "fixed background" feel) WITHOUT position:fixed — the photo stays inside
+    // the overflow-hidden hero block, so it can never bleed into later sections.
+    (() => {
+      const bg = document.querySelector<HTMLElement>('[data-hero-parallax]');
+      const hero = document.getElementById('top');
+      if (!bg || !hero) return;
+      let ticking = false;
+      const update = () => {
+        const max = hero.offsetHeight;
+        const y = Math.min(Math.max(window.scrollY, 0), max);
+        bg.style.transform = `translate3d(0, ${y}px, 0)`;
+        ticking = false;
+      };
+      const onScroll = () => {
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      };
+      update();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', update, { passive: true });
+    })();
+  </script>
 
 </LandingLayout>
