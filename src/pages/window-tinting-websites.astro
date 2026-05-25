@@ -216,10 +216,29 @@ const faqSchema = {
   ]} />
 
   <main>
+    <!-- FIXED HERO BACKGROUND — pinned to the viewport with position:fixed so it
+         stays still while content scrolls over it (works on iOS Safari, which
+         ignores background-attachment:fixed). Sits at z-0; the hero below is
+         transparent to reveal it, and everything after the hero is wrapped in an
+         opaque bg-bg layer that scrolls over the top of it. -->
+    <div class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+      <img
+        src="/window-tint/tint-shop-hero.jpg"
+        alt=""
+        class="absolute inset-0 h-full w-full object-cover"
+        width="1672"
+        height="941"
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+      />
+      <div class="absolute inset-0 bg-bg/64"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-bg/88 via-bg/45 to-bg/20"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-bg/25 via-transparent to-bg"></div>
+    </div>
+
     <!-- HERO -->
-    <section id="top" class="relative overflow-hidden border-b border-line">
-      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
-      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+    <section id="top" class="relative z-10 overflow-hidden border-b border-line">
 
       <!-- MINIMAL LANDING HEADER — no nav, transparent over the hero. -->
       <header class="relative z-30 w-full">
@@ -300,6 +319,10 @@ const faqSchema = {
         </div>
       </div>
     </section>
+
+    <!-- CONTENT OVER THE FIXED BACKGROUND — opaque bg-bg so the hero photo only
+         shows behind the hero, then this layer scrolls up over it. -->
+    <div class="relative z-10 bg-bg">
 
     <!-- PAIN -->
     <section class="relative border-b border-line">
@@ -638,10 +661,11 @@ const faqSchema = {
         </p>
       </div>
     </section>
+    </div>
   </main>
 
   <!-- MINIMAL FOOTER — no service nav. Copyright + contact + required legal only. -->
-  <footer class="relative z-10 border-t border-line">
+  <footer class="relative z-10 border-t border-line bg-bg">
     <div class="mx-auto max-w-7xl px-5 sm:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.85rem] text-text-muted">
       <div>© 2026 Designed to Elevate. All rights reserved.</div>
       <div class="flex flex-wrap gap-4 justify-center items-center">
