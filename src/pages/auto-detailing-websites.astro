@@ -1,0 +1,611 @@
+---
+// /auto-detailing-websites — dedicated Google Ads landing page for auto
+// detailing + ceramic coating shop OWNERS (not their end customers).
+// No nav, single conversion path. Minimal header + footer baked in here so we
+// don't reuse SiteHeader/SiteFooter (which would pull paid traffic off to other
+// pages). Mirrors the barbershop-websites LP structure. noindex so it doesn't
+// compete with the indexed /auto-detail-websites SEO page. LandingLayout still
+// provides the global <head>, sticky-mobile-CTA observer JS, and the call/text
+// dialog.
+import LandingLayout from '../layouts/LandingLayout.astro';
+import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
+
+const SITE = 'https://designedtoelevate.co';
+const PHONE_DISPLAY = '(740) 617-6488';
+const PHONE_TEL = 'tel:7406176488';
+const EMAIL = 'bilsonxnc@gmail.com';
+const QUOTE_HREF = '/contact?service=auto-detailing&from=auto-detailing-websites';
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Auto Detailing & Ceramic Coating Website Design',
+  serviceType: 'Website and quote-system design for auto detailing and ceramic coating shops',
+  description:
+    'Detailing and ceramic coating shop websites built around a real quote system — vehicle-by-vehicle pricing for detail packages and ceramic tiers, lead capture before the final step, and a text-to-book handoff. $4,495 setup + $545/month.',
+  provider: { '@id': `${SITE}/#organization` },
+  areaServed: { '@type': 'State', name: 'Ohio' },
+  audience: { '@type': 'BusinessAudience', name: 'Auto detailing and ceramic coating shops' },
+  url: `${SITE}/auto-detailing-websites`,
+  offers: {
+    '@type': 'Offer',
+    price: '4495',
+    priceCurrency: 'USD',
+    description: '$4,495 setup + $545/month ongoing care plan',
+  },
+};
+
+const painCards = [
+  {
+    title: "Your 'request a quote' form is really a phone-tag machine",
+    body: "Every submission is a name and a 'call me.' You call back, leave a voicemail, play tag for two days — and half of them already booked the shop that answered first.",
+  },
+  {
+    title: 'Detail and ceramic pricing is too layered for a flat form',
+    body: "A heavy-soil interior on a 3-row SUV isn't a Crystal+ coating on a sedan. A generic form can't price the difference, so it doesn't — it just collects a name and punts the work back to you.",
+  },
+  {
+    title: 'You lose the lead the second they leave',
+    body: 'If someone bails before calling, you never knew they were there. No vehicle, no service, no contact — nothing to follow up on.',
+  },
+  {
+    title: 'Your site looks nothing like the work you do',
+    body: 'You decontaminate paint and lay down System X by hand, then send people to a slow, generic site that looks like every other shop in the county.',
+  },
+];
+
+const whatYouGet = [
+  'A guided quote flow that prices detailing, ceramic, and add-ons by vehicle',
+  'Condition-aware questions that keep estimates accurate (pet hair, stains, heavy buildup)',
+  'Ceramic tier comparison that sells the upgrade for you — Crystal+, Pro+, Max G+',
+  'Lead capture before the final step — partial quotes still land in your dashboard',
+  'The finished quote texted straight to your phone to book',
+  'A dashboard showing every quote, vehicle, service, and add-on the customer picked',
+  'Local SEO structure so you rank for "[service] in [town]," not just your shop name',
+];
+
+const caseFacts = [
+  '378 vehicle configurations priced',
+  'Detailing, ceramic & tint in one guided flow',
+  'Partial-lead capture — no quote lost',
+  'Quote texts straight to the shop to book',
+  'Built on Astro + Vercel for sub-second mobile loads',
+];
+
+const caseBullets = [
+  'One quote flow across detailing, ceramic coating, tint, and add-ons — priced by vehicle',
+  'Ceramic tiers shown inline so customers see the value gap (Crystal+ → Pro+ → Max G+)',
+  'Condition-aware detailing questions — interior condition, pet hair, stains',
+  'Lead capture before the final step — partial quotes still land in the dashboard',
+  'The finished quote deep-links into a text to book — no phone tag',
+];
+
+const proofItems = [
+  {
+    src: '/wizard/step-1-service.png',
+    title: 'Pick the service',
+    description:
+      'Detailing, ceramic coating, or tint — your full menu in one guided flow. Customers self-select, then the questions adapt to what they chose.',
+  },
+  {
+    src: '/wizard/step-5-summary.png',
+    title: 'An estimate they can adjust',
+    description:
+      'Customers see an itemized quote they can toggle line by line, with a live subtotal, tax, and total — before anything is booked.',
+  },
+  {
+    src: '/wizard/step-6-final-quote.png',
+    title: 'Priced and ready to book',
+    description:
+      'A real estimate with a quote number, then one tap to text it to the shop or book online. The lead is already captured either way.',
+  },
+];
+
+const howItWorks = [
+  {
+    label: 'Fast on a phone, ad-ready',
+    value:
+      'Built on Astro and deployed on Vercel — sub-second mobile loads, which keeps Google Ads Quality Score high and stops paid clicks from bouncing.',
+  },
+  {
+    label: 'Your booking and payments stay yours',
+    value:
+      'Square, your scheduler, your POS all keep running. The quote hands off to a text or your booking link, with an optional Stripe deposit to hold the slot.',
+  },
+  {
+    label: 'Every quote in one dashboard',
+    value:
+      'Finished or abandoned, each quote lands with the vehicle, services, and add-ons the customer picked — so follow-up isn’t a phone-tag exercise.',
+  },
+  {
+    label: 'Tracking baked in',
+    value:
+      'Step-by-step analytics show where customers drop off and which ads bring booked work — so you scale what converts and kill what doesn’t.',
+  },
+];
+
+const whoFor = [
+  'You already do quality detailing, ceramic coating, or both',
+  'Your pricing changes by vehicle, condition, and package',
+  'You’re running — or about to run — Google Ads or Google Business Profile clicks',
+  'You’re tired of every quote turning into a phone call',
+  'You want the lead captured even when the customer doesn’t pick up the phone',
+];
+
+const faqs = [
+  {
+    q: 'How much does a detailing website with a quote system cost?',
+    a: "$4,495 one-time + $545/month. That's the Custom Lead System build — a custom quote wizard with tiered package logic, an upsell and add-on flow, advanced lead capture, and multi-service quote paths, same as the Fitchin system. Prefer to spread it out? $1,498/month for three months, then $545/month. The monthly covers hosting, the quote engine and pricing updates, your lead dashboard, analytics, small updates, and software costs — month-to-month, no long-term contract.",
+  },
+  {
+    q: 'Does it handle both detailing and ceramic coating?',
+    a: 'Yes — one quote flow prices detailing packages, ceramic tiers (Crystal+, Pro+, Max G+), and any add-ons, all by vehicle. If you also do window tint, that lives in the same flow. The questions adapt to whatever service the customer picks.',
+  },
+  {
+    q: 'How long does it take?',
+    a: 'About 3–5 weeks from kickoff to launch, depending on how many services you offer and how much pricing complexity we’re modelling.',
+  },
+  {
+    q: "What's the monthly fee for?",
+    a: 'Hosting, the quote engine and ongoing pricing updates, your lead dashboard, step-by-step analytics, small site updates, and software costs. Month-to-month — no long-term contract.',
+  },
+  {
+    q: 'Do I have to change how I take bookings or payments?',
+    a: 'No. Whatever you use to schedule and take payment keeps running. The finished quote hands off to a pre-filled text or your online booking link, with an optional Stripe deposit if you want to hold the slot before drop-off.',
+  },
+  {
+    q: 'Can you match my exact pricing?',
+    a: 'Yes. The engine is built around your real pricing — by vehicle size, package, condition, and add-on. When your prices change, you update them yourself and the site reflects it on the next load — no redeploy, no waiting on me.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<LandingLayout
+  title="Auto Detailing & Ceramic Coating Website Design with Quote Systems | Designed to Elevate"
+  description="Detailing and ceramic coating shop websites with a real quote system — prices the job by vehicle, captures the lead before they bounce, and texts the quote to your phone to book. See the Fitchin build."
+  pathname="auto-detailing-websites"
+  noindex={true}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <BreadcrumbSchema items={[
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Auto Detailing Websites', url: `${SITE}/auto-detailing-websites` },
+  ]} />
+
+  <main>
+    <!-- HERO -->
+    <div id="top" class="relative overflow-hidden border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-50" aria-hidden="true"></div>
+      <div class="accent-glow absolute -top-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <!-- MINIMAL LANDING HEADER — no nav, transparent over the hero. -->
+      <header class="relative z-30 w-full">
+        <div class="mx-auto max-w-7xl px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-3 sm:gap-4">
+          <a href="#top" class="flex items-center" aria-label="Designed to Elevate">
+            <img
+              src="/logo-wordmark-orange.png"
+              alt="Designed to Elevate"
+              width="320"
+              height="96"
+              class="h-8 sm:h-10 w-auto"
+            />
+          </a>
+          <div class="flex items-center gap-2 sm:gap-3">
+            <a
+              href={PHONE_TEL}
+              class="inline-flex items-center gap-1.5 sm:gap-2 font-display font-medium text-[0.78rem] sm:text-[0.85rem] text-text-soft hover:text-accent transition-colors px-2 py-2 rounded-md"
+              aria-label={`Call or text Bill at ${PHONE_DISPLAY}`}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/>
+              </svg>
+              <span class="hidden xs:inline sm:inline">{PHONE_DISPLAY}</span>
+              <span class="xs:hidden sm:hidden">Call</span>
+            </a>
+            <a href={QUOTE_HREF} class="btn-primary !py-2.5 !px-3.5 sm:!px-4 !text-[0.78rem] sm:!text-[0.85rem] whitespace-nowrap">
+              Get a Free Quote
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <!-- HERO CONTENT -->
+      <div class="relative z-10 mx-auto max-w-6xl px-5 sm:px-8 pt-6 sm:pt-10 pb-14 sm:pb-20">
+        <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
+          <div>
+            <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Auto Detailing &amp; Ceramic Websites</span>
+            <h1 class="mt-5 text-[2.2rem] sm:text-[2.9rem] lg:text-[3.3rem] leading-[1.04] font-bold tracking-tight">
+              A detailing &amp; ceramic website that quotes the work — <span class="text-accent">not just a form that rings your phone.</span>
+            </h1>
+            <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.1rem] leading-relaxed max-w-2xl">
+              We build detail-shop websites with a real quote system — the kind that prices a full interior, a paint correction, or a ceramic tier by vehicle, captures the lead before they bounce, and texts the quote to your phone to book. The same system we built for Fitchin.
+            </p>
+
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href={QUOTE_HREF} data-hero-cta class="btn-primary">
+                Book a Detailing Website Call
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a href="#case-study" class="btn-ghost">
+                See the Fitchin Build
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+
+            <div class="mt-6 text-[0.9rem] text-text-muted">
+              Custom quote system &nbsp;·&nbsp; priced around your shop &nbsp;·&nbsp; 3–5 week build
+            </div>
+          </div>
+
+          <div class="relative">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
+            <div class="relative card overflow-hidden max-w-[20rem] mx-auto">
+              <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
+                <img
+                  src="/showcase/fitchin-mobile.png"
+                  alt="Fitchin Auto Detail mobile homepage — heat, glare, and ceramic protection messaging with a 'See your price in 2 min' quote button."
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  width="1320"
+                  height="2678"
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAIN -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Problem</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.5rem] leading-[1.07] font-bold">
+            Most detail-shop websites describe the work. They can't price it — so they hand every quote back to your phone.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            A generic contact form is a tax on your day. Every job that could have been priced online instead becomes phone tag — and most customers won't wait.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 gap-5">
+          {painCards.map((c) => (
+            <div class="card p-7 flex flex-col gap-3">
+              <h3 class="font-display font-semibold text-[1.05rem] leading-snug text-text">{c.title}</h3>
+              <p class="text-[0.95rem] text-text-soft leading-relaxed">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT THIS ACTUALLY IS -->
+    <section class="relative border-b border-line bg-surface-1/30">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What You Get</span>
+        <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+          What this actually is.
+        </h2>
+        <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
+          Not just a prettier homepage. A detailing website built around how your shop actually books work:
+        </p>
+
+        <ul class="mt-9 grid sm:grid-cols-2 gap-4">
+          {whatYouGet.map((b) => (
+            <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- CASE STUDY (Fitchin feature) -->
+    <section id="case-study" class="relative border-b border-line">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl mb-12">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Featured Build</span>
+          <h2 class="mt-5 text-[2rem] sm:text-[2.5rem] leading-[1.05] font-bold">
+            Fitchin Automotive Detailing &amp; Window Tinting
+          </h2>
+          <div class="mt-3 text-text-muted text-[0.95rem]">Coshocton, Ohio</div>
+        </div>
+
+        <div class="grid lg:grid-cols-[0.9fr_1fr] gap-10 lg:gap-14 items-center">
+          <div class="relative">
+            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-50" aria-hidden="true"></div>
+            <div class="relative card p-7 sm:p-8">
+              <span class="inline-flex items-center gap-2 rounded-full bg-accent px-2.5 py-1 font-display text-[0.62rem] font-bold uppercase tracking-[0.16em] text-bg">
+                <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
+                  <span class="absolute inline-flex h-1.5 w-1.5 rounded-full bg-bg/60 animate-ping"></span>
+                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-bg"></span>
+                </span>
+                Live in Production
+              </span>
+              <ul class="mt-6 space-y-4">
+                {caseFacts.map((f) => (
+                  <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
+                    <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-text-soft text-[1.05rem] leading-relaxed">
+              Fitchin is the founder's own shop — the build that became the blueprint for this offer. The reputation was there, but every quote request still meant a phone call, because the old site couldn't price work that changes with the vehicle, the package, and the condition. The new build replaced the contact form with a guided quote system that handles detailing, ceramic coating, tint, and add-ons end to end — and captures the lead even when the customer doesn't finish.
+            </p>
+
+            <ul class="mt-7 space-y-3">
+              {caseBullets.map((b) => (
+                <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+
+            <p class="mt-7 pt-6 border-t border-line text-text-soft text-[0.98rem] italic leading-relaxed">
+              The same engine runs any shop's menu — detailing, ceramic, tint, or all three — priced the way you actually price it.
+            </p>
+
+            <div class="mt-7 flex flex-wrap gap-3">
+              <a href="/case-studies/fitchin-auto-detail-tint" class="btn-ghost">
+                Read the full case study
+                <span aria-hidden="true">→</span>
+              </a>
+              <a href="https://fitchinautodetail.com" target="_blank" rel="noopener noreferrer" class="btn-ghost">
+                Visit the live site
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIGNATURE FEATURES -->
+    <section class="relative border-b border-line bg-surface-1/30">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Signature Features</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+            Three things a quote system does that a contact form never will.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Built first for Fitchin, available on every detailing and ceramic build.
+          </p>
+        </div>
+
+        <div class="mt-14 grid md:grid-cols-3 gap-8 lg:gap-10">
+          <div class="flex flex-col gap-4">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-[1.15rem] text-text">Condition-aware pricing that protects your margin</h3>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">
+              The flow asks about interior condition, pet hair, stains, and heavy buildup — so a trashed work truck and a garage-kept sedan don't get the same number. Customers self-select into an accurate estimate before they ever reach your phone.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-4">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-[1.15rem] text-text">Ceramic tiers that sell the upgrade for you</h3>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">
+              Crystal+, Pro+, and Max G+ shown side by side, with the value gap visible. Most customers don't know the difference between a 3-year and a lifetime coating — showing the tiers inline raises the average ticket better than any sales pitch.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-4">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-[1.15rem] text-text">The quote texts itself to you to book</h3>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">
+              When the customer finishes, the quote deep-links into a pre-filled text — shop name, vehicle, services, total, quote ID — straight to your phone. Or route it to online booking with an optional deposit to hold the slot.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROOF -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Real Screens</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+            Real screens from a live quote system — not a mockup.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            From the live Fitchin install. The same flow runs detailing, ceramic, and tint.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {proofItems.map((p) => (
+            <div class="card overflow-hidden flex flex-col">
+              <div class="relative aspect-[10/13] bg-surface-2 overflow-hidden border-b border-line">
+                <img
+                  src={p.src}
+                  alt={p.title}
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  width="1320"
+                  height="2868"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div class="p-5 flex flex-col gap-2">
+                <h3 class="font-display font-semibold text-[1rem] text-text">{p.title}</h3>
+                <p class="text-[0.92rem] text-text-soft leading-relaxed">{p.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="relative border-b border-line bg-surface-1/30">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> How It Works</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+            Built to feel simple for customers — and powerful behind the scenes.
+          </h2>
+        </div>
+
+        <div class="mt-10 grid sm:grid-cols-2 gap-5">
+          {howItWorks.map((t) => (
+            <div class="card p-6">
+              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">{t.label}</div>
+              <div class="text-[1rem] text-text leading-relaxed">{t.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- WHO THIS IS FOR -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Fit Check</span>
+        <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+          This is built for shops ready to stop quoting over the phone.
+        </h2>
+        <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+          This is a good fit if:
+        </p>
+
+        <ul class="mt-7 space-y-3">
+          {whoFor.map((b) => (
+            <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
+              <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p class="mt-8 text-text-muted text-[0.95rem] italic">
+          This isn't for shops that want the cheapest one-page template or a contact form bolted onto a stock theme.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-3xl px-5 sm:px-8 py-20 sm:py-24">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> FAQ</span>
+        <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+          Honest answers, no fine print.
+        </h2>
+
+        <div class="mt-10 space-y-3">
+          {faqs.map((f, i) => (
+            <details class="card p-6 group" open={i === 0}>
+              <summary class="cursor-pointer list-none font-display font-semibold text-[1rem] sm:text-[1.05rem] text-text flex items-start justify-between gap-4">
+                <span>{f.q}</span>
+                <span class="text-accent text-[1.2rem] leading-none mt-0.5 group-open:rotate-45 transition-transform" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-4 text-[0.97rem] text-text-soft leading-relaxed">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section id="apply" class="relative overflow-hidden">
+      <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
+      <div class="accent-glow absolute -bottom-40 -right-40 w-[640px] h-[640px] z-0" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
+        <h2 class="text-[2.1rem] sm:text-[2.9rem] leading-[1.05] font-bold tracking-tight">
+          Stop turning every quote into a phone call — <span class="text-accent">and start capturing the ones that get away.</span>
+        </h2>
+        <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
+          Give your shop a website with a real quote system — one that prices detailing and ceramic by vehicle, sells the upgrade, captures the lead, and texts the quote to your phone to book.
+        </p>
+
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a href={QUOTE_HREF} class="btn-primary">
+            Book a Detailing Website Call
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href={PHONE_TEL} class="btn-ghost">
+            Call/Text Bill
+            <span aria-hidden="true">→</span>
+          </a>
+          <a href="/seo" class="btn-ghost">
+            How we build for SEO
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <p class="mt-6 text-[0.95rem] text-text-soft">
+          Or call/text directly:
+          <a href={PHONE_TEL} class="text-accent font-medium underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors whitespace-nowrap">{PHONE_DISPLAY}</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- MINIMAL FOOTER — no nav, no service links. Copyright + phone + email only. -->
+  <footer class="relative z-10 border-t border-line">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.85rem] text-text-muted">
+      <div>© 2026 Designed to Elevate. All rights reserved.</div>
+      <div class="flex flex-wrap gap-4 justify-center">
+        <a href={PHONE_TEL} class="hover:text-accent transition-colors">{PHONE_DISPLAY}</a>
+        <a href={`mailto:${EMAIL}`} class="hover:text-accent transition-colors">{EMAIL}</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- STICKY MOBILE CTA — controlled by LandingLayout's IntersectionObserver
+       which watches [data-hero-cta] and #apply. -->
+  <div
+    data-sticky-cta
+    class="md:hidden fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/85 px-3 py-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] translate-y-full opacity-0 pointer-events-none transition-[transform,opacity] duration-300 ease-out"
+    aria-label="Detailing website conversion actions"
+  >
+    <div class="flex gap-2">
+      <a href={PHONE_TEL} class="btn-ghost flex-1 !px-2 !text-[0.85rem]" aria-label={`Call or text Bill at ${PHONE_DISPLAY}`}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+        Call/Text
+      </a>
+      <a href={QUOTE_HREF} class="btn-primary flex-1 !px-2 !text-[0.85rem]">
+        Book a Call
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </div>
+
+</LandingLayout>
