@@ -1,0 +1,379 @@
+---
+// src/components/landing/QuoteFlowSection.astro
+// Guided, multi-step "Build My Quote" flow for /auto-detailing-websites.
+// Submits through LandingLayout's global [data-audit-form] Web3Forms handler.
+// Steps: service mix → site situation → goals → timeline+budget → estimate+contact.
+
+const ACCESS_KEY = '1272e2dd-abff-4804-a541-beb2bd0be075';
+
+const serviceOptions = [
+  { value: 'Auto detailing', label: 'Auto detailing', desc: 'Interior + exterior packages' },
+  { value: 'Ceramic coating', label: 'Ceramic coating', desc: 'Crystal+, Pro+, Max G+ tiers' },
+  { value: 'Window tint', label: 'Window tint', desc: 'Film tiers, per-section pricing' },
+  { value: 'Paint protection film', label: 'Paint protection film', desc: 'Partial or full wraps' },
+  { value: 'Something else', label: 'Something else', desc: 'Correction, wraps, more' },
+];
+
+const situationOptions = [
+  { value: 'No website yet', label: 'No website yet', desc: 'Starting from scratch' },
+  { value: 'A DIY builder (Wix / Squarespace / GoDaddy)', label: 'A DIY builder', desc: 'Wix, Squarespace, GoDaddy' },
+  { value: 'An older custom site', label: 'An older custom site', desc: 'Dated, slow, hard to update' },
+  { value: 'A decent site, no quote system', label: 'A decent site, no quote system', desc: 'Just a contact form today' },
+];
+
+const goalOptions = [
+  { value: 'Price jobs by vehicle', label: 'Price jobs by vehicle', desc: 'Real estimates, not “call me”' },
+  { value: "Capture leads that don't call", label: "Capture leads that don't call", desc: 'Partial quotes still land with you' },
+  { value: 'Sell ceramic / coating tiers', label: 'Sell ceramic / coating tiers', desc: 'Show the upgrade gap inline' },
+  { value: 'Take deposits or bookings', label: 'Take deposits or bookings', desc: 'Hold the slot before drop-off' },
+  { value: 'Rank on Google locally', label: 'Rank on Google locally', desc: '“[service] in [town]” searches' },
+  { value: 'Sync with my booking tool', label: 'Work with my booking tool', desc: 'Square, your scheduler, your POS' },
+];
+
+const timelineOptions = [
+  { value: 'As soon as possible', label: 'As soon as possible' },
+  { value: 'In the next 1–2 months', label: 'In the next 1–2 months' },
+  { value: 'Just exploring for now', label: 'Just exploring for now' },
+];
+
+const budgetOptions = [
+  { value: '$2k–$4k', label: '$2k–$4k' },
+  { value: '$4k–$6k', label: '$4k–$6k' },
+  { value: '$6k+', label: '$6k+' },
+  { value: 'Not sure yet', label: 'Not sure yet' },
+];
+
+// shared class strings
+const cardCls = 'group relative flex items-start gap-3 rounded-xl border border-line bg-surface-1/40 p-4 cursor-pointer transition-colors hover:border-accent/50 has-[input:checked]:border-accent has-[input:checked]:bg-accent/10';
+const tickCls = 'mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-line text-bg opacity-30 transition-all group-has-[input:checked]:opacity-100 group-has-[input:checked]:bg-accent group-has-[input:checked]:border-accent';
+const inputCls = 'w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60';
+const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+---
+<section id="quote" data-quote-flow class="relative z-10 bg-bg border-b border-line scroll-mt-24">
+  <div class="mx-auto max-w-3xl px-5 sm:px-8 py-20 sm:py-24">
+    <div class="max-w-2xl">
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Build Your Quote</span>
+      <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+        Get a ballpark in 60 seconds — same kind of quote flow we'd build for your shop.
+      </h2>
+      <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+        Tap through a few questions, see what we'd build and what it runs, then leave your info for an exact quote priced to your menu. No phone tag.
+      </p>
+    </div>
+
+    <div class="card p-6 sm:p-8 mt-10">
+      <div data-steps-wrap>
+        <!-- progress -->
+        <div class="mb-8">
+          <div class="flex items-center justify-between text-[0.8rem] font-display text-text-muted mb-2">
+            <span data-step-label>Step 1 of 5</span>
+            <span>About 60 seconds</span>
+          </div>
+          <div class="h-1.5 w-full rounded-full bg-surface-2 overflow-hidden">
+            <div data-progress-bar class="h-full bg-accent transition-[width] duration-300" style="width:20%"></div>
+          </div>
+        </div>
+
+        <form
+          data-audit-form
+          data-quote-form
+          action="https://api.web3forms.com/submit"
+          method="POST"
+        >
+          <input type="hidden" name="access_key" value={ACCESS_KEY} />
+          <input type="hidden" name="subject" value="New Detailing Website Quote Request — designedtoelevate.co" />
+          <input type="hidden" name="source" value="auto-detailing-websites quote flow" />
+          <input type="hidden" name="recommended_build" value="" />
+          <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true" />
+
+          <!-- STEP 1 — services -->
+          <div data-step="1">
+            <h3 class="font-display font-semibold text-[1.2rem] text-text">Which of these does your shop do?</h3>
+            <p class="mt-1.5 text-[0.92rem] text-text-soft">Pick all that apply — the quote engine adapts to what you offer.</p>
+            <div class="mt-5 grid sm:grid-cols-2 gap-3">
+              {serviceOptions.map((o) => (
+                <label class={cardCls}>
+                  <input type="checkbox" name="services[]" value={o.value} class="sr-only" />
+                  <span class={tickCls} set:html={check} />
+                  <span class="min-w-0">
+                    <span class="block font-display font-semibold text-[0.95rem] text-text">{o.label}</span>
+                    <span class="block text-[0.83rem] text-text-soft leading-snug">{o.desc}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+            <p data-error class="hidden mt-4 text-[0.85rem] text-[#F87171]">Pick at least one to continue.</p>
+            <div class="mt-6 flex justify-end">
+              <button type="button" data-next class="btn-primary">Continue <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+
+          <!-- STEP 2 — situation -->
+          <div data-step="2" class="hidden">
+            <h3 class="font-display font-semibold text-[1.2rem] text-text">What's your website situation today?</h3>
+            <p class="mt-1.5 text-[0.92rem] text-text-soft">So we know where we're starting from.</p>
+            <div class="mt-5 grid sm:grid-cols-2 gap-3">
+              {situationOptions.map((o) => (
+                <label class={cardCls}>
+                  <input type="radio" name="website_situation" value={o.value} class="sr-only" />
+                  <span class={tickCls} set:html={check} />
+                  <span class="min-w-0">
+                    <span class="block font-display font-semibold text-[0.95rem] text-text">{o.label}</span>
+                    <span class="block text-[0.83rem] text-text-soft leading-snug">{o.desc}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+            <p data-error class="hidden mt-4 text-[0.85rem] text-[#F87171]">Pick one to continue.</p>
+            <div class="mt-6 flex items-center justify-between gap-3">
+              <button type="button" data-back class="btn-ghost"><span aria-hidden="true">←</span> Back</button>
+              <button type="button" data-next class="btn-primary">Continue <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+
+          <!-- STEP 3 — goals -->
+          <div data-step="3" class="hidden">
+            <h3 class="font-display font-semibold text-[1.2rem] text-text">What should the site actually do?</h3>
+            <p class="mt-1.5 text-[0.92rem] text-text-soft">Pick all that matter — this shapes the build.</p>
+            <div class="mt-5 grid sm:grid-cols-2 gap-3">
+              {goalOptions.map((o) => (
+                <label class={cardCls}>
+                  <input type="checkbox" name="goals[]" value={o.value} class="sr-only" />
+                  <span class={tickCls} set:html={check} />
+                  <span class="min-w-0">
+                    <span class="block font-display font-semibold text-[0.95rem] text-text">{o.label}</span>
+                    <span class="block text-[0.83rem] text-text-soft leading-snug">{o.desc}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+            <p data-error class="hidden mt-4 text-[0.85rem] text-[#F87171]">Pick at least one to continue.</p>
+            <div class="mt-6 flex items-center justify-between gap-3">
+              <button type="button" data-back class="btn-ghost"><span aria-hidden="true">←</span> Back</button>
+              <button type="button" data-next class="btn-primary">Continue <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+
+          <!-- STEP 4 — timeline + budget -->
+          <div data-step="4" class="hidden">
+            <h3 class="font-display font-semibold text-[1.2rem] text-text">Timeline and budget?</h3>
+            <p class="mt-1.5 text-[0.92rem] text-text-soft">Ballpark is fine — it just helps us point you right.</p>
+
+            <div class="mt-5">
+              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">When do you want it live?</div>
+              <div class="grid sm:grid-cols-3 gap-3">
+                {timelineOptions.map((o) => (
+                  <label class={cardCls}>
+                    <input type="radio" name="timeline" value={o.value} class="sr-only" />
+                    <span class={tickCls} set:html={check} />
+                    <span class="block font-display font-semibold text-[0.92rem] text-text">{o.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">Budget you're working with?</div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {budgetOptions.map((o) => (
+                  <label class={cardCls}>
+                    <input type="radio" name="budget" value={o.value} class="sr-only" />
+                    <span class={tickCls} set:html={check} />
+                    <span class="block font-display font-semibold text-[0.92rem] text-text">{o.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <p data-error class="hidden mt-4 text-[0.85rem] text-[#F87171]">Pick a timeline and a budget to continue.</p>
+            <div class="mt-6 flex items-center justify-between gap-3">
+              <button type="button" data-back class="btn-ghost"><span aria-hidden="true">←</span> Back</button>
+              <button type="button" data-next class="btn-primary">See my estimate <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+
+          <!-- STEP 5 — estimate + contact -->
+          <div data-step="5" data-estimate-step class="hidden">
+            <div class="rounded-xl border border-accent/40 bg-accent/5 p-5 sm:p-6">
+              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent">Your ballpark</div>
+              <h3 class="mt-2 font-display font-bold text-[1.3rem] text-text leading-snug">
+                We'd build you a <span data-rec-build class="text-accent">Custom Lead System</span>.
+              </h3>
+              <div class="mt-2 font-display font-bold text-[1.25rem] text-text">
+                <span data-rec-price>$4,495 one-time + $545/mo</span>
+              </div>
+              <p data-rec-blurb class="mt-3 text-text-soft text-[0.95rem] leading-relaxed">
+                A guided quote engine that prices your work by vehicle, captures the lead before they bounce, and texts the quote to your phone to book.
+              </p>
+              <ul data-rec-features class="mt-4 space-y-2 text-[0.92rem] text-text"></ul>
+              <p class="mt-4 text-[0.8rem] text-text-muted italic leading-relaxed">
+                A ballpark, not a contract. Bill prices it to your exact menu before you commit — and you can spread setup over 3 months if you'd rather.
+              </p>
+            </div>
+
+            <div class="mt-7">
+              <h4 class="font-display font-semibold text-[1.1rem] text-text">Want it in writing, priced to your shop?</h4>
+              <p class="mt-1.5 text-[0.92rem] text-text-soft">Tell us where to send your detailed quote — Bill replies within 24 hours.</p>
+
+              <div class="mt-5 grid sm:grid-cols-2 gap-4">
+                <label class="block">
+                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Your name <span class="text-accent">*</span></span>
+                  <input required name="name" type="text" autocomplete="name" class={inputCls} placeholder="Your name" />
+                </label>
+                <label class="block">
+                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Shop name</span>
+                  <input name="business" type="text" autocomplete="organization" class={inputCls} placeholder="Acme Auto Detail" />
+                </label>
+              </div>
+              <div class="mt-4 grid sm:grid-cols-2 gap-4">
+                <label class="block">
+                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Phone <span class="text-accent">*</span></span>
+                  <input required name="phone" type="tel" autocomplete="tel" class={inputCls} placeholder="(555) 555-5555" />
+                </label>
+                <label class="block">
+                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Email <span class="text-accent">*</span></span>
+                  <input required name="email" type="email" autocomplete="email" class={inputCls} placeholder="you@yourshop.com" />
+                </label>
+              </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-between gap-3">
+              <button type="button" data-back class="btn-ghost"><span aria-hidden="true">←</span> Back</button>
+              <button type="submit" class="btn-primary">Send my quote request <span aria-hidden="true">↗</span></button>
+            </div>
+
+            <p data-audit-status class="hidden mt-4 text-[0.92rem] text-accent font-display font-medium items-center gap-2" role="status" aria-live="polite"></p>
+            <p class="mt-4 text-[0.78rem] text-text-muted leading-relaxed">
+              Bill responds within 24 hours. No spam, no list-selling, no long sales calls.
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <!-- confirmation (revealed on submit success) -->
+      <div data-quote-done class="hidden text-center py-4">
+        <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-accent/15 text-accent" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3 class="font-display font-bold text-[1.4rem] text-text">Quote request sent.</h3>
+        <p class="mt-3 text-text-soft text-[1rem] leading-relaxed max-w-md mx-auto">
+          Bill will reach out within 24 hours with a detailed quote priced to your exact menu. Want to talk now? Call or text and we'll handle it directly.
+        </p>
+        <a href="tel:7406176488" class="btn-ghost mt-6">Call / Text Bill <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.querySelector('[data-quote-flow]');
+      if (!root) return;
+      const form = root.querySelector('[data-quote-form]');
+      const steps = Array.from(root.querySelectorAll('[data-step]'));
+      const bar = root.querySelector('[data-progress-bar]');
+      const label = root.querySelector('[data-step-label]');
+      const total = steps.length;
+      let current = 0;
+
+      // Real tiers of the same core build — scope scales with services + goals.
+      const TIERS = {
+        starter: {
+          name: 'Starter Quote Site',
+          setup: '$2,495',
+          monthly: '$295/mo',
+          blurb: 'A focused single-service site with a guided quote flow for one offering (detailing, ceramic, tint, or PPF). Same pricing logic, smaller scope.',
+        },
+        custom: {
+          name: 'Custom Lead System',
+          setup: '$4,495',
+          monthly: '$545/mo',
+          blurb: 'A guided quote engine that prices your work by vehicle, captures the lead before they bounce, and texts the quote to your phone to book.',
+        },
+        multi: {
+          name: 'Multi-Service Quote System',
+          setup: '$5,995',
+          monthly: '$695/mo',
+          blurb: 'A unified quote engine that handles detailing, ceramic, tint, and PPF under one flow — service-aware pricing, vehicle logic, and shared lead dashboard across the whole menu.',
+        },
+      };
+
+      // Higher tier wins on conflict: multi → custom → starter → fallback custom.
+      const pickTier = (services, goals) => {
+        const coatings = services.filter((s) => s === 'Ceramic coating' || s === 'Paint protection film');
+        const others = services.filter((s) => s === 'Auto detailing' || s === 'Window tint');
+        const premiumGoals = ['Sell ceramic / coating tiers', 'Take deposits or bookings', 'Sync with my booking tool'];
+
+        if (services.length >= 3 || (coatings.length >= 1 && others.length >= 1)) return TIERS.multi;
+        if (services.length >= 2 || goals.some((g) => premiumGoals.includes(g))) return TIERS.custom;
+        const noUpsell = !goals.includes('Sell ceramic / coating tiers') && !goals.includes('Take deposits or bookings');
+        if (services.length === 1 && noUpsell) return TIERS.starter;
+        return TIERS.custom;
+      };
+
+      const buildEstimate = () => {
+        const picked = (name) => Array.from(form.querySelectorAll('[name="' + name + '"]:checked')).map((i) => i.value);
+        const goals = picked('goals[]');
+        const services = picked('services[]');
+        const tier = pickTier(services, goals);
+
+        const setText = (sel, txt) => { const el = root.querySelector(sel); if (el) el.textContent = txt; };
+        setText('[data-rec-build]', tier.name);
+        setText('[data-rec-price]', tier.setup + ' one-time + ' + tier.monthly);
+        setText('[data-rec-blurb]', tier.blurb);
+
+        const ul = root.querySelector('[data-rec-features]');
+        ul.innerHTML = '';
+        (goals.length ? goals : ["Capture leads that don't call"]).forEach((g) => {
+          const li = document.createElement('li');
+          li.className = 'flex items-start gap-2.5';
+          li.innerHTML = '<span class="mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-accent/20 text-accent"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>' + g + '</span>';
+          ul.appendChild(li);
+        });
+
+        const hidden = form.querySelector('[name="recommended_build"]');
+        if (hidden) hidden.value = tier.name + ' — ' + tier.setup + ' + ' + tier.monthly + (services.length ? ' · Services: ' + services.join(', ') : '');
+      };
+
+      const show = (i, scroll) => {
+        steps.forEach((s, idx) => s.classList.toggle('hidden', idx !== i));
+        current = i;
+        if (bar) bar.style.width = (((i + 1) / total) * 100) + '%';
+        if (label) label.textContent = 'Step ' + (i + 1) + ' of ' + total;
+        if (steps[i].hasAttribute('data-estimate-step')) buildEstimate();
+        if (scroll) root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+
+      const stepValid = (stepEl) => {
+        const inputs = stepEl.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+        if (!inputs.length) return true;
+        const groups = {};
+        inputs.forEach((c) => { (groups[c.name] = groups[c.name] || []).push(c); });
+        return Object.values(groups).every((g) => g.some((c) => c.checked));
+      };
+
+      root.querySelectorAll('[data-next]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const stepEl = steps[current];
+          const err = stepEl.querySelector('[data-error]');
+          if (!stepValid(stepEl)) { if (err) err.classList.remove('hidden'); return; }
+          if (err) err.classList.add('hidden');
+          if (current < total - 1) show(current + 1, true);
+        });
+      });
+
+      root.querySelectorAll('[data-back]').forEach((btn) => {
+        btn.addEventListener('click', () => { if (current > 0) show(current - 1, true); });
+      });
+
+      document.addEventListener('audit-form:success', () => {
+        const wrap = root.querySelector('[data-steps-wrap]');
+        const done = root.querySelector('[data-quote-done]');
+        if (wrap) wrap.classList.add('hidden');
+        if (done) done.classList.remove('hidden');
+        root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      show(0, false);
+    })();
+  </script>
+</section>
