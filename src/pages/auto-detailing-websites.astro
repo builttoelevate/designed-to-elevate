@@ -15,7 +15,7 @@ const SITE = 'https://designedtoelevate.co';
 const PHONE_DISPLAY = '(740) 617-6488';
 const PHONE_TEL = 'tel:7406176488';
 const EMAIL = 'bilsonxnc@gmail.com';
-const QUOTE_HREF = '/contact?service=auto-detailing&from=auto-detailing-websites';
+const QUOTE_HREF = '#quote';
 
 const serviceSchema = {
   '@context': 'https://schema.org',
@@ -544,6 +544,8 @@ const faqSchema = {
       </div>
     </section>
 
+    <QuoteFlowSection />
+
     <!-- FAQ -->
     <section class="relative border-b border-line">
       <div class="mx-auto max-w-3xl px-5 sm:px-8 py-20 sm:py-24">
@@ -566,8 +568,6 @@ const faqSchema = {
       </div>
     </section>
 
-    <QuoteFlowSection />
-
     <!-- FINAL CTA -->
     <section id="apply" class="relative overflow-hidden">
       <div class="grid-bg absolute inset-0 z-0 opacity-40" aria-hidden="true"></div>
@@ -588,10 +588,6 @@ const faqSchema = {
           </a>
           <a href={PHONE_TEL} class="btn-ghost">
             Call/Text Bill
-            <span aria-hidden="true">→</span>
-          </a>
-          <a href="/seo" class="btn-ghost">
-            How we build for SEO
             <span aria-hidden="true">→</span>
           </a>
         </div>
