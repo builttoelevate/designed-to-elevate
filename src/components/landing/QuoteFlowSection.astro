@@ -27,7 +27,7 @@ const goalOptions = [
   { value: 'Sell ceramic / coating tiers', label: 'Sell ceramic / coating tiers', desc: 'Show the upgrade gap inline' },
   { value: 'Take deposits or bookings', label: 'Take deposits or bookings', desc: 'Hold the slot before drop-off' },
   { value: 'Rank on Google locally', label: 'Rank on Google locally', desc: '“[service] in [town]” searches' },
-  { value: 'Sync with my booking tool', label: 'Work with my booking tool', desc: 'Square, your scheduler, your POS' },
+  { value: 'Work with my booking tool', label: 'Work with my booking tool', desc: 'Square, your scheduler, your POS' },
 ];
 
 const timelineOptions = [
@@ -44,7 +44,7 @@ const budgetOptions = [
 ];
 
 // shared class strings
-const cardCls = 'group relative flex items-start gap-3 rounded-xl border border-line bg-surface-1/40 p-4 cursor-pointer transition-colors hover:border-accent/50 has-[input:checked]:border-accent has-[input:checked]:bg-accent/10';
+const cardCls = 'group relative flex items-start gap-3 rounded-xl border border-line bg-surface-1/40 p-4 cursor-pointer transition-colors hover:border-accent/50 has-[input:checked]:border-accent has-[input:checked]:bg-accent/10 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-accent/60 has-[input:focus-visible]:ring-offset-2 has-[input:focus-visible]:ring-offset-bg';
 const tickCls = 'mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-line text-bg opacity-30 transition-all group-has-[input:checked]:opacity-100 group-has-[input:checked]:bg-accent group-has-[input:checked]:border-accent';
 const inputCls = 'w-full rounded-md bg-surface-2 border border-line px-3.5 py-2.5 text-[0.95rem] text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60';
 const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
@@ -81,7 +81,7 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
           method="POST"
         >
           <input type="hidden" name="access_key" value={ACCESS_KEY} />
-          <input type="hidden" name="subject" value="New Detailing Website Quote Request — designedtoelevate.co" />
+          <input type="hidden" name="subject" value="New Detailing Website Quote Request — Designed to Elevate" />
           <input type="hidden" name="source" value="auto-detailing-websites quote flow" />
           <input type="hidden" name="recommended_build" value="" />
           <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true" />
@@ -197,17 +197,17 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
             <div class="rounded-xl border border-accent/40 bg-accent/5 p-5 sm:p-6">
               <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent">Your ballpark</div>
               <h3 class="mt-2 font-display font-bold text-[1.3rem] text-text leading-snug">
-                We'd build you a <span data-rec-build class="text-accent">Custom Lead System</span>.
+                Your shop looks like a fit for a <span data-rec-build class="text-accent">Custom Lead System</span>.
               </h3>
               <div class="mt-2 font-display font-bold text-[1.25rem] text-text">
-                <span data-rec-price>$4,495 one-time + $545/mo</span>
+                <span data-rec-price>Ballpark: $4,495 setup + $545/month</span>
               </div>
               <p data-rec-blurb class="mt-3 text-text-soft text-[0.95rem] leading-relaxed">
                 A guided quote engine that prices your work by vehicle, captures the lead before they bounce, and texts the quote to your phone to book.
               </p>
               <ul data-rec-features class="mt-4 space-y-2 text-[0.92rem] text-text"></ul>
               <p class="mt-4 text-[0.8rem] text-text-muted italic leading-relaxed">
-                A ballpark, not a contract. Bill prices it to your exact menu before you commit — and you can spread setup over 3 months if you'd rather.
+                This is a ballpark, not a contract. Bill will price the final build around your exact services, menu, add-ons, and quote logic before you commit. Setup can also be spread over 3 months.
               </p>
             </div>
 
@@ -257,7 +257,7 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
         </div>
         <h3 class="font-display font-bold text-[1.4rem] text-text">Quote request sent.</h3>
         <p class="mt-3 text-text-soft text-[1rem] leading-relaxed max-w-md mx-auto">
-          Bill will reach out within 24 hours with a detailed quote priced to your exact menu. Want to talk now? Call or text and we'll handle it directly.
+          Bill will review your services, goals, and quote flow needs, then reach out within 24 hours with the next best step. If it looks like a fit, he'll price the build around your exact menu and booking process. Want to talk now? Call or text directly.
         </p>
         <a href="tel:7406176488" class="btn-ghost mt-6">Call / Text Bill <span aria-hidden="true">→</span></a>
       </div>
@@ -301,7 +301,7 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
       const pickTier = (services, goals) => {
         const coatings = services.filter((s) => s === 'Ceramic coating' || s === 'Paint protection film');
         const others = services.filter((s) => s === 'Auto detailing' || s === 'Window tint');
-        const premiumGoals = ['Sell ceramic / coating tiers', 'Take deposits or bookings', 'Sync with my booking tool'];
+        const premiumGoals = ['Sell ceramic / coating tiers', 'Take deposits or bookings', 'Work with my booking tool'];
 
         if (services.length >= 3 || (coatings.length >= 1 && others.length >= 1)) return TIERS.multi;
         if (services.length >= 2 || goals.some((g) => premiumGoals.includes(g))) return TIERS.custom;
@@ -318,7 +318,7 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
 
         const setText = (sel, txt) => { const el = root.querySelector(sel); if (el) el.textContent = txt; };
         setText('[data-rec-build]', tier.name);
-        setText('[data-rec-price]', tier.setup + ' one-time + ' + tier.monthly);
+        setText('[data-rec-price]', 'Ballpark: ' + tier.setup + ' setup + ' + tier.monthly.replace('/mo', '/month'));
         setText('[data-rec-blurb]', tier.blurb);
 
         const ul = root.querySelector('[data-rec-features]');
