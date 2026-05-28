@@ -72,7 +72,7 @@ if (session.clientIds.length === 0) {
       </div>
 
       <div>
-        <label class="ph-label">Priority</label>
+        <label class="ph-label">How urgent is this?</label>
         <div class="grid sm:grid-cols-3 gap-2 mb-2">
           {PRIORITY_OPTIONS.map((o, i) => (
             <label class="ph-card flex items-center gap-2 px-3 py-2.5 cursor-pointer has-[:checked]:border-accent has-[:checked]:bg-accent/5">
@@ -82,9 +82,9 @@ if (session.clientIds.length === 0) {
           ))}
         </div>
         <ul class="ph-hint space-y-1 mt-2">
-          <li><strong>Normal</strong> — general update</li>
-          <li><strong>Important</strong> — needed soon, but the site still works</li>
-          <li><strong>Urgent</strong> — site issue, incorrect info, broken page, or time-sensitive</li>
+          <li><strong>Whenever you get a chance</strong> — general update, no rush</li>
+          <li><strong>Soon — please don't sit on it</strong> — needed this week, but the site still works</li>
+          <li><strong>Blocking — I can't move forward</strong> — site issue, wrong info, broken page, or time-sensitive</li>
         </ul>
       </div>
 

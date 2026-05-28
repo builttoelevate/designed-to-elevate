@@ -60,12 +60,25 @@ const preselectClient = Astro.url.searchParams.get('client') || '';
       </div>
 
       <div>
-        <label for="priority" class="ph-label">Priority</label>
+        <label for="priority" class="ph-label">How urgently does the client need to act?</label>
         <select id="priority" name="priority" class="ph-input">
           {PRIORITY_OPTIONS.map((o, i) => (
             <option value={o.value} selected={i === 0}>{o.label}</option>
           ))}
         </select>
+        <p class="ph-hint">The client sees this wording on their dashboard and in the email. Bumping it later sends a follow-up.</p>
+      </div>
+
+      <div>
+        <label for="status" class="ph-label">Status on creation</label>
+        <select id="status" name="status" class="ph-input">
+          <option value="new" selected>New — I'm working on it (no action needed from them)</option>
+          <option value="waiting_on_client">Waiting on You — they need to do something before I can move</option>
+        </select>
+        <p class="ph-hint">
+          Pick "Waiting on You" if you're creating a job that's blocked on the client.
+          They'll get an email immediately and the job shows up flagged in their queue.
+        </p>
       </div>
 
       <div>
@@ -104,6 +117,7 @@ const preselectClient = Astro.url.searchParams.get('client') || '';
         title: (fd.get('title') as string | null)?.trim() ?? '',
         category: (fd.get('category') as string | null)?.trim() ?? '',
         priority: (fd.get('priority') as string | null) ?? 'normal',
+        status: (fd.get('status') as string | null) ?? 'new',
         description: (fd.get('description') as string | null)?.trim() ?? '',
         instructions: (fd.get('instructions') as string | null)?.trim() || null,
       };
