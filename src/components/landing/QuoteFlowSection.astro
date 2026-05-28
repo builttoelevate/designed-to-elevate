@@ -61,7 +61,7 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
       </p>
     </div>
 
-    <div class="card p-6 sm:p-8 mt-10">
+    <div class="card p-6 sm:p-8 mt-10 scroll-mt-4" data-quote-card>
       <div data-steps-wrap>
         <!-- progress -->
         <div class="mb-8">
@@ -269,6 +269,7 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
       const root = document.querySelector('[data-quote-flow]');
       if (!root) return;
       const form = root.querySelector('[data-quote-form]');
+      const card = root.querySelector('[data-quote-card]');
       const steps = Array.from(root.querySelectorAll('[data-step]'));
       const bar = root.querySelector('[data-progress-bar]');
       const label = root.querySelector('[data-step-label]');
@@ -340,7 +341,7 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
         if (bar) bar.style.width = (((i + 1) / total) * 100) + '%';
         if (label) label.textContent = 'Step ' + (i + 1) + ' of ' + total;
         if (steps[i].hasAttribute('data-estimate-step')) buildEstimate();
-        if (scroll) root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (scroll) (card || root).scrollIntoView({ behavior: 'smooth', block: 'start' });
       };
 
       const stepValid = (stepEl) => {
@@ -370,7 +371,7 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
         const done = root.querySelector('[data-quote-done]');
         if (wrap) wrap.classList.add('hidden');
         if (done) done.classList.remove('hidden');
-        root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        (card || root).scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
 
       show(0, false);
