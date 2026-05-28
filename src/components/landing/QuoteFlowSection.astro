@@ -1,8 +1,12 @@
 ---
 // src/components/landing/QuoteFlowSection.astro
-// Guided, multi-step "Build My Quote" flow for /auto-detailing-websites.
+// Guided, multi-step "Build My Quote" flow for /auto-detailing-websites
+// (and any other automotive quote-page that mounts this component).
 // Submits through LandingLayout's global [data-audit-form] Web3Forms handler.
-// Steps: service mix → site situation → goals → timeline+budget → estimate+contact.
+// Steps: service mix → product-line routing → goals → timeline+budget+contact → estimate.
+//
+// Pricing lives entirely in PRICING.md (single source of truth). The TIERS table
+// and recommendation logic in the inline <script> below pulls from those numbers.
 
 const ACCESS_KEY = '1272e2dd-abff-4804-a541-beb2bd0be075';
 
@@ -14,19 +18,34 @@ const serviceOptions = [
   { value: 'Something else', label: 'Something else', desc: 'Correction, wraps, more' },
 ];
 
-const situationOptions = [
-  { value: 'No website yet', label: 'No website yet', desc: 'Starting from scratch' },
-  { value: 'A DIY builder (Wix / Squarespace / GoDaddy)', label: 'A DIY builder', desc: 'Wix, Squarespace, GoDaddy' },
-  { value: 'An older custom site', label: 'An older custom site', desc: 'Dated, slow, hard to update' },
-  { value: 'A decent site, no quote system', label: 'A decent site, no quote system', desc: 'Just a contact form today' },
+// Step 2 — product-line routing question. Drives which tier set the shop
+// sees on the estimate step. Values must match the keys used by the JS
+// recommendation logic ("form" | "website" | "not-sure").
+const productLineOptions = [
+  {
+    value: 'form',
+    label: 'Just the quote wizard added to my current site',
+    desc: 'Form line · starts at $997 install + $97/mo',
+  },
+  {
+    value: 'website',
+    label: 'A new website with the wizard built in',
+    desc: 'Website line · starts at $1,497 install + $97/mo',
+  },
+  {
+    value: 'not-sure',
+    label: 'Not sure yet — show me both options',
+    desc: 'We\'ll show you the most common pick from each line',
+  },
 ];
 
 const goalOptions = [
-  { value: 'Price jobs by vehicle', label: 'Price jobs by vehicle', desc: 'Real estimates, not “call me”' },
+  { value: 'Price jobs by vehicle', label: 'Price jobs by vehicle', desc: 'Real estimates, not "call me"' },
   { value: "Capture leads that don't call", label: "Capture leads that don't call", desc: 'Partial quotes still land with you' },
   { value: 'Sell ceramic / coating tiers', label: 'Sell ceramic / coating tiers', desc: 'Show the upgrade gap inline' },
-  { value: 'Take deposits or bookings', label: 'Take deposits or bookings', desc: 'Hold the slot before drop-off' },
-  { value: 'Rank on Google locally', label: 'Rank on Google locally', desc: '“[service] in [town]” searches' },
+  { value: 'Send automatic review requests', label: 'Send automatic review requests', desc: 'SMS Google reviews after each job' },
+  { value: 'Take online bookings or deposits', label: 'Take online bookings or deposits', desc: 'Customer self-serves the slot' },
+  { value: 'Rank on Google locally', label: 'Rank on Google locally', desc: '"[service] in [town]" searches' },
   { value: 'Work with my booking tool', label: 'Work with my booking tool', desc: 'Square, your scheduler, your POS' },
 ];
 
@@ -36,12 +55,36 @@ const timelineOptions = [
   { value: 'Just exploring for now', label: 'Just exploring for now' },
 ];
 
-const budgetOptions = [
-  { value: '$2k–$4k', label: '$2k–$4k' },
-  { value: '$4k–$6k', label: '$4k–$6k' },
-  { value: '$6k+', label: '$6k+' },
-  { value: 'Not sure yet', label: 'Not sure yet' },
-];
+// Budget options per product line. Step 4 renders the right set via JS based on
+// the Step 2 product-line answer. Each option carries the tier it most closely
+// fits so we can flag budget/goal mismatches on Step 5.
+// All ranges and tier mappings track PRICING.md exactly.
+const budgetSets = {
+  form: [
+    { value: '$0.5k–$1k', label: '$0.5k–$1k', fitsTier: 'form_t1' },
+    { value: '$1k–$2k',   label: '$1k–$2k',   fitsTier: 'form_t2' },
+    { value: '$2k–$3k',   label: '$2k–$3k',   fitsTier: 'form_t3' },
+    { value: 'Not sure yet', label: 'Not sure yet' },
+  ],
+  website: [
+    { value: '$1k–$2k', label: '$1k–$2k', fitsTier: 'web_t1' },
+    { value: '$2k–$3k', label: '$2k–$3k', fitsTier: 'web_t2' },
+    { value: '$3k–$5k', label: '$3k–$5k', fitsTier: 'web_t3' },
+    { value: 'Not sure yet', label: 'Not sure yet' },
+  ],
+  // "Not sure" routing shows both Form T2 + Website T2 side-by-side at the end,
+  // so the budget set here covers both ladders' midpoints + the wider range.
+  'not-sure': [
+    { value: '$1k–$2k', label: '$1k–$2k' },
+    { value: '$2k–$3k', label: '$2k–$3k' },
+    { value: '$3k–$5k', label: '$3k–$5k' },
+    { value: 'Not sure yet', label: 'Not sure yet' },
+  ],
+};
+// The Step 4 markup renders one set as the initial paint (Form, matching the
+// most common entry). JS swaps it on Step 2 change. The schema lives in JSON
+// so the script reads from the same source as the server-rendered fallback.
+const budgetSetsJson = JSON.stringify(budgetSets);
 
 // shared class strings
 const cardCls = 'group relative flex items-start gap-3 rounded-xl border border-line bg-surface-1/40 p-4 cursor-pointer transition-colors hover:border-accent/50 has-[input:checked]:border-accent has-[input:checked]:bg-accent/10 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-accent/60 has-[input:focus-visible]:ring-offset-2 has-[input:focus-visible]:ring-offset-bg';
@@ -84,6 +127,8 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
           <input type="hidden" name="subject" value="New Detailing Website Quote Request — Designed to Elevate" />
           <input type="hidden" name="source" value="auto-detailing-websites quote flow" />
           <input type="hidden" name="recommended_build" value="" />
+          <input type="hidden" name="recommended_tier_id" value="" />
+          <input type="hidden" name="budget_fit_note" value="" />
           <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true" />
 
           <!-- STEP 1 — services -->
@@ -108,14 +153,17 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
             </div>
           </div>
 
-          <!-- STEP 2 — situation -->
+          <!-- STEP 2 — product-line routing.
+               This is what drives which tier set the shop sees on Step 5.
+               "form" = add wizard to existing site · "website" = build new site too
+               · "not-sure" = show both T2s side-by-side. Per checklist §15. -->
           <div data-step="2" class="hidden">
-            <h3 class="font-display font-semibold text-[1.2rem] text-text">What's your website situation today?</h3>
-            <p class="mt-1.5 text-[0.92rem] text-text-soft">So we know where we're starting from.</p>
-            <div class="mt-5 grid sm:grid-cols-2 gap-3">
-              {situationOptions.map((o) => (
+            <h3 class="font-display font-semibold text-[1.2rem] text-text">What do you need from us?</h3>
+            <p class="mt-1.5 text-[0.92rem] text-text-soft">This sets which product line we ballpark against.</p>
+            <div class="mt-5 grid gap-3">
+              {productLineOptions.map((o) => (
                 <label class={cardCls}>
-                  <input type="radio" name="website_situation" value={o.value} class="sr-only" />
+                  <input type="radio" name="product_line" value={o.value} class="sr-only" />
                   <span class={tickCls} set:html={check} />
                   <span class="min-w-0">
                     <span class="block font-display font-semibold text-[0.95rem] text-text">{o.label}</span>
@@ -177,11 +225,14 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
             </div>
 
             <div class="mt-6">
-              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">Budget you're working with?</div>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {budgetOptions.map((o) => (
+              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2" data-budget-label>Budget you're working with?</div>
+              <!-- Budget options are rendered by JS from `budgetSets` on Step 4 entry
+                   based on the Step 2 product_line choice. The server-side render is
+                   the Form-line set as a no-JS fallback. -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" data-budget-options>
+                {budgetSets.form.map((o) => (
                   <label class={cardCls}>
-                    <input type="radio" name="budget" value={o.value} class="sr-only" />
+                    <input type="radio" name="budget" value={o.value} class="sr-only" data-fits-tier={o.fitsTier || ''} />
                     <span class={tickCls} set:html={check} />
                     <span class="block font-display font-semibold text-[0.92rem] text-text">{o.label}</span>
                   </label>
@@ -227,22 +278,68 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
           <!-- STEP 5 — estimate reveal + final submit.
                Contact has already been captured at step 4 and a partial submission
                has already fired, so even if the user bails here, their info lands
-               in the dashboard. The final submit just upgrades that record. -->
+               in the dashboard. The final submit just upgrades that record.
+               Two display modes:
+                 - SINGLE: one tier card (form or website routing)
+                 - DUAL: Form T2 + Website T2 side-by-side (not-sure routing) -->
           <div data-step="5" data-estimate-step class="hidden">
-            <div class="rounded-xl border border-accent/40 bg-accent/5 p-5 sm:p-6">
-              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent">Your ballpark</div>
+
+            <!-- SINGLE-tier panel (form OR website routing) -->
+            <div data-estimate-single class="rounded-xl border border-accent/40 bg-accent/5 p-5 sm:p-6">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent">Your ballpark</div>
+                <div class="font-display text-[0.7rem] uppercase tracking-[0.16em] text-text-muted" data-rec-line>—</div>
+              </div>
               <h3 class="mt-2 font-display font-bold text-[1.3rem] text-text leading-snug">
-                Your shop looks like a fit for a <span data-rec-build class="text-accent">Custom Lead System</span>.
+                Your shop looks like a fit for the <span data-rec-build class="text-accent">Quote Site</span>.
               </h3>
               <div class="mt-2 font-display font-bold text-[1.25rem] text-text">
-                <span data-rec-price>Ballpark: $4,495 setup + $545/month</span>
+                <span data-rec-price>Ballpark: $2,497 install + $97/month</span>
+              </div>
+              <div class="mt-1 font-display text-[0.92rem] text-text-soft hidden" data-rec-maintenance>
+                or $197/month with Care + Maintenance (optional)
               </div>
               <p data-rec-blurb class="mt-3 text-text-soft text-[0.95rem] leading-relaxed">
-                A guided quote engine that prices your work by vehicle, captures the lead before they bounce, and texts the quote to your phone to book.
+                Everything in T1, plus the full quote wizard built into the site.
               </p>
               <ul data-rec-features class="mt-4 space-y-2 text-[0.92rem] text-text"></ul>
+
+              <!-- Budget-fit note: shown when the budget answer doesn't match the
+                   goal-recommended tier. JS swaps in the closest-fit prose. -->
+              <div data-budget-fit-note class="hidden mt-4 rounded-lg border border-line bg-bg/40 p-3 text-[0.88rem] text-text-soft leading-relaxed">
+                <!-- text injected by JS -->
+              </div>
+
               <p class="mt-4 text-[0.8rem] text-text-muted italic leading-relaxed">
-                This is a ballpark, not a contract. Bill will price the final build around your exact services, menu, add-ons, and quote logic before you commit. Setup can also be spread over 3 months.
+                Ballpark, not a contract. Bill will price the final build around your exact services, menu, add-ons, and quote logic before you commit.
+              </p>
+            </div>
+
+            <!-- DUAL-tier panel (not-sure routing — shows Form T2 + Website T2). -->
+            <div data-estimate-dual class="hidden">
+              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-3">Your two most-likely picks</div>
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div class="rounded-xl border border-line bg-surface-1/40 p-5">
+                  <div class="font-display text-[0.7rem] uppercase tracking-[0.16em] text-text-muted">Form line · keep your site</div>
+                  <h4 class="mt-1 font-display font-bold text-[1.1rem] text-text">Quote + Reviews</h4>
+                  <div class="mt-3 font-display font-bold text-[1.05rem] text-text">$1,497 install</div>
+                  <div class="font-display text-[0.95rem] text-text-soft">+ $97/month</div>
+                  <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">
+                    The wizard added to your current site, plus automated SMS Google-review requests after each job.
+                  </p>
+                </div>
+                <div class="rounded-xl border border-accent/40 bg-accent/[0.06] p-5">
+                  <div class="font-display text-[0.7rem] uppercase tracking-[0.16em] text-accent">Website line · build new</div>
+                  <h4 class="mt-1 font-display font-bold text-[1.1rem] text-text">Quote Site</h4>
+                  <div class="mt-3 font-display font-bold text-[1.05rem] text-text">$2,497 install</div>
+                  <div class="font-display text-[0.95rem] text-text-soft">+ $97/month (or $197/mo with Maintenance)</div>
+                  <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">
+                    Full new site with the wizard built in. The Fitchin starting point.
+                  </p>
+                </div>
+              </div>
+              <p class="mt-4 text-[0.86rem] text-text-muted italic leading-relaxed">
+                Bill will help you pick the right one on the call — ballparks, not contracts.
               </p>
             </div>
 
@@ -277,7 +374,7 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
     </div>
   </div>
 
-  <script>
+  <script define:vars={{ budgetSetsJson }}>
     (() => {
       const root = document.querySelector('[data-quote-flow]');
       if (!root) return;
@@ -289,70 +386,216 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
       const total = steps.length;
       let current = 0;
 
-      // Real tiers of the same core build — scope scales with services + goals.
+      // Pricing tiers — pulled from PRICING.md. Single source of truth.
+      // Two product lines (form/website) × three tiers each. Maintenance monthly
+      // only applies to Website T2 + T3.
       const TIERS = {
-        starter: {
-          name: 'Starter Quote Site',
-          setup: '$2,495',
-          monthly: '$295/mo',
-          blurb: 'A focused single-service site with a guided quote flow for one offering (detailing, ceramic, tint, or PPF). Same pricing logic, smaller scope.',
+        form_t1: {
+          id: 'form_t1', line: 'form', code: 'T1',
+          name: 'Quote',
+          setup: '$997', monthly: '$97',
+          blurb: 'The wizard added to your current site. Customer gets a real price, the lead hits your dashboard, you schedule it manually.',
         },
-        custom: {
-          name: 'Custom Lead System',
-          setup: '$4,495',
-          monthly: '$545/mo',
-          blurb: 'A guided quote engine that prices your work by vehicle, captures the lead before they bounce, and texts the quote to your phone to book.',
+        form_t2: {
+          id: 'form_t2', line: 'form', code: 'T2',
+          name: 'Quote + Reviews',
+          setup: '$1,497', monthly: '$97',
+          blurb: 'Everything in T1, plus automated SMS Google-review requests after every job (skips no-shows).',
         },
-        multi: {
-          name: 'Multi-Service Quote System',
-          setup: '$5,995',
-          monthly: '$695/mo',
-          blurb: 'A unified quote engine that handles detailing, ceramic, tint, and PPF under one flow — service-aware pricing, vehicle logic, and shared lead dashboard across the whole menu.',
+        form_t3: {
+          id: 'form_t3', line: 'form', code: 'T3',
+          name: 'Quote + Booking',
+          setup: '$2,497', monthly: '$97',
+          blurb: 'Everything in T2, plus the customer books their own slot online — runs on autopilot.',
+        },
+        web_t1: {
+          id: 'web_t1', line: 'website', code: 'T1',
+          name: 'Starter Site',
+          setup: '$1,497', monthly: '$97',
+          blurb: 'New custom site + a smart lead-capture form. The foundation — easy to upgrade to the full quote system later.',
+        },
+        web_t2: {
+          id: 'web_t2', line: 'website', code: 'T2',
+          name: 'Quote Site',
+          setup: '$2,497', monthly: '$97', maintenance: '$197',
+          blurb: 'Everything in T1, plus the full quote wizard built into the site. The Fitchin starting point.',
+        },
+        web_t3: {
+          id: 'web_t3', line: 'website', code: 'T3',
+          name: 'The Works',
+          setup: '$4,497', monthly: '$97', maintenance: '$297',
+          blurb: 'Everything Fitchin has — T2 plus automated SMS review requests and customer self-service booking. The whole system, on autopilot.',
         },
       };
 
-      // Higher tier wins on conflict: multi → custom → starter → fallback custom.
-      const pickTier = (services, goals) => {
-        const coatings = services.filter((s) => s === 'Ceramic coating' || s === 'Paint protection film');
-        const others = services.filter((s) => s === 'Auto detailing' || s === 'Window tint');
-        const premiumGoals = ['Sell ceramic / coating tiers', 'Take deposits or bookings', 'Work with my booking tool'];
+      const LINE_LABEL = { form: 'Form line · keep your site', website: 'Website line · build new' };
+      const budgetSets = JSON.parse(budgetSetsJson);
 
-        if (services.length >= 3 || (coatings.length >= 1 && others.length >= 1)) return TIERS.multi;
-        if (services.length >= 2 || goals.some((g) => premiumGoals.includes(g))) return TIERS.custom;
-        const noUpsell = !goals.includes('Sell ceramic / coating tiers') && !goals.includes('Take deposits or bookings');
-        if (services.length === 1 && noUpsell) return TIERS.starter;
-        return TIERS.custom;
+      // Pick the recommended tier from goals, scoped to the routed product line.
+      // Logic mirrors checklist §15.
+      const recommendFromGoals = (line, goals) => {
+        const has = (g) => goals.includes(g);
+        if (line === 'form') {
+          if (has('Take online bookings or deposits')) return TIERS.form_t3;
+          if (has('Send automatic review requests')) return TIERS.form_t2;
+          return TIERS.form_t1;
+        }
+        // website
+        if (has('Take online bookings or deposits')) return TIERS.web_t3;
+        const t2Triggers = [
+          'Price jobs by vehicle',
+          "Capture leads that don't call",
+          'Sell ceramic / coating tiers',
+          'Send automatic review requests',
+        ];
+        if (goals.some((g) => t2Triggers.includes(g))) return TIERS.web_t2;
+        return TIERS.web_t1;
       };
 
+      // Translate the user's budget answer into the tier that range fits, by
+      // walking the budget set for the routed line and reading data-fits-tier.
+      const fitTierFromBudget = (line, budgetValue) => {
+        if (!budgetValue || budgetValue === 'Not sure yet') return null;
+        const set = budgetSets[line] || [];
+        const hit = set.find((b) => b.value === budgetValue);
+        return hit && hit.fitsTier ? TIERS[hit.fitsTier] : null;
+      };
+
+      // Build the budget-fit note shown inside the estimate panel. Returns ''
+      // when goal-recommended tier matches budget-fit tier (or budget is "not sure").
+      const budgetFitNote = (recTier, budgetTier) => {
+        if (!budgetTier || recTier.id === budgetTier.id) return '';
+        // Compare positions on the tier ladder of the routed line.
+        const ladder = recTier.line === 'form' ? ['form_t1', 'form_t2', 'form_t3'] : ['web_t1', 'web_t2', 'web_t3'];
+        const ri = ladder.indexOf(recTier.id);
+        const bi = ladder.indexOf(budgetTier.id);
+        if (bi < ri) {
+          return 'Heads up: your goals point to the ' + recTier.name + ' tier (' + recTier.setup + '), but your budget range fits the ' + budgetTier.name + ' tier (' + budgetTier.setup + '). Two ways to close that gap — trim the scope to fit the smaller tier, or stretch the budget. Bill will walk through both on the call.';
+        }
+        return 'Good news: your budget gives you room to upgrade. The ' + budgetTier.name + ' tier (' + budgetTier.setup + ') is one step above the ' + recTier.name + ' fit for your goals — happy to spec what the extra buys you.';
+      };
+
+      // Step 4 budget options — render the correct set for the routed line.
+      // Called whenever Step 2 changes OR when we enter Step 4.
+      const renderBudgetOptions = () => {
+        const line = (form.querySelector('[name="product_line"]:checked') || {}).value || 'form';
+        const container = root.querySelector('[data-budget-options]');
+        if (!container) return;
+        const set = budgetSets[line] || budgetSets.form;
+        container.innerHTML = '';
+        set.forEach((opt) => {
+          const lbl = document.createElement('label');
+          lbl.className = 'group relative flex items-start gap-3 rounded-xl border border-line bg-surface-1/40 p-4 cursor-pointer transition-colors hover:border-accent/50 has-[input:checked]:border-accent has-[input:checked]:bg-accent/10';
+          lbl.innerHTML =
+            '<input type="radio" name="budget" value="' + opt.value + '" class="sr-only" data-fits-tier="' + (opt.fitsTier || '') + '" />' +
+            '<span class="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-line text-bg opacity-30 transition-all group-has-[input:checked]:opacity-100 group-has-[input:checked]:bg-accent group-has-[input:checked]:border-accent">' +
+            '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+            '</span>' +
+            '<span class="block font-display font-semibold text-[0.92rem] text-text">' + opt.label + '</span>';
+          container.appendChild(lbl);
+        });
+      };
+
+      // Render Step 5 — either the single-tier panel or the dual-tier ("not-sure") panel.
       const buildEstimate = () => {
         const picked = (name) => Array.from(form.querySelectorAll('[name="' + name + '"]:checked')).map((i) => i.value);
         const goals = picked('goals[]');
         const services = picked('services[]');
-        const tier = pickTier(services, goals);
+        const line = (form.querySelector('[name="product_line"]:checked') || {}).value || 'form';
+        const budgetEl = form.querySelector('[name="budget"]:checked');
+        const budgetValue = budgetEl ? budgetEl.value : '';
+
+        const single = root.querySelector('[data-estimate-single]');
+        const dual = root.querySelector('[data-estimate-dual]');
+
+        if (line === 'not-sure') {
+          // Dual: show the canonical T2 from each line side by side.
+          if (single) single.classList.add('hidden');
+          if (dual) dual.classList.remove('hidden');
+          const hidden = form.querySelector('[name="recommended_build"]');
+          if (hidden) hidden.value = 'Not sure — showing Form T2 ($1,497 + $97/mo) and Website T2 ($2,497 + $97/mo)' + (services.length ? ' · Services: ' + services.join(', ') : '');
+          const tierIdField = form.querySelector('[name="recommended_tier_id"]');
+          if (tierIdField) tierIdField.value = 'not_sure_dual';
+          const fitNoteField = form.querySelector('[name="budget_fit_note"]');
+          if (fitNoteField) fitNoteField.value = '';
+          return;
+        }
+
+        // Single: render the goal-recommended tier from the routed line.
+        if (single) single.classList.remove('hidden');
+        if (dual) dual.classList.add('hidden');
+
+        const recTier = recommendFromGoals(line, goals);
+        const budgetTier = fitTierFromBudget(line, budgetValue);
+        const fitNote = budgetFitNote(recTier, budgetTier);
 
         const setText = (sel, txt) => { const el = root.querySelector(sel); if (el) el.textContent = txt; };
-        setText('[data-rec-build]', tier.name);
-        setText('[data-rec-price]', 'Ballpark: ' + tier.setup + ' setup + ' + tier.monthly.replace('/mo', '/month'));
-        setText('[data-rec-blurb]', tier.blurb);
+        setText('[data-rec-line]', LINE_LABEL[recTier.line]);
+        setText('[data-rec-build]', recTier.name);
+        setText('[data-rec-price]', 'Ballpark: ' + recTier.setup + ' install + ' + recTier.monthly + '/month');
+        setText('[data-rec-blurb]', recTier.blurb);
 
+        const maintEl = root.querySelector('[data-rec-maintenance]');
+        if (maintEl) {
+          if (recTier.maintenance) {
+            maintEl.textContent = 'or ' + recTier.maintenance + '/month with Care + Maintenance (optional)';
+            maintEl.classList.remove('hidden');
+          } else {
+            maintEl.classList.add('hidden');
+          }
+        }
+
+        // Features list = the user's selected goals (with fallback default).
         const ul = root.querySelector('[data-rec-features]');
-        ul.innerHTML = '';
-        (goals.length ? goals : ["Capture leads that don't call"]).forEach((g) => {
-          const li = document.createElement('li');
-          li.className = 'flex items-start gap-2.5';
-          li.innerHTML = '<span class="mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-accent/20 text-accent"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>' + g + '</span>';
-          ul.appendChild(li);
-        });
+        if (ul) {
+          ul.innerHTML = '';
+          (goals.length ? goals : ["Capture leads that don't call"]).forEach((g) => {
+            const li = document.createElement('li');
+            li.className = 'flex items-start gap-2.5';
+            li.innerHTML = '<span class="mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-accent/20 text-accent"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>' + g + '</span>';
+            ul.appendChild(li);
+          });
+        }
 
+        // Budget-fit note: shown only when the budget doesn't match the goal-tier.
+        const noteEl = root.querySelector('[data-budget-fit-note]');
+        if (noteEl) {
+          if (fitNote) {
+            noteEl.textContent = fitNote;
+            noteEl.classList.remove('hidden');
+          } else {
+            noteEl.textContent = '';
+            noteEl.classList.add('hidden');
+          }
+        }
+
+        // Hidden fields for the email payload — make the dashboard record useful.
         const hidden = form.querySelector('[name="recommended_build"]');
-        if (hidden) hidden.value = tier.name + ' — ' + tier.setup + ' + ' + tier.monthly + (services.length ? ' · Services: ' + services.join(', ') : '');
+        const monthlyTail = recTier.maintenance
+          ? ' (or ' + recTier.maintenance + '/mo with Maintenance)'
+          : '';
+        if (hidden) {
+          hidden.value = recTier.line + ' line · ' + recTier.name + ' (' + recTier.code + ') — ' + recTier.setup + ' + ' + recTier.monthly + '/mo' + monthlyTail + (services.length ? ' · Services: ' + services.join(', ') : '');
+        }
+        const tierIdField = form.querySelector('[name="recommended_tier_id"]');
+        if (tierIdField) tierIdField.value = recTier.id;
+        const fitNoteField = form.querySelector('[name="budget_fit_note"]');
+        if (fitNoteField) fitNoteField.value = fitNote;
       };
+
+      // Re-render budget options whenever product line changes (Step 2 answer changes).
+      form.querySelectorAll('[name="product_line"]').forEach((r) => {
+        r.addEventListener('change', renderBudgetOptions);
+      });
 
       const show = (i, scroll) => {
         steps.forEach((s, idx) => s.classList.toggle('hidden', idx !== i));
         current = i;
         if (bar) bar.style.width = (((i + 1) / total) * 100) + '%';
         if (label) label.textContent = 'Step ' + (i + 1) + ' of ' + total;
+        // Re-render budget options on entry to the step that contains them, so
+        // back-navigation that changes the product line picks up the right set.
+        if (steps[i].querySelector('[data-budget-options]')) renderBudgetOptions();
         if (steps[i].hasAttribute('data-estimate-step')) buildEstimate();
         if (scroll) (card || root).scrollIntoView({ behavior: 'smooth', block: 'start' });
       };
