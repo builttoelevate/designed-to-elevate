@@ -9,12 +9,13 @@
 // CTA observer JS, and the call/text dialog.
 import LandingLayout from '../layouts/LandingLayout.astro';
 import BreadcrumbSchema from '../components/BreadcrumbSchema.astro';
+import QuoteFlowSection from '../components/landing/QuoteFlowSection.astro';
 
 const SITE = 'https://designedtoelevate.co';
 const PHONE_DISPLAY = '(740) 617-6488';
 const PHONE_TEL = 'tel:7406176488';
 const EMAIL = 'bilsonxnc@gmail.com';
-const QUOTE_HREF = '/contact?service=window-tint&from=window-tinting-websites';
+const QUOTE_HREF = '#quote';
 
 // Service schema for a web design studio that builds tint-shop websites.
 const serviceSchema = {
@@ -23,11 +24,19 @@ const serviceSchema = {
   name: 'Window Tint Shop Website Design',
   serviceType: 'Website and quote-system design for window tint shops',
   description:
-    'Window tint shop website builder for auto, residential, and commercial tint. Instant auto-tint quote flows, in-home residential estimates, commercial site assessments, lead capture, and a text-to-book handoff.',
+    'Window tint shop website builder for auto, residential, and commercial tint. Instant auto-tint quote flows, in-home residential estimates, commercial site assessments, lead capture, and a text-to-book handoff. Two product lines: add the wizard to your existing site (Form line, $997–$2,497 install) or build a new site with the wizard included (Website line, $1,497–$4,497 install). Flat $97/month floor across all tiers.',
   provider: { '@id': `${SITE}/#organization` },
   areaServed: { '@type': 'State', name: 'Ohio' },
   audience: { '@type': 'BusinessAudience', name: 'Window tint shops (auto, residential, commercial)' },
   url: `${SITE}/window-tinting-websites`,
+  offers: {
+    '@type': 'AggregateOffer',
+    lowPrice: '997',
+    highPrice: '4497',
+    priceCurrency: 'USD',
+    offerCount: '6',
+    description: 'Form line: $997 / $1,497 / $2,497 install + $97/mo. Website line: $1,497 / $2,497 / $4,497 install + $97/mo (or $197/$297 with Care + Maintenance on T2/T3).',
+  },
 };
 
 const painCards = [
@@ -49,15 +58,163 @@ const painCards = [
   },
 ];
 
+// Outcome-first deliverables — outcome owners care about, then the feature underneath.
 const whatYouGet = [
-  'Three quote paths, one site — auto instant-quote, residential in-home estimate, commercial site assessment',
-  'Vehicle-accurate auto pricing across 17 body-class buckets',
-  'Film tier comparison that sells the upgrade — Carbon, Nano Ceramic, Ceramic IR',
-  'Per-zone darkness selection with a "recommend for me" branch for the undecided',
-  'Lead capture before the final step — partial quotes still land in your dashboard',
-  'The finished quote texted straight to your phone to book',
-  'A dashboard showing every quote, vehicle, film, and add-on the customer picked',
-  'Local SEO structure so you rank for "window tint [town]," not just your shop name',
+  {
+    outcome: 'Auto-tint buyers see a real price in two minutes — not a callback request.',
+    feature: 'Instant-quote flow priced across 17 vehicle body-class buckets — coupe to crew-cab truck.',
+  },
+  {
+    outcome: 'Home and commercial leads close on a booked estimate, not a guess.',
+    feature: 'Scenario-led pages route each segment to its own CTA — in-home estimate or site assessment.',
+  },
+  {
+    outcome: 'The ceramic upgrade sells itself.',
+    feature: 'Carbon, Nano Ceramic, and Ceramic IR shown side-by-side with the upgrade delta inline — "only +$X from Carbon."',
+  },
+  {
+    outcome: 'The undecided customer still leaves with a price.',
+    feature: 'Per-zone darkness/VLT picker plus a "recommend for me" branch so nobody bounces on a question.',
+  },
+  {
+    outcome: 'Even abandons still land in your dashboard.',
+    feature: 'Partial-lead capture grabs name + phone a step before the final screen — so you can follow up.',
+  },
+  {
+    outcome: 'The finished quote texts itself to you to book.',
+    feature: 'Quote ID, vehicle, film, coverage, darkness — pre-filled in a text to your phone, or routed to your booking link.',
+  },
+  {
+    outcome: 'You rank for "window tint [town]," not just your shop name.',
+    feature: 'Local SEO structure, service-area schema, and Google Business Profile alignment built into the build.',
+  },
+  {
+    outcome: 'You own it — cancel the monthly anytime, the site keeps running.',
+    feature: 'Code, repo, and domain in your name at handoff. Hosting tier is free for shops your size.',
+  },
+];
+
+// Old way vs new way — explicit two-column contrast.
+const oldWay = [
+  'One generic form for three different buyers',
+  'Auto-tint customers wait for a callback that loses to the next shop',
+  'Home and commercial leads get the same "we\'ll get back to you"',
+  'Loses every visitor who wanted a price or a booked estimate',
+];
+
+const newWay = [
+  'Three segment-specific flows on one site',
+  'Auto tint priced instantly by vehicle and film tier',
+  'Residential + commercial routed to a booked estimate',
+  'Captures the lead before they bounce — every segment',
+];
+
+// What happens after the click — the invisible system, made tangible.
+const afterClickSteps = [
+  { num: '01', label: 'Google ad click',          body: '"Window tint [town]," "ceramic tint near me," or your shop name' },
+  { num: '02', label: 'Segment-specific page',    body: 'Auto, residential, or commercial — ad params drop them in the right flow' },
+  { num: '03', label: 'Pick vehicle + film tier', body: 'For auto: vehicle, coverage, film tier, darkness. For home/commercial: scenario.' },
+  { num: '04', label: 'See a real ballpark',      body: 'Auto gets an instant price. Home/commercial gets a booked estimate slot.' },
+  { num: '05', label: 'Lead in your dashboard',   body: 'Quote texted to your phone, contact captured even if they bail' },
+];
+
+// Pricing tiers — two-line structure pulled from PRICING.md (single source of truth).
+// Form line = add the wizard to an existing site. Website line = build the site too.
+// Both share the $97/mo Care floor; Website T2/T3 have an optional Maintenance upgrade.
+// Tier names + numbers match auto-detailing-websites; copy is generic across niches.
+const formLineTiers = [
+  {
+    id: 'form_t1',
+    name: 'Quote',
+    code: 'T1',
+    setup: '$997',
+    monthly: '$97',
+    blurb: 'Customer gets a real price, the lead hits your dashboard, you schedule it manually.',
+    features: [
+      'Guided quote wizard with automatic pricing',
+      'Final quote → pre-filled text to the shop',
+      'Lead lands in the dashboard + calendar',
+      'Customer + shop both get a quote email',
+    ],
+    highlight: false,
+  },
+  {
+    id: 'form_t2',
+    name: 'Quote + Reviews',
+    code: 'T2',
+    setup: '$1,497',
+    monthly: '$97',
+    blurb: 'Everything in T1, plus auto-texts each customer a Google-review request after the job (skips no-shows).',
+    features: [
+      'Everything in T1',
+      'Automated SMS Google-review requests',
+      'Review request auto-skips no-shows',
+    ],
+    highlight: true,
+    tag: 'Most form-line builds',
+  },
+  {
+    id: 'form_t3',
+    name: 'Quote + Booking',
+    code: 'T3',
+    setup: '$2,497',
+    monthly: '$97',
+    blurb: 'Everything in T2, plus the customer books their own slot online — runs on autopilot.',
+    features: [
+      'Everything in T2',
+      'Customer self-service booking → calendar',
+    ],
+    highlight: false,
+  },
+];
+
+const websiteLineTiers = [
+  {
+    id: 'web_t1',
+    name: 'Starter Site',
+    code: 'T1',
+    setup: '$1,497',
+    monthly: '$97',
+    blurb: 'Fast, modern website + smart lead-capture form. The foundation — easy to upgrade to the full system later.',
+    features: [
+      'Custom website (mobile-first, fast, owned)',
+      'Local SEO structure + analytics',
+      'Smart lead-capture form (1–2 questions, routed to text/email)',
+    ],
+    highlight: false,
+  },
+  {
+    id: 'web_t2',
+    name: 'Quote Site',
+    code: 'T2',
+    setup: '$2,497',
+    monthly: '$97',
+    maintenanceMonthly: '$197',
+    blurb: 'Everything in T1, plus the full Quote wizard built into the site (Form-line T1 system).',
+    features: [
+      'Everything in T1',
+      'Full guided quote wizard + automatic pricing',
+      'Quote → text-to-shop handoff',
+      'Lead dashboard + calendar + customer/shop emails',
+    ],
+    highlight: true,
+    tag: 'Most website builds',
+  },
+  {
+    id: 'web_t3',
+    name: 'The Works',
+    code: 'T3',
+    setup: '$4,497',
+    monthly: '$97',
+    maintenanceMonthly: '$297',
+    blurb: 'Everything Fitchin has — T2 + automated SMS reviews + customer self-service online booking. The whole system, on autopilot.',
+    features: [
+      'Everything in T2',
+      'Automated SMS Google-review requests (skips no-shows)',
+      'Customer self-service online booking → calendar',
+    ],
+    highlight: false,
+  },
 ];
 
 const segments = [
@@ -82,7 +239,7 @@ const segments = [
 ];
 
 const caseFacts = [
-  'Live in production on my own shop',
+  'Live in production at Fitchin',
   '17 vehicle body-class buckets for accurate pricing',
   'Carbon, Nano Ceramic & Ceramic IR compared inline',
   'Per-zone darkness with a recommend-for-me branch',
@@ -168,7 +325,11 @@ const whoFor = [
 const faqs = [
   {
     q: 'How much does a window tint shop website cost?',
-    a: "It's a custom build — a quote system shaped around the segments you run and how you price them. There's no flat sticker, because a single auto-tint flow and a full auto-plus-residential-plus-commercial build aren't the same project. Book a call, I'll look at what you've got, and I'll scope it straight.",
+    a: "Two product lines, six tiers, one $97/month floor. If you already have a website you're keeping, we add just the wizard — Form line, $997 (Quote) / $1,497 (Quote + Reviews) / $2,497 (Quote + Booking) install, plus $97/month flat. If you need a new website too, we build the system in — Website line, $1,497 (Starter Site) / $2,497 (Quote Site) / $4,497 (The Works) install, plus $97/month Care or an optional $197/$297 Care + Maintenance on T2/T3. All tiers month-to-month, no contract. Code is yours at handoff — cancel anytime and the site keeps running.",
+  },
+  {
+    q: 'Do I need a new website, or can you just add the wizard to mine?',
+    a: "Both — your call. If your current tint-shop site is fine and you just want the quoting + lead-capture system on top of it, that's the Form line: $997 (T1 Quote) / $1,497 (T2 Quote + Reviews) / $2,497 (T3 Quote + Booking) install, plus $97/month flat. If you need a new site too — or your current one is a Wix/Squarespace you're trying to leave — that's the Website line: $1,497 (Starter Site) / $2,497 (Quote Site) / $4,497 (The Works) install, plus $97/month Care. Same wizard either way, same $97/month floor either way.",
   },
   {
     q: 'Can one site really handle auto, residential, and commercial tint?',
@@ -176,7 +337,19 @@ const faqs = [
   },
   {
     q: 'How long does it take?',
-    a: 'About 3–5 weeks from kickoff to launch, depending on how many of the three segments you run and how deep the pricing logic goes.',
+    a: 'About 3–5 weeks from kickoff to launch on Website tiers; 1–3 weeks on Form line. Depends on how many segments you run (auto / residential / commercial) and how deep the pricing logic goes.',
+  },
+  {
+    q: "What's the difference between the $97 and the $197 / $297 monthly?",
+    a: "$97/month — Care — is the floor on every tier. It covers hosting on our infrastructure (no separate server bill), repo + domain ownership in your name, platform-wide updates pushed automatically, and breakage fixes on the Form line and Website T1. $197/month (Website T2) and $297/month (Website T3) — Care + Maintenance — is an optional upgrade. It adds active monitoring (Bill catches issues before you do), included breakage fixes (no per-incident charges), included monthly content tweaks (~1 hour on T2, ~2 hours on T3), priority 24-hour Client Hub response, and a quarterly health check. The Form line and Website T1 stay flat $97 — no Maintenance upgrade available on those, because the surface area is small enough that base Care already covers it.",
+  },
+  {
+    q: 'Can I start with the wizard and upgrade to a full website later?',
+    a: "Yes. If you start on the Form line and later want a full website, your original install credits against the new Website tier — so a Form T2 client ($1,497) upgrading to Website T2 ($2,497) pays the $1,000 difference, not a fresh build cost. The wizard and dashboard you already own carry into the new build; we don't rebuild from scratch. Your monthly transitions cleanly too — Form $97 stays $97 on Website T1 or base Care, and you can opt into Maintenance later if you want it.",
+  },
+  {
+    q: 'What happens if I cancel the monthly?',
+    a: "You keep the site. The code is yours, the repo and domain are in your name, and the site runs on a hosting tier that's free for shops your size — so even after you cancel, there's no monthly server bill. The monthly fee covers ongoing services — pricing updates, your lead dashboard, support. Cancel anytime and the site keeps running; you'd just take those pieces over yourself or hand them to another developer.",
   },
   {
     q: 'Do I have to change how I take bookings or payments?',
@@ -187,8 +360,24 @@ const faqs = [
     a: 'Yes. The engine is built around your real pricing — by vehicle, film tier, coverage, darkness, and add-on. When your prices change, you update them yourself and the site reflects it on the next load — no redeploy, no waiting on me.',
   },
   {
-    q: 'Will it rank on Google too?',
-    a: "It's built for paid traffic first, but on clean, fast, semantic code with local SEO structure — so it earns its way up for searches like \"window tint [your town]\" over time. I won't promise a ranking; I'll build it so it has every reason to climb.",
+    q: 'Can I update prices later?',
+    a: "Yes. Pricing is editable through a simple admin — no code, no developer needed. Change a base rate, swap a film tier, add a new vehicle class or add-on, save, and the live site reflects it on the next load.",
+  },
+  {
+    q: 'What if I already have a website?',
+    a: "Most shops do. Your existing site can either be replaced cleanly at launch or kept running while this lives as a dedicated landing page for paid traffic — your call. Either way, the old site keeps running until handoff so there's no downtime.",
+  },
+  {
+    q: 'Do I need a new logo or photos?',
+    a: "No. We work with what you have. If your logo or photos would limit conversion, we'll flag it and either tackle it together or leave it to you — nothing about the build is dependent on a rebrand. We can drop in better photography over time once leads start flowing.",
+  },
+  {
+    q: 'Will this help with Google Ads and local SEO?',
+    a: "Yes on both. A faster, message-matched landing page raises your Google Ads Quality Score, which lowers cost per click — and the quote flow gives Ads a clean conversion event to optimize against. Local SEO structure (service-area pages, schema, Google Business Profile alignment) is baked in so you can rank for \"window tint [town]\" searches, not just your exact shop name.",
+  },
+  {
+    q: 'How is this different from Wix, Squarespace, or WordPress?',
+    a: "Wix and Squarespace rent you a locked template — you pay forever, and the second you stop, the site goes dark. WordPress is yours but stacks its own monthly costs (hosting, plugins, security, theme updates). This is custom-built around how your tint shop quotes and books, the code is yours at handoff, the hosting is free for shops your size, and you can cancel the monthly anytime without losing the site.",
   },
 ];
 
@@ -265,7 +454,7 @@ const faqSchema = {
               <span class="xs:hidden sm:hidden">Call</span>
             </a>
             <a href={QUOTE_HREF} class="btn-primary !py-2.5 !px-3.5 sm:!px-4 !text-[0.78rem] sm:!text-[0.85rem] whitespace-nowrap">
-              Get a Free Quote
+              Build My Estimate
               <span aria-hidden="true">↗</span>
             </a>
           </div>
@@ -278,16 +467,25 @@ const faqSchema = {
           <div>
             <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Window Tint Shop Websites</span>
             <h1 class="mt-5 text-[2.2rem] sm:text-[2.9rem] lg:text-[3.3rem] leading-[1.04] font-bold tracking-tight">
-              Window tint shop websites that sell auto, home, and commercial — <span class="text-accent">the way each one actually buys.</span>
+              Window tint websites that <span class="text-accent">price the job</span> — before the customer calls another shop.
             </h1>
             <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.1rem] leading-relaxed max-w-2xl">
-              Auto tint, residential, commercial — three different customers, three different ways to close them. We build the quote flow, the pricing logic, and the call-to-action each segment needs. The same tint wizard I built for my own shop, Fitchin.
+              Auto tint priced on the spot by vehicle and film tier. Residential and commercial routed to booked estimates. We build the quote flow, the pricing logic, and the call-to-action each segment actually needs.
             </p>
 
-            <div class="mt-8 flex flex-wrap gap-3">
+            <!-- HERO PROOF ELEMENT — live-in-production badge + named shop. -->
+            <div class="mt-5 inline-flex items-center gap-2.5 rounded-full border border-line bg-surface-1/60 px-3 py-1.5">
+              <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
+                <span class="absolute inline-flex h-1.5 w-1.5 rounded-full bg-accent/60 animate-ping"></span>
+                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent"></span>
+              </span>
+              <span class="font-display text-[0.75rem] uppercase tracking-[0.14em] text-text-soft">Live in Production · Built for Fitchin Tint &amp; Detail</span>
+            </div>
+
+            <div class="mt-7 flex flex-wrap gap-3">
               <a href={QUOTE_HREF} data-hero-cta class="btn-primary">
-                Book a Tint Website Call
-                <span aria-hidden="true">↗</span>
+                Build My Ballpark Estimate
+                <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
               </a>
               <a href="#segments" class="btn-ghost">
                 How we build by segment
@@ -295,8 +493,12 @@ const faqSchema = {
               </a>
             </div>
 
+            <div class="mt-3 text-[0.85rem] text-text-muted">
+              No spam, no pushy sales call. Bill replies within 24 hours.
+            </div>
+
             <div class="mt-6 text-[0.9rem] text-text-muted">
-              Custom quote system &nbsp;·&nbsp; built around your pricing &nbsp;·&nbsp; 3–5 week build
+              You own the code &nbsp;·&nbsp; Quote system included &nbsp;·&nbsp; 3–5 week build
             </div>
           </div>
 
@@ -348,24 +550,104 @@ const faqSchema = {
       </div>
     </section>
 
-    <!-- WHAT THIS ACTUALLY IS -->
+    <!-- OLD WAY vs NEW WAY — contrast block. Justifies costing more than a $500 template. -->
+    <section class="relative border-b border-line bg-surface-1/30">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Old vs. New</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.5rem] leading-[1.07] font-bold">
+            A normal tint website vs. a real quote system.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Both cost money to run. Only one of them prices the job and captures the lead.
+          </p>
+        </div>
+
+        <div class="mt-12 grid md:grid-cols-2 gap-5">
+          <div class="card p-7 sm:p-8 flex flex-col">
+            <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-text-muted mb-4">A normal tint website</div>
+            <ul class="space-y-3 flex-1">
+              {oldWay.map((item) => (
+                <li class="flex items-start gap-3 text-[0.98rem] text-text-soft leading-snug">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-text-muted/15 text-text-muted flex-shrink-0" aria-hidden="true">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="card p-7 sm:p-8 flex flex-col border-accent/40 bg-accent/[0.04]">
+            <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-4">A Designed to Elevate quote system</div>
+            <ul class="space-y-3 flex-1">
+              {newWay.map((item) => (
+                <li class="flex items-start gap-3 text-[0.98rem] text-text leading-snug">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/20 text-accent flex-shrink-0" aria-hidden="true">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT HAPPENS AFTER THE CLICK — the invisible system, made tangible. -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The Flow</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+            What happens after the click?
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Most websites stop at the click. We build the path after it — from paid traffic to a quote you can book.
+          </p>
+        </div>
+
+        <ol class="mt-12 grid sm:grid-cols-2 md:grid-cols-5 gap-4 md:gap-3">
+          {afterClickSteps.map((s) => (
+            <li class="card p-5 flex flex-col">
+              <div class="font-display text-accent text-[0.74rem] uppercase tracking-[0.2em] mb-2">{s.num}</div>
+              <h3 class="font-display font-semibold text-[1rem] text-text leading-snug">{s.label}</h3>
+              <p class="mt-2 text-[0.88rem] text-text-soft leading-relaxed">{s.body}</p>
+            </li>
+          ))}
+        </ol>
+
+        <div class="mt-12 flex justify-center">
+          <a href={QUOTE_HREF} class="btn-primary">
+            Build My Ballpark Estimate
+            <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT YOU GET — outcomes first, feature underneath. -->
     <section class="relative border-b border-line bg-surface-1/30">
       <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-24">
         <span class="eyebrow"><span class="dot" aria-hidden="true"></span> What You Get</span>
         <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
-          What this actually is.
+          Not a prettier homepage. A booking machine.
         </h2>
         <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed max-w-3xl">
-          Not just a prettier homepage. A window tint shop website builder’s worth of pricing logic, built around how your shop actually books work:
+          What changes for your shop, and what's running under the hood to make it happen.
         </p>
 
-        <ul class="mt-9 grid sm:grid-cols-2 gap-4">
-          {whatYouGet.map((b) => (
-            <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
+        <ul class="mt-10 grid sm:grid-cols-2 gap-x-8 gap-y-7">
+          {whatYouGet.map((item) => (
+            <li class="flex items-start gap-3">
               <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               </span>
-              <span>{b}</span>
+              <div class="min-w-0">
+                <div class="font-display font-semibold text-[1rem] text-text leading-snug">{item.outcome}</div>
+                <div class="mt-1.5 text-[0.92rem] text-text-soft leading-relaxed">{item.feature}</div>
+              </div>
             </li>
           ))}
         </ul>
@@ -420,7 +702,7 @@ const faqSchema = {
             </div>
           </div>
           <figcaption class="mt-4 text-[0.92rem] text-text-muted text-center max-w-2xl mx-auto">
-            The auto-tint instant-quote flow, live on my own shop: film tiers compared side by side, priced by vehicle.
+            The auto-tint instant-quote flow, live at Fitchin: film tiers compared side by side, priced by vehicle.
           </figcaption>
         </figure>
       </div>
@@ -463,7 +745,7 @@ const faqSchema = {
 
           <div>
             <p class="text-text-soft text-[1.05rem] leading-relaxed">
-              Fitchin is my own shop — where this whole system started. I built it from nothing, ran the bay, wrote the quotes, and watched leads slip away because the old site couldn’t price tint. So I rebuilt it. Now the site runs a guided tint wizard that handles every vehicle, every film tier, and every add-on end to end — and captures the lead even when the customer doesn’t finish.
+              Fitchin was the proving ground for this system. Eric runs a real auto detailing, ceramic, and window tinting shop in Coshocton, Ohio — with real pricing complexity across three segments and real customers who need clear answers before they book. The old site could describe the films, but it still couldn't price the work. The rebuild replaced the basic contact-form experience with a guided tint wizard that handles every vehicle, every film tier, and every add-on end to end — and captures the lead even when the customer doesn't finish.
             </p>
 
             <ul class="mt-7 space-y-3">
@@ -481,6 +763,42 @@ const faqSchema = {
               The same engine runs auto, residential, and commercial — priced and routed the way each one actually closes.
             </p>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PEER TESTIMONIAL — placed adjacent to a primary CTA, per checklist §8. -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-4xl px-5 sm:px-8 py-20 sm:py-24">
+        <figure class="card p-7 sm:p-10">
+          <div class="flex items-center gap-1 text-accent" aria-label="5 out of 5 stars">
+            {Array.from({ length: 5 }).map(() => (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"/>
+              </svg>
+            ))}
+          </div>
+          <blockquote class="mt-5 text-[1.15rem] sm:text-[1.3rem] text-text leading-relaxed font-display">
+            "Bill made two websites for me over the past few years. I had a great experience working with Bill from start to finish. They took the time to really understand my business, my goals, and the kind of online presence I was trying to build. Communication was clear and consistent throughout the entire process, which made everything feel smooth and stress-free."
+          </blockquote>
+          <figcaption class="mt-6 flex items-center gap-3">
+            <div class="font-display font-semibold text-text">Eric Fitch</div>
+            <span class="text-text-muted text-[0.95rem]">Owner, Fitchin Auto Detail &amp; Window Tinting · Coshocton, OH</span>
+          </figcaption>
+        </figure>
+
+        <!-- Inline CTA adjacent to the testimonial. -->
+        <div class="mt-10 text-center">
+          <p class="text-text-soft text-[0.97rem] mb-5">
+            Want the same tint quote system priced around your exact menu?
+          </p>
+          <a href={QUOTE_HREF} class="btn-primary">
+            Build My Ballpark Estimate
+            <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
+          </a>
+          <p class="mt-3 text-[0.85rem] text-text-muted">
+            ~60 seconds. No spam, no pushy sales call.
+          </p>
         </div>
       </div>
     </section>
@@ -604,10 +922,210 @@ const faqSchema = {
         </ul>
 
         <p class="mt-8 text-text-muted text-[0.95rem] italic">
-          This isn’t for shops that want the cheapest one-page template or a contact form bolted onto a stock theme.
+          This isn't for shops that want the cheapest one-page template or a contact form bolted onto a stock theme.
         </p>
       </div>
     </section>
+
+    <!-- OWNERSHIP / RISK REVERSAL — strongest objection-killer, surface it explicitly. -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Ownership</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+            Your site. Your code. Your hosting. <span class="text-accent">No rent.</span>
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Unlike Wix, Squarespace, or any rented site builder, the whole stack is yours at handoff — the code, the domain, the hosting account. Cancel the monthly anytime and the site keeps running.
+          </p>
+        </div>
+
+        <div class="mt-14 grid md:grid-cols-3 gap-8 lg:gap-10">
+          <div class="flex flex-col gap-4">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><line x1="10.85" y1="12.15" x2="19" y2="4"/><line x1="18" y1="5" x2="20" y2="7"/><line x1="15" y1="8" x2="17" y2="10"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-[1.15rem] text-text">You own the code</h3>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">
+              At handoff the repo and domain are in your name. Cancel the monthly anytime and the site keeps running — nobody can yank it down, lock you out, or hold a redesign over your head.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-4">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-[1.15rem] text-text">No more builder rent</h3>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">
+              Stop paying Wix or Squarespace every month for a locked-down template you'll never own. Yours is custom-built around how your tint shop quotes and books — not a theme you fight with.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-4">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 1 0-1.5-8.75 5 5 0 0 0-9.65 1.4A4 4 0 0 0 6 19h11.5z"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-[1.15rem] text-text">$0 hosting bill</h3>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">
+              The site runs on hosting that's free for shops your size — no monthly server bill from us, and none if you ever walk away. The fee you pay covers the work, not the server.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OFFER + PRICING — two product lines, six tiers, $97/mo floor across both.
+         All numbers pulled from PRICING.md (single source of truth). Mirrors the
+         pricing block on /auto-detailing-websites — same tier table, same monthlies,
+         same Care vs. Care + Maintenance structure. -->
+    <section id="pricing" class="relative border-b border-line bg-surface-1/30">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Pricing</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+            Two product lines. <span class="text-accent">One $97/month floor.</span>
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Already have a site you're keeping? Add just the wizard — <strong class="text-text">Form line, starts at $997</strong>. Need a new site too? Build the system in from day one — <strong class="text-text">Website line, starts at $1,497</strong>. Same $97/month on every tier.
+          </p>
+        </div>
+
+        <!-- FORM LINE — for shops keeping their existing site. -->
+        <div class="mt-14">
+          <div class="flex flex-wrap items-baseline gap-3 mb-6">
+            <h3 class="font-display font-bold text-[1.5rem] text-text">Form / Wizard line</h3>
+            <span class="text-text-muted text-[0.95rem]">Add the wizard to your existing site</span>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-5">
+            {formLineTiers.map((t) => (
+              <div class={'card p-7 flex flex-col ' + (t.highlight ? 'border-accent/60 bg-accent/[0.05] relative' : '')}>
+                {t.highlight && (
+                  <span class="absolute -top-3 left-7 inline-flex items-center rounded-full bg-accent px-2.5 py-1 font-display text-[0.62rem] font-bold uppercase tracking-[0.16em] text-bg">
+                    {t.tag}
+                  </span>
+                )}
+                <div class="font-display text-[0.7rem] uppercase tracking-[0.18em] text-text-muted">{t.code}</div>
+                <h4 class="mt-1 font-display font-bold text-[1.2rem] text-text">{t.name}</h4>
+                <div class="mt-4 font-display">
+                  <div class="text-[2rem] leading-none font-bold text-text">{t.setup}</div>
+                  <div class="mt-1 text-[0.85rem] text-text-muted uppercase tracking-[0.14em]">install · one-time</div>
+                </div>
+                <div class="mt-3 font-display text-[1.05rem] text-text">
+                  + <span class="font-bold">${t.monthly.replace('$','')}</span><span class="text-text-soft text-[0.95rem]">/month</span>
+                </div>
+                <p class="mt-5 text-[0.95rem] text-text-soft leading-relaxed">{t.blurb}</p>
+                <ul class="mt-5 space-y-2 flex-1">
+                  {t.features.map((f) => (
+                    <li class="flex items-start gap-2 text-[0.9rem] text-text leading-snug">
+                      <span class="mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      </span>
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <p class="mt-5 text-[0.86rem] text-text-muted">
+            Form line monthly is a flat $97 across all three tiers — the wizard's surface area is small enough that $97 covers hosting, updates, and breakage fixes without a maintenance upgrade.
+          </p>
+        </div>
+
+        <!-- WEBSITE LINE — for shops building new. -->
+        <div class="mt-16">
+          <div class="flex flex-wrap items-baseline gap-3 mb-6">
+            <h3 class="font-display font-bold text-[1.5rem] text-text">Website line</h3>
+            <span class="text-text-muted text-[0.95rem]">Full site + the system, built together</span>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-5">
+            {websiteLineTiers.map((t) => (
+              <div class={'card p-7 flex flex-col ' + (t.highlight ? 'border-accent/60 bg-accent/[0.05] relative' : '')}>
+                {t.highlight && (
+                  <span class="absolute -top-3 left-7 inline-flex items-center rounded-full bg-accent px-2.5 py-1 font-display text-[0.62rem] font-bold uppercase tracking-[0.16em] text-bg">
+                    {t.tag}
+                  </span>
+                )}
+                <div class="font-display text-[0.7rem] uppercase tracking-[0.18em] text-text-muted">{t.code}</div>
+                <h4 class="mt-1 font-display font-bold text-[1.2rem] text-text">{t.name}</h4>
+                <div class="mt-4 font-display">
+                  <div class="text-[2rem] leading-none font-bold text-text">{t.setup}</div>
+                  <div class="mt-1 text-[0.85rem] text-text-muted uppercase tracking-[0.14em]">install · one-time</div>
+                </div>
+                <div class="mt-3 font-display text-[1.05rem] text-text">
+                  + <span class="font-bold">${t.monthly.replace('$','')}</span><span class="text-text-soft text-[0.95rem]">/mo Care</span>
+                </div>
+                {t.maintenanceMonthly && (
+                  <div class="mt-1 font-display text-[0.92rem] text-text-soft">
+                    or <span class="font-semibold text-text">${t.maintenanceMonthly.replace('$','')}</span>/mo Care + Maintenance
+                  </div>
+                )}
+                <p class="mt-5 text-[0.95rem] text-text-soft leading-relaxed">{t.blurb}</p>
+                <ul class="mt-5 space-y-2 flex-1">
+                  {t.features.map((f) => (
+                    <li class="flex items-start gap-2 text-[0.9rem] text-text leading-snug">
+                      <span class="mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      </span>
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- MONTHLY EXPLAINER — Care vs. Care + Maintenance. -->
+        <div class="mt-14 grid sm:grid-cols-2 gap-5">
+          <div class="card p-6">
+            <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">$97/mo · Care</div>
+            <h4 class="font-display font-semibold text-[1rem] text-text">The floor on every tier.</h4>
+            <p class="mt-2 text-[0.94rem] text-text-soft leading-relaxed">
+              Hosting on our infrastructure (no separate server bill), repo + domain in your name, platform-wide updates pushed automatically, and breakage fixes on Form line + Website T1. Cancel anytime — the site freezes as-is and keeps running.
+            </p>
+          </div>
+          <div class="card p-6 border-accent/40">
+            <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">$197 / $297/mo · Care + Maintenance</div>
+            <h4 class="font-display font-semibold text-[1rem] text-text">Optional upgrade · Website T2 + T3 only.</h4>
+            <p class="mt-2 text-[0.94rem] text-text-soft leading-relaxed">
+              Everything in Care, plus Bill actively keeps the site functioning: monitoring catches issues before you do, breakage fixes are included, ~1 hr/mo (T2) or ~2 hr/mo (T3) of content tweaks bundled, priority 24-hr Client Hub response, and a quarterly health check.
+            </p>
+          </div>
+        </div>
+
+        <!-- TIMELINE + UPGRADE PATH. -->
+        <div class="mt-6 grid sm:grid-cols-2 gap-5">
+          <div class="card p-6">
+            <h4 class="font-display font-semibold text-[1rem] text-text mb-2">Timeline + terms</h4>
+            <p class="text-[0.94rem] text-text-soft leading-relaxed">
+              3–5 weeks from kickoff to launch on Website tiers; 1–3 weeks on Form line. All tiers month-to-month, no contract. Charm-priced because the brand position is value, not premium.
+            </p>
+          </div>
+          <div class="card p-6">
+            <h4 class="font-display font-semibold text-[1rem] text-text mb-2">Upgrade path: Form → Website</h4>
+            <p class="text-[0.94rem] text-text-soft leading-relaxed">
+              Start on Form, upgrade later. Your original install credits against the new Website tier — Form T2 ($1,497) → Website T2 ($2,497) costs the $1,000 difference. The wizard + dashboard you already own carry over.
+            </p>
+          </div>
+        </div>
+
+        <p class="mt-7 text-[0.86rem] text-text-muted italic max-w-3xl leading-relaxed">
+          Ballpark, not a contract. Bill prices the final build around your exact segments, film tiers, vehicle logic, and add-ons before you commit.
+        </p>
+
+        <div class="mt-10 flex justify-center">
+          <a href={QUOTE_HREF} class="btn-primary">
+            Build My Ballpark Estimate
+            <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <QuoteFlowSection />
 
     <!-- FAQ -->
     <section class="relative border-b border-line">
@@ -638,7 +1156,7 @@ const faqSchema = {
 
       <div class="relative z-10 mx-auto max-w-4xl px-5 sm:px-8 py-24 sm:py-32 text-center">
         <h2 class="text-[2.1rem] sm:text-[2.9rem] leading-[1.05] font-bold tracking-tight">
-          Three tint customers. <span class="text-accent">One site that knows the difference.</span>
+          Most websites stop at the click. <span class="text-accent">We build the path after it.</span>
         </h2>
         <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.15rem] leading-relaxed max-w-2xl mx-auto">
           Give your shop a website that prices auto tint on the spot, books home and commercial estimates, and captures every lead in between.
@@ -646,8 +1164,8 @@ const faqSchema = {
 
         <div class="mt-10 flex flex-wrap justify-center gap-3">
           <a href={QUOTE_HREF} class="btn-primary">
-            Book a Tint Website Call
-            <span aria-hidden="true">↗</span>
+            Build My Ballpark Estimate
+            <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
           </a>
           <a href={PHONE_TEL} class="btn-ghost">
             Call/Text Bill
@@ -655,7 +1173,10 @@ const faqSchema = {
           </a>
         </div>
 
-        <p class="mt-6 text-[0.95rem] text-text-soft">
+        <p class="mt-6 text-[0.92rem] text-text-soft">
+          ~60 seconds. No spam, no list-selling, no pushy sales call.
+        </p>
+        <p class="mt-2 text-[0.86rem] text-text-muted">
           Or call/text directly:
           <a href={PHONE_TEL} class="text-accent font-medium underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors whitespace-nowrap">{PHONE_DISPLAY}</a>
         </p>
@@ -690,7 +1211,7 @@ const faqSchema = {
         Call/Text
       </a>
       <a href={QUOTE_HREF} class="btn-primary flex-1 !px-2 !text-[0.85rem]">
-        Book a Call
+        Build My Estimate
         <span aria-hidden="true">↗</span>
       </a>
     </div>
