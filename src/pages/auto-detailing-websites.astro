@@ -63,7 +63,7 @@ const whatYouGet = [
   'The finished quote texted straight to your phone to book',
   'A dashboard showing every quote, vehicle, service, and add-on the customer picked',
   'Local SEO structure so you rank for "[service] in [town]," not just your shop name',
-  'Full code ownership at handoff — your repo, your Vercel account, no platform lock-in',
+  'Full code ownership at handoff — your repo, your domain, no platform lock-in',
 ];
 
 const caseFacts = [
@@ -107,7 +107,7 @@ const howItWorks = [
   {
     label: 'Fast on a phone, ad-ready',
     value:
-      'Built on Astro and deployed on Vercel — sub-second mobile loads that support a stronger landing page experience for paid traffic and reduce bounced ad clicks.',
+      'Sub-second mobile loads — a stronger landing page experience for paid traffic that reduces bounced ad clicks.',
   },
   {
     label: 'Your booking and payments stay yours',
@@ -149,11 +149,11 @@ const faqs = [
   },
   {
     q: "What's the monthly fee for?",
-    a: 'Hosting, the quote engine and ongoing pricing updates, your lead dashboard, step-by-step analytics, small site updates, and software costs. Month-to-month — no long-term contract.',
+    a: "The quote engine and ongoing pricing updates, your lead dashboard, step-by-step analytics, small site updates, and software costs. Hosting itself runs on a free tier built for small businesses, so the monthly covers the work — not the server. Month-to-month, no long-term contract.",
   },
   {
     q: 'What happens if I cancel the monthly?',
-    a: "You keep the site. The code is yours, the repo is yours, the Vercel and domain accounts are in your name. The monthly covers ongoing services — hosting we manage, pricing updates, dashboard support, software costs. Cancel anytime and the site keeps running; you'd just take those pieces over yourself or hand them to another developer. Most of our competitors at this price point can't say that.",
+    a: "You keep the site. The code is yours, the repo and domain are in your name, and the site runs on a hosting tier that's free for shops your size — so even after you cancel, there's no monthly server bill. The monthly fee covers ongoing services — pricing updates, your lead dashboard, support, software costs. Cancel anytime and the site keeps running; you'd just take those pieces over yourself or hand them to another developer. Most of our competitors at this price point can't say that.",
   },
   {
     q: 'Do I have to change how I take bookings or payments?',
@@ -334,6 +334,53 @@ const faqSchema = {
             </li>
           ))}
         </ul>
+      </div>
+    </section>
+
+    <!-- OWNERSHIP -->
+    <section class="relative border-b border-line">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Ownership</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+            Your site. Your code. Your hosting. <span class="text-accent">No rent.</span>
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            Unlike Wix, Squarespace, or any rented site builder, the whole stack is yours at handoff — the code, the domain, the hosting account. Cancel the monthly anytime and the site keeps running.
+          </p>
+        </div>
+
+        <div class="mt-14 grid md:grid-cols-3 gap-8 lg:gap-10">
+          <div class="flex flex-col gap-4">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><line x1="10.85" y1="12.15" x2="19" y2="4"/><line x1="18" y1="5" x2="20" y2="7"/><line x1="15" y1="8" x2="17" y2="10"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-[1.15rem] text-text">You own the code</h3>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">
+              At handoff the repo and domain are in your name. Cancel the monthly anytime and the site keeps running — nobody can yank it down, lock you out, or hold a redesign over your head.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-4">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-[1.15rem] text-text">No more builder rent</h3>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">
+              Stop paying Wix or Squarespace every month for a locked-down template you'll never own. Yours is custom-built around how your shop actually quotes and books — not a theme you fight with.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-4">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 1 0-1.5-8.75 5 5 0 0 0-9.65 1.4A4 4 0 0 0 6 19h11.5z"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-[1.15rem] text-text">$0 hosting bill</h3>
+            <p class="text-[0.95rem] text-text-soft leading-relaxed">
+              The site runs on hosting that's free for shops your size — no monthly server bill from us, and none if you ever walk away. The fee you pay covers the work, not the server.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
