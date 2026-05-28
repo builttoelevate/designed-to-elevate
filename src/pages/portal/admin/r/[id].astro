@@ -8,6 +8,7 @@ import {
   STATUS_LABELS,
   STATUS_ORDER,
   BILLING_OPTIONS,
+  PRIORITY_OPTIONS,
   categoryLabel,
   externalUrl,
   priorityLabel,
@@ -128,12 +129,20 @@ function uploaderLabel(f: SignedFile): string {
       <span class="ph-badge shrink-0" data-status={req.status}>{STATUS_LABELS[req.status as RequestStatus]}</span>
     </div>
 
-    <div class="grid sm:grid-cols-2 gap-3 mb-5">
+    <div class="grid sm:grid-cols-3 gap-3 mb-2">
       <label class="block">
         <span class="ph-label">Status</span>
         <select class="ph-input" data-update-field="status" data-request-id={req.id}>
           {STATUS_ORDER.map((s) => (
             <option value={s} selected={req.status === s}>{STATUS_LABELS[s]}</option>
+          ))}
+        </select>
+      </label>
+      <label class="block">
+        <span class="ph-label">Client urgency</span>
+        <select class="ph-input" data-update-field="priority" data-request-id={req.id}>
+          {PRIORITY_OPTIONS.map((p) => (
+            <option value={p.value} selected={req.priority === p.value}>{p.label}</option>
           ))}
         </select>
       </label>
@@ -146,15 +155,12 @@ function uploaderLabel(f: SignedFile): string {
         </select>
       </label>
     </div>
+    <p class="ph-hint mb-5">Bumping urgency UP (e.g. Whenever → Blocking) emails the client. De-escalating is silent.</p>
 
     <dl class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5 text-xs">
       <div>
         <dt class="text-text-muted uppercase tracking-wide">Type</dt>
         <dd class="mt-0.5 font-medium">{categoryLabel(req.category)}</dd>
-      </div>
-      <div>
-        <dt class="text-text-muted uppercase tracking-wide">Priority</dt>
-        <dd class="mt-0.5 font-medium ph-pri" data-priority={req.priority}>{priorityLabel(req.priority)}</dd>
       </div>
       <div>
         <dt class="text-text-muted uppercase tracking-wide">Submitted</dt>

@@ -39,11 +39,26 @@ export const CATEGORY_OPTIONS: { value: RequestCategory; label: string }[] = [
   { value: 'other', label: 'Other' },
 ];
 
+// Labels are intentionally client-facing ("how urgently do you need to act?")
+// rather than internal triage labels. They render the same in the admin UI;
+// the admin sees the same words a client does so there's one shared vocabulary.
 export const PRIORITY_OPTIONS: { value: RequestPriority; label: string }[] = [
-  { value: 'normal', label: 'Normal' },
-  { value: 'important', label: 'Important' },
-  { value: 'urgent', label: 'Urgent' },
+  { value: 'normal', label: 'Whenever you get a chance' },
+  { value: 'important', label: "Soon — please don't sit on it" },
+  { value: 'urgent', label: "Blocking — I can't move forward" },
 ];
+
+// Used to compare priorities for escalation emails: a change is an escalation
+// only when the new rank is strictly greater than the previous one.
+const PRIORITY_RANK: Record<RequestPriority, number> = {
+  normal: 0,
+  important: 1,
+  urgent: 2,
+};
+
+export function priorityRank(value: string): number {
+  return PRIORITY_RANK[value as RequestPriority] ?? 0;
+}
 
 export const BILLING_OPTIONS: { value: BillingType; label: string }[] = [
   { value: 'included', label: 'Included in plan' },

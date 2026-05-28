@@ -43,6 +43,23 @@ interface ClientEmail {
   firstName: string;
   title: string;
   requestId: string;
+  /** Optional urgency label to surface in the body (e.g. "Blocking — I can't move forward"). */
+  urgencyLabel?: string | null;
+}
+
+/** Wraps an urgency line in the dark-card "tag" style used in the email body. */
+function urgencyTagHtml(label: string | null | undefined): string {
+  if (!label) return '';
+  return `
+    <div style="margin:0 0 16px;padding:10px 14px;background:rgba(255,106,0,0.08);border:1px solid rgba(255,106,0,0.32);border-radius:8px;">
+      <span style="font-family:${FONT};font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:${COLOR.accent};font-weight:700;">Marked as</span>
+      <div style="margin-top:3px;font-family:${FONT};font-size:15px;color:${COLOR.text};font-weight:600;">${esc(label)}</div>
+    </div>`;
+}
+
+function urgencyTagText(label: string | null | undefined): string {
+  if (!label) return '';
+  return `\n\nMarked as: ${label}`;
 }
 
 interface AdminEmail {
@@ -288,14 +305,16 @@ export async function sendStatusWaitingOnClientEmail(args: ClientEmail) {
   const url = clientRequestUrl(args.requestId);
   const text = `Hi ${args.firstName},
 
-We need a bit more info to move forward on '${args.title}'.
+We need a bit more info to move forward on '${args.title}'.${urgencyTagText(args.urgencyLabel)}
 
 Open the request and reply with what we need to keep things moving:
 ${url}
 
 — Bill, Designed to Elevate`;
 
-  const bodyHtml = paragraphs(`Hi ${args.firstName}, we need a bit more info to move forward on '${args.title}'.
+  const bodyHtml =
+    urgencyTagHtml(args.urgencyLabel) +
+    paragraphs(`Hi ${args.firstName}, we need a bit more info to move forward on '${args.title}'.
 
 Open the request and reply with what we need to keep things moving.`);
 
@@ -351,7 +370,106 @@ Open the request to see what was done and any screenshots attached.`);
   });
 }
 
-/* ── 5. client: new message on a request ───────────────────────────────── */
+/* ── 5. client: admin logged a job for them (status starts at "new") ───── */
+export async function sendJobLoggedForClientEmail(args: ClientEmail & { description?: string | null }) {
+  const url = clientRequestUrl(args.requestId);
+  const desc = (args.description ?? '').trim();
+  const previewText = desc ? `\n\nWhat it is:\n${desc.length > 280 ? `${desc.slice(0, 280)}…` : desc}` : '';
+
+  const text = `Hi ${args.firstName},
+
+I added a job to your queue: '${args.title}'.${urgencyTagText(args.urgencyLabel)}${previewText}
+
+You can see it in your dashboard. I'll keep you posted as it moves; if I need anything from you to keep going, I'll switch it to "Waiting on you" and you'll get another email.
+
+Open the job: ${url}
+
+— Bill, Designed to Elevate`;
+
+  const previewHtml = desc
+    ? `<p style="margin:0 0 14px;font-family:${FONT};font-size:14px;line-height:1.6;color:${COLOR.textMuted};white-space:pre-wrap;"><span style="color:${COLOR.textFaint};font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:0.12em;">What it is</span><br>${esc(desc.length > 280 ? `${desc.slice(0, 280)}…` : desc)}</p>`
+    : '';
+
+  const bodyHtml =
+    urgencyTagHtml(args.urgencyLabel) +
+    paragraphs(`Hi ${args.firstName}, I added a job to your queue: '${args.title}'.`) +
+    previewHtml +
+    paragraphs(`I'll keep you posted as it moves. If I need anything from you to keep going, I'll switch it to "Waiting on you" and you'll get another email.`);
+
+  const html = renderShell({
+    preheader: `New job in your queue: '${args.title}'.`,
+    title: `New in your queue — ${args.title}`,
+    headline: 'New job in your queue',
+    bodyHtml,
+    buttonText: 'Open job',
+    buttonUrl: url,
+  });
+
+  await send({
+    to: args.toEmail,
+    subject: `New in your queue — ${args.title}`,
+    text,
+    html,
+    replyTo: ADMIN_EMAIL,
+  });
+}
+
+/* ── 6. client: urgency was bumped up on an active job ─────────────────── */
+export async function sendUrgencyEscalatedEmail(
+  args: ClientEmail & { fromLabel: string; toLabel: string; waitingOnClient: boolean }
+) {
+  const url = clientRequestUrl(args.requestId);
+  const blocking = args.waitingOnClient;
+  const action = blocking
+    ? `Please open the job and respond — I can't move forward until you do.`
+    : `Heads up so it's on your radar.`;
+
+  const text = `Hi ${args.firstName},
+
+The urgency on '${args.title}' just went up.
+
+  ${args.fromLabel}  →  ${args.toLabel}
+
+${action}
+
+Open the job: ${url}
+
+— Bill, Designed to Elevate`;
+
+  const transitionHtml = `
+    <div style="margin:0 0 16px;padding:12px 14px;background:rgba(255,106,0,0.08);border:1px solid rgba(255,106,0,0.32);border-radius:8px;">
+      <div style="font-family:${FONT};font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:${COLOR.accent};font-weight:700;margin-bottom:6px;">Urgency change</div>
+      <div style="font-family:${FONT};font-size:14px;color:${COLOR.textMuted};">
+        <span style="text-decoration:line-through;">${esc(args.fromLabel)}</span>
+        <span style="color:${COLOR.textFaint};padding:0 6px;">→</span>
+        <span style="color:${COLOR.text};font-weight:600;">${esc(args.toLabel)}</span>
+      </div>
+    </div>`;
+
+  const bodyHtml =
+    paragraphs(`Hi ${args.firstName}, the urgency on '${args.title}' just went up.`) +
+    transitionHtml +
+    paragraphs(action);
+
+  const html = renderShell({
+    preheader: `'${args.title}' is now ${args.toLabel}.`,
+    title: `Urgency went up — ${args.title}`,
+    headline: 'Heads up — urgency went up',
+    bodyHtml,
+    buttonText: blocking ? 'Open job & respond' : 'Open job',
+    buttonUrl: url,
+  });
+
+  await send({
+    to: args.toEmail,
+    subject: `Urgency went up — ${args.title}`,
+    text,
+    html,
+    replyTo: ADMIN_EMAIL,
+  });
+}
+
+/* ── 7. client: new message on a request ───────────────────────────────── */
 export async function sendNewMessageEmail(args: ClientEmail & { preview?: string }) {
   const url = clientRequestUrl(args.requestId);
   const preview = (args.preview || '').trim();

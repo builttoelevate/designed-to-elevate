@@ -17,6 +17,7 @@ import {
   sendJobCompleteEmail,
 } from '../../../../../lib/email';
 import { isClientNotificationEnabled } from '../../../../../lib/notifications';
+import { priorityLabel } from '../../../../../lib/portal';
 
 const ALLOWED_STATUSES = new Set(['new', 'in_progress', 'waiting_on_client', 'complete']);
 const MAX_BULK = 200;
@@ -45,7 +46,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   // Snapshot prior state so we can log clean transitions and skip no-ops.
   const { data: before, error: beforeErr } = await admin
     .from('requests')
-    .select('id, status, client_id, title')
+    .select('id, status, priority, client_id, title')
     .in('id', ids);
   if (beforeErr) return json({ error: beforeErr.message }, 500);
 
@@ -69,9 +70,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       metadata: { from: prev.status, to: status },
     });
     if (status === 'waiting_on_client') {
-      void notifyClient(id, prev.client_id, prev.title, 'waiting_on_client');
+      void notifyClient(id, prev.client_id, prev.title, 'waiting_on_client', prev.priority);
     } else if (status === 'complete') {
-      void notifyClient(id, prev.client_id, prev.title, 'complete');
+      void notifyClient(id, prev.client_id, prev.title, 'complete', prev.priority);
     }
   }
   if (activityRows.length) {
@@ -85,7 +86,8 @@ async function notifyClient(
   requestId: string,
   clientId: string,
   title: string,
-  kind: 'waiting_on_client' | 'complete'
+  kind: 'waiting_on_client' | 'complete',
+  priority: string,
 ) {
   try {
     const admin = createServiceSupabase();
@@ -115,6 +117,7 @@ async function notifyClient(
       firstName,
       title,
       requestId,
+      urgencyLabel: priorityLabel(priority),
     };
 
     if (kind === 'complete') {

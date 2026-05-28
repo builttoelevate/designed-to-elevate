@@ -33,10 +33,24 @@ export const CLIENT_NOTIFICATIONS: ClientNotificationType[] = [
     defaultEnabled: true,
   },
   {
+    key: 'job_logged_for_client',
+    label: 'Job logged for them',
+    trigger: 'You log a job for them (status starts at “New”)',
+    clientGets: '“We added a job to your queue — here’s what it is.”',
+    defaultEnabled: true,
+  },
+  {
     key: 'status_waiting_on_client',
     label: 'Waiting on them',
-    trigger: 'You set a job to “Waiting on client”',
+    trigger: 'You set a job to “Waiting on client” (on create or later)',
     clientGets: '“We need one more thing to keep moving.”',
+    defaultEnabled: true,
+  },
+  {
+    key: 'urgency_escalated',
+    label: 'Urgency went up',
+    trigger: 'You bump a job’s urgency UP (Whenever → Soon → Blocking)',
+    clientGets: '“Heads up — the urgency on this job just went up.”',
     defaultEnabled: true,
   },
   {
