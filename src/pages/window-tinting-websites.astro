@@ -24,11 +24,19 @@ const serviceSchema = {
   name: 'Window Tint Shop Website Design',
   serviceType: 'Website and quote-system design for window tint shops',
   description:
-    'Window tint shop website builder for auto, residential, and commercial tint. Instant auto-tint quote flows, in-home residential estimates, commercial site assessments, lead capture, and a text-to-book handoff.',
+    'Window tint shop website builder for auto, residential, and commercial tint. Instant auto-tint quote flows, in-home residential estimates, commercial site assessments, lead capture, and a text-to-book handoff. Two product lines: add the wizard to your existing site (Form line, $997–$2,497 install) or build a new site with the wizard included (Website line, $1,497–$4,497 install). Flat $97/month floor across all tiers.',
   provider: { '@id': `${SITE}/#organization` },
   areaServed: { '@type': 'State', name: 'Ohio' },
   audience: { '@type': 'BusinessAudience', name: 'Window tint shops (auto, residential, commercial)' },
   url: `${SITE}/window-tinting-websites`,
+  offers: {
+    '@type': 'AggregateOffer',
+    lowPrice: '997',
+    highPrice: '4497',
+    priceCurrency: 'USD',
+    offerCount: '6',
+    description: 'Form line: $997 / $1,497 / $2,497 install + $97/mo. Website line: $1,497 / $2,497 / $4,497 install + $97/mo (or $197/$297 with Care + Maintenance on T2/T3).',
+  },
 };
 
 const painCards = [
@@ -110,29 +118,101 @@ const afterClickSteps = [
   { num: '05', label: 'Lead in your dashboard',   body: 'Quote texted to your phone, contact captured even if they bail' },
 ];
 
-// Pricing tiers — single source of truth shared with the dedicated Offer section
-// AND surfaced inside the quote flow's dynamic "recommended build" reveal.
-const pricingTiers = [
+// Pricing tiers — two-line structure pulled from PRICING.md (single source of truth).
+// Form line = add the wizard to an existing site. Website line = build the site too.
+// Both share the $97/mo Care floor; Website T2/T3 have an optional Maintenance upgrade.
+// Tier names + numbers match auto-detailing-websites; copy is generic across niches.
+const formLineTiers = [
   {
-    name: 'Starter Quote Site',
-    setup: '$2,495',
-    monthly: '$295',
-    blurb: 'A focused single-segment tint site with a guided quote flow — auto only, residential only, or commercial only. Same pricing logic, smaller scope.',
+    id: 'form_t1',
+    name: 'Quote',
+    code: 'T1',
+    setup: '$997',
+    monthly: '$97',
+    blurb: 'Customer gets a real price, the lead hits your dashboard, you schedule it manually.',
+    features: [
+      'Guided quote wizard with automatic pricing',
+      'Final quote → pre-filled text to the shop',
+      'Lead lands in the dashboard + calendar',
+      'Customer + shop both get a quote email',
+    ],
     highlight: false,
   },
   {
-    name: 'Custom Lead System',
-    setup: '$4,495',
-    monthly: '$545',
-    blurb: 'The Fitchin build. A guided tint quote engine that prices auto by vehicle and film tier, books home/commercial estimates, and texts every quote to your phone.',
+    id: 'form_t2',
+    name: 'Quote + Reviews',
+    code: 'T2',
+    setup: '$1,497',
+    monthly: '$97',
+    blurb: 'Everything in T1, plus auto-texts each customer a Google-review request after the job (skips no-shows).',
+    features: [
+      'Everything in T1',
+      'Automated SMS Google-review requests',
+      'Review request auto-skips no-shows',
+    ],
     highlight: true,
-    tag: 'Most builds land here',
+    tag: 'Most form-line builds',
   },
   {
-    name: 'Multi-Service Quote System',
-    setup: '$5,995',
-    monthly: '$695',
-    blurb: 'A unified engine across tint, detailing, ceramic, and PPF — service-aware pricing, vehicle logic, and shared lead dashboard for the whole menu.',
+    id: 'form_t3',
+    name: 'Quote + Booking',
+    code: 'T3',
+    setup: '$2,497',
+    monthly: '$97',
+    blurb: 'Everything in T2, plus the customer books their own slot online — runs on autopilot.',
+    features: [
+      'Everything in T2',
+      'Customer self-service booking → calendar',
+    ],
+    highlight: false,
+  },
+];
+
+const websiteLineTiers = [
+  {
+    id: 'web_t1',
+    name: 'Starter Site',
+    code: 'T1',
+    setup: '$1,497',
+    monthly: '$97',
+    blurb: 'Fast, modern website + smart lead-capture form. The foundation — easy to upgrade to the full system later.',
+    features: [
+      'Custom website (mobile-first, fast, owned)',
+      'Local SEO structure + analytics',
+      'Smart lead-capture form (1–2 questions, routed to text/email)',
+    ],
+    highlight: false,
+  },
+  {
+    id: 'web_t2',
+    name: 'Quote Site',
+    code: 'T2',
+    setup: '$2,497',
+    monthly: '$97',
+    maintenanceMonthly: '$197',
+    blurb: 'Everything in T1, plus the full Quote wizard built into the site (Form-line T1 system).',
+    features: [
+      'Everything in T1',
+      'Full guided quote wizard + automatic pricing',
+      'Quote → text-to-shop handoff',
+      'Lead dashboard + calendar + customer/shop emails',
+    ],
+    highlight: true,
+    tag: 'Most website builds',
+  },
+  {
+    id: 'web_t3',
+    name: 'The Works',
+    code: 'T3',
+    setup: '$4,497',
+    monthly: '$97',
+    maintenanceMonthly: '$297',
+    blurb: 'Everything Fitchin has — T2 + automated SMS reviews + customer self-service online booking. The whole system, on autopilot.',
+    features: [
+      'Everything in T2',
+      'Automated SMS Google-review requests (skips no-shows)',
+      'Customer self-service online booking → calendar',
+    ],
     highlight: false,
   },
 ];
@@ -245,7 +325,11 @@ const whoFor = [
 const faqs = [
   {
     q: 'How much does a window tint shop website cost?',
-    a: "Three tiers, depending on how many segments you run. The Custom Lead System — the same build live at Fitchin — is $4,495 setup + $545/month. Single-segment tint sites (auto only, residential only, or commercial only) start at $2,495 setup + $295/month. Full multi-segment builds (auto + residential + commercial, or tint + detailing + ceramic) run $5,995 setup + $695/month. All tiers month-to-month, no contract. Custom Lead System payment plan: $1,498/month for three months, then $545/month. Code is yours — cancel anytime and the site stays.",
+    a: "Two product lines, six tiers, one $97/month floor. If you already have a website you're keeping, we add just the wizard — Form line, $997 (Quote) / $1,497 (Quote + Reviews) / $2,497 (Quote + Booking) install, plus $97/month flat. If you need a new website too, we build the system in — Website line, $1,497 (Starter Site) / $2,497 (Quote Site) / $4,497 (The Works) install, plus $97/month Care or an optional $197/$297 Care + Maintenance on T2/T3. All tiers month-to-month, no contract. Code is yours at handoff — cancel anytime and the site keeps running.",
+  },
+  {
+    q: 'Do I need a new website, or can you just add the wizard to mine?',
+    a: "Both — your call. If your current tint-shop site is fine and you just want the quoting + lead-capture system on top of it, that's the Form line: $997 (T1 Quote) / $1,497 (T2 Quote + Reviews) / $2,497 (T3 Quote + Booking) install, plus $97/month flat. If you need a new site too — or your current one is a Wix/Squarespace you're trying to leave — that's the Website line: $1,497 (Starter Site) / $2,497 (Quote Site) / $4,497 (The Works) install, plus $97/month Care. Same wizard either way, same $97/month floor either way.",
   },
   {
     q: 'Can one site really handle auto, residential, and commercial tint?',
@@ -253,11 +337,15 @@ const faqs = [
   },
   {
     q: 'How long does it take?',
-    a: 'About 3–5 weeks from kickoff to launch, depending on how many of the three segments you run and how deep the pricing logic goes.',
+    a: 'About 3–5 weeks from kickoff to launch on Website tiers; 1–3 weeks on Form line. Depends on how many segments you run (auto / residential / commercial) and how deep the pricing logic goes.',
   },
   {
-    q: "What's the monthly fee for?",
-    a: "The quote engine and ongoing pricing updates, your lead dashboard, step-by-step analytics, small site updates, software costs. Hosting itself runs on a free tier built for small businesses, so the monthly covers the work — not the server. Month-to-month, no long-term contract.",
+    q: "What's the difference between the $97 and the $197 / $297 monthly?",
+    a: "$97/month — Care — is the floor on every tier. It covers hosting on our infrastructure (no separate server bill), repo + domain ownership in your name, platform-wide updates pushed automatically, and breakage fixes on the Form line and Website T1. $197/month (Website T2) and $297/month (Website T3) — Care + Maintenance — is an optional upgrade. It adds active monitoring (Bill catches issues before you do), included breakage fixes (no per-incident charges), included monthly content tweaks (~1 hour on T2, ~2 hours on T3), priority 24-hour Client Hub response, and a quarterly health check. The Form line and Website T1 stay flat $97 — no Maintenance upgrade available on those, because the surface area is small enough that base Care already covers it.",
+  },
+  {
+    q: 'Can I start with the wizard and upgrade to a full website later?',
+    a: "Yes. If you start on the Form line and later want a full website, your original install credits against the new Website tier — so a Form T2 client ($1,497) upgrading to Website T2 ($2,497) pays the $1,000 difference, not a fresh build cost. The wizard and dashboard you already own carry into the new build; we don't rebuild from scratch. Your monthly transitions cleanly too — Form $97 stays $97 on Website T1 or base Care, and you can opt into Maintenance later if you want it.",
   },
   {
     q: 'What happens if I cancel the monthly?',
@@ -886,51 +974,140 @@ const faqSchema = {
       </div>
     </section>
 
-    <!-- OFFER + PRICING — surface the range up front per checklist §11. -->
+    <!-- OFFER + PRICING — two product lines, six tiers, $97/mo floor across both.
+         All numbers pulled from PRICING.md (single source of truth). Mirrors the
+         pricing block on /auto-detailing-websites — same tier table, same monthlies,
+         same Care vs. Care + Maintenance structure. -->
     <section id="pricing" class="relative border-b border-line bg-surface-1/30">
       <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
         <div class="max-w-3xl">
           <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Pricing</span>
           <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
-            Three tiers — most builds land in the middle.
+            Two product lines. <span class="text-accent">One $97/month floor.</span>
           </h2>
           <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-            Setup runs $2,495 – $5,995 depending on how many segments you run and how complex your pricing logic is. You get a firm number before you commit.
+            Already have a site you're keeping? Add just the wizard — <strong class="text-text">Form line, starts at $997</strong>. Need a new site too? Build the system in from day one — <strong class="text-text">Website line, starts at $1,497</strong>. Same $97/month on every tier.
           </p>
         </div>
 
-        <div class="mt-12 grid md:grid-cols-3 gap-5">
-          {pricingTiers.map((t) => (
-            <div class={'card p-7 flex flex-col ' + (t.highlight ? 'border-accent/60 bg-accent/[0.05] relative' : '')}>
-              {t.highlight && (
-                <span class="absolute -top-3 left-7 inline-flex items-center rounded-full bg-accent px-2.5 py-1 font-display text-[0.62rem] font-bold uppercase tracking-[0.16em] text-bg">
-                  {t.tag}
-                </span>
-              )}
-              <h3 class="font-display font-bold text-[1.2rem] text-text">{t.name}</h3>
-              <div class="mt-4 font-display">
-                <div class="text-[2rem] leading-none font-bold text-text">{t.setup}</div>
-                <div class="mt-1 text-[0.85rem] text-text-muted uppercase tracking-[0.14em]">setup</div>
+        <!-- FORM LINE — for shops keeping their existing site. -->
+        <div class="mt-14">
+          <div class="flex flex-wrap items-baseline gap-3 mb-6">
+            <h3 class="font-display font-bold text-[1.5rem] text-text">Form / Wizard line</h3>
+            <span class="text-text-muted text-[0.95rem]">Add the wizard to your existing site</span>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-5">
+            {formLineTiers.map((t) => (
+              <div class={'card p-7 flex flex-col ' + (t.highlight ? 'border-accent/60 bg-accent/[0.05] relative' : '')}>
+                {t.highlight && (
+                  <span class="absolute -top-3 left-7 inline-flex items-center rounded-full bg-accent px-2.5 py-1 font-display text-[0.62rem] font-bold uppercase tracking-[0.16em] text-bg">
+                    {t.tag}
+                  </span>
+                )}
+                <div class="font-display text-[0.7rem] uppercase tracking-[0.18em] text-text-muted">{t.code}</div>
+                <h4 class="mt-1 font-display font-bold text-[1.2rem] text-text">{t.name}</h4>
+                <div class="mt-4 font-display">
+                  <div class="text-[2rem] leading-none font-bold text-text">{t.setup}</div>
+                  <div class="mt-1 text-[0.85rem] text-text-muted uppercase tracking-[0.14em]">install · one-time</div>
+                </div>
+                <div class="mt-3 font-display text-[1.05rem] text-text">
+                  + <span class="font-bold">${t.monthly.replace('$','')}</span><span class="text-text-soft text-[0.95rem]">/month</span>
+                </div>
+                <p class="mt-5 text-[0.95rem] text-text-soft leading-relaxed">{t.blurb}</p>
+                <ul class="mt-5 space-y-2 flex-1">
+                  {t.features.map((f) => (
+                    <li class="flex items-start gap-2 text-[0.9rem] text-text leading-snug">
+                      <span class="mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      </span>
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div class="mt-3 font-display text-[1.05rem] text-text">
-                + <span class="font-bold">{t.monthly}</span><span class="text-text-soft text-[0.95rem]">/month ongoing</span>
-              </div>
-              <p class="mt-5 text-[0.95rem] text-text-soft leading-relaxed flex-1">{t.blurb}</p>
-            </div>
-          ))}
+            ))}
+          </div>
+          <p class="mt-5 text-[0.86rem] text-text-muted">
+            Form line monthly is a flat $97 across all three tiers — the wizard's surface area is small enough that $97 covers hosting, updates, and breakage fixes without a maintenance upgrade.
+          </p>
         </div>
 
-        <div class="mt-12 grid sm:grid-cols-2 gap-5">
+        <!-- WEBSITE LINE — for shops building new. -->
+        <div class="mt-16">
+          <div class="flex flex-wrap items-baseline gap-3 mb-6">
+            <h3 class="font-display font-bold text-[1.5rem] text-text">Website line</h3>
+            <span class="text-text-muted text-[0.95rem]">Full site + the system, built together</span>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-5">
+            {websiteLineTiers.map((t) => (
+              <div class={'card p-7 flex flex-col ' + (t.highlight ? 'border-accent/60 bg-accent/[0.05] relative' : '')}>
+                {t.highlight && (
+                  <span class="absolute -top-3 left-7 inline-flex items-center rounded-full bg-accent px-2.5 py-1 font-display text-[0.62rem] font-bold uppercase tracking-[0.16em] text-bg">
+                    {t.tag}
+                  </span>
+                )}
+                <div class="font-display text-[0.7rem] uppercase tracking-[0.18em] text-text-muted">{t.code}</div>
+                <h4 class="mt-1 font-display font-bold text-[1.2rem] text-text">{t.name}</h4>
+                <div class="mt-4 font-display">
+                  <div class="text-[2rem] leading-none font-bold text-text">{t.setup}</div>
+                  <div class="mt-1 text-[0.85rem] text-text-muted uppercase tracking-[0.14em]">install · one-time</div>
+                </div>
+                <div class="mt-3 font-display text-[1.05rem] text-text">
+                  + <span class="font-bold">${t.monthly.replace('$','')}</span><span class="text-text-soft text-[0.95rem]">/mo Care</span>
+                </div>
+                {t.maintenanceMonthly && (
+                  <div class="mt-1 font-display text-[0.92rem] text-text-soft">
+                    or <span class="font-semibold text-text">${t.maintenanceMonthly.replace('$','')}</span>/mo Care + Maintenance
+                  </div>
+                )}
+                <p class="mt-5 text-[0.95rem] text-text-soft leading-relaxed">{t.blurb}</p>
+                <ul class="mt-5 space-y-2 flex-1">
+                  {t.features.map((f) => (
+                    <li class="flex items-start gap-2 text-[0.9rem] text-text leading-snug">
+                      <span class="mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-accent/15 text-accent flex-shrink-0" aria-hidden="true">
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      </span>
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- MONTHLY EXPLAINER — Care vs. Care + Maintenance. -->
+        <div class="mt-14 grid sm:grid-cols-2 gap-5">
           <div class="card p-6">
-            <h4 class="font-display font-semibold text-[1rem] text-text mb-2">What the monthly covers</h4>
-            <p class="text-[0.94rem] text-text-soft leading-relaxed">
-              Quote engine, ongoing pricing + film-tier updates, your lead dashboard, step-by-step analytics, small site updates, software costs. Hosting itself is free for shops your size — the fee covers the work, not the server.
+            <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">$97/mo · Care</div>
+            <h4 class="font-display font-semibold text-[1rem] text-text">The floor on every tier.</h4>
+            <p class="mt-2 text-[0.94rem] text-text-soft leading-relaxed">
+              Hosting on our infrastructure (no separate server bill), repo + domain in your name, platform-wide updates pushed automatically, and breakage fixes on Form line + Website T1. Cancel anytime — the site freezes as-is and keeps running.
             </p>
           </div>
+          <div class="card p-6 border-accent/40">
+            <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">$197 / $297/mo · Care + Maintenance</div>
+            <h4 class="font-display font-semibold text-[1rem] text-text">Optional upgrade · Website T2 + T3 only.</h4>
+            <p class="mt-2 text-[0.94rem] text-text-soft leading-relaxed">
+              Everything in Care, plus Bill actively keeps the site functioning: monitoring catches issues before you do, breakage fixes are included, ~1 hr/mo (T2) or ~2 hr/mo (T3) of content tweaks bundled, priority 24-hr Client Hub response, and a quarterly health check.
+            </p>
+          </div>
+        </div>
+
+        <!-- TIMELINE + UPGRADE PATH. -->
+        <div class="mt-6 grid sm:grid-cols-2 gap-5">
           <div class="card p-6">
             <h4 class="font-display font-semibold text-[1rem] text-text mb-2">Timeline + terms</h4>
             <p class="text-[0.94rem] text-text-soft leading-relaxed">
-              3–5 weeks from kickoff to launch. All tiers month-to-month, no contract. Custom Lead System payment plan: $1,498/month × 3, then $545/month. Code is yours at handoff — cancel anytime, the site keeps running.
+              3–5 weeks from kickoff to launch on Website tiers; 1–3 weeks on Form line. All tiers month-to-month, no contract. Charm-priced because the brand position is value, not premium.
+            </p>
+          </div>
+          <div class="card p-6">
+            <h4 class="font-display font-semibold text-[1rem] text-text mb-2">Upgrade path: Form → Website</h4>
+            <p class="text-[0.94rem] text-text-soft leading-relaxed">
+              Start on Form, upgrade later. Your original install credits against the new Website tier — Form T2 ($1,497) → Website T2 ($2,497) costs the $1,000 difference. The wizard + dashboard you already own carry over.
             </p>
           </div>
         </div>
