@@ -52,12 +52,12 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
 <section id="quote" data-quote-flow class="relative z-10 bg-bg border-b border-line scroll-mt-24">
   <div class="mx-auto max-w-3xl px-5 sm:px-8 py-20 sm:py-24">
     <div class="max-w-2xl">
-      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Build Your Quote</span>
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Build My Estimate</span>
       <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
-        Get a ballpark in 60 seconds — same kind of quote flow we'd build for your shop.
+        Build my ballpark estimate <span class="text-accent">— in about 60 seconds.</span>
       </h2>
       <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-        Tap through a few questions, see the build tier that fits your shop, then leave your info if you want Bill to price it around your exact menu. No phone tag.
+        Same flow we'd build for your shop. Tap through a few questions and you'll see the build tier that fits, with a real price range — then Bill prices it around your exact menu within 24 hours.
       </p>
     </div>
 
@@ -154,10 +154,14 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
             </div>
           </div>
 
-          <!-- STEP 4 — timeline + budget -->
+          <!-- STEP 4 — timeline + budget + contact.
+               Contact lives here (a step BEFORE the estimate reveal) so that when
+               the user advances to step 5, we fire a partial-lead submission with
+               their contact info — every abandon after this point still lands in
+               the dashboard. -->
           <div data-step="4" class="hidden">
-            <h3 class="font-display font-semibold text-[1.2rem] text-text">Timeline and budget?</h3>
-            <p class="mt-1.5 text-[0.92rem] text-text-soft">Ballpark is fine — it just helps us point you right.</p>
+            <h3 class="font-display font-semibold text-[1.2rem] text-text">Last few — then your estimate.</h3>
+            <p class="mt-1.5 text-[0.92rem] text-text-soft">Timeline, budget, and where to send your detailed quote. Ballparks are fine.</p>
 
             <div class="mt-5">
               <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">When do you want it live?</div>
@@ -185,14 +189,45 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
               </div>
             </div>
 
-            <p data-error class="hidden mt-4 text-[0.85rem] text-[#F87171]">Pick a timeline and a budget to continue.</p>
+            <div class="mt-7 border-t border-line pt-7">
+              <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-3">Where should Bill send your detailed quote?</div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <label class="block">
+                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Your name <span class="text-accent">*</span></span>
+                  <input required name="name" type="text" autocomplete="name" class={inputCls} placeholder="Your name" />
+                </label>
+                <label class="block">
+                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Shop name <span class="text-text-muted text-[0.78rem] font-normal">(optional)</span></span>
+                  <input name="business" type="text" autocomplete="organization" class={inputCls} placeholder="Acme Auto Detail" />
+                </label>
+              </div>
+              <div class="mt-4 grid sm:grid-cols-2 gap-4">
+                <label class="block">
+                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Phone <span class="text-accent">*</span></span>
+                  <input required name="phone" type="tel" autocomplete="tel" class={inputCls} placeholder="(555) 555-5555" />
+                </label>
+                <label class="block">
+                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Email <span class="text-accent">*</span></span>
+                  <input required name="email" type="email" autocomplete="email" class={inputCls} placeholder="you@yourshop.com" />
+                </label>
+              </div>
+              <p class="mt-3 text-[0.78rem] text-text-muted leading-relaxed">
+                No spam, no list-selling. Bill replies within 24 hours.
+              </p>
+            </div>
+
+            <p data-error class="hidden mt-4 text-[0.85rem] text-[#F87171]">Fill in name, phone, and email, and pick a timeline and budget to continue.</p>
             <div class="mt-6 flex items-center justify-between gap-3">
               <button type="button" data-back class="btn-ghost"><span aria-hidden="true">←</span> Back</button>
               <button type="button" data-next class="btn-primary">See my estimate <span aria-hidden="true">→</span></button>
             </div>
           </div>
 
-          <!-- STEP 5 — estimate + contact -->
+          <!-- STEP 5 — estimate reveal + final submit.
+               Contact has already been captured at step 4 and a partial submission
+               has already fired, so even if the user bails here, their info lands
+               in the dashboard. The final submit just upgrades that record. -->
           <div data-step="5" data-estimate-step class="hidden">
             <div class="rounded-xl border border-accent/40 bg-accent/5 p-5 sm:p-6">
               <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent">Your ballpark</div>
@@ -211,40 +246,18 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
               </p>
             </div>
 
-            <div class="mt-7">
-              <h4 class="font-display font-semibold text-[1.1rem] text-text">Want it in writing, priced to your shop?</h4>
-              <p class="mt-1.5 text-[0.92rem] text-text-soft">Tell us where to send your detailed quote — Bill replies within 24 hours.</p>
-
-              <div class="mt-5 grid sm:grid-cols-2 gap-4">
-                <label class="block">
-                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Your name <span class="text-accent">*</span></span>
-                  <input required name="name" type="text" autocomplete="name" class={inputCls} placeholder="Your name" />
-                </label>
-                <label class="block">
-                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Shop name</span>
-                  <input name="business" type="text" autocomplete="organization" class={inputCls} placeholder="Acme Auto Detail" />
-                </label>
-              </div>
-              <div class="mt-4 grid sm:grid-cols-2 gap-4">
-                <label class="block">
-                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Phone <span class="text-accent">*</span></span>
-                  <input required name="phone" type="tel" autocomplete="tel" class={inputCls} placeholder="(555) 555-5555" />
-                </label>
-                <label class="block">
-                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Email <span class="text-accent">*</span></span>
-                  <input required name="email" type="email" autocomplete="email" class={inputCls} placeholder="you@yourshop.com" />
-                </label>
-              </div>
-            </div>
+            <p class="mt-6 text-text-soft text-[0.97rem] leading-relaxed">
+              Want a real quote, priced to your menu? Hit send and Bill will review your services, goals, and quote-flow needs, then reply within 24 hours with the next best step.
+            </p>
 
             <div class="mt-6 flex items-center justify-between gap-3">
               <button type="button" data-back class="btn-ghost"><span aria-hidden="true">←</span> Back</button>
-              <button type="submit" class="btn-primary">Send my quote request <span aria-hidden="true">↗</span></button>
+              <button type="submit" class="btn-primary">Send my detailed quote <span aria-hidden="true">↗</span></button>
             </div>
 
             <p data-audit-status class="hidden mt-4 text-[0.92rem] text-accent font-display font-medium items-center gap-2" role="status" aria-live="polite"></p>
             <p class="mt-4 text-[0.78rem] text-text-muted leading-relaxed">
-              Bill responds within 24 hours. No spam, no list-selling, no long sales calls.
+              No spam, no list-selling, no long sales calls.
             </p>
           </div>
         </form>
@@ -345,11 +358,32 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
       };
 
       const stepValid = (stepEl) => {
-        const inputs = stepEl.querySelectorAll('input[type="checkbox"], input[type="radio"]');
-        if (!inputs.length) return true;
+        // Required checkboxes/radios: every named group must have at least one checked.
+        const choosers = stepEl.querySelectorAll('input[type="checkbox"], input[type="radio"]');
         const groups = {};
-        inputs.forEach((c) => { (groups[c.name] = groups[c.name] || []).push(c); });
-        return Object.values(groups).every((g) => g.some((c) => c.checked));
+        choosers.forEach((c) => { (groups[c.name] = groups[c.name] || []).push(c); });
+        const choosersOk = Object.values(groups).every((g) => g.some((c) => c.checked));
+
+        // Required text/tel/email inputs: must be non-empty and validate per the input type.
+        const requiredInputs = stepEl.querySelectorAll('input[required]');
+        const inputsOk = Array.from(requiredInputs).every((el) => el.value.trim() !== '' && el.checkValidity());
+
+        return choosersOk && inputsOk;
+      };
+
+      // Partial-lead capture: when the user clears step 4 (which collects contact + timeline + budget),
+      // fire a fire-and-forget submission to Web3Forms so the lead lands in the dashboard even if
+      // they bail at the estimate reveal. The final submit on step 5 then upgrades the record.
+      let partialSentAt = 0;
+      const firePartial = () => {
+        if (Date.now() - partialSentAt < 30000) return; // de-dupe rapid back/forth
+        try {
+          const fd = new FormData(form);
+          fd.set('subject', '[PARTIAL] Detailing Website Quote — Lead Captured Before Final Step');
+          fd.set('lead_state', 'partial');
+          fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd }).catch(() => {});
+          partialSentAt = Date.now();
+        } catch (_) { /* silent — never block UX on telemetry */ }
       };
 
       root.querySelectorAll('[data-next]').forEach((btn) => {
@@ -358,6 +392,10 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
           const err = stepEl.querySelector('[data-error]');
           if (!stepValid(stepEl)) { if (err) err.classList.remove('hidden'); return; }
           if (err) err.classList.add('hidden');
+          // Fire partial on the transition into the estimate step (i.e., leaving step 4 → step 5).
+          if (steps[current + 1] && steps[current + 1].hasAttribute('data-estimate-step')) {
+            firePartial();
+          }
           if (current < total - 1) show(current + 1, true);
         });
       });
