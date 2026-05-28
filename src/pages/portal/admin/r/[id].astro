@@ -244,29 +244,25 @@ function uploaderLabel(f: SignedFile): string {
               )}
 
               <div class="flex-1 min-w-0">
-                <div class="text-sm truncate" title={f.filename}>{f.filename}</div>
+                <a
+                  href={f.view}
+                  target="_blank"
+                  rel="noopener"
+                  class="block text-sm truncate hover:text-accent transition"
+                  title={`Open ${f.filename} in a new tab`}
+                >{f.filename}</a>
                 <div class="text-xs text-text-muted mt-0.5 truncate">{uploaderLabel(f)}</div>
               </div>
               </div>
 
               <div class="flex flex-wrap items-center gap-2 shrink-0">
               <a
-                href={f.view}
-                target="_blank"
-                rel="noopener"
-                class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded border border-line text-text-soft hover:text-accent hover:border-accent/40 transition"
-                aria-label={`Open ${f.filename} in a new tab`}
-              >
-                Open
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              </a>
-              <a
                 href={f.download}
-                class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded bg-accent/15 text-accent hover:bg-accent/25 transition"
+                class="shrink-0 inline-flex items-center justify-center p-1.5 rounded text-text-muted hover:text-accent hover:bg-accent/10 transition"
                 aria-label={`Download ${f.filename}`}
+                title={`Download ${f.filename}`}
               >
-                Download
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               </a>
               <button
                 type="button"

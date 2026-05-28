@@ -290,9 +290,17 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
                   <button
                     type="button"
                     class="flex-1 min-w-0 text-left truncate hover:text-accent transition"
-                    data-attachment-download
+                    data-attachment-view
                   >{a.file_name}</button>
                   <span class="text-text-muted shrink-0">{formatBytes(a.size_bytes)}</span>
+                  <button
+                    type="button"
+                    class="text-text-muted hover:text-accent transition shrink-0"
+                    data-attachment-download
+                    aria-label={`Download ${a.file_name}`}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </button>
                   <button
                     type="button"
                     class="text-text-muted hover:text-red-400 transition shrink-0"
@@ -400,9 +408,17 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
                           <button
                             type="button"
                             class="flex-1 min-w-0 text-left truncate hover:text-accent transition"
-                            data-attachment-download
+                            data-attachment-view
                           >{a.file_name}</button>
                           <span class="text-text-muted shrink-0">{formatBytes(a.size_bytes)}</span>
+                          <button
+                            type="button"
+                            class="text-text-muted hover:text-accent transition shrink-0"
+                            data-attachment-download
+                            aria-label={`Download ${a.file_name}`}
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                          </button>
                         </li>
                       ))}
                     </ul>
@@ -1140,17 +1156,22 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
     patchField(li, 'due_at', null);
   });
 
-  // Attachment download: ask server for a fresh signed URL each time.
+  // Attachment view (filename click) and download (icon click): ask the
+  // server for a fresh signed URL each time. View opens inline; download
+  // gets a URL with Content-Disposition: attachment via ?download=1.
   document.addEventListener('click', async (e) => {
     const target = e.target as HTMLElement;
-    if (!target.matches('[data-attachment-download]')) return;
-    const attLi = target.closest<HTMLElement>('[data-attachment-id]');
-    const todoLi = target.closest<HTMLElement>('[data-todo-id]');
+    const btn = target.closest<HTMLElement>('[data-attachment-view], [data-attachment-download]');
+    if (!btn) return;
+    const isDownload = btn.matches('[data-attachment-download]');
+    const attLi = btn.closest<HTMLElement>('[data-attachment-id]');
+    const todoLi = btn.closest<HTMLElement>('[data-todo-id]');
     const attachmentId = attLi?.dataset.attachmentId;
     const todoId = todoLi?.dataset.todoId;
     if (!attachmentId || !todoId) return;
     try {
-      const res = await fetch(`/api/portal/admin/todos/${todoId}/attachments/${attachmentId}`);
+      const url = `/api/portal/admin/todos/${todoId}/attachments/${attachmentId}` + (isDownload ? '?download=1' : '');
+      const res = await fetch(url);
       if (!res.ok) {
         const j = await res.json().catch(() => ({}));
         throw new Error(j.error || `HTTP ${res.status}`);
@@ -1158,7 +1179,7 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
       const { signedUrl } = (await res.json()) as { signedUrl: string };
       window.open(signedUrl, '_blank', 'noopener');
     } catch (err) {
-      showError(err instanceof Error ? err.message : 'Could not open file');
+      showError(err instanceof Error ? err.message : (isDownload ? 'Could not download file' : 'Could not open file'));
     }
   });
 
@@ -1187,13 +1208,13 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
         const attachmentId = item.dataset.attachmentId;
         const fileName =
           item.dataset.fileName ||
-          item.querySelector<HTMLElement>('[data-attachment-download]')?.textContent?.trim() ||
+          item.querySelector<HTMLElement>('[data-attachment-view]')?.textContent?.trim() ||
           `attachment-${i + 1}`;
         if (!attachmentId) continue;
 
         button.textContent = `Downloading ${i + 1}/${items.length}…`;
 
-        const signRes = await fetch(`/api/portal/admin/todos/${todoId}/attachments/${attachmentId}`);
+        const signRes = await fetch(`/api/portal/admin/todos/${todoId}/attachments/${attachmentId}?download=1`);
         if (!signRes.ok) {
           const j = await signRes.json().catch(() => ({}));
           throw new Error(j.error || `HTTP ${signRes.status} signing ${fileName}`);
