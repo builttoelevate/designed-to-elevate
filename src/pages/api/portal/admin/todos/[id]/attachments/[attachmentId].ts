@@ -1,6 +1,11 @@
 /**
  * GET    /api/portal/admin/todos/:id/attachments/:attachmentId
  *           → { signedUrl }     (60s TTL, for download / inline view)
+ *
+ * Pass ?download=1 to opt into Content-Disposition: attachment with the
+ * original filename. Without it, the signed URL serves the file with its
+ * native content-type so the browser can render images / PDFs inline.
+ *
  * DELETE /api/portal/admin/todos/:id/attachments/:attachmentId
  *
  * Admin-only. Scopes by owner_id even though service-role bypasses RLS.
@@ -15,7 +20,7 @@ import { getPortalSession } from '../../../../../../../lib/session';
 const BUCKET = 'owner-todo-attachments';
 const SIGNED_URL_TTL_SECONDS = 60;
 
-export const GET: APIRoute = async ({ params, request, cookies }) => {
+export const GET: APIRoute = async ({ params, request, cookies, url }) => {
   const session = await getPortalSession({ cookies, request });
   if (!session || session.role !== 'admin') return json({ error: 'Forbidden' }, 403);
 
@@ -33,11 +38,12 @@ export const GET: APIRoute = async ({ params, request, cookies }) => {
 
   if (!row) return json({ error: 'Not found' }, 404);
 
+  const wantsDownload = url.searchParams.get('download') === '1';
+  const opts = wantsDownload ? { download: row.file_name } : undefined;
+
   const { data, error } = await admin.storage
     .from(BUCKET)
-    .createSignedUrl(row.storage_path, SIGNED_URL_TTL_SECONDS, {
-      download: row.file_name,
-    });
+    .createSignedUrl(row.storage_path, SIGNED_URL_TTL_SECONDS, opts);
   if (error || !data) return json({ error: error?.message ?? 'Could not sign URL' }, 500);
 
   return json({ signedUrl: data.signedUrl, expiresIn: SIGNED_URL_TTL_SECONDS });
