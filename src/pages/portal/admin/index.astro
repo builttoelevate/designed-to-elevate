@@ -119,8 +119,11 @@ function qs(overrides: Record<string, string>): string {
       </li>
     )}
     {list.map((r: any) => (
-      <li>
-        <a href={`/portal/admin/r/${r.id}`} class="ph-card block p-3 sm:p-4 hover:border-accent/40 transition">
+      <li class="ph-card p-3 sm:p-4 hover:border-accent/40 transition flex items-start gap-3">
+        <label class="shrink-0 pt-0.5 cursor-pointer" aria-label={`Select ${r.title}`}>
+          <input type="checkbox" data-bulk-select value={r.id} class="w-4 h-4 align-middle accent-[color:var(--color-accent)] cursor-pointer" />
+        </label>
+        <a href={`/portal/admin/r/${r.id}`} class="block flex-1 min-w-0">
           <div class="flex items-start justify-between gap-3 mb-1.5">
             <div class="min-w-0">
               <h3 class="font-display font-semibold text-base leading-tight truncate">{r.title}</h3>
@@ -138,6 +141,26 @@ function qs(overrides: Record<string, string>): string {
       </li>
     ))}
   </ul>
+
+  <!-- BULK ACTION BAR — appears when at least one request is selected. -->
+  <div
+    data-bulk-bar
+    class="hidden fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/85 px-3 py-3 pb-[max(env(safe-area-inset-bottom),0.75rem)]"
+    role="region"
+    aria-label="Bulk status actions"
+  >
+    <div class="mx-auto max-w-7xl flex items-center gap-2 sm:gap-3 flex-wrap">
+      <span class="text-sm text-text-soft whitespace-nowrap"><span data-bulk-count>0</span> selected</span>
+      <select data-bulk-status class="ph-input flex-1 min-w-[10rem] !py-2 !text-sm" aria-label="New status">
+        <option value="">Change status to…</option>
+        {STATUS_ORDER.map((s) => (
+          <option value={s}>{STATUS_LABELS[s]}</option>
+        ))}
+      </select>
+      <button type="button" data-bulk-apply class="btn-primary !py-2 !px-4 !text-sm disabled:opacity-50 disabled:cursor-not-allowed" disabled>Apply</button>
+      <button type="button" data-bulk-clear class="btn-ghost !py-2 !px-4 !text-sm">Clear</button>
+    </div>
+  </div>
 </PortalLayout>
 
 <script>
@@ -151,4 +174,60 @@ function qs(overrides: Record<string, string>): string {
       window.location.search = s ? `?${s}` : '';
     });
   });
+
+  // Bulk selection + bulk status change.
+  (() => {
+    const boxes = () => Array.from(document.querySelectorAll<HTMLInputElement>('[data-bulk-select]'));
+    const bar = document.querySelector<HTMLDivElement>('[data-bulk-bar]');
+    const countEl = document.querySelector<HTMLSpanElement>('[data-bulk-count]');
+    const statusSel = document.querySelector<HTMLSelectElement>('[data-bulk-status]');
+    const applyBtn = document.querySelector<HTMLButtonElement>('[data-bulk-apply]');
+    const clearBtn = document.querySelector<HTMLButtonElement>('[data-bulk-clear]');
+    if (!bar || !statusSel || !applyBtn || !clearBtn || !countEl) return;
+
+    const selectedIds = () => boxes().filter((c) => c.checked).map((c) => c.value);
+
+    const sync = () => {
+      const ids = selectedIds();
+      countEl.textContent = String(ids.length);
+      bar.classList.toggle('hidden', ids.length === 0);
+      applyBtn.disabled = ids.length === 0 || !statusSel.value;
+    };
+
+    boxes().forEach((c) => c.addEventListener('change', sync));
+    statusSel.addEventListener('change', sync);
+
+    clearBtn.addEventListener('click', () => {
+      boxes().forEach((c) => (c.checked = false));
+      statusSel.value = '';
+      sync();
+    });
+
+    applyBtn.addEventListener('click', async () => {
+      const ids = selectedIds();
+      const status = statusSel.value;
+      if (!ids.length || !status) return;
+      const originalLabel = applyBtn.textContent;
+      applyBtn.disabled = true;
+      applyBtn.textContent = 'Applying…';
+      try {
+        const res = await fetch('/api/portal/admin/requests/bulk-status', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ ids, status }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || `Bulk update failed (${res.status})`);
+        }
+        window.location.reload();
+      } catch (err: any) {
+        alert(err?.message || 'Bulk update failed');
+        applyBtn.textContent = originalLabel;
+        sync();
+      }
+    });
+
+    sync();
+  })();
 </script>
