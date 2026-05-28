@@ -184,6 +184,13 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
           <div class="p-3 sm:p-4 flex items-start gap-3" data-row-toggle>
             <input
               type="checkbox"
+              class="mt-1 h-4 w-4 cursor-pointer flex-shrink-0"
+              data-bulk-select
+              value={t.id}
+              aria-label="Select for bulk action"
+            />
+            <input
+              type="checkbox"
               class="mt-1 h-4 w-4 cursor-pointer accent-accent flex-shrink-0"
               data-toggle
               aria-label="Mark complete"
@@ -344,6 +351,13 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
               data-completed="true"
             >
               <div class="p-3 sm:p-4 flex items-start gap-3" data-row-toggle>
+                <input
+                  type="checkbox"
+                  class="mt-1 h-4 w-4 cursor-pointer flex-shrink-0"
+                  data-bulk-select
+                  value={t.id}
+                  aria-label="Select for bulk action"
+                />
                 <input
                   type="checkbox"
                   class="mt-1 h-4 w-4 cursor-pointer accent-accent flex-shrink-0"
@@ -512,9 +526,81 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
     [data-row-toggle] input[type="checkbox"],
     [data-row-toggle] button { cursor: pointer; }
   </style>
+
+  <!-- BULK ACTION BAR — appears when at least one todo is selected. -->
+  <div
+    data-bulk-bar
+    class="hidden fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/85 px-3 py-3 pb-[max(env(safe-area-inset-bottom),0.75rem)]"
+    role="region"
+    aria-label="Bulk todo actions"
+  >
+    <div class="mx-auto max-w-7xl flex items-center gap-2 sm:gap-3 flex-wrap">
+      <span class="text-sm text-text-soft whitespace-nowrap"><span data-bulk-count>0</span> selected</span>
+      <span class="flex-1"></span>
+      <button type="button" data-bulk-delete class="!py-2 !px-4 !text-sm rounded-[var(--radius-button)] border border-red-500/60 text-red-400 hover:bg-red-500/10 font-display font-medium transition-colors">Delete</button>
+      <button type="button" data-bulk-clear class="btn-ghost !py-2 !px-4 !text-sm">Clear</button>
+    </div>
+  </div>
 </PortalLayout>
 
 <script>
+  // ---------------- bulk select + bulk delete ----------------
+  (() => {
+    const boxes = () => Array.from(document.querySelectorAll<HTMLInputElement>('[data-bulk-select]'));
+    const bar = document.querySelector<HTMLDivElement>('[data-bulk-bar]');
+    const countEl = document.querySelector<HTMLSpanElement>('[data-bulk-count]');
+    const deleteBtn = document.querySelector<HTMLButtonElement>('[data-bulk-delete]');
+    const clearBtn = document.querySelector<HTMLButtonElement>('[data-bulk-clear]');
+    if (!bar || !countEl || !deleteBtn || !clearBtn) return;
+
+    const selectedIds = () => boxes().filter((c) => c.checked).map((c) => c.value);
+
+    const sync = () => {
+      const n = selectedIds().length;
+      countEl.textContent = String(n);
+      bar.classList.toggle('hidden', n === 0);
+      deleteBtn.disabled = n === 0;
+    };
+
+    document.addEventListener('change', (e) => {
+      const t = e.target as HTMLElement | null;
+      if (t && (t as HTMLInputElement).matches?.('[data-bulk-select]')) sync();
+    });
+
+    clearBtn.addEventListener('click', () => {
+      boxes().forEach((c) => (c.checked = false));
+      sync();
+    });
+
+    deleteBtn.addEventListener('click', async () => {
+      const ids = selectedIds();
+      if (!ids.length) return;
+      const ok = window.confirm(`Delete ${ids.length} todo${ids.length === 1 ? '' : 's'}? This can't be undone.`);
+      if (!ok) return;
+      const originalLabel = deleteBtn.textContent;
+      deleteBtn.disabled = true;
+      deleteBtn.textContent = 'Deleting…';
+      try {
+        const res = await fetch('/api/portal/admin/todos/bulk-delete', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ ids }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || `Bulk delete failed (${res.status})`);
+        }
+        window.location.reload();
+      } catch (err: any) {
+        alert(err?.message || 'Bulk delete failed');
+        deleteBtn.textContent = originalLabel;
+        sync();
+      }
+    });
+
+    sync();
+  })();
+
   const flash = document.getElementById('todo-flash') as HTMLElement | null;
   const newForm = document.getElementById('new-todo-form') as HTMLFormElement | null;
 
@@ -864,7 +950,7 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
   // Toggle expand on row click (ignoring checkbox / delete / inside expanded panel).
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
-    if (target.closest('[data-toggle]') || target.closest('[data-delete]')) return;
+    if (target.closest('[data-toggle]') || target.closest('[data-delete]') || target.closest('[data-bulk-select]')) return;
     const row = target.closest<HTMLElement>('[data-row-toggle]');
     if (!row) return;
     const li = row.closest<HTMLElement>('[data-todo-id]');
