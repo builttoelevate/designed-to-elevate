@@ -23,7 +23,7 @@ const serviceSchema = {
   name: 'Auto Detailing & Ceramic Coating Website Design',
   serviceType: 'Website and quote-system design for auto detailing and ceramic coating shops',
   description:
-    'Detailing and ceramic coating shop websites built around a real quote system — vehicle-by-vehicle pricing for detail packages and ceramic tiers, lead capture before the final step, and a text-to-book handoff. Two product lines: add the wizard to your existing site (Form line, $997–$2,497 install) or build a new site with the wizard included (Website line, $1,497–$4,497 install). Flat $97/month floor across all tiers.',
+    'Detailing and ceramic coating shop websites built around a real quote system — vehicle-by-vehicle pricing for detail packages and ceramic tiers, lead capture before the final step, and a text-to-book handoff. Two product lines: add the wizard to your existing site (Form line, $997–$2,497 install) or build a new site with the wizard included (Website line, $1,497–$4,497 install). Install pricing only. You own everything at handoff — no required ongoing fee.',
   provider: { '@id': `${SITE}/#organization` },
   areaServed: { '@type': 'State', name: 'Ohio' },
   audience: { '@type': 'BusinessAudience', name: 'Auto detailing and ceramic coating shops' },
@@ -34,7 +34,7 @@ const serviceSchema = {
     highPrice: '4497',
     priceCurrency: 'USD',
     offerCount: '6',
-    description: 'Form line: $997 / $1,497 / $2,497 install + $97/mo. Website line: $1,497 / $2,497 / $4,497 install + $97/mo (or $197/$297 with Care + Maintenance on T2/T3).',
+    description: 'Form line install: $997 / $1,497 / $2,497. Website line install: $1,497 / $2,497 / $4,497. You own everything outright at handoff — no required ongoing fee.',
   },
 };
 
@@ -88,7 +88,7 @@ const whatYouGet = [
     feature: 'Local SEO structure, service-area schema, and Google Business Profile alignment baked into the build.',
   },
   {
-    outcome: 'You own it — cancel the monthly anytime, the site keeps running.',
+    outcome: 'You own it outright — no required monthly, cancel anytime, site keeps running.',
     feature: 'Code, repo, and domain in your name at handoff. Hosting tier is free for shops your size.',
   },
 ];
@@ -117,16 +117,16 @@ const afterClickSteps = [
   { num: '05', label: 'Lead in your dashboard',  body: 'Quote texted to your phone, contact captured even if they bail' },
 ];
 
-// Pricing tiers — two-line structure pulled from PRICING.md (single source of truth).
+// Pricing tiers — two-line structure pulled from PRICING.md → PUBLIC section.
 // Form line = add the wizard to an existing site. Website line = build the site too.
-// Both share the $97/mo Care floor; Website T2/T3 have an optional Maintenance upgrade.
+// Install price only. Care plans are INTERNAL (sold on the call, never rendered here)
+// — see PRICING.md → INTERNAL section for the $97/$197/$297 structure and sales script.
 const formLineTiers = [
   {
     id: 'form_t1',
     name: 'Quote',
     code: 'T1',
     setup: '$997',
-    monthly: '$97',
     blurb: 'Customer gets a real price, the lead hits your dashboard, you schedule it manually.',
     features: [
       'Guided quote wizard with automatic pricing',
@@ -141,7 +141,6 @@ const formLineTiers = [
     name: 'Quote + Reviews',
     code: 'T2',
     setup: '$1,497',
-    monthly: '$97',
     blurb: 'Everything in T1, plus auto-texts each customer a Google-review request after the job (skips no-shows).',
     features: [
       'Everything in T1',
@@ -156,7 +155,6 @@ const formLineTiers = [
     name: 'Quote + Booking',
     code: 'T3',
     setup: '$2,497',
-    monthly: '$97',
     blurb: 'Everything in T2, plus the customer books their own slot online — runs on autopilot.',
     features: [
       'Everything in T2',
@@ -172,7 +170,6 @@ const websiteLineTiers = [
     name: 'Starter Site',
     code: 'T1',
     setup: '$1,497',
-    monthly: '$97',
     blurb: 'Fast, modern website + smart lead-capture form. The foundation — easy to upgrade to the full system later.',
     features: [
       'Custom website (mobile-first, fast, owned)',
@@ -186,8 +183,6 @@ const websiteLineTiers = [
     name: 'Quote Site',
     code: 'T2',
     setup: '$2,497',
-    monthly: '$97',
-    maintenanceMonthly: '$197',
     blurb: 'Everything in T1, plus the full Quote wizard built into the site (Form-line T1 system).',
     features: [
       'Everything in T1',
@@ -203,8 +198,6 @@ const websiteLineTiers = [
     name: 'The Works',
     code: 'T3',
     setup: '$4,497',
-    monthly: '$97',
-    maintenanceMonthly: '$297',
     blurb: 'Everything Fitchin has — T2 + automated SMS reviews + customer self-service online booking. The whole system, on autopilot.',
     features: [
       'Everything in T2',
@@ -296,19 +289,19 @@ const whoFor = [
 const faqs = [
   {
     q: 'How much does a detailing website with a quote system cost?',
-    a: "Two product lines, six tiers, one $97/month floor. If you already have a website you're keeping, we add just the wizard — Form line, $997 (Quote) / $1,497 (Quote + Reviews) / $2,497 (Quote + Booking) install, plus $97/month flat. If you need a new website too, we build the system in — Website line, $1,497 (Starter Site) / $2,497 (Quote Site) / $4,497 (The Works) install, plus $97/month Care or an optional $197/$297 Care + Maintenance on T2/T3. All tiers month-to-month, no contract. Code is yours at handoff — cancel anytime and the site keeps running.",
+    a: "Two product lines, six tiers, install-only pricing. If you already have a website you're keeping, we add just the wizard — Form line, $997 (Quote) / $1,497 (Quote + Reviews) / $2,497 (Quote + Booking) install. If you need a new website too, we build the system in — Website line, $1,497 (Starter Site) / $2,497 (Quote Site) / $4,497 (The Works) install. No required monthly on any tier. You own everything at handoff — the code, the repo, the domain. Cancel anytime and the site freezes as-is and keeps working.",
   },
   {
     q: 'Do I need a new website, or can you just add the wizard to mine?',
-    a: "Both — your call. If your current site is fine and you just want the quoting + lead-capture system on top of it, that's the Form line: $997 (T1 Quote) / $1,497 (T2 Quote + Reviews) / $2,497 (T3 Quote + Booking) install, plus $97/month flat. If you need a new site too — or your current one is a Wix/Squarespace you're trying to leave — that's the Website line: $1,497 (Starter Site) / $2,497 (Quote Site) / $4,497 (The Works) install, plus $97/month Care. Same wizard either way, same $97/month floor either way.",
+    a: "Both — your call. If your current site is fine and you just want the quoting + lead-capture system on top of it, that's the Form line: $997 (T1 Quote) / $1,497 (T2 Quote + Reviews) / $2,497 (T3 Quote + Booking) install. If you need a new site too — or your current one is a Wix/Squarespace you're trying to leave — that's the Website line: $1,497 (Starter Site) / $2,497 (Quote Site) / $4,497 (The Works) install. Same wizard either way. You own everything at handoff either way.",
   },
   {
-    q: "What's the difference between the $97 and the $197 / $297 monthly?",
-    a: "$97/month — Care — is the floor on every tier. It covers hosting on our infrastructure (no separate server bill), repo + domain ownership in your name, platform-wide updates pushed automatically, and breakage fixes on the Form line and Website T1. $197/month (Website T2) and $297/month (Website T3) — Care + Maintenance — is an optional upgrade. It adds active monitoring (Bill catches issues before you do), included breakage fixes (no per-incident charges), included monthly content tweaks (~1 hour on T2, ~2 hours on T3), priority 24-hour Client Hub response, and a quarterly health check. The Form line and Website T1 stay flat $97 — no Maintenance upgrade available on those, because the surface area is small enough that base Care already covers it.",
+    q: 'Is there a monthly fee?',
+    a: "No required monthly. You own your site outright — the code, the repo, the domain. The site keeps running whether you pay us anything ongoing or not. Optional care plans are available if you'd rather not manage hosting and maintenance yourself — we'll cover that on the call after we figure out which tier fits your shop.",
   },
   {
     q: 'Can I start with the wizard and upgrade to a full website later?',
-    a: "Yes. If you start on the Form line and later want a full website, your original install credits against the new Website tier — so a Form T2 client ($1,497) upgrading to Website T2 ($2,497) pays the $1,000 difference, not a fresh build cost. The wizard and dashboard you already own carry into the new build; we don't rebuild from scratch. Your monthly transitions cleanly too — Form $97 stays $97 on Website T1 or base Care, and you can opt into Maintenance later if you want it.",
+    a: "Yes. If you start on the Form line and later want a full website, your original install credits against the new Website tier — so a Form T2 client ($1,497) upgrading to Website T2 ($2,497) pays the $1,000 difference, not a fresh build cost. The wizard and dashboard you already own carry into the new build; we don't rebuild from scratch.",
   },
   {
     q: 'Does it handle both detailing and ceramic coating?',
@@ -316,15 +309,7 @@ const faqs = [
   },
   {
     q: 'How long does it take?',
-    a: 'About 3–5 weeks from kickoff to launch, depending on how many services you offer and how much pricing complexity we’re modelling.',
-  },
-  {
-    q: "What's the monthly fee for?",
-    a: "The quote engine and ongoing pricing updates, your lead dashboard, step-by-step analytics, small site updates, and software costs. Hosting itself runs on a free tier built for small businesses, so the monthly covers the work — not the server. Month-to-month, no long-term contract.",
-  },
-  {
-    q: 'What happens if I cancel the monthly?',
-    a: "You keep the site. The code is yours, the repo and domain are in your name, and the site runs on a hosting tier that's free for shops your size — so even after you cancel, there's no monthly server bill. The monthly fee covers ongoing services — pricing updates, your lead dashboard, support, software costs. Cancel anytime and the site keeps running; you'd just take those pieces over yourself or hand them to another developer. Most of our competitors at this price point can't say that.",
+    a: 'About 3–5 weeks from kickoff to launch on a Website tier; 1–3 weeks on the Form line. Depends on how many services you offer and how much pricing complexity we’re modelling.',
   },
   {
     q: 'Do I have to change how I take bookings or payments?',
@@ -356,7 +341,7 @@ const faqs = [
   },
   {
     q: 'How is this different from Wix, Squarespace, or WordPress?',
-    a: "Wix and Squarespace rent you a locked template — you pay forever, and the second you stop, the site goes dark. WordPress is yours but stacks its own monthly costs (hosting, plugins, security, theme updates). This is custom-built around how your shop quotes and books, the code is yours at handoff, the hosting is free for shops your size, and you can cancel the monthly anytime without losing the site.",
+    a: "Wix and Squarespace rent you a locked template — you pay forever, and the second you stop, the site goes dark. WordPress is yours but stacks its own ongoing costs (hosting, plugins, security, theme updates). This is custom-built around how your shop quotes and books, the code is yours at handoff, and nothing gets shut off if you walk away. You own it outright.",
   },
 ];
 
@@ -631,7 +616,7 @@ const faqSchema = {
             Your site. Your code. Your hosting. <span class="text-accent">No rent.</span>
           </h2>
           <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-            Unlike Wix, Squarespace, or any rented site builder, the whole stack is yours at handoff — the code, the domain, the hosting account. Cancel the monthly anytime and the site keeps running.
+            Unlike Wix, Squarespace, or any rented site builder, the whole stack is yours at handoff — the code, the domain, the hosting account. No required monthly. Cancel anything you're paying us anytime, and the site keeps running.
           </p>
         </div>
 
@@ -642,7 +627,7 @@ const faqSchema = {
             </span>
             <h3 class="font-display font-semibold text-[1.15rem] text-text">You own the code</h3>
             <p class="text-[0.95rem] text-text-soft leading-relaxed">
-              At handoff the repo and domain are in your name. Cancel the monthly anytime and the site keeps running — nobody can yank it down, lock you out, or hold a redesign over your head.
+              At handoff the repo and domain are in your name. No required monthly. The site keeps running on its own — nobody can yank it down, lock you out, or hold a redesign over your head.
             </p>
           </div>
 
@@ -662,7 +647,7 @@ const faqSchema = {
             </span>
             <h3 class="font-display font-semibold text-[1.15rem] text-text">$0 hosting bill</h3>
             <p class="text-[0.95rem] text-text-soft leading-relaxed">
-              The site runs on hosting that's free for shops your size — no monthly server bill from us, and none if you ever walk away. The fee you pay covers the work, not the server.
+              The site runs on hosting that's free for shops your size — no server bill from us required, and none if you ever walk away. You're not locked into a hosting contract.
             </p>
           </div>
         </div>
@@ -950,17 +935,19 @@ const faqSchema = {
       </div>
     </section>
 
-    <!-- OFFER + PRICING — two product lines, six tiers, $97/mo floor across both.
-         All numbers pulled from PRICING.md (single source of truth). -->
+    <!-- OFFER + PRICING — two product lines, six tiers, install price only.
+         Public pricing here pulls from PRICING.md → PUBLIC. Care plans
+         ($97 / $197 / $297) are INTERNAL only — sold on the call, never
+         rendered on the page. See PRICING.md → INTERNAL section. -->
     <section id="pricing" class="relative border-b border-line bg-surface-1/30">
       <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
         <div class="max-w-3xl">
           <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Pricing</span>
           <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
-            Two product lines. <span class="text-accent">One $97/month floor.</span>
+            Two product lines. <span class="text-accent">You own everything.</span>
           </h2>
           <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-            Already have a site you're keeping? Add just the wizard — <strong class="text-text">Form line, starts at $997</strong>. Need a new site too? Build the system in from day one — <strong class="text-text">Website line, starts at $1,497</strong>. Same $97/month on every tier.
+            Already have a site you're keeping? Add just the wizard — <strong class="text-text">Form line, starts at $997</strong>. Need a new site too? Build the system in from day one — <strong class="text-text">Website line, starts at $1,497</strong>. No required monthly on any tier. You own your code, your site, your domain — outright.
           </p>
         </div>
 
@@ -985,9 +972,9 @@ const faqSchema = {
                   <div class="text-[2rem] leading-none font-bold text-text">{t.setup}</div>
                   <div class="mt-1 text-[0.85rem] text-text-muted uppercase tracking-[0.14em]">install · one-time</div>
                 </div>
-                <div class="mt-3 font-display text-[1.05rem] text-text">
-                  + <span class="font-bold">${t.monthly.replace('$','')}</span><span class="text-text-soft text-[0.95rem]">/month</span>
-                </div>
+                <p class="mt-3 text-[0.85rem] text-text-soft leading-snug">
+                  You own everything. No required monthly.
+                </p>
                 <p class="mt-5 text-[0.95rem] text-text-soft leading-relaxed">{t.blurb}</p>
                 <ul class="mt-5 space-y-2 flex-1">
                   {t.features.map((f) => (
@@ -1002,9 +989,6 @@ const faqSchema = {
               </div>
             ))}
           </div>
-          <p class="mt-5 text-[0.86rem] text-text-muted">
-            Form line monthly is a flat $97 across all three tiers — the wizard's surface area is small enough that $97 covers hosting, updates, and breakage fixes without a maintenance upgrade.
-          </p>
         </div>
 
         <!-- WEBSITE LINE — for shops building new. -->
@@ -1028,14 +1012,9 @@ const faqSchema = {
                   <div class="text-[2rem] leading-none font-bold text-text">{t.setup}</div>
                   <div class="mt-1 text-[0.85rem] text-text-muted uppercase tracking-[0.14em]">install · one-time</div>
                 </div>
-                <div class="mt-3 font-display text-[1.05rem] text-text">
-                  + <span class="font-bold">${t.monthly.replace('$','')}</span><span class="text-text-soft text-[0.95rem]">/mo Care</span>
-                </div>
-                {t.maintenanceMonthly && (
-                  <div class="mt-1 font-display text-[0.92rem] text-text-soft">
-                    or <span class="font-semibold text-text">${t.maintenanceMonthly.replace('$','')}</span>/mo Care + Maintenance
-                  </div>
-                )}
+                <p class="mt-3 text-[0.85rem] text-text-soft leading-snug">
+                  You own everything. No required monthly.
+                </p>
                 <p class="mt-5 text-[0.95rem] text-text-soft leading-relaxed">{t.blurb}</p>
                 <ul class="mt-5 space-y-2 flex-1">
                   {t.features.map((f) => (
@@ -1052,30 +1031,12 @@ const faqSchema = {
           </div>
         </div>
 
-        <!-- MONTHLY EXPLAINER — Care vs. Care + Maintenance. -->
+        <!-- TIMELINE + UPGRADE PATH. -->
         <div class="mt-14 grid sm:grid-cols-2 gap-5">
           <div class="card p-6">
-            <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">$97/mo · Care</div>
-            <h4 class="font-display font-semibold text-[1rem] text-text">The floor on every tier.</h4>
-            <p class="mt-2 text-[0.94rem] text-text-soft leading-relaxed">
-              Hosting on our infrastructure (no separate server bill), repo + domain in your name, platform-wide updates pushed automatically, and breakage fixes on Form line + Website T1. Cancel anytime — the site freezes as-is and keeps running.
-            </p>
-          </div>
-          <div class="card p-6 border-accent/40">
-            <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">$197 / $297/mo · Care + Maintenance</div>
-            <h4 class="font-display font-semibold text-[1rem] text-text">Optional upgrade · Website T2 + T3 only.</h4>
-            <p class="mt-2 text-[0.94rem] text-text-soft leading-relaxed">
-              Everything in Care, plus Bill actively keeps the site functioning: monitoring catches issues before you do, breakage fixes are included, ~1 hr/mo (T2) or ~2 hr/mo (T3) of content tweaks bundled, priority 24-hr Client Hub response, and a quarterly health check.
-            </p>
-          </div>
-        </div>
-
-        <!-- TIMELINE + UPGRADE PATH. -->
-        <div class="mt-6 grid sm:grid-cols-2 gap-5">
-          <div class="card p-6">
-            <h4 class="font-display font-semibold text-[1rem] text-text mb-2">Timeline + terms</h4>
+            <h4 class="font-display font-semibold text-[1rem] text-text mb-2">Timeline</h4>
             <p class="text-[0.94rem] text-text-soft leading-relaxed">
-              3–5 weeks from kickoff to launch on Website tiers; 1–3 weeks on Form line. All tiers month-to-month, no contract. Charm-priced because the brand position is value, not premium.
+              3–5 weeks from kickoff to launch on Website tiers; 1–3 weeks on Form line. Code is yours at handoff. No long-term contract.
             </p>
           </div>
           <div class="card p-6">
