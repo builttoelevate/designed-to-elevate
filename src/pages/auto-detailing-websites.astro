@@ -226,19 +226,19 @@ const caseBullets = [
 
 const proofItems = [
   {
-    src: '/wizard/step-1-service.png',
+    src: '/wizard/step-1-service.webp',
     title: 'Pick the service',
     description:
       'Detailing, ceramic coating, or tint — your full menu in one guided flow. Customers self-select, then the questions adapt to what they chose.',
   },
   {
-    src: '/wizard/step-5-summary.png',
+    src: '/wizard/step-5-summary.webp',
     title: 'An estimate they can adjust',
     description:
       'Customers see an itemized quote they can toggle line by line, with a live subtotal, tax, and total — before anything is booked.',
   },
   {
-    src: '/wizard/step-6-final-quote.png',
+    src: '/wizard/step-6-final-quote.webp',
     title: 'Priced and ready to book',
     description:
       'A real estimate with a quote number, then one tap to text it to the shop or book online. The lead is already captured either way.',
@@ -350,6 +350,8 @@ const faqSchema = {
   description="Detailing and ceramic coating shop websites with a real quote system — prices the job by vehicle, captures the lead before they bounce, and texts the quote to your phone to book. See the Fitchin build."
   pathname="auto-detailing-websites"
   noindex={true}
+  skipHref="#quote"
+  skipLabel="Skip to quote builder"
 >
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
@@ -366,7 +368,7 @@ const faqSchema = {
          opaque bg-bg layer that scrolls over the top of it. -->
     <div class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
       <img
-        src="/auto-detail/detailing-bay-hero.jpg?v=2"
+        src="/auto-detail/detailing-bay-hero.webp?v=2"
         alt=""
         class="absolute inset-0 h-full w-full object-cover"
         width="1672"
@@ -388,10 +390,10 @@ const faqSchema = {
         <div class="mx-auto max-w-7xl px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-3 sm:gap-4">
           <a href="#top" class="flex items-center" aria-label="Designed to Elevate">
             <img
-              src="/logo-wordmark-orange.png"
+              src="/logo-wordmark-orange.webp"
               alt="Designed to Elevate"
-              width="320"
-              height="96"
+              width="721"
+              height="240"
               class="h-8 sm:h-10 w-auto"
             />
           </a>
@@ -410,7 +412,7 @@ const faqSchema = {
           <div>
             <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Auto Detailing + Ceramic Coating Websites</span>
             <h1 class="mt-5 text-[2.2rem] sm:text-[2.9rem] lg:text-[3.3rem] leading-[1.04] font-bold tracking-tight">
-              Auto detailing websites that <span class="text-accent">quote the job</span> — before the customer calls another shop.
+              Auto Detailing Websites That <span class="text-accent">Quote the Job</span> — Before They Call Another Shop.
             </h1>
             <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.1rem] leading-relaxed max-w-2xl">
               We build detail-shop websites with a real quote system — prices a full interior, paint correction, or ceramic tier by vehicle, captures the lead before they bounce, and texts the quote straight to your phone to book.
@@ -450,7 +452,7 @@ const faqSchema = {
             <div class="relative card overflow-hidden max-w-[20rem] mx-auto">
               <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
                 <img
-                  src="/showcase/fitchin-mobile.png"
+                  src="/showcase/fitchin-mobile.webp"
                   alt="Fitchin Auto Detail mobile homepage — heat, glare, and ceramic protection messaging with a 'See your price in 2 min' quote button."
                   class="absolute inset-0 w-full h-full object-cover object-top"
                   width="1320"
@@ -685,6 +687,10 @@ const faqSchema = {
               Fitchin became the proving ground for this system. It's a real detailing, ceramic coating, and window tinting shop in Coshocton, Ohio — with real pricing complexity, real service combinations, and real customers who need clear answers before they book. The old site could describe the services, but it still couldn't price the work. The rebuild replaced the basic contact-form experience with a guided quote flow that handles detailing, ceramic coating, tint, add-ons, vehicle logic, lead capture, and booking handoff in one system.
             </p>
 
+            <p class="mt-5 text-text-soft text-[1rem] leading-relaxed">
+              <span class="text-text font-display font-semibold">Built by Bill</span> — the same person who built and marketed the site for a real, working detail and tint shop, not an agency selling theory from a template.
+            </p>
+
             <ul class="mt-7 space-y-3">
               {caseBullets.map((b) => (
                 <li class="flex items-start gap-3 text-[1rem] text-text leading-snug">
@@ -734,6 +740,14 @@ const faqSchema = {
             <span class="text-text-muted text-[0.95rem]">Owner, Fitchin Auto Detail · Coshocton, OH</span>
           </figcaption>
         </figure>
+
+        <!-- Page-voice outcome line (NOT attributed to Eric). The testimonial is
+             genuine process praise; this adds the concrete result the proof slot
+             needs (checklist §8), stated as fact about the live system and kept
+             revenue-free per the voice rules. -->
+        <p class="mt-6 text-center text-[0.95rem] text-text-soft leading-relaxed max-w-2xl mx-auto">
+          The result that matters: Fitchin's customers now get a real price from the quote flow before they ever pick up the phone — the same system every build on this page is based on.
+        </p>
 
         <!-- Inline CTA adjacent to the testimonial. -->
         <div class="mt-10 text-center">
@@ -817,7 +831,7 @@ const faqSchema = {
               <div class="relative aspect-[10/13] bg-surface-2 overflow-hidden border-b border-line">
                 <img
                   src={p.src}
-                  alt={p.title}
+                  alt={p.description}
                   class="absolute inset-0 w-full h-full object-cover object-top"
                   width="1320"
                   height="2708"
@@ -924,7 +938,7 @@ const faqSchema = {
         <div class="mt-14">
           <div class="flex flex-wrap items-baseline gap-3 mb-6">
             <h3 class="font-display font-bold text-[1.5rem] text-text">Form / Wizard line</h3>
-            <span class="text-text-muted text-[0.95rem]">Add the wizard to your existing site</span>
+            <span class="text-text-muted text-[0.95rem]">Keeping the site you have? Add just the wizard.</span>
           </div>
 
           <div class="grid md:grid-cols-3 gap-5">
@@ -964,7 +978,7 @@ const faqSchema = {
         <div class="mt-16">
           <div class="flex flex-wrap items-baseline gap-3 mb-6">
             <h3 class="font-display font-bold text-[1.5rem] text-text">Website line</h3>
-            <span class="text-text-muted text-[0.95rem]">Full site + the system, built together</span>
+            <span class="text-text-muted text-[0.95rem]">Need a new site too? Build it in from day one.</span>
           </div>
 
           <div class="grid md:grid-cols-3 gap-5">
@@ -1118,5 +1132,87 @@ const faqSchema = {
       </a>
     </div>
   </div>
+
+  <!--
+    Conversion tracking for /auto-detailing-websites (the paid-traffic LP).
+    Mirrors the /upgrade scaffold but points at the embedded quote wizard
+    (#quote) instead of #apply. Pushes events to window.dataLayer (GA4/GTM
+    consume them) and fires the Google Ads conversion on a successful quote
+    submit. The gtag() stub + dataLayer are defined in LandingLayout's <head>,
+    so this is safe to run before real IDs exist.
+
+    PLACEHOLDER: replace ADS_CONVERSION_SEND_TO below with the real value
+    (AW-XXXXXXXXXX/AbCdEf…) once the Google Ads conversion action is created.
+    Until then the conversion is wired but intentionally inert.
+
+    Events: cta_click · phone_tap · form_view · form_submit_success ·
+    form_submit_error · thank_you_view. (quote_step / quote_partial_lead are
+    pushed from QuoteFlowSection's own script.)
+  -->
+  <script>
+    type Payload = Record<string, string | number | boolean | undefined>;
+    interface TrackingWindow extends Window {
+      dataLayer?: Array<Payload & { event: string }>;
+      gtag?: (...args: unknown[]) => void;
+    }
+
+    // Google Ads conversion identifier — REPLACE with the real send_to value
+    // (format: AW-XXXXXXXXXX/AbC-dEf123) when the conversion action is created.
+    const ADS_CONVERSION_SEND_TO = 'AW-PLACEHOLDER/CONVERSION_LABEL';
+
+    const w = window as TrackingWindow;
+    w.dataLayer = w.dataLayer || [];
+    const trackEvent = (event: string, payload: Payload = {}): void => {
+      w.dataLayer!.push({ event, ...payload });
+    };
+
+    // 1. cta_click — every primary CTA pointing at the quote wizard (#quote).
+    document.querySelectorAll<HTMLElement>('a[href="#quote"], a[href^="#quote"]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const section = el.closest('section')?.id || 'header_or_footer';
+        trackEvent('cta_click', { cta: 'build_estimate', section, label: el.textContent?.trim().slice(0, 80) });
+      });
+    });
+
+    // 2. phone_tap — call/text popup triggers and any direct tel:/sms: link.
+    document.querySelectorAll<HTMLElement>('[data-call-text], a[href^="tel:"], a[href^="sms:"]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const section = el.closest('section')?.id || 'header_or_footer';
+        const kind = el.tagName === 'A' ? (el.getAttribute('href')?.startsWith('sms:') ? 'sms_link' : 'tel_link') : 'popup_trigger';
+        trackEvent('phone_tap', { section, kind });
+      });
+    });
+
+    // 3. form_view — fire once when the quote wizard scrolls into view.
+    const quoteSection = document.getElementById('quote');
+    if (quoteSection && 'IntersectionObserver' in window) {
+      const obs = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            trackEvent('form_view', { form: 'quote_wizard' });
+            obs.disconnect();
+          }
+        }
+      }, { threshold: 0.25 });
+      obs.observe(quoteSection);
+    }
+
+    // 4. form_submit + Google Ads conversion. LandingLayout's submit handler
+    //    dispatches audit-form:success / audit-form:error. On success we push
+    //    the dataLayer events AND fire the Ads conversion (the primary
+    //    paid-traffic conversion) plus a thank_you_view for the inline confirm.
+    document.addEventListener('audit-form:success', (e) => {
+      const detail = (e as CustomEvent).detail || {};
+      trackEvent('form_submit_success', { form: 'quote_wizard', source: detail.source || '/auto-detailing-websites' });
+      trackEvent('thank_you_view', { form: 'quote_wizard' });
+      if (typeof w.gtag === 'function' && !ADS_CONVERSION_SEND_TO.includes('PLACEHOLDER')) {
+        w.gtag('event', 'conversion', { send_to: ADS_CONVERSION_SEND_TO });
+      }
+    });
+    document.addEventListener('audit-form:error', (e) => {
+      const detail = (e as CustomEvent).detail || {};
+      trackEvent('form_submit_error', { form: 'quote_wizard', message: detail.message });
+    });
+  </script>
 
 </LandingLayout>

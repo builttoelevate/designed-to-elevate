@@ -26,16 +26,29 @@ export default defineConfig({
   // Auto-generates /sitemap-index.xml (+ /sitemap-0.xml) at build from the
   // prerendered marketing pages. Replaces the old hand-maintained
   // public/sitemap.xml so new/removed pages stay in sync automatically.
-  // Excludes the noindex / private routes (the ad landing page, brochure,
-  // private proposals at /p/*, and the whole authed /portal) so the sitemap
-  // only advertises pages we actually want indexed.
+  // Excludes the noindex / private routes so the sitemap only advertises pages
+  // we actually want indexed. A sitemap that lists a noindex URL is a
+  // self-contradictory signal (Search Console flags "Submitted URL marked
+  // noindex"). Keep this in sync with any page that sets noindex={true}:
+  //   - /grow                      ad landing page
+  //   - /brochure                  static brochure
+  //   - /p/*                       private proposals
+  //   - /portal                    authed client/admin portal
+  //   - /auto-detailing-websites   paid LP (noindex; SEO twin is /auto-detail-websites)
+  //   - /barbershop-websites       paid LP (noindex)
+  //   - /window-tinting-websites   paid LP (noindex)
+  //   - /upgrade/thank-you         post-conversion page (noindex)
   integrations: [
     sitemap({
       filter: (page) =>
         !page.includes('/grow') &&
         !page.includes('/brochure') &&
         !page.includes('/p/') &&
-        !page.includes('/portal'),
+        !page.includes('/portal') &&
+        !page.includes('/auto-detailing-websites') &&
+        !page.includes('/barbershop-websites') &&
+        !page.includes('/window-tinting-websites') &&
+        !page.includes('/upgrade/thank-you'),
     }),
   ],
   // Legacy URL redirects after the redesign:
