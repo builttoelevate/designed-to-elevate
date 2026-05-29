@@ -25,12 +25,12 @@ const productLineOptions = [
   {
     value: 'form',
     label: 'Just the quote wizard added to my current site',
-    desc: 'Form line · starts at $997 install + $97/mo',
+    desc: 'Form line · starts at $997 install',
   },
   {
     value: 'website',
     label: 'A new website with the wizard built in',
-    desc: 'Website line · starts at $1,497 install + $97/mo',
+    desc: 'Website line · starts at $1,497 install',
   },
   {
     value: 'not-sure',
@@ -284,7 +284,8 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
                  - DUAL: Form T2 + Website T2 side-by-side (not-sure routing) -->
           <div data-step="5" data-estimate-step class="hidden">
 
-            <!-- SINGLE-tier panel (form OR website routing) -->
+            <!-- SINGLE-tier panel (form OR website routing). Install price only;
+                 see PRICING.md INTERNAL for what ships ongoing. -->
             <div data-estimate-single class="rounded-xl border border-accent/40 bg-accent/5 p-5 sm:p-6">
               <div class="flex items-center justify-between gap-2 flex-wrap">
                 <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent">Your ballpark</div>
@@ -294,11 +295,11 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
                 Your shop looks like a fit for the <span data-rec-build class="text-accent">Quote Site</span>.
               </h3>
               <div class="mt-2 font-display font-bold text-[1.25rem] text-text">
-                <span data-rec-price>Ballpark: $2,497 install + $97/month</span>
+                <span data-rec-price>Ballpark: $2,497 install — one-time</span>
               </div>
-              <div class="mt-1 font-display text-[0.92rem] text-text-soft hidden" data-rec-maintenance>
-                or $197/month with Care + Maintenance (optional)
-              </div>
+              <p class="mt-1 text-[0.92rem] text-text-soft">
+                You own everything. No required monthly.
+              </p>
               <p data-rec-blurb class="mt-3 text-text-soft text-[0.95rem] leading-relaxed">
                 Everything in T1, plus the full quote wizard built into the site.
               </p>
@@ -315,15 +316,16 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
               </p>
             </div>
 
-            <!-- DUAL-tier panel (not-sure routing — shows Form T2 + Website T2). -->
+            <!-- DUAL-tier panel (not-sure routing — shows Form T2 + Website T2).
+                 Install only, same as single panel. -->
             <div data-estimate-dual class="hidden">
               <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-3">Your two most-likely picks</div>
               <div class="grid sm:grid-cols-2 gap-4">
                 <div class="rounded-xl border border-line bg-surface-1/40 p-5">
                   <div class="font-display text-[0.7rem] uppercase tracking-[0.16em] text-text-muted">Form line · keep your site</div>
                   <h4 class="mt-1 font-display font-bold text-[1.1rem] text-text">Quote + Reviews</h4>
-                  <div class="mt-3 font-display font-bold text-[1.05rem] text-text">$1,497 install</div>
-                  <div class="font-display text-[0.95rem] text-text-soft">+ $97/month</div>
+                  <div class="mt-3 font-display font-bold text-[1.05rem] text-text">$1,497 install — one-time</div>
+                  <p class="mt-1 text-[0.88rem] text-text-soft">You own everything. No required monthly.</p>
                   <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">
                     The wizard added to your current site, plus automated SMS Google-review requests after each job.
                   </p>
@@ -331,8 +333,8 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
                 <div class="rounded-xl border border-accent/40 bg-accent/[0.06] p-5">
                   <div class="font-display text-[0.7rem] uppercase tracking-[0.16em] text-accent">Website line · build new</div>
                   <h4 class="mt-1 font-display font-bold text-[1.1rem] text-text">Quote Site</h4>
-                  <div class="mt-3 font-display font-bold text-[1.05rem] text-text">$2,497 install</div>
-                  <div class="font-display text-[0.95rem] text-text-soft">+ $97/month (or $197/mo with Maintenance)</div>
+                  <div class="mt-3 font-display font-bold text-[1.05rem] text-text">$2,497 install — one-time</div>
+                  <p class="mt-1 text-[0.88rem] text-text-soft">You own everything. No required monthly.</p>
                   <p class="mt-3 text-[0.9rem] text-text-soft leading-relaxed">
                     Full new site with the wizard built in. The Fitchin starting point.
                   </p>
@@ -386,44 +388,43 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
       const total = steps.length;
       let current = 0;
 
-      // Pricing tiers — pulled from PRICING.md. Single source of truth.
-      // Two product lines (form/website) × three tiers each. Maintenance monthly
-      // only applies to Website T2 + T3.
+      // Pricing tiers — pulled from PRICING.md → PUBLIC. Install price only;
+      // see PRICING.md → INTERNAL for what ships ongoing.
       const TIERS = {
         form_t1: {
           id: 'form_t1', line: 'form', code: 'T1',
           name: 'Quote',
-          setup: '$997', monthly: '$97',
+          setup: '$997',
           blurb: 'The wizard added to your current site. Customer gets a real price, the lead hits your dashboard, you schedule it manually.',
         },
         form_t2: {
           id: 'form_t2', line: 'form', code: 'T2',
           name: 'Quote + Reviews',
-          setup: '$1,497', monthly: '$97',
+          setup: '$1,497',
           blurb: 'Everything in T1, plus automated SMS Google-review requests after every job (skips no-shows).',
         },
         form_t3: {
           id: 'form_t3', line: 'form', code: 'T3',
           name: 'Quote + Booking',
-          setup: '$2,497', monthly: '$97',
+          setup: '$2,497',
           blurb: 'Everything in T2, plus the customer books their own slot online — runs on autopilot.',
         },
         web_t1: {
           id: 'web_t1', line: 'website', code: 'T1',
           name: 'Starter Site',
-          setup: '$1,497', monthly: '$97',
+          setup: '$1,497',
           blurb: 'New custom site + a smart lead-capture form. The foundation — easy to upgrade to the full quote system later.',
         },
         web_t2: {
           id: 'web_t2', line: 'website', code: 'T2',
           name: 'Quote Site',
-          setup: '$2,497', monthly: '$97', maintenance: '$197',
+          setup: '$2,497',
           blurb: 'Everything in T1, plus the full quote wizard built into the site. The Fitchin starting point.',
         },
         web_t3: {
           id: 'web_t3', line: 'website', code: 'T3',
           name: 'The Works',
-          setup: '$4,497', monthly: '$97', maintenance: '$297',
+          setup: '$4,497',
           blurb: 'Everything Fitchin has — T2 plus automated SMS review requests and customer self-service booking. The whole system, on autopilot.',
         },
       };
@@ -513,7 +514,7 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
           if (single) single.classList.add('hidden');
           if (dual) dual.classList.remove('hidden');
           const hidden = form.querySelector('[name="recommended_build"]');
-          if (hidden) hidden.value = 'Not sure — showing Form T2 ($1,497 + $97/mo) and Website T2 ($2,497 + $97/mo)' + (services.length ? ' · Services: ' + services.join(', ') : '');
+          if (hidden) hidden.value = 'Not sure — showing Form T2 ($1,497 install) and Website T2 ($2,497 install)' + (services.length ? ' · Services: ' + services.join(', ') : '');
           const tierIdField = form.querySelector('[name="recommended_tier_id"]');
           if (tierIdField) tierIdField.value = 'not_sure_dual';
           const fitNoteField = form.querySelector('[name="budget_fit_note"]');
@@ -532,18 +533,9 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
         const setText = (sel, txt) => { const el = root.querySelector(sel); if (el) el.textContent = txt; };
         setText('[data-rec-line]', LINE_LABEL[recTier.line]);
         setText('[data-rec-build]', recTier.name);
-        setText('[data-rec-price]', 'Ballpark: ' + recTier.setup + ' install + ' + recTier.monthly + '/month');
+        // Install-only ballpark — any ongoing-fee conversation is handled on the call.
+        setText('[data-rec-price]', 'Ballpark: ' + recTier.setup + ' install — one-time');
         setText('[data-rec-blurb]', recTier.blurb);
-
-        const maintEl = root.querySelector('[data-rec-maintenance]');
-        if (maintEl) {
-          if (recTier.maintenance) {
-            maintEl.textContent = 'or ' + recTier.maintenance + '/month with Care + Maintenance (optional)';
-            maintEl.classList.remove('hidden');
-          } else {
-            maintEl.classList.add('hidden');
-          }
-        }
 
         // Features list = the user's selected goals (with fallback default).
         const ul = root.querySelector('[data-rec-features]');
@@ -569,13 +561,11 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
           }
         }
 
-        // Hidden fields for the email payload — make the dashboard record useful.
+        // Hidden fields for the email payload — install price + tier id only.
+        // PRICING.md INTERNAL maps the tier id to its ongoing-fee structure for Bill.
         const hidden = form.querySelector('[name="recommended_build"]');
-        const monthlyTail = recTier.maintenance
-          ? ' (or ' + recTier.maintenance + '/mo with Maintenance)'
-          : '';
         if (hidden) {
-          hidden.value = recTier.line + ' line · ' + recTier.name + ' (' + recTier.code + ') — ' + recTier.setup + ' + ' + recTier.monthly + '/mo' + monthlyTail + (services.length ? ' · Services: ' + services.join(', ') : '');
+          hidden.value = recTier.line + ' line · ' + recTier.name + ' (' + recTier.code + ') — ' + recTier.setup + ' install' + (services.length ? ' · Services: ' + services.join(', ') : '');
         }
         const tierIdField = form.querySelector('[name="recommended_tier_id"]');
         if (tierIdField) tierIdField.value = recTier.id;
