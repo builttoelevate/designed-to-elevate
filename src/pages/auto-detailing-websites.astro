@@ -82,6 +82,15 @@ const caseBullets = [
   'The finished quote deep-links into a text to book — no phone tag',
 ];
 
+// Real, measured PageSpeed Insights scores (desktop, May 2026). Same numbers
+// surfaced on the SEO page — kept in sync there if these change.
+const caseScores = [
+  { score: '98', label: 'Performance' },
+  { score: '97', label: 'Accessibility' },
+  { score: '100', label: 'Best Practices' },
+  { score: '100', label: 'SEO' },
+];
+
 const proofItems = [
   {
     src: '/wizard/step-1-service.png',
@@ -451,6 +460,27 @@ const faqSchema = {
               </a>
             </div>
           </div>
+        </div>
+
+        <!-- LIVE PAGESPEED SCORES — measured on the live Fitchin site. -->
+        <div class="mt-16 pt-10 border-t border-line">
+          <div class="flex items-baseline justify-between gap-3 flex-wrap mb-6">
+            <h3 class="font-display font-semibold text-[1.05rem] sm:text-[1.15rem] text-text">
+              Live PageSpeed Insights <span class="text-text-muted font-normal">— desktop</span>
+            </h3>
+            <span class="text-[0.8rem] text-text-muted">Google PageSpeed, May 2026</span>
+          </div>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {caseScores.map((s) => (
+              <div class="card p-6 text-center">
+                <div class="font-display font-bold text-accent text-[2.6rem] sm:text-[3rem] leading-none">{s.score}</div>
+                <div class="mt-3 text-[0.78rem] uppercase tracking-[0.14em] text-text-muted">{s.label}</div>
+              </div>
+            ))}
+          </div>
+          <p class="mt-4 text-[0.78rem] text-text-muted italic">
+            Measured on the live Fitchin build. Scores are a snapshot and can shift over time.
+          </p>
         </div>
       </div>
     </section>
