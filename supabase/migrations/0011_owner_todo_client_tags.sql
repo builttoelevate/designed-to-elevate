@@ -43,8 +43,9 @@ create policy "admin sees todo client tags"
   using (
     public.is_admin()
     and exists (
-      select 1 from public.owner_todos t
-      where t.id = owner_todo_clients.todo_id and t.owner_id = auth.uid()
+      select 1 from public.owner_todos
+      where id       = owner_todo_clients.todo_id
+        and owner_id = auth.uid()
     )
   );
 
@@ -53,14 +54,16 @@ create policy "admin manages todo client tags"
   using (
     public.is_admin()
     and exists (
-      select 1 from public.owner_todos t
-      where t.id = owner_todo_clients.todo_id and t.owner_id = auth.uid()
+      select 1 from public.owner_todos
+      where id       = owner_todo_clients.todo_id
+        and owner_id = auth.uid()
     )
   )
   with check (
     public.is_admin()
     and exists (
-      select 1 from public.owner_todos t
-      where t.id = owner_todo_clients.todo_id and t.owner_id = auth.uid()
+      select 1 from public.owner_todos
+      where id       = owner_todo_clients.todo_id
+        and owner_id = auth.uid()
     )
   );
