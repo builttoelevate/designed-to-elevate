@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Marketing site for **Designed to Elevate** — a digital marketing studio for local service businesses (detailers, tint shops, barbershops, contractors, etc.). Static site built with Astro 5 + Tailwind v4, deployed on Vercel at `designedtoelevate.co`.
+Marketing site for **Designed to Elevate** — a digital marketing studio for local service businesses (detailers, tint shops, barbershops, contractors, etc.). Static site built with Astro 5 + Tailwind v4, deployed on Cloudflare Pages at `designedtoelevate.co`.
 
 `SITE_CONTEXT.md` and `FOUNDER_PROFILE.md` are reference material for content/voice. Read them before writing or editing user-facing copy — they define the founder story, services, voice rules ("Built From the Bay, Not a Boardroom," no agency-speak, no "solutions"), Stripe-readiness requirements, and which information is private vs. public.
 
