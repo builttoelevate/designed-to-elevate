@@ -6,16 +6,22 @@ import { createServiceSupabase } from '../../../lib/supabase';
 import { relativeDate } from '../../../lib/portal';
 
 const session = Astro.locals.session!;
+const params = Astro.url.searchParams;
+// Client filter: '' (no filter), 'unassigned' (no tags + not all), or a uuid.
+const fClient = params.get('client') || '';
 
 const admin = createServiceSupabase();
 
 // Sort: priority DESC (high → low), then due_at ASC NULLS LAST,
 // then created_at DESC. Urgent items float to the top of the list; inside
 // each urgency tier, soonest due date wins; ties broken by newest.
-const [{ data: openRows }, { data: doneRows }] = await Promise.all([
+const todoSelect =
+  'id, title, body, due_at, priority, completed, created_at, completed_at, updated_at, applies_to_all_clients';
+
+const [{ data: openRows }, { data: doneRows }, { data: clientRows }] = await Promise.all([
   admin
     .from('owner_todos')
-    .select('id, title, body, due_at, priority, completed, created_at, completed_at, updated_at')
+    .select(todoSelect)
     .eq('owner_id', session.userId)
     .eq('completed', false)
     .order('priority', { ascending: false })
@@ -23,15 +29,57 @@ const [{ data: openRows }, { data: doneRows }] = await Promise.all([
     .order('created_at', { ascending: false }),
   admin
     .from('owner_todos')
-    .select('id, title, body, due_at, priority, completed, created_at, completed_at, updated_at')
+    .select(todoSelect)
     .eq('owner_id', session.userId)
     .eq('completed', true)
     .order('completed_at', { ascending: false })
     .limit(20),
+  admin.from('clients').select('id, business_name').order('business_name'),
 ]);
 
-const open = openRows ?? [];
-const done = doneRows ?? [];
+const allOpen = openRows ?? [];
+const allDone = doneRows ?? [];
+const clients = (clientRows ?? []) as Array<{ id: string; business_name: string }>;
+const clientNameById = new Map(clients.map((c) => [c.id, c.business_name]));
+
+// Pull client tags for the rows we're about to render. Done up-front so
+// the filter step + the per-row display both share one query.
+const preFilterIds = [...allOpen, ...allDone].map((t: any) => t.id as string);
+type TagRow = { todo_id: string; client_id: string };
+const tagsByTodo = new Map<string, string[]>();
+if (preFilterIds.length > 0) {
+  const { data: tagRows } = await admin
+    .from('owner_todo_clients')
+    .select('todo_id, client_id')
+    .in('todo_id', preFilterIds);
+  for (const r of (tagRows ?? []) as TagRow[]) {
+    const arr = tagsByTodo.get(r.todo_id) ?? [];
+    arr.push(r.client_id);
+    tagsByTodo.set(r.todo_id, arr);
+  }
+}
+
+function todoMatchesClientFilter(t: any): boolean {
+  if (!fClient) return true;
+  if (fClient === 'unassigned') {
+    return !t.applies_to_all_clients && (tagsByTodo.get(t.id)?.length ?? 0) === 0;
+  }
+  if (t.applies_to_all_clients) return true;
+  return (tagsByTodo.get(t.id) ?? []).includes(fClient);
+}
+
+const open = allOpen.filter(todoMatchesClientFilter);
+const done = allDone.filter(todoMatchesClientFilter);
+
+function qs(overrides: Record<string, string>): string {
+  const next = new URLSearchParams(params);
+  for (const [k, v] of Object.entries(overrides)) {
+    if (v) next.set(k, v);
+    else next.delete(k);
+  }
+  const s = next.toString();
+  return s ? `?${s}` : '';
+}
 
 // One query for all attachments belonging to the rows we're rendering, then
 // group by todo_id. Small data volume — fine to do client-side grouping.
@@ -112,6 +160,24 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
     </div>
   </section>
 
+  <!-- CLIENT FILTER — narrows the lists to one client, "all clients" todos
+       included automatically. "Unassigned" shows todos with no tags. -->
+  <div class="mb-5 flex items-center gap-2 flex-wrap text-sm">
+    <label class="flex items-center gap-2">
+      <span class="text-text-muted">For</span>
+      <select class="ph-input !py-1.5 !px-2 text-sm w-auto" data-todo-client-filter>
+        <option value="" selected={!fClient}>All clients</option>
+        <option value="unassigned" selected={fClient === 'unassigned'}>Unassigned</option>
+        {clients.map((c) => (
+          <option value={c.id} selected={fClient === c.id}>{c.business_name}</option>
+        ))}
+      </select>
+    </label>
+    {fClient && (
+      <a href={qs({ client: '' })} class="text-xs text-text-muted hover:text-text underline-offset-2 hover:underline">Clear filter</a>
+    )}
+  </div>
+
   <!--
     NEW-TODO FORM
     Submits the title/body/due_at first, then runs the direct-upload flow
@@ -164,6 +230,31 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
         <span data-add-label>Add</span>
       </button>
     </div>
+
+    {/* Client picker — collapsed by default so the create form stays compact. */}
+    <details class="text-sm" data-client-picker>
+      <summary class="cursor-pointer text-text-muted hover:text-text inline-flex items-center gap-1.5">
+        <span>Tag a client</span>
+        <span class="text-[11px] text-text-muted/70" data-client-summary>None selected</span>
+      </summary>
+      <div class="mt-3 ph-card p-3 space-y-2">
+        <label class="flex items-center gap-2 text-sm">
+          <input type="checkbox" class="h-4 w-4 cursor-pointer accent-accent" data-applies-all />
+          <span class="font-medium">All clients</span>
+        </label>
+        <div class="border-t border-line/60 pt-2 grid sm:grid-cols-2 gap-x-3 gap-y-1.5" data-client-list>
+          {clients.length === 0 && (
+            <p class="text-xs text-text-muted col-span-full">No clients yet — add some under Clients.</p>
+          )}
+          {clients.map((c) => (
+            <label class="flex items-center gap-2 text-sm">
+              <input type="checkbox" class="h-4 w-4 cursor-pointer accent-accent" data-client-checkbox value={c.id} />
+              <span class="truncate">{c.business_name}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+    </details>
   </form>
 
   <div id="todo-flash" class="ph-flash hidden" data-tone="error" role="status"></div>
@@ -175,6 +266,12 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
     {open.map((t: any) => {
       const atts = attachmentsByTodo.get(t.id) ?? [];
       const overdueSsr = isOverdueUtc(t.due_at, t.completed);
+      const tagIds = tagsByTodo.get(t.id) ?? [];
+      const tagNames = tagIds
+        .map((id) => clientNameById.get(id))
+        .filter((n): n is string => typeof n === 'string');
+      const visibleTags = tagNames.slice(0, 2);
+      const extraTags = tagNames.length - visibleTags.length;
       return (
         <li
           class="ph-card group"
@@ -202,6 +299,15 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
                   <span class="ph-priority-pill" data-priority-pill data-priority={String(t.priority ?? 1)}>
                     {priorityLabel(t.priority)}
                   </span>
+                )}
+                {t.applies_to_all_clients && (
+                  <span class="ph-client-pill ph-client-pill--all" data-tag-pill>All clients</span>
+                )}
+                {!t.applies_to_all_clients && visibleTags.map((n) => (
+                  <span class="ph-client-pill" data-tag-pill>{n}</span>
+                ))}
+                {!t.applies_to_all_clients && extraTags > 0 && (
+                  <span class="ph-client-pill ph-client-pill--more" data-tag-pill>+{extraTags} more</span>
                 )}
                 <span>Added {relativeDate(t.created_at)}</span>
                 {t.due_at && (
@@ -283,6 +389,52 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
               </label>
             </div>
 
+            {/* Inline client picker — same shape as the new-todo form so the
+                save handler can target a single attribute. */}
+            <details class="text-sm" data-client-picker data-todo-tag-editor>
+              <summary class="cursor-pointer text-text-muted hover:text-text inline-flex items-center gap-1.5">
+                <span>Clients</span>
+                <span class="text-[11px] text-text-muted/70" data-client-summary>
+                  {t.applies_to_all_clients
+                    ? 'All clients'
+                    : tagNames.length === 0
+                    ? 'None selected'
+                    : tagNames.length === 1
+                    ? tagNames[0]
+                    : `${tagNames.length} selected`}
+                </span>
+              </summary>
+              <div class="mt-3 ph-card p-3 space-y-2">
+                <label class="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4 cursor-pointer accent-accent"
+                    data-applies-all
+                    checked={t.applies_to_all_clients}
+                  />
+                  <span class="font-medium">All clients</span>
+                </label>
+                <div class="border-t border-line/60 pt-2 grid sm:grid-cols-2 gap-x-3 gap-y-1.5" data-client-list>
+                  {clients.length === 0 && (
+                    <p class="text-xs text-text-muted col-span-full">No clients yet — add some under Clients.</p>
+                  )}
+                  {clients.map((c) => (
+                    <label class="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        class="h-4 w-4 cursor-pointer accent-accent"
+                        data-client-checkbox
+                        value={c.id}
+                        checked={!t.applies_to_all_clients && tagIds.includes(c.id)}
+                      />
+                      <span class="truncate">{c.business_name}</span>
+                    </label>
+                  ))}
+                </div>
+                <span data-tag-save-status class="block text-[11px] text-text-muted">Saved</span>
+              </div>
+            </details>
+
             <ul class="space-y-1.5" data-attachment-list>
               {atts.map((a) => (
                 <li class="flex items-center gap-2 text-xs ph-attach-row" data-attachment-id={a.id} data-file-name={a.file_name}>
@@ -352,6 +504,12 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
       <ul class="space-y-2 mt-3" id="done-list">
         {done.map((t: any) => {
           const atts = attachmentsByTodo.get(t.id) ?? [];
+          const tagIds = tagsByTodo.get(t.id) ?? [];
+          const tagNames = tagIds
+            .map((id) => clientNameById.get(id))
+            .filter((n): n is string => typeof n === 'string');
+          const visibleTags = tagNames.slice(0, 2);
+          const extraTags = tagNames.length - visibleTags.length;
           return (
             <li
               class="ph-card group opacity-70"
@@ -376,6 +534,15 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
                 <div class="flex-1 min-w-0">
                   <div class="text-sm leading-snug break-words line-through" data-title-text>{t.title}</div>
                   <div class="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-text-muted">
+                    {t.applies_to_all_clients && (
+                      <span class="ph-client-pill ph-client-pill--all" data-tag-pill>All clients</span>
+                    )}
+                    {!t.applies_to_all_clients && visibleTags.map((n) => (
+                      <span class="ph-client-pill" data-tag-pill>{n}</span>
+                    ))}
+                    {!t.applies_to_all_clients && extraTags > 0 && (
+                      <span class="ph-client-pill ph-client-pill--more" data-tag-pill>+{extraTags} more</span>
+                    )}
                     <span>Done {relativeDate(t.completed_at)}</span>
                     {atts.length > 0 && (
                       <span class="ph-attach-badge">
@@ -492,6 +659,31 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
       background: rgba(148, 163, 184, 0.1);
       color: rgb(203, 213, 225);
       border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    .ph-client-pill {
+      display: inline-flex;
+      align-items: center;
+      max-width: 12rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      background: rgba(99, 102, 241, 0.10);
+      color: rgb(165, 180, 252);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ph-client-pill--all {
+      background: rgba(255, 107, 26, 0.12);
+      color: var(--color-accent);
+      border: 1px solid rgba(255, 107, 26, 0.35);
+    }
+    .ph-client-pill--more {
+      background: rgba(148, 163, 184, 0.08);
+      color: rgb(148, 163, 184);
+      border: 1px solid rgba(148, 163, 184, 0.18);
     }
     .ph-drop-zone {
       border: 1px dashed var(--color-line);
@@ -619,6 +811,88 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
 
   const flash = document.getElementById('todo-flash') as HTMLElement | null;
   const newForm = document.getElementById('new-todo-form') as HTMLFormElement | null;
+
+  // ---------------- client filter + client-tag pickers ----------------
+  (() => {
+    // 1) Top-of-page filter select → reload with ?client=<value>.
+    const filter = document.querySelector<HTMLSelectElement>('[data-todo-client-filter]');
+    filter?.addEventListener('change', () => {
+      const url = new URL(window.location.href);
+      if (filter.value) url.searchParams.set('client', filter.value);
+      else url.searchParams.delete('client');
+      window.location.href = url.toString();
+    });
+
+    // 2) Every client picker (new-todo + every per-row editor): wire the
+    //    "All clients" mutex, the summary line, and — for per-row editors —
+    //    save-on-change via PATCH.
+    function refreshPicker(picker: HTMLElement) {
+      const all = picker.querySelector<HTMLInputElement>('[data-applies-all]');
+      const boxes = Array.from(picker.querySelectorAll<HTMLInputElement>('[data-client-checkbox]'));
+      const summary = picker.querySelector<HTMLElement>('[data-client-summary]');
+      if (!all || !summary) return;
+
+      // Mutex: when "All clients" is checked, individual selections are
+      // ignored. Disable them so the UI matches what the server stores.
+      boxes.forEach((b) => {
+        b.disabled = all.checked;
+        if (all.checked) b.checked = false;
+      });
+
+      const chosen = boxes.filter((b) => b.checked);
+      summary.textContent = all.checked
+        ? 'All clients'
+        : chosen.length === 0
+        ? 'None selected'
+        : chosen.length === 1
+        ? (chosen[0].nextElementSibling?.textContent?.trim() || '1 selected')
+        : `${chosen.length} selected`;
+    }
+
+    document.querySelectorAll<HTMLElement>('[data-client-picker]').forEach(refreshPicker);
+
+    async function patchTags(li: HTMLElement, picker: HTMLElement) {
+      const todoId = li.dataset.todoId;
+      if (!todoId) return;
+      const all = picker.querySelector<HTMLInputElement>('[data-applies-all]');
+      const boxes = Array.from(picker.querySelectorAll<HTMLInputElement>('[data-client-checkbox]'));
+      const status = picker.querySelector<HTMLElement>('[data-tag-save-status]');
+      const appliesAll = !!all?.checked;
+      const clientIds = appliesAll ? [] : boxes.filter((b) => b.checked).map((b) => b.value);
+      if (status) status.textContent = 'Saving…';
+      try {
+        const res = await fetch(`/api/portal/admin/todos/${todoId}`, {
+          method: 'PATCH',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ applies_to_all: appliesAll, client_ids: clientIds }),
+        });
+        if (!res.ok) {
+          const j = await res.json().catch(() => ({}));
+          throw new Error(j.error || `HTTP ${res.status}`);
+        }
+        if (status) status.textContent = 'Saved';
+      } catch (err) {
+        if (status) status.textContent = err instanceof Error ? `Save failed: ${err.message}` : 'Save failed';
+      }
+    }
+
+    document.addEventListener('change', (e) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      const picker = target.closest<HTMLElement>('[data-client-picker]');
+      if (!picker) return;
+      if (!target.matches('[data-applies-all], [data-client-checkbox]')) return;
+      refreshPicker(picker);
+
+      // Only per-row editors auto-save. The new-todo form ships its values
+      // with the create POST.
+      const editor = picker.closest<HTMLElement>('[data-todo-tag-editor]');
+      const li = picker.closest<HTMLElement>('[data-todo-id]');
+      if (editor && li) {
+        void patchTags(li, picker);
+      }
+    });
+  })();
 
   // ---------------- helpers ----------------
   function showError(msg: string) {
@@ -913,6 +1187,11 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
     const priorityInput = newForm.querySelector<HTMLSelectElement>('select[name="priority"]');
     const submitBtn = newForm.querySelector<HTMLButtonElement>('button[type="submit"]');
     const label = newForm.querySelector<HTMLElement>('[data-add-label]');
+    const newPicker = newForm.querySelector<HTMLElement>('[data-client-picker]');
+    const newAppliesAll = newPicker?.querySelector<HTMLInputElement>('[data-applies-all]');
+    const newClientBoxes = newPicker
+      ? Array.from(newPicker.querySelectorAll<HTMLInputElement>('[data-client-checkbox]'))
+      : [];
 
     const title = titleInput?.value.trim() ?? '';
     if (!title) return;
@@ -920,6 +1199,10 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
     const dueAt = (dueInput?.value ?? '') || null;
     const priorityRaw = priorityInput?.value ?? '1';
     const priority = [0, 1, 2].includes(Number(priorityRaw)) ? Number(priorityRaw) : 1;
+    const appliesAll = !!newAppliesAll?.checked;
+    const clientIds = appliesAll
+      ? []
+      : newClientBoxes.filter((c) => c.checked).map((c) => c.value);
 
     if (submitBtn) submitBtn.disabled = true;
     if (label) label.textContent = 'Adding…';
@@ -928,7 +1211,14 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
       const res = await fetch('/api/portal/admin/todos', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ title, body: body || null, due_at: dueAt, priority }),
+        body: JSON.stringify({
+          title,
+          body: body || null,
+          due_at: dueAt,
+          priority,
+          applies_to_all: appliesAll,
+          client_ids: clientIds,
+        }),
       });
       if (!res.ok) {
         const j = await res.json().catch(() => ({}));
@@ -966,7 +1256,7 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
   // Toggle expand on row click (ignoring checkbox / delete / inside expanded panel).
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
-    if (target.closest('[data-toggle]') || target.closest('[data-delete]') || target.closest('[data-bulk-select]')) return;
+    if (target.closest('[data-toggle]') || target.closest('[data-delete]') || target.closest('[data-bulk-select]') || target.closest('[data-client-picker]')) return;
     const row = target.closest<HTMLElement>('[data-row-toggle]');
     if (!row) return;
     const li = row.closest<HTMLElement>('[data-todo-id]');
