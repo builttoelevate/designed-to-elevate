@@ -170,7 +170,7 @@ const websiteLineTiers = [
     name: 'Starter Site',
     code: 'T1',
     setup: '$1,497',
-    blurb: 'Fast, modern website + smart lead-capture form. The foundation — easy to upgrade to the full system later.',
+    blurb: 'Fast, modern website + smart lead-capture form. For shops not ready for automatic quoting yet. The foundation — easy to upgrade to the full system later.',
     features: [
       'Custom website (mobile-first, fast, owned)',
       'Local SEO structure + analytics',
@@ -183,7 +183,7 @@ const websiteLineTiers = [
     name: 'Quote Site',
     code: 'T2',
     setup: '$2,497',
-    blurb: 'Everything in T1, plus the full Quote wizard built into the site (Form-line T1 system).',
+    blurb: 'Best for most detail shops running Google Ads. Everything in T1, plus the full Quote wizard built into the site (Form-line T1 system).',
     features: [
       'Everything in T1',
       'Full guided quote wizard + automatic pricing',
@@ -1029,8 +1029,8 @@ const faqSchema = {
         <!-- FORM LINE — for shops keeping their existing site. -->
         <div class="mt-14">
           <div class="flex flex-wrap items-baseline gap-3 mb-6">
-            <h3 class="font-display font-bold text-[1.5rem] text-text">Form / Wizard line</h3>
-            <span class="text-text-muted text-[0.95rem]">Add the wizard to your existing site</span>
+            <h3 class="font-display font-bold text-[1.5rem] text-text">Add the Quote Wizard to My Current Site</h3>
+            <span class="text-text-muted text-[0.95rem]">Keep your existing site, drop the quoting system on top</span>
           </div>
 
           <div class="grid md:grid-cols-3 gap-5">
@@ -1069,9 +1069,13 @@ const faqSchema = {
         <!-- WEBSITE LINE — for shops building new. -->
         <div class="mt-16">
           <div class="flex flex-wrap items-baseline gap-3 mb-6">
-            <h3 class="font-display font-bold text-[1.5rem] text-text">Website line</h3>
+            <h3 class="font-display font-bold text-[1.5rem] text-text">Build Me a New Quote Website</h3>
             <span class="text-text-muted text-[0.95rem]">Full site + the system, built together</span>
           </div>
+
+          <p class="text-text-soft text-[0.97rem] leading-relaxed mb-6 max-w-3xl">
+            Most shops choose <strong class="text-text">Quote Site</strong> — the full website plus the quote system in one build. Already have a site you like? Start with the wizard line instead.
+          </p>
 
           <div class="grid md:grid-cols-3 gap-5">
             {websiteLineTiers.map((t) => (
