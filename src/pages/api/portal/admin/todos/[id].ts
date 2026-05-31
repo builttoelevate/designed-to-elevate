@@ -36,6 +36,8 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
       body?: string | null;
       due_at?: string | null;
       priority?: number | null;
+      applies_to_all?: boolean;
+      client_ids?: unknown;
     };
     try {
       body = await request.json();
@@ -99,26 +101,98 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
       patch.priority = body.priority;
     }
 
-    if (Object.keys(patch).length === 0) {
+    // Client-tag updates are a separate concern from row fields, but the
+    // UI sends them in the same PATCH so the toggle UX feels atomic. Either
+    // of these flags being present means "rewrite this todo's tag set".
+    const appliesToAllProvided = body.applies_to_all !== undefined;
+    const clientIdsProvided = body.client_ids !== undefined;
+    let appliesToAll = false;
+    let clientIds: string[] = [];
+    if (appliesToAllProvided) {
+      if (typeof body.applies_to_all !== 'boolean') {
+        return json({ error: 'applies_to_all must be boolean' }, 400);
+      }
+      appliesToAll = body.applies_to_all;
+      patch.applies_to_all_clients = appliesToAll;
+    }
+    if (clientIdsProvided) {
+      if (!Array.isArray(body.client_ids)) {
+        return json({ error: 'client_ids must be an array' }, 400);
+      }
+      clientIds = Array.from(
+        new Set(
+          (body.client_ids as unknown[]).filter(
+            (v): v is string => typeof v === 'string' && v.length > 0,
+          ),
+        ),
+      );
+      if (clientIds.length > 200) {
+        return json({ error: 'Too many client tags (max 200)' }, 400);
+      }
+    }
+
+    if (Object.keys(patch).length === 0 && !clientIdsProvided) {
       return json({ error: 'No fields to update' }, 400);
     }
 
     const admin = createServiceSupabase();
     try {
-      const { data, error } = await admin
-        .from('owner_todos')
-        .update(patch)
-        .eq('id', id)
-        .eq('owner_id', session.userId)
-        .select('id, title, body, due_at, priority, completed, created_at, completed_at, updated_at')
-        .maybeSingle();
-
-      if (error) {
-        console.error('[todos PATCH] update error:', error.message);
-        return json({ error: error.message }, 500);
+      // owner_todos row update (skip if only tags changed).
+      let data: any = null;
+      if (Object.keys(patch).length > 0) {
+        const res = await admin
+          .from('owner_todos')
+          .update(patch)
+          .eq('id', id)
+          .eq('owner_id', session.userId)
+          .select(
+            'id, title, body, due_at, priority, completed, created_at, completed_at, updated_at, applies_to_all_clients',
+          )
+          .maybeSingle();
+        if (res.error) {
+          console.error('[todos PATCH] update error:', res.error.message);
+          return json({ error: res.error.message }, 500);
+        }
+        if (!res.data) return json({ error: 'Not found' }, 404);
+        data = res.data;
+      } else {
+        // Tag-only patch: confirm ownership and fetch row for the response.
+        const res = await admin
+          .from('owner_todos')
+          .select(
+            'id, title, body, due_at, priority, completed, created_at, completed_at, updated_at, applies_to_all_clients',
+          )
+          .eq('id', id)
+          .eq('owner_id', session.userId)
+          .maybeSingle();
+        if (res.error) return json({ error: res.error.message }, 500);
+        if (!res.data) return json({ error: 'Not found' }, 404);
+        data = res.data;
       }
-      if (!data) return json({ error: 'Not found' }, 404);
-      return json({ todo: data });
+
+      // Rewrite client tag set when either tag field came in. "applies to
+      // all" clears the join (the flag is the source of truth in that state).
+      if (appliesToAllProvided || clientIdsProvided) {
+        const wantsRows = !appliesToAll && clientIds.length > 0;
+        const { error: delErr } = await admin
+          .from('owner_todo_clients')
+          .delete()
+          .eq('todo_id', id);
+        if (delErr) {
+          console.error('[todos PATCH] tag-clear error:', delErr.message);
+          return json({ error: delErr.message }, 500);
+        }
+        if (wantsRows) {
+          const rows = clientIds.map((cid) => ({ todo_id: id, client_id: cid }));
+          const { error: insErr } = await admin.from('owner_todo_clients').insert(rows);
+          if (insErr) {
+            console.error('[todos PATCH] tag-insert error:', insErr.message);
+            return json({ error: insErr.message }, 500);
+          }
+        }
+      }
+
+      return json({ todo: data, client_ids: appliesToAll ? [] : clientIds });
     } catch (e) {
       console.error('[todos PATCH] update threw:', e);
       return json({ error: e instanceof Error ? e.message : 'Update failed' }, 500);

@@ -1,8 +1,12 @@
 /**
- * POST /api/portal/admin/todos   { title, body?, due_at?, priority? }
+ * POST /api/portal/admin/todos
+ *   { title, body?, due_at?, priority?, applies_to_all?, client_ids? }
  *
  * Admin-only. Creates a personal todo owned by the calling admin
  * (owner_id is set from the session — clients can't spoof it).
+ *
+ * applies_to_all takes precedence over client_ids; when true the join
+ * table is left empty for the new row.
  */
 
 export const prerender = false;
@@ -13,6 +17,7 @@ import { getPortalSession } from '../../../../../lib/session';
 
 const MAX_TITLE = 200;
 const MAX_BODY = 50_000;
+const MAX_CLIENT_TAGS = 200;
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   const session = await getPortalSession({ cookies, request });
@@ -23,6 +28,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     body?: string | null;
     due_at?: string | null;
     priority?: number | null;
+    applies_to_all?: boolean;
+    client_ids?: unknown;
   };
   try {
     body = await request.json();
@@ -60,15 +67,52 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     priority = body.priority;
   }
 
+  const appliesToAll = body.applies_to_all === true;
+
+  // client_ids: ignored when applies_to_all is true; otherwise dedup + bound.
+  let clientIds: string[] = [];
+  if (!appliesToAll && Array.isArray(body.client_ids)) {
+    clientIds = Array.from(
+      new Set(
+        (body.client_ids as unknown[]).filter(
+          (v): v is string => typeof v === 'string' && v.length > 0,
+        ),
+      ),
+    );
+    if (clientIds.length > MAX_CLIENT_TAGS) {
+      return json({ error: `Too many client tags (max ${MAX_CLIENT_TAGS})` }, 400);
+    }
+  }
+
   const admin = createServiceSupabase();
   const { data, error } = await admin
     .from('owner_todos')
-    .insert({ owner_id: session.userId, title, body: todoBody, due_at: dueAt, priority })
-    .select('id, title, body, due_at, priority, completed, created_at, completed_at, updated_at')
+    .insert({
+      owner_id: session.userId,
+      title,
+      body: todoBody,
+      due_at: dueAt,
+      priority,
+      applies_to_all_clients: appliesToAll,
+    })
+    .select(
+      'id, title, body, due_at, priority, completed, created_at, completed_at, updated_at, applies_to_all_clients',
+    )
     .single();
 
   if (error) return json({ error: error.message }, 500);
-  return json({ todo: data });
+
+  if (clientIds.length > 0) {
+    const rows = clientIds.map((cid) => ({ todo_id: data.id, client_id: cid }));
+    const { error: tagErr } = await admin.from('owner_todo_clients').insert(rows);
+    if (tagErr) {
+      // Tag write failed but the parent todo is in. Surface so the UI can
+      // re-issue the tag patch on the same id instead of orphaning the todo.
+      return json({ todo: data, client_ids: [], warning: tagErr.message }, 207);
+    }
+  }
+
+  return json({ todo: data, client_ids: clientIds });
 };
 
 function json(data: unknown, status = 200) {
