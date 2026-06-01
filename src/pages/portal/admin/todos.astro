@@ -155,8 +155,17 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
       <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">My Todos</h1>
       <p class="text-text-muted text-sm mt-1">Personal jobs you need to remember. Only you see this.</p>
     </div>
-    <div class="text-xs text-text-muted">
-      {open.length} open · {done.length} recently done
+    <div class="flex items-center gap-3 text-xs text-text-muted">
+      <span>{open.length} open · {done.length} recently done</span>
+      <button
+        type="button"
+        data-select-mode-toggle
+        class="font-display font-medium text-text-soft hover:text-accent border border-line hover:border-accent/40 rounded-md px-2.5 py-1 transition-colors"
+        aria-pressed="false"
+      >
+        <span data-select-mode-label-default>Select</span>
+        <span data-select-mode-label-active class="hidden">Done</span>
+      </button>
     </div>
   </section>
 
@@ -733,6 +742,23 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
     [data-row-toggle] button { cursor: default; }
     [data-row-toggle] input[type="checkbox"],
     [data-row-toggle] button { cursor: pointer; }
+
+    /* Select mode — only one checkbox visible per row at a time so the
+       two-checkbox confusion goes away. Default: complete-toggle visible,
+       bulk-select hidden. With body.todo-select-mode-on: bulk-select is
+       visible and complete-toggle hides. The class is set only on this
+       page so it can't affect the admin queue's bulk-select wiring. */
+    body:not(.todo-select-mode-on) [data-row-toggle] [data-bulk-select] {
+      display: none;
+    }
+    body.todo-select-mode-on [data-row-toggle] [data-toggle] {
+      display: none;
+    }
+    body.todo-select-mode-on [data-select-mode-toggle] {
+      background: rgba(255, 107, 26, 0.10);
+      border-color: rgba(255, 107, 26, 0.45);
+      color: var(--color-accent);
+    }
   </style>
 
   <!-- BULK ACTION BAR — appears when at least one todo is selected. -->
@@ -752,6 +778,43 @@ function isOverdueUtc(due_at: string | null, completed: boolean): boolean {
 </PortalLayout>
 
 <script>
+  // ---------------- select mode toggle ----------------
+  // Default: each row shows just the complete-toggle checkbox. Tap
+  // the "Select" button → body gains .todo-select-mode-on which swaps
+  // every row's visible checkbox to the bulk-select one (CSS-only).
+  // Tap "Done" → restore default, uncheck all selections, hide bar.
+  (() => {
+    const btn = document.querySelector<HTMLButtonElement>('[data-select-mode-toggle]');
+    const labelDefault = document.querySelector<HTMLElement>('[data-select-mode-label-default]');
+    const labelActive = document.querySelector<HTMLElement>('[data-select-mode-label-active]');
+    if (!btn || !labelDefault || !labelActive) return;
+
+    const enter = () => {
+      document.body.classList.add('todo-select-mode-on');
+      btn.setAttribute('aria-pressed', 'true');
+      labelDefault.classList.add('hidden');
+      labelActive.classList.remove('hidden');
+    };
+
+    const exit = () => {
+      document.body.classList.remove('todo-select-mode-on');
+      btn.setAttribute('aria-pressed', 'false');
+      labelActive.classList.add('hidden');
+      labelDefault.classList.remove('hidden');
+      // Clear any selections + hide the bulk bar.
+      document.querySelectorAll<HTMLInputElement>('[data-bulk-select]').forEach((c) => (c.checked = false));
+      const bar = document.querySelector<HTMLDivElement>('[data-bulk-bar]');
+      if (bar) bar.classList.add('hidden');
+      const countEl = document.querySelector<HTMLSpanElement>('[data-bulk-count]');
+      if (countEl) countEl.textContent = '0';
+    };
+
+    btn.addEventListener('click', () => {
+      if (document.body.classList.contains('todo-select-mode-on')) exit();
+      else enter();
+    });
+  })();
+
   // ---------------- bulk select + bulk delete ----------------
   (() => {
     const boxes = () => Array.from(document.querySelectorAll<HTMLInputElement>('[data-bulk-select]'));
