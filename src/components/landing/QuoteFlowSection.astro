@@ -261,11 +261,11 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
               </div>
               <div class="mt-4 grid sm:grid-cols-2 gap-4">
                 <label class="block">
-                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Phone <span class="text-accent">*</span></span>
-                  <input required name="phone" type="tel" autocomplete="tel" class={inputCls} placeholder="(555) 555-5555" />
+                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Phone <span class="text-text-muted text-[0.78rem] font-normal">(one required)</span></span>
+                  <input name="phone" type="tel" inputmode="tel" autocomplete="tel" class={inputCls} placeholder="(555) 555-5555" />
                 </label>
                 <label class="block">
-                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Email <span class="text-text-muted text-[0.78rem] font-normal">(optional)</span></span>
+                  <span class="block font-display font-medium text-[0.82rem] text-text-soft mb-1.5">Email <span class="text-text-muted text-[0.78rem] font-normal">(one required)</span></span>
                   <input name="email" type="email" autocomplete="email" class={inputCls} placeholder="you@yourshop.com" />
                 </label>
               </div>
@@ -274,7 +274,7 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
               </p>
             </div>
 
-            <p data-error role="alert" class="hidden mt-4 text-[0.85rem] text-[#F87171]">Add your name and phone, and pick a timeline and budget to continue.</p>
+            <p data-error role="alert" class="hidden mt-4 text-[0.85rem] text-[#F87171]">Add your name and a phone or email so Bill can send your quote.</p>
             <div class="mt-6 flex items-center justify-between gap-3">
               <button type="button" data-back class="btn-ghost"><span aria-hidden="true">←</span> Back</button>
               <button type="button" data-next class="btn-primary">See my estimate <span aria-hidden="true">→</span></button>
@@ -627,15 +627,26 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
         choosers.forEach((c) => { (groups[c.name] = groups[c.name] || []).push(c); });
         const choosersOk = Object.values(groups).every((g) => g.some((c) => c.checked));
 
-        // Required text/tel inputs (name + phone): must be non-empty and valid.
+        // Required text inputs (e.g. name): must be non-empty and valid.
         const requiredInputs = stepEl.querySelectorAll('input[required]');
         const inputsOk = Array.from(requiredInputs).every((el) => el.value.trim() !== '' && el.checkValidity());
 
-        // Email is optional — only enforce a valid format if one was actually typed.
-        const emailEl = stepEl.querySelector('input[type="email"]');
-        const emailOk = !emailEl || emailEl.value.trim() === '' || emailEl.checkValidity();
+        // Contact step: require at least ONE of phone / email (not both). Phone counts
+        // as provided at >=10 digits (after stripping non-numerics); email must be a
+        // basic valid shape. A typed-but-malformed email blocks (it gets sent to Web3Forms).
+        const phoneEl = stepEl.querySelector('input[name="phone"]');
+        const emailEl = stepEl.querySelector('input[name="email"]');
+        let contactOk = true;
+        if (phoneEl || emailEl) {
+          const phoneVal = phoneEl ? phoneEl.value.trim() : '';
+          const emailVal = emailEl ? emailEl.value.trim() : '';
+          const phoneValid = phoneVal !== '' && phoneVal.replace(/\D/g, '').length >= 10;
+          const emailValid = emailVal !== '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+          const emailTypedInvalid = emailVal !== '' && !emailValid;
+          contactOk = (phoneValid || emailValid) && !emailTypedInvalid;
+        }
 
-        return choosersOk && inputsOk && emailOk;
+        return choosersOk && inputsOk && contactOk;
       };
 
       // Partial-lead capture: when the user clears step 4 (which collects contact + timeline + budget),
@@ -676,6 +687,19 @@ const check = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" strok
 
       root.querySelectorAll('[data-back]').forEach((btn) => {
         btn.addEventListener('click', () => { if (current > 0) show(current - 1, true); });
+      });
+
+      // Enter-key guard: on any non-estimate step, pressing Enter inside an input
+      // advances to the next step (same as clicking Continue) instead of triggering
+      // the form's implicit submit early. Only the estimate step's submit button submits.
+      form.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        const t = e.target;
+        if (t && t.tagName === 'INPUT' && !steps[current].hasAttribute('data-estimate-step')) {
+          e.preventDefault();
+          const nextBtn = steps[current].querySelector('[data-next]');
+          if (nextBtn) nextBtn.click();
+        }
       });
 
       document.addEventListener('audit-form:success', () => {
