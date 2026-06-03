@@ -1,0 +1,133 @@
+---
+// Lead form for the Modern Classic friends-pricing page.
+// Submits through LandingLayout's global [data-audit-form] Web3Forms handler
+// (same access key as the rest of the site) and redirects to the thank-you
+// page on success via [data-redirect]. No bespoke submit script needed.
+const inputCls =
+  "mt-2 w-full rounded-md border border-line bg-surface-2 px-3 py-2.5 text-text placeholder:text-text-muted ring-1 ring-line focus:border-accent focus:ring-accent focus:outline-none";
+
+const ACCESS_KEY = "1272e2dd-abff-4804-a541-beb2bd0be075";
+
+const packages = [
+  { v: "starter", label: "Starter Website" },
+  { v: "leadgen", label: "Lead Generation Website" },
+  { v: "booking", label: "Custom Lead System" },
+];
+const colors = [
+  { v: "blue", name: "Blue", tag: "Trust", p: "#021E48", a: "#0556B2" },
+  { v: "green", name: "Green", tag: "Clean", p: "#08281E", a: "#0D9464" },
+  { v: "gold", name: "Gold", tag: "Premium", p: "#1C1A16", a: "#B08A38" },
+  { v: "orange", name: "Orange", tag: "Bold", p: "#1E1B18", a: "#EA580C" },
+  { v: "purple", name: "Purple", tag: "Modern", p: "#201440", a: "#7C3AED" },
+];
+const modes = [
+  { v: "light", label: "Light" },
+  { v: "dark", label: "Dark" },
+  { v: "either", label: "Either works" },
+];
+---
+
+<form
+  id="lead-form"
+  data-audit-form
+  data-redirect="/modern-classic/thank-you"
+  action="https://api.web3forms.com/submit"
+  method="POST"
+  class="scroll-mt-24"
+>
+  <input type="hidden" name="access_key" value={ACCESS_KEY} />
+  <input type="hidden" name="subject" value="New Modern Classic Referral Lead" />
+  <input type="hidden" name="from_name" value="Modern Classic Referral — designedtoelevate.co" />
+
+  <div class="card p-6 sm:p-9">
+    {/* Package */}
+    <fieldset>
+      <legend class="font-display text-lg text-text">Choose your package <span class="text-accent">*</span></legend>
+      <div class="mt-4 grid gap-3 sm:grid-cols-3">
+        {packages.map((p) => (
+          <label class="rf-opt flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-line bg-surface-2 px-4 py-3 text-center">
+            <span class="text-sm font-semibold text-text">{p.label}</span>
+            <input class="sr-only" type="radio" name="package" value={p.v} required />
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    {/* Color */}
+    <fieldset class="mt-7">
+      <legend class="font-display text-lg text-text">Color preference</legend>
+      <div class="mt-4 grid gap-2.5 sm:grid-cols-3">
+        {colors.map((c) => (
+          <label class="rf-opt flex cursor-pointer items-center gap-2.5 rounded-xl border border-line bg-surface-2 px-3 py-2.5">
+            <span class="h-6 w-6 shrink-0 rounded-full ring-1 ring-white/10" style={`background:linear-gradient(135deg,${c.p} 0 50%,${c.a} 50% 100%)`}></span>
+            <span class="text-sm text-text"><span class="font-semibold">{c.name}</span> <span class="text-text-muted">{c.tag}</span></span>
+            <input class="sr-only" type="radio" name="color" value={c.v} />
+          </label>
+        ))}
+        <label class="rf-opt flex cursor-pointer items-center gap-2.5 rounded-xl border border-line bg-surface-2 px-3 py-2.5">
+          <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full text-text-muted ring-1 ring-line">?</span>
+          <span class="text-sm text-text">Not sure — let's talk</span>
+          <input class="sr-only" type="radio" name="color" value="notsure" checked />
+        </label>
+      </div>
+    </fieldset>
+
+    {/* Mode */}
+    <fieldset class="mt-7">
+      <legend class="font-display text-lg text-text">Light or dark?</legend>
+      <div class="mt-4 grid grid-cols-3 gap-2.5">
+        {modes.map((m, i) => (
+          <label class="rf-opt cursor-pointer rounded-xl border border-line bg-surface-2 px-3 py-2.5 text-center text-sm font-semibold text-text">
+            {m.label}
+            <input class="sr-only" type="radio" name="mode" value={m.v} checked={i === 2} />
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    {/* Contact */}
+    <div class="mt-7 grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for="rf-name" class="block text-sm font-medium text-text">Your name <span class="text-accent">*</span></label>
+        <input id="rf-name" name="name" type="text" required autocomplete="name" class={inputCls} />
+      </div>
+      <div>
+        <label for="rf-business" class="block text-sm font-medium text-text">Business name <span class="text-accent">*</span></label>
+        <input id="rf-business" name="business" type="text" required autocomplete="organization" class={inputCls} />
+      </div>
+      <div>
+        <label for="rf-phone" class="block text-sm font-medium text-text">Phone <span class="text-accent">*</span></label>
+        <input id="rf-phone" name="phone" type="tel" required autocomplete="tel" class={inputCls} />
+      </div>
+      <div>
+        <label for="rf-email" class="block text-sm font-medium text-text">Email <span class="text-accent">*</span></label>
+        <input id="rf-email" name="email" type="email" required autocomplete="email" class={inputCls} />
+      </div>
+      <div class="sm:col-span-2">
+        <label for="rf-coupon" class="block text-sm font-medium text-text">Coupon code (optional)</label>
+        <input id="rf-coupon" name="coupon" type="text" class={inputCls} />
+      </div>
+      <div class="sm:col-span-2">
+        <label for="rf-notes" class="block text-sm font-medium text-text">Anything else I should know?</label>
+        <textarea id="rf-notes" name="notes" rows="3" class={inputCls}></textarea>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary mt-7 w-full">
+      Send to Bill
+      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
+    </button>
+    <p data-audit-status class="mt-3 hidden items-center justify-center text-center text-sm text-text-soft"></p>
+    <p class="mt-3 text-center text-xs text-text-muted">No payment now — Bill follows up to confirm details.</p>
+  </div>
+</form>
+
+<style>
+  .rf-opt { transition: border-color .15s, box-shadow .15s; }
+  .rf-opt:hover { border-color: rgb(255 107 26 / .5); }
+  .rf-opt:has(input:checked) {
+    border-color: var(--color-accent);
+    box-shadow: inset 0 0 0 1px var(--color-accent);
+  }
+  .rf-opt:has(input:focus-visible) { box-shadow: 0 0 0 2px rgb(255 107 26 / .4); }
+</style>

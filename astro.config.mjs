@@ -27,15 +27,20 @@ export default defineConfig({
   // prerendered marketing pages. Replaces the old hand-maintained
   // public/sitemap.xml so new/removed pages stay in sync automatically.
   // Excludes the noindex / private routes (the ad landing page, brochure,
-  // private proposals at /p/*, and the whole authed /portal) so the sitemap
-  // only advertises pages we actually want indexed.
+  // private proposals at /p/*, the whole authed /portal, and the Modern Classic
+  // friends-pricing referral page) so the sitemap only advertises pages we
+  // actually want indexed.
   integrations: [
     sitemap({
       filter: (page) =>
         !page.includes('/grow') &&
         !page.includes('/brochure') &&
         !page.includes('/p/') &&
-        !page.includes('/portal'),
+        !page.includes('/portal') &&
+        // Friends-pricing referral page + its thank-you (noindex). Path-prefix
+        // match so we don't also drop the indexed
+        // /case-studies/modern-classic-barbershop.
+        !new URL(page).pathname.startsWith('/modern-classic'),
     }),
   ],
   // Legacy URL redirects after the redesign:

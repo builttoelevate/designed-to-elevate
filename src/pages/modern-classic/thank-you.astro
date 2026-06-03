@@ -1,0 +1,31 @@
+---
+// /modern-classic/thank-you — success page the referral lead form redirects to
+// after a successful Web3Forms submission (via [data-redirect] in ReferralForm).
+import LandingLayout from "../../layouts/LandingLayout.astro";
+
+const BILL_TEL = "+17406176488";
+const BILL_DISPLAY = "(740) 617-6488";
+---
+
+<LandingLayout
+  title="Thanks — Designed to Elevate"
+  description="Thanks for your submission."
+  pathname="modern-classic/thank-you"
+  noindex={true}
+>
+  <section class="mx-auto flex min-h-[80vh] max-w-3xl flex-col items-center justify-center px-5 py-20 text-center">
+    <span class="grid h-16 w-16 place-items-center rounded-full bg-accent-tint text-accent ring-1 ring-accent/25">
+      <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+    </span>
+    <h1 class="mt-7 font-display text-4xl text-text sm:text-5xl">Thanks — got it.</h1>
+    <p class="mt-5 max-w-xl text-lg text-text-soft">
+      Your info is in. I'll be in touch shortly to walk you through next steps.
+    </p>
+    <p class="mt-4 text-text-soft">
+      If you need to reach me sooner, text or call:
+      <a href={`tel:${BILL_TEL}`} class="font-semibold text-accent hover:text-accent-hover">{BILL_DISPLAY}</a>
+    </p>
+    <p class="mt-8 font-display text-lg text-text">— Bill</p>
+    <a href="/modern-classic" class="btn-ghost mt-10">Back to pricing</a>
+  </section>
+</LandingLayout>
