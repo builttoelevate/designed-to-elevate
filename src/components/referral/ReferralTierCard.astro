@@ -19,7 +19,7 @@ const half = (price: string) => {
   const n = Number(String(price).replace(/[^0-9.]/g, ""));
   const h = n / 2;
   const fmt = "$" + (Number.isInteger(h) ? h.toLocaleString("en-US") : h.toLocaleString("en-US", { minimumFractionDigits: 2 }));
-  return `${fmt} today · ${fmt} at launch`;
+  return `${fmt} to start · ${fmt} at launch`;
 };
 const mcSplit = half(mcPrice);
 ---
@@ -48,7 +48,7 @@ const mcSplit = half(mcPrice);
     ))}
   </ul>
   <button type="button" data-choose-tier={tierId} class="btn-primary mt-7 w-full">
-    Choose This Plan
+    Start with this
     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
   </button>
 </div>

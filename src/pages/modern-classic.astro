@@ -1,17 +1,19 @@
 ---
 // /modern-classic — friends-and-family website pricing for customers referred
-// by Modern Classic Barbershop. Hosted on DtE (was previously on the janitorial
-// deployment). Minimal chrome (no SiteHeader/SiteFooter) — single conversion
-// path to the lead form. noindex: private referral page, not for search.
+// by Modern Classic Barbershop. Michael hands this link out directly, so the
+// page is built for COLD traffic: it leads with who DtE/Bill is and the proof
+// that DtE built Michael's own site, THEN price, THEN the form. No demo feeds
+// it, so there are no color/light-dark pickers. noindex: private referral page.
 import LandingLayout from "../layouts/LandingLayout.astro";
 import ReferralTierCard from "../components/referral/ReferralTierCard.astro";
 import ReferralForm from "../components/referral/ReferralForm.astro";
 
 const BILL_TEL = "+17406176488";
 const BILL_DISPLAY = "(740) 617-6488";
+const BILL_EMAIL = "bilsonxnc@gmail.com";
+const MICHAEL_SITE = "https://modernclassicbarbershop.com";
 
 // Modern Classic referrals get 50% off the standard price (mcPrice = the hero).
-// Founding 5 stacking has been removed.
 const tiers = [
   {
     tierId: "starter" as const,
@@ -41,8 +43,12 @@ const tiers = [
 ];
 
 const faqs = [
-  { q: "Why is this discounted?", a: "Michael's a client of ours. His customers get friends-and-family pricing on every package, ongoing." },
-  { q: "What happens after I submit?", a: "Bill will reach out within 24 hours to confirm details and walk you through next steps." },
+  { q: "Why is this discounted?", a: "I built Michael's website — modernclassicbarbershop.com. Anyone he sends my way gets friends-and-family pricing on every package, ongoing. Referrals beat paying for ads, so I pass the savings on." },
+  { q: "Who am I working with?", a: "Me — Bill. I run Designed to Elevate out of Zanesville, Ohio. I built Modern Classic's site myself, and I'll build yours the same way." },
+  { q: "Do you only work with shops near Zanesville?", a: "No. I'm based in Ohio, but the work happens online — I work with service businesses anywhere." },
+  { q: "What if I'm not sure which package?", a: "Pick the closest one, or choose “Not sure yet” on the form. We'll figure out the right fit on the call — no pressure." },
+  { q: "Are there ongoing costs?", a: "The build is a one-time cost and the site is yours. If you want me handling small updates after launch — swapping images, running a sale, copy tweaks — that's an optional $97/month. It doesn't cover big builds or full redesigns. Skip it and you still own everything." },
+  { q: "What happens after I submit?", a: "I'll reach out within 24 hours to confirm details and walk you through next steps." },
   { q: "How long until my site is live?", a: "Most sites launch within 2–4 weeks of kickoff, depending on the package." },
 ];
 ---
@@ -52,6 +58,8 @@ const faqs = [
   description="Friends-and-family website pricing for Modern Classic Barbershop referrals."
   pathname="modern-classic"
   noindex={true}
+  skipHref="#main"
+  skipLabel="Skip to pricing"
 >
   {/* Top strip */}
   <div class="border-b border-line bg-bg/80 backdrop-blur">
@@ -64,83 +72,138 @@ const faqs = [
     </div>
   </div>
 
-  {/* Headline */}
-  <section class="mx-auto max-w-6xl px-5 pt-10 pb-10 text-center sm:pt-14">
-    <div class="flex justify-center">
-      <p class="eyebrow">Friends pricing · 50% off, ongoing</p>
-    </div>
-    <h1 class="mx-auto mt-5 max-w-3xl font-display text-4xl leading-[1.05] text-text sm:text-5xl">
-      Modern Classic Friends Pricing
-    </h1>
-    <p class="mx-auto mt-5 max-w-2xl text-lg text-text-soft">
-      Michael's a client of ours. His customers get 50% off our standard packages — ongoing. Pick a package below and I'll be in touch.
-    </p>
-  </section>
-
-  {/* How payment works — 50/50 split, shown once above the cards */}
-  <section class="mx-auto max-w-6xl px-5 pb-8">
-    <div class="mx-auto max-w-2xl text-center">
-      <p class="text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">How payment works</p>
-      <ol class="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-2">
-        {["Pay 50% deposit", "I build your site", "Pay the rest at launch"].map((step, i) => (
-          <li class="flex items-center gap-2 sm:gap-3">
-            <span class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-1 px-3.5 py-2 text-sm font-medium text-text">
-              <span class="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-accent text-xs font-bold text-bg">{i + 1}</span>
-              {step}
-            </span>
-            {i < 2 && (
-              <svg class="hidden h-4 w-4 text-text-muted sm:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
-            )}
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  {/* Tiers */}
-  <section class="mx-auto max-w-6xl px-5 pb-6">
-    <div class="grid items-stretch gap-6 lg:grid-cols-3">
-      {tiers.map((t) => <ReferralTierCard {...t} />)}
-    </div>
-  </section>
-
-  {/* Lead form */}
-  <section class="mx-auto max-w-6xl px-5 py-12">
-    <div class="mx-auto max-w-3xl">
-      <div class="mb-8 text-center">
-        <h2 class="font-display text-3xl text-text sm:text-4xl">Lock in your pricing</h2>
-        <p class="mt-3 text-text-soft">Pick a package and your look, and I'll take it from there.</p>
+  <main id="main">
+    {/* Hero — names the product, the referral, and the proof in one read */}
+    <section class="mx-auto max-w-6xl px-5 pt-10 pb-9 text-center sm:pt-14">
+      <div class="flex justify-center">
+        <p class="eyebrow">Friends pricing · 50% off, ongoing</p>
       </div>
-      <ReferralForm />
-    </div>
-  </section>
+      <h1 class="mx-auto mt-5 max-w-3xl font-display text-4xl leading-[1.05] text-text sm:text-5xl">
+        A website built to bring you customers — half off, because Michael sent you.
+      </h1>
+      <p class="mx-auto mt-5 max-w-2xl text-lg text-text-soft">
+        I'm Bill. I built Modern Classic's website — the one you've probably booked a cut on. Anyone Michael sends my way gets 50% off every package, ongoing. Beats paying for ads to find you.
+      </p>
+    </section>
 
-  {/* Call / text fallback */}
-  <section class="mx-auto max-w-6xl px-5 pb-12 text-center">
-    <p class="text-text-soft">
-      Prefer to call? Text or call Bill:
-      <a href={`tel:${BILL_TEL}`} class="font-semibold text-accent hover:text-accent-hover">{BILL_DISPLAY}</a>
-    </p>
-  </section>
-
-  {/* FAQ */}
-  <section class="mx-auto max-w-6xl px-5 pb-16">
-    <div class="mx-auto max-w-2xl">
-      <h2 class="text-center font-display text-2xl text-text">Questions</h2>
-      <dl class="mt-6 space-y-3">
-        {faqs.map((f) => (
-          <div class="card p-5">
-            <dt class="font-semibold text-text">{f.q}</dt>
-            <dd class="mt-1.5 text-sm leading-relaxed text-text-soft">{f.a}</dd>
+    {/* Proof — turn trust in Michael into trust in Bill's actual work */}
+    <section class="mx-auto max-w-5xl px-5 pb-4">
+      <div class="card overflow-hidden">
+        <div class="flex flex-col items-center gap-6 p-6 sm:flex-row sm:gap-8 sm:p-8">
+          <img
+            src="/showcase/modern-classic-mobile.png"
+            alt="The Modern Classic Barbershop website, designed and built by Designed to Elevate"
+            width="240"
+            height="480"
+            loading="lazy"
+            class="w-36 shrink-0 rounded-xl sm:w-44"
+          />
+          <div class="text-center sm:text-left">
+            <p class="text-xs font-semibold uppercase tracking-[0.14em] text-accent">The proof</p>
+            <h2 class="mt-2 font-display text-2xl text-text sm:text-3xl">You've probably booked a cut on this.</h2>
+            <p class="mt-3 text-text-soft">
+              I built Modern Classic's website for Michael — start to finish. The booking, the brand, the whole thing. I can build yours the same way.
+            </p>
+            <div class="mt-5 flex flex-wrap justify-center gap-x-6 gap-y-2 sm:justify-start">
+              <a href={MICHAEL_SITE} target="_blank" rel="noopener" class="font-semibold text-accent hover:text-accent-hover">See Michael's live site →</a>
+              <a href="/case-studies/modern-classic-barbershop" target="_blank" rel="noopener" class="font-semibold text-accent hover:text-accent-hover">See how I built it →</a>
+            </div>
           </div>
-        ))}
-      </dl>
-    </div>
-  </section>
+        </div>
+      </div>
+    </section>
 
-  {/* Slim footer */}
-  <footer class="border-t border-line py-8 text-center text-xs text-text-muted">
-    Designed to Elevate · <a href={`tel:${BILL_TEL}`} class="hover:text-accent">{BILL_DISPLAY}</a>
+    {/* Founder — make "I" a real person before asking for the sale */}
+    <section class="mx-auto max-w-3xl px-5 py-10">
+      <div class="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-start sm:gap-7 sm:text-left">
+        {/* Photo slot: drop a headshot at public/founder-bill.jpg. Until then the
+            branded "B" monogram shows; the photo covers it once present. */}
+        <div class="relative h-24 w-24 shrink-0 overflow-hidden rounded-full bg-accent-tint ring-1 ring-line">
+          <span class="grid h-full w-full place-items-center font-display text-3xl font-bold text-accent">B</span>
+          <img src="/founder-bill.jpg" alt="Bill, founder of Designed to Elevate" class="absolute inset-0 h-full w-full object-cover" onerror="this.style.display='none'" />
+        </div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.14em] text-accent">Who you're working with</p>
+          <h2 class="mt-2 font-display text-2xl text-text sm:text-3xl">Built From the Bay, Not a Boardroom</h2>
+          <p class="mt-3 text-text-soft">
+            I'm Bill. I'm a service-business owner first, marketer second. I started Fitchin Automotive Detailing &amp; Window Tinting from nothing and learned marketing the hard way — by keeping my own shop's phone ringing. Designed to Elevate is that same system, built for shops like yours. No agency price tag, no long contracts, no fluff.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Pricing */}
+    <section class="mx-auto max-w-6xl px-5 pt-2 pb-6">
+      <p class="mx-auto mb-6 max-w-2xl text-center text-sm text-text-muted">
+        The same packages behind sites like Michael's — half off, because he sent you.
+      </p>
+      <div class="grid items-stretch gap-6 lg:grid-cols-3">
+        {tiers.map((t) => <ReferralTierCard {...t} />)}
+      </div>
+    </section>
+
+    {/* How payment works — framed as buyer protection, not a demand */}
+    <section class="mx-auto max-w-6xl px-5 pb-10">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-accent">How payment works</p>
+        <ol class="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-2">
+          {["Pay 50% to start", "I build your site", "Approve it, then pay the rest"].map((step, i) => (
+            <li class="flex items-center gap-2 sm:gap-3">
+              <span class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-1 px-3.5 py-2 text-sm font-medium text-text">
+                <span class="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-accent text-xs font-bold text-bg">{i + 1}</span>
+                {step}
+              </span>
+              {i < 2 && (
+                <svg class="hidden h-4 w-4 text-text-muted sm:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
+              )}
+            </li>
+          ))}
+        </ol>
+        <p class="mt-5 text-sm text-text-muted">
+          Nothing's due right now. The deposit only starts things once we've talked and you're ready — and you see the site before the final payment.
+        </p>
+      </div>
+    </section>
+
+    {/* Lead form */}
+    <section class="mx-auto max-w-6xl px-5 py-12">
+      <div class="mx-auto max-w-3xl">
+        <div class="mb-8 text-center">
+          <h2 class="font-display text-3xl text-text sm:text-4xl">Start with Michael's pricing</h2>
+          <p class="mt-3 text-text-soft">Pick a package, drop your details, and I'll reach out within 24 hours. No payment now.</p>
+        </div>
+        <ReferralForm />
+      </div>
+    </section>
+
+    {/* Call / text fallback */}
+    <section class="mx-auto max-w-6xl px-5 pb-12 text-center">
+      <p class="text-text-soft">
+        Rather talk first? Text or call Bill:
+        <a href={`tel:${BILL_TEL}`} class="font-semibold text-accent hover:text-accent-hover">{BILL_DISPLAY}</a>
+      </p>
+    </section>
+
+    {/* FAQ */}
+    <section class="mx-auto max-w-6xl px-5 pb-16">
+      <div class="mx-auto max-w-2xl">
+        <h2 class="text-center font-display text-2xl text-text">Questions</h2>
+        <dl class="mt-6 space-y-3">
+          {faqs.map((f) => (
+            <div class="card p-5">
+              <dt class="font-semibold text-text">{f.q}</dt>
+              <dd class="mt-1.5 text-sm leading-relaxed text-text-soft">{f.a}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  {/* Slim footer — legitimacy markers for a cold buyer */}
+  <footer class="border-t border-line py-8 text-center text-xs leading-relaxed text-text-muted">
+    <span class="font-semibold text-text-soft">Designed to Elevate</span> · Zanesville, Ohio<br />
+    <a href={`tel:${BILL_TEL}`} class="hover:text-accent">{BILL_DISPLAY}</a> · <a href={`mailto:${BILL_EMAIL}`} class="hover:text-accent">{BILL_EMAIL}</a>
   </footer>
 
   <script is:inline>
