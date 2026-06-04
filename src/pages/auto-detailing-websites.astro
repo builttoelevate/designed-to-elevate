@@ -459,19 +459,22 @@ const faqSchema = {
             </div>
           </div>
 
-          <div class="relative">
-            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
-            <div class="relative max-w-[24rem] mx-auto">
-              <img
-                src="/showcase/fitchin-hero.png"
-                alt="Fitchin Auto Detail mobile site — Coshocton Window Tint & Detailing, Done Right — a real production build by Designed to Elevate."
-                class="relative w-full h-auto"
-                width="1122"
-                height="1402"
-                loading="eager"
-                decoding="async"
-              />
-            </div>
+          {/* Hero product shot. On mobile it goes full-bleed across the screen
+              and sits flush against the hero's bottom edge (-mx-5 cancels the
+              container padding; -mb-14 cancels the section's bottom padding). On
+              desktop it's constrained beside the headline. The composite carries
+              its own dark backdrop, so the glow only shows on larger screens. */}
+          <div class="relative -mx-5 -mb-14 sm:mx-0 sm:mb-0">
+            <div class="hidden sm:block absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60" aria-hidden="true"></div>
+            <img
+              src="/showcase/auto-detail-hero.jpg"
+              alt="The auto-detailing quote wizard and the Fitchin window-tint site, shown on two phones."
+              class="relative block w-full h-auto sm:max-w-[24rem] sm:mx-auto sm:rounded-xl"
+              width="900"
+              height="1125"
+              loading="eager"
+              decoding="async"
+            />
           </div>
         </div>
       </div>
