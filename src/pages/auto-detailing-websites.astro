@@ -237,24 +237,54 @@ const caseScores = [
   { score: '100', label: 'SEO' },
 ];
 
-const proofItems = [
+// Real screenshots from the live Fitchin auto-detailing wizard.
+// The flow group shows the customer path; the upsells group shows the
+// condition/add-on logic that protects margin and sells the upgrade for you.
+const wizardFlow = [
   {
-    src: '/wizard/step-1-service.png',
+    src: '/wizard/detail-1-service.jpg',
     title: 'Pick the service',
     description:
-      'Detailing, ceramic coating, or tint — your full menu in one guided flow. Customers self-select, then the questions adapt to what they chose.',
+      'Window tint, auto detailing, or ceramic — the customer self-selects, and the questions adapt to what they chose.',
   },
   {
-    src: '/wizard/step-5-summary.png',
-    title: 'An estimate they can adjust',
+    src: '/wizard/detail-2-vehicle.jpg',
+    title: 'Their exact vehicle',
     description:
-      'Customers see an itemized quote they can toggle line by line, with a live subtotal, tax, and total — before anything is booked.',
+      'Year, make, and model — so a sedan and a 3-row SUV get priced differently. Boats, RVs, and equipment route to a custom quote.',
   },
   {
-    src: '/wizard/step-6-final-quote.png',
-    title: 'Priced and ready to book',
+    src: '/wizard/detail-3-options.jpg',
+    title: 'A real price, by package',
     description:
-      'A real estimate with a quote number, then one tap to text it to the shop or book online. The lead is already captured either way.',
+      'Exterior, interior, or a full detail — each with a live price and a time estimate. The most popular package is flagged for them.',
+  },
+];
+
+const wizardUpsells = [
+  {
+    src: '/wizard/detail-4-interior-condition.jpg',
+    title: 'Condition-based pricing',
+    description:
+      'A trashed interior costs more than a clean one — and the quote knows it. Moderate adds $15, heavy adds $50, so your margin holds on the hard jobs.',
+  },
+  {
+    src: '/wizard/detail-5-pet-hair.jpg',
+    title: 'Pet hair, priced in',
+    description:
+      'The thing that eats your time gets billed for it — light hair +$50, heavy +$100. No more eating the cost of a fur-covered back seat.',
+  },
+  {
+    src: '/wizard/detail-6-biohazard-ozone.jpg',
+    title: 'Odor & biohazard, handled',
+    description:
+      'Heavy smoke or odor adds a $75 ozone treatment; biohazard flags for inspection before any price is quoted — so the ugly jobs never blow up your day.',
+  },
+  {
+    src: '/wizard/detail-7-ceramic.jpg',
+    title: 'The upgrade sells itself',
+    description:
+      'Window ceramic shown right in the flow — windshield (+$100) or the whole vehicle (+$150, flagged best value). They see the upsell before they ask.',
   },
 ];
 
@@ -577,6 +607,36 @@ const faqSchema = {
       </div>
     </section>
 
+    <!-- PRODUCT SHOWCASE — the owner-facing system: lead → one-tap action → booking. -->
+    <section class="relative border-b border-line bg-surface-1/30">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
+        <div class="max-w-3xl">
+          <span class="eyebrow"><span class="dot" aria-hidden="true"></span> The System</span>
+          <h2 class="mt-5 text-[1.9rem] sm:text-[2.4rem] leading-[1.07] font-bold">
+            From first click to a booked job.
+          </h2>
+          <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
+            The customer's quote lands in your dashboard the moment they finish. One tap texts or calls them back. It drops onto your calendar. Lead, follow-up, and booking — one system, built for detail shops.
+          </p>
+        </div>
+
+        <div class="mt-12 relative">
+          <div class="absolute -inset-6 bg-gradient-to-br from-accent/25 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60" aria-hidden="true"></div>
+          <div class="relative card overflow-hidden p-3 sm:p-5">
+            <img
+              src="/auto-detail/lead-to-appointment.jpg"
+              alt="The Fitchin lead system shown across three phones — a leads dashboard, a one-tap follow-up panel with text, call, and schedule actions, and a booking calendar."
+              class="w-full h-auto rounded-lg"
+              width="1448"
+              height="1086"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- WHAT YOU GET — outcomes first, feature underneath. -->
     <section class="relative border-b border-line bg-surface-1/30">
       <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-24">
@@ -788,7 +848,7 @@ const faqSchema = {
       </div>
     </section>
 
-    <!-- PROOF -->
+    <!-- PROOF — real screenshots of the live Fitchin auto-detailing wizard. -->
     <section class="relative border-b border-line">
       <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
         <div class="max-w-3xl">
@@ -797,30 +857,63 @@ const faqSchema = {
             Real screens from a live quote system — not a mockup.
           </h2>
           <p class="mt-5 text-text-soft text-[1.05rem] leading-relaxed">
-            From the live Fitchin install. The same flow runs detailing, ceramic, and tint.
+            Straight from the live Fitchin install. The customer answers a few quick questions and the price builds itself — including the add-ons most shops forget to charge for.
           </p>
         </div>
 
-        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {proofItems.map((p) => (
-            <div class="card overflow-hidden flex flex-col">
-              <div class="relative aspect-[10/13] bg-surface-2 overflow-hidden border-b border-line">
-                <img
-                  src={p.src}
-                  alt={p.title}
-                  class="absolute inset-0 w-full h-full object-cover object-top"
-                  width="1320"
-                  height="2708"
-                  loading="lazy"
-                  decoding="async"
-                />
+        <!-- The flow: service → vehicle → live price -->
+        <div class="mt-12">
+          <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-text-muted mb-5">The flow — service → vehicle → price</div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {wizardFlow.map((p) => (
+              <div class="card overflow-hidden flex flex-col">
+                <div class="aspect-[4/5] bg-bg overflow-hidden border-b border-line">
+                  <img
+                    src={p.src}
+                    alt={p.title}
+                    class="w-full h-full object-contain"
+                    width="1320"
+                    height="1650"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div class="p-5 flex flex-col gap-2">
+                  <h3 class="font-display font-semibold text-[1rem] text-text">{p.title}</h3>
+                  <p class="text-[0.92rem] text-text-soft leading-relaxed">{p.description}</p>
+                </div>
               </div>
-              <div class="p-5 flex flex-col gap-2">
-                <h3 class="font-display font-semibold text-[1rem] text-text">{p.title}</h3>
-                <p class="text-[0.92rem] text-text-soft leading-relaxed">{p.description}</p>
+            ))}
+          </div>
+        </div>
+
+        <!-- The upsells: the questions you'd ask in person, priced automatically -->
+        <div class="mt-14">
+          <div class="font-display text-[0.74rem] uppercase tracking-[0.18em] text-accent mb-2">Where the margin is — automatic upsells</div>
+          <p class="text-text-soft text-[0.97rem] leading-relaxed max-w-3xl mb-6">
+            The wizard asks the questions you'd ask in person — interior condition, pet hair, odor, ceramic — and prices each one automatically. The upgrade gets offered on every quote, not just when you remember.
+          </p>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+            {wizardUpsells.map((p) => (
+              <div class="card overflow-hidden flex flex-col">
+                <div class="aspect-[4/5] bg-bg overflow-hidden border-b border-line">
+                  <img
+                    src={p.src}
+                    alt={p.title}
+                    class="w-full h-full object-contain"
+                    width="1320"
+                    height="1650"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div class="p-4 sm:p-5 flex flex-col gap-1.5">
+                  <h3 class="font-display font-semibold text-[0.95rem] text-text">{p.title}</h3>
+                  <p class="text-[0.86rem] text-text-soft leading-relaxed">{p.description}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
