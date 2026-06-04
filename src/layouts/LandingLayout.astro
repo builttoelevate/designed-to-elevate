@@ -62,15 +62,14 @@ const sitewideSchema = [
   },
 ];
 
-// Google tag (gtag.js) — GA4 + Google Ads conversion tracking, loaded once for
-// every page on this layout. PLACEHOLDER values until real ones are provisioned:
-// replace the four consts below and tracking activates automatically. The remote
-// loader only renders once the placeholders are gone, so we never ship 404 tag
-// requests to live visitors while pending. Full setup: GOOGLE_ADS_LAUNCH_CHECKLIST.md.
-const GA4_ID = 'G-PLACEHOLDER';            // ← GA4 Measurement ID (G-XXXXXXXXXX)
-const GOOGLE_ADS_ID = 'AW-PLACEHOLDER';    // ← Google Ads ID (AW-XXXXXXXXXX)
-const ADS_LEAD_LABEL = 'LEAD_LABEL';       // ← conversion label for the quote-form submit
-const ADS_PHONE_LABEL = 'PHONE_LABEL';     // ← (optional) conversion label for tel/sms taps
+// Google tag (gtag.js) — GA4 + Google Ads, loaded once site-wide off a SINGLE
+// gtag setup: one script load with the GA4 ID as the src param, then both IDs
+// configured (no second Google tag). To pause tracking, set an ID back to a
+// value containing 'PLACEHOLDER'.
+const GA4_ID = 'G-PKT3PJX7N7';                 // GA4 Measurement ID
+const GOOGLE_ADS_ID = 'AW-11109940882';        // Google Ads conversion ID
+const ADS_LEAD_LABEL = '7knECKXF0bgcEJL90LEp'; // quote-form submit conversion (send_to = AW-…/label)
+const ADS_PHONE_LABEL = 'PHONE_LABEL';         // no tel/sms Ads label yet — phone taps fire a GA4 event to import later
 const TRACKING_IDS = [GA4_ID, GOOGLE_ADS_ID].filter((id) => !id.includes('PLACEHOLDER'));
 const TRACKING_ENABLED = TRACKING_IDS.length > 0;
 ---
@@ -130,39 +129,73 @@ const TRACKING_ENABLED = TRACKING_IDS.length > 0;
     var leadReady = adsReady && ADS_LEAD_LABEL.indexOf('LABEL') === -1;
     var phoneReady = adsReady && ADS_PHONE_LABEL.indexOf('LABEL') === -1;
 
+    // Enhanced Conversions for Web — normalize the raw name/email/phone the form
+    // collected; gtag SHA-256-hashes it in the browser before it ever leaves the
+    // page. Phone must be E.164.
+    function ecPhone(v){ var d = String(v || '').replace(/[^0-9]/g, ''); if (!d) return ''; if (d.length === 10) return '+1' + d; if (d.length === 11 && d.charAt(0) === '1') return '+' + d; return '+' + d; }
+    function setUserData(d){
+      if (!d) return;
+      var ud = {};
+      if (d.email) ud.email = String(d.email).trim().toLowerCase();
+      if (d.phone) { var ph = ecPhone(d.phone); if (ph) ud.phone_number = ph; }
+      if (d.name) {
+        var parts = String(d.name).trim().split(/\s+/);
+        ud.address = { first_name: parts.shift() || '', last_name: parts.join(' ') };
+      }
+      if (Object.keys(ud).length) gtag('set', 'user_data', ud);
+    }
+
     // PRIMARY conversion — fires once, only on a CONFIRMED final form submit.
-    // The audit-form handler dispatches this on an HTTP-200 success; the partial
-    // lead-capture POST does NOT dispatch it, so this never double-counts.
-    document.addEventListener('audit-form:success', function () {
+    // The audit-form handler dispatches this on an HTTP-200 success AFTER the lead
+    // is saved; the partial lead-capture POST does NOT dispatch it, and it never
+    // runs on the submit-button click before the save. So no double-count, no
+    // premature fire. Enhanced-conversions user_data is set immediately before.
+    document.addEventListener('audit-form:success', function (e) {
+      var d = (e && e.detail) || {};
+      setUserData(d);
       window.dataLayer.push({ event: 'generate_lead' });
       if (ga4Ready) gtag('event', 'generate_lead');
       if (leadReady) gtag('event', 'conversion', { send_to: GOOGLE_ADS_ID + '/' + ADS_LEAD_LABEL });
     });
 
     // SECONDARY signal — phone/text taps (often the likeliest mobile lead).
-    // Keep this a SECONDARY action in Google Ads so it never becomes the sole bid goal.
+    // Distinct event name ('contact_click', with method) so it can be imported as
+    // a SEPARATE Google Ads conversion later without touching the lead conversion.
     document.addEventListener('click', function (e) {
       var a = e.target && e.target.closest ? e.target.closest('a[href^="tel:"], a[href^="sms:"]') : null;
       if (!a) return;
-      window.dataLayer.push({ event: 'phone_tap' });
-      if (ga4Ready) gtag('event', 'phone_tap');
+      var method = a.getAttribute('href').indexOf('sms:') === 0 ? 'sms' : 'phone';
+      window.dataLayer.push({ event: 'contact_click', method: method });
+      if (ga4Ready) gtag('event', 'contact_click', { method: method });
       if (phoneReady) gtag('event', 'conversion', { send_to: GOOGLE_ADS_ID + '/' + ADS_PHONE_LABEL });
     });
 
-    // ATTRIBUTION — stamp gclid/utm onto every lead form so a closed build can be
-    // traced back to the ad click (and uploaded via Offline Conversion Import later).
+    // ATTRIBUTION — read gclid/utm from the URL, persist to a 90-day cookie, and
+    // stamp them (from URL or cookie) onto every lead form so the lead payload
+    // carries them and a closed job can be traced to the originating click.
     (function () {
       try {
         var p = new URLSearchParams(window.location.search);
         var keys = ['gclid','gbraid','wbraid','utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
-        var present = keys.filter(function (k){ return p.get(k); });
+        var COOKIE = 'dte_attr';
+        var data = {};
+        keys.forEach(function (k){ var v = p.get(k); if (v) data[k] = v; });
+        if (Object.keys(data).length) {
+          try { document.cookie = COOKIE + '=' + encodeURIComponent(JSON.stringify(data)) + ';path=/;max-age=7776000;SameSite=Lax'; } catch (e) {}
+        } else {
+          try {
+            var m = document.cookie.match(new RegExp('(?:^|; )' + COOKIE + '=([^;]+)'));
+            if (m) data = JSON.parse(decodeURIComponent(m[1])) || {};
+          } catch (e) {}
+        }
+        var present = Object.keys(data);
         if (!present.length) return;
         var stamp = function () {
           document.querySelectorAll('[data-audit-form]').forEach(function (f) {
             present.forEach(function (k) {
               if (f.querySelector('input[name="' + k + '"]')) return;
               var i = document.createElement('input');
-              i.type = 'hidden'; i.name = k; i.value = p.get(k);
+              i.type = 'hidden'; i.name = k; i.value = data[k];
               f.appendChild(i);
             });
           });
@@ -448,7 +481,13 @@ const TRACKING_ENABLED = TRACKING_IDS.length > 0;
             // Dispatch a page-level event so per-page scripts (e.g. /upgrade
             // analytics) can react without re-implementing the fetch.
             document.dispatchEvent(new CustomEvent('audit-form:success', {
-              detail: { source: (formData.get('source') as string) || form.getAttribute('action') || '' },
+              detail: {
+                source: (formData.get('source') as string) || form.getAttribute('action') || '',
+                // Passed to gtag enhanced conversions (hashed in-browser by gtag).
+                name: (formData.get('name') as string) || '',
+                email: (formData.get('email') as string) || '',
+                phone: (formData.get('phone') as string) || '',
+              },
             }));
 
             // Opt-in redirect: forms with [data-redirect="/path"] navigate
