@@ -7,6 +7,11 @@ interface Props {
   pathname?: string;
   noindex?: boolean;
   ogImage?: string;
+  // Skip-link target/label. Per-page override so the skip link lands on the
+  // page's real conversion element (e.g. the pricing/form at #main) instead of
+  // the default #apply CTA band. Defaults preserve every existing page.
+  skipHref?: string;
+  skipLabel?: string;
 }
 
 const {
@@ -15,6 +20,8 @@ const {
   pathname = '',
   noindex = false,
   ogImage,
+  skipHref = '#apply',
+  skipLabel = 'Skip to application form',
 } = Astro.props;
 
 const SITE_URL = 'https://designedtoelevate.co';
@@ -93,7 +100,7 @@ const sitewideSchema = [
   />
 </head>
 <body class="bg-bg text-text font-body antialiased">
-  <a class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-accent focus:text-bg" href="#apply">Skip to application form</a>
+  <a class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-accent focus:text-bg" href={skipHref}>{skipLabel}</a>
   <slot />
 
   <!-- Global Call/Text popup. Any element with [data-call-text]
