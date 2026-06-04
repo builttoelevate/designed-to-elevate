@@ -114,6 +114,10 @@ html.landing body {
   border-color: var(--color-accent);
   background: rgba(255, 107, 26, 0.06);
 }
+.btn-ghost:focus-visible {
+  outline: 2px solid var(--color-accent-hover);
+  outline-offset: 3px;
+}
 
 .eyebrow {
   display: inline-flex;

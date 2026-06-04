@@ -365,6 +365,8 @@ const faqSchema = {
   description="Detailing and ceramic coating shop websites with a real quote system — prices the job by vehicle, captures the lead before they bounce, and texts the quote to your phone to book. See the Fitchin build."
   pathname="auto-detailing-websites"
   noindex={true}
+  skipHref="#quote"
+  skipLabel="Skip to the quote builder"
 >
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
@@ -403,16 +405,17 @@ const faqSchema = {
         <div class="mx-auto max-w-7xl px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-3 sm:gap-4">
           <a href="#top" class="flex items-center" aria-label="Designed to Elevate">
             <img
-              src="/logo-wordmark-orange.png"
+              src="/logo-wordmark-orange-480.png"
               alt="Designed to Elevate"
-              width="320"
-              height="96"
+              width="480"
+              height="160"
+              fetchpriority="low"
               class="h-8 sm:h-10 w-auto"
             />
           </a>
           <div class="flex items-center gap-2 sm:gap-3">
             <a href={QUOTE_HREF} class="btn-ghost !border-accent !text-accent !py-2.5 !px-3.5 sm:!px-4 !text-[0.78rem] sm:!text-[0.85rem] whitespace-nowrap">
-              Build My Estimate
+              Get My Website Estimate
               <span aria-hidden="true">↗</span>
             </a>
           </div>
@@ -461,12 +464,12 @@ const faqSchema = {
             <div class="relative card overflow-hidden max-w-[20rem] mx-auto">
               <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
                 <img
-                  src="/showcase/fitchin-mobile.png"
+                  src="/showcase/fitchin-mobile-sm.jpg"
                   alt="Fitchin Auto Detail mobile homepage — heat, glare, and ceramic protection messaging with a 'See your price in 2 min' quote button."
                   class="absolute inset-0 w-full h-full object-cover object-top"
-                  width="1320"
-                  height="2678"
-                  loading="lazy"
+                  width="640"
+                  height="1298"
+                  loading="eager"
                   decoding="async"
                 />
               </div>
@@ -596,7 +599,7 @@ const faqSchema = {
 
         <div class="mt-12 flex justify-center">
           <a href={QUOTE_HREF} class="btn-primary">
-            Build My Ballpark Estimate
+            Get My Website Estimate
             <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
           </a>
         </div>
@@ -834,7 +837,7 @@ const faqSchema = {
             Want the same quote system priced around your exact menu?
           </p>
           <a href={QUOTE_HREF} class="btn-primary">
-            Build My Ballpark Estimate
+            Get My Website Estimate
             <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
           </a>
           <p class="mt-3 text-[0.85rem] text-text-muted">
@@ -1158,7 +1161,7 @@ const faqSchema = {
 
         <div class="mt-10 flex justify-center">
           <a href={QUOTE_HREF} class="btn-primary">
-            Build My Ballpark Estimate
+            Get My Website Estimate
             <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
           </a>
         </div>
@@ -1204,7 +1207,7 @@ const faqSchema = {
 
         <div class="mt-10 flex flex-wrap justify-center gap-3">
           <a href={QUOTE_HREF} class="btn-primary">
-            Build My Ballpark Estimate
+            Get My Website Estimate
             <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
           </a>
           <a href={PHONE_TEL} class="btn-ghost">
@@ -1232,6 +1235,8 @@ const faqSchema = {
       <div class="flex flex-wrap gap-4 justify-center">
         <a href={PHONE_TEL} class="hover:text-accent transition-colors">{PHONE_DISPLAY}</a>
         <a href={`mailto:${EMAIL}`} class="hover:text-accent transition-colors">{EMAIL}</a>
+        <a href="/privacy" class="hover:text-accent transition-colors">Privacy</a>
+        <a href="/terms" class="hover:text-accent transition-colors">Terms</a>
       </div>
     </div>
   </footer>
@@ -1249,7 +1254,7 @@ const faqSchema = {
         Call/Text
       </a>
       <a href={QUOTE_HREF} class="btn-primary flex-1 !px-2 !text-[0.85rem]">
-        Build My Estimate
+        Get My Website Estimate
         <span aria-hidden="true">↗</span>
       </a>
     </div>
