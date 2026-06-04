@@ -61,6 +61,18 @@ const sitewideSchema = [
     inLanguage: 'en-US',
   },
 ];
+
+// Google tag (gtag.js) — GA4 + Google Ads conversion tracking, loaded once for
+// every page on this layout. PLACEHOLDER values until real ones are provisioned:
+// replace the four consts below and tracking activates automatically. The remote
+// loader only renders once the placeholders are gone, so we never ship 404 tag
+// requests to live visitors while pending. Full setup: GOOGLE_ADS_LAUNCH_CHECKLIST.md.
+const GA4_ID = 'G-PLACEHOLDER';            // ← GA4 Measurement ID (G-XXXXXXXXXX)
+const GOOGLE_ADS_ID = 'AW-PLACEHOLDER';    // ← Google Ads ID (AW-XXXXXXXXXX)
+const ADS_LEAD_LABEL = 'LEAD_LABEL';       // ← conversion label for the quote-form submit
+const ADS_PHONE_LABEL = 'PHONE_LABEL';     // ← (optional) conversion label for tel/sms taps
+const TRACKING_IDS = [GA4_ID, GOOGLE_ADS_ID].filter((id) => !id.includes('PLACEHOLDER'));
+const TRACKING_ENABLED = TRACKING_IDS.length > 0;
 ---
 <!doctype html>
 <html lang="en" class="landing">
@@ -98,6 +110,68 @@ const sitewideSchema = [
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
   />
+
+  {/* Google tag (gtag.js) — async, non-render-blocking. The remote loader only
+      renders once REAL IDs replace the placeholders in the frontmatter (no 404
+      tag requests for live visitors while pending). The gtag() stub + dataLayer
+      are ALWAYS defined so conversion/event calls never throw before IDs exist. */}
+  {TRACKING_ENABLED && (
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${TRACKING_IDS[0]}`}></script>
+  )}
+  <script is:inline define:vars={{ TRACKING_IDS, GA4_ID, GOOGLE_ADS_ID, ADS_LEAD_LABEL, ADS_PHONE_LABEL }}>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ window.dataLayer.push(arguments); }
+    window.gtag = window.gtag || gtag;
+    gtag('js', new Date());
+    TRACKING_IDS.forEach(function (id) { gtag('config', id); });
+
+    var adsReady = GOOGLE_ADS_ID.indexOf('PLACEHOLDER') === -1;
+    var ga4Ready = GA4_ID.indexOf('PLACEHOLDER') === -1;
+    var leadReady = adsReady && ADS_LEAD_LABEL.indexOf('LABEL') === -1;
+    var phoneReady = adsReady && ADS_PHONE_LABEL.indexOf('LABEL') === -1;
+
+    // PRIMARY conversion — fires once, only on a CONFIRMED final form submit.
+    // The audit-form handler dispatches this on an HTTP-200 success; the partial
+    // lead-capture POST does NOT dispatch it, so this never double-counts.
+    document.addEventListener('audit-form:success', function () {
+      window.dataLayer.push({ event: 'generate_lead' });
+      if (ga4Ready) gtag('event', 'generate_lead');
+      if (leadReady) gtag('event', 'conversion', { send_to: GOOGLE_ADS_ID + '/' + ADS_LEAD_LABEL });
+    });
+
+    // SECONDARY signal — phone/text taps (often the likeliest mobile lead).
+    // Keep this a SECONDARY action in Google Ads so it never becomes the sole bid goal.
+    document.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('a[href^="tel:"], a[href^="sms:"]') : null;
+      if (!a) return;
+      window.dataLayer.push({ event: 'phone_tap' });
+      if (ga4Ready) gtag('event', 'phone_tap');
+      if (phoneReady) gtag('event', 'conversion', { send_to: GOOGLE_ADS_ID + '/' + ADS_PHONE_LABEL });
+    });
+
+    // ATTRIBUTION — stamp gclid/utm onto every lead form so a closed build can be
+    // traced back to the ad click (and uploaded via Offline Conversion Import later).
+    (function () {
+      try {
+        var p = new URLSearchParams(window.location.search);
+        var keys = ['gclid','gbraid','wbraid','utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+        var present = keys.filter(function (k){ return p.get(k); });
+        if (!present.length) return;
+        var stamp = function () {
+          document.querySelectorAll('[data-audit-form]').forEach(function (f) {
+            present.forEach(function (k) {
+              if (f.querySelector('input[name="' + k + '"]')) return;
+              var i = document.createElement('input');
+              i.type = 'hidden'; i.name = k; i.value = p.get(k);
+              f.appendChild(i);
+            });
+          });
+        };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', stamp);
+        else stamp();
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body class="bg-bg text-text font-body antialiased">
   <a class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-accent focus:text-bg" href={skipHref}>{skipLabel}</a>
@@ -286,7 +360,11 @@ const sitewideSchema = [
     // major orange filled CTA on screen at a time.
     const heroCta = document.querySelector<HTMLElement>('[data-hero-cta]');
     const stickyCta = document.querySelector<HTMLElement>('[data-sticky-cta]');
-    const applyFormSection = document.querySelector<HTMLElement>('#apply');
+    // Prefer the real conversion form (#quote wizard) when present; fall back to
+    // the #apply CTA band. querySelector returns whichever appears first in the
+    // DOM, so pages with a mid-page #quote track it, and pages with only #apply
+    // are unaffected.
+    const applyFormSection = document.querySelector<HTMLElement>('#quote, #apply');
 
     if (heroCta && stickyCta) {
       let heroVisible = true;
@@ -321,7 +399,8 @@ const sitewideSchema = [
     // Audit form → Web3Forms.
     // FormData preserves multi-value `help[]` checkboxes natively;
     // Web3Forms parses them as an array and aggregates them in the email.
-    // Add Google Ads conversion tracking inside the success branch when ready.
+    // Conversion tracking is wired in the <head> gtag block: it listens for the
+    // `audit-form:success` event dispatched below and fires the Ads/GA4 conversion.
     const form = document.querySelector<HTMLFormElement>('[data-audit-form]');
     const status = document.querySelector<HTMLElement>('[data-audit-status]');
     if (form && status) {
@@ -364,9 +443,6 @@ const sitewideSchema = [
           const result = await response
             .json()
             .catch(() => ({} as { success?: boolean; message?: string }));
-
-          // Log full response for debugging in DevTools (remove later).
-          console.log('[audit-form] web3forms response:', response.status, result);
 
           if (response.ok && result.success) {
             // Dispatch a page-level event so per-page scripts (e.g. /upgrade
