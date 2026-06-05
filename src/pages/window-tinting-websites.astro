@@ -442,7 +442,7 @@ const faqSchema = {
               <span class="xs:hidden sm:hidden">Call</span>
             </a>
             <a href={QUOTE_HREF} class="btn-primary !py-2.5 !px-3.5 sm:!px-4 !text-[0.78rem] sm:!text-[0.85rem] whitespace-nowrap">
-              Build My Estimate
+              Get My Website Estimate
               <span aria-hidden="true">↗</span>
             </a>
           </div>
@@ -454,11 +454,11 @@ const faqSchema = {
         <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
           <div>
             <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Window Tint Shop Websites</span>
-            <h1 class="mt-5 text-[2.2rem] sm:text-[2.9rem] lg:text-[3.3rem] leading-[1.04] font-bold tracking-tight">
-              Window tint websites that <span class="text-accent">price the job</span> — before the customer calls another shop.
+            <h1 class="mt-5 text-[2.2rem] sm:text-[2.9rem] lg:text-[3.3rem] leading-[1.06] font-bold tracking-tight text-balance">
+              Get a <span class="text-accent">tint quote</span> before they call another shop.
             </h1>
-            <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.1rem] leading-relaxed max-w-2xl">
-              Auto tint priced on the spot by vehicle and film tier. Residential and commercial routed to booked estimates. We build the quote flow, the pricing logic, and the call-to-action each segment actually needs.
+            <p class="mt-6 text-text-soft text-[1.05rem] sm:text-[1.1rem] leading-relaxed max-w-xl">
+              A mobile-first website and quote system for tint shops — visitors become ready-to-book leads sent straight to your phone. You own the code outright.
             </p>
 
             <!-- HERO PROOF ELEMENT — live-in-production badge + named shop. -->
@@ -467,12 +467,12 @@ const faqSchema = {
                 <span class="absolute inline-flex h-1.5 w-1.5 rounded-full bg-accent/60 animate-ping"></span>
                 <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent"></span>
               </span>
-              <span class="font-display text-[0.75rem] uppercase tracking-[0.14em] text-text-soft">Live in Production · Built for Fitchin Tint &amp; Detail</span>
+              <span class="font-display text-[0.75rem] uppercase tracking-[0.14em] text-text-soft">Live in Production · Fitchin Tint &amp; Detail</span>
             </div>
 
             <div class="mt-7 flex flex-wrap gap-3">
               <a href={QUOTE_HREF} data-hero-cta class="btn-primary">
-                Build My Ballpark Estimate
+                Get My Website Estimate
                 <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
               </a>
               <a href="#segments" class="btn-ghost">
@@ -482,29 +482,29 @@ const faqSchema = {
             </div>
 
             <div class="mt-3 text-[0.85rem] text-text-muted">
-              No spam, no pushy sales call. Bill replies within 24 hours.
-            </div>
-
-            <div class="mt-6 text-[0.9rem] text-text-muted">
-              You own the code &nbsp;·&nbsp; Quote system included &nbsp;·&nbsp; 3–5 week build
+              No spam. No pressure. I'll reply within 24 hours.
             </div>
           </div>
 
-          <div class="relative">
-            <div class="absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60"></div>
-            <div class="relative card overflow-hidden max-w-[20rem] mx-auto">
-              <div class="relative aspect-[9/16] bg-surface-2 overflow-hidden">
-                <img
-                  src="/showcase/fitchin-mobile.png"
-                  alt="Fitchin window tint shop website on a phone, leading with heat, glare, and fade protection and a 'See your price in 2 min' quote button."
-                  class="absolute inset-0 w-full h-full object-cover object-top"
-                  width="1320"
-                  height="2678"
-                  loading="eager"
-                  decoding="async"
-                />
-              </div>
-            </div>
+          {/* Hero product shot — art-directed per device (only the matching image
+              downloads). Desktop (>=1024px): landscape laptop shot of the live
+              Fitchin site. Mobile/tablet: the two-phone composite, full-bleed +
+              flush to the hero's bottom edge on phones. (Shared images for now —
+              tint-specific shots can be swapped in later.) */}
+          <div class="relative -mx-5 -mb-14 sm:mx-0 sm:mb-0">
+            <div class="hidden sm:block absolute -inset-6 bg-gradient-to-br from-accent/30 via-accent/5 to-transparent rounded-[2rem] blur-3xl opacity-60" aria-hidden="true"></div>
+            <picture>
+              <source media="(min-width: 1024px)" srcset="/showcase/auto-detail-hero-desktop.webp" width="1100" height="825" />
+              <img
+                src="/showcase/auto-detail-hero.jpg"
+                alt="The Fitchin website and its built-in quote wizard — a real production build by Designed to Elevate."
+                class="relative block w-full h-auto sm:max-w-[24rem] sm:mx-auto lg:max-w-none sm:rounded-xl"
+                width="900"
+                height="1125"
+                loading="eager"
+                decoding="async"
+              />
+            </picture>
           </div>
         </div>
       </div>
@@ -608,7 +608,7 @@ const faqSchema = {
 
         <div class="mt-12 flex justify-center">
           <a href={QUOTE_HREF} class="btn-primary">
-            Build My Ballpark Estimate
+            Get My Website Estimate
             <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
           </a>
         </div>
@@ -696,8 +696,8 @@ const faqSchema = {
       </div>
     </section>
 
-    <!-- FEATURED BUILD (Fitchin) -->
-    <section class="relative border-b border-line bg-surface-1/30">
+    <!-- FEATURED BUILD (Fitchin) — #case-study is a Google Ads sitelink target. -->
+    <section id="case-study" class="relative border-b border-line bg-surface-1/30">
       <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
         <div class="max-w-3xl mb-12">
           <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Featured Build</span>
@@ -781,7 +781,7 @@ const faqSchema = {
             Want the same tint quote system priced around your exact menu?
           </p>
           <a href={QUOTE_HREF} class="btn-primary">
-            Build My Ballpark Estimate
+            Get My Website Estimate
             <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
           </a>
           <p class="mt-3 text-[0.85rem] text-text-muted">
@@ -915,8 +915,8 @@ const faqSchema = {
       </div>
     </section>
 
-    <!-- OWNERSHIP / RISK REVERSAL — strongest objection-killer, surface it explicitly. -->
-    <section class="relative border-b border-line">
+    <!-- OWNERSHIP / RISK REVERSAL — strongest objection-killer; #ownership is a Google Ads sitelink target. -->
+    <section id="ownership" class="relative border-b border-line">
       <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-24">
         <div class="max-w-3xl">
           <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Ownership</span>
@@ -1080,7 +1080,7 @@ const faqSchema = {
 
         <div class="mt-10 flex justify-center">
           <a href={QUOTE_HREF} class="btn-primary">
-            Build My Ballpark Estimate
+            Get My Website Estimate
             <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
           </a>
         </div>
@@ -1126,7 +1126,7 @@ const faqSchema = {
 
         <div class="mt-10 flex flex-wrap justify-center gap-3">
           <a href={QUOTE_HREF} class="btn-primary">
-            Build My Ballpark Estimate
+            Get My Website Estimate
             <span class="text-[0.85em] font-normal opacity-80">→ 60 sec</span>
           </a>
           <a href={PHONE_TEL} class="btn-ghost">
@@ -1173,7 +1173,7 @@ const faqSchema = {
         Call/Text
       </a>
       <a href={QUOTE_HREF} class="btn-primary flex-1 !px-2 !text-[0.85rem]">
-        Build My Estimate
+        Get My Website Estimate
         <span aria-hidden="true">↗</span>
       </a>
     </div>
